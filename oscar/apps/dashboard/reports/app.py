@@ -6,7 +6,7 @@ from oscar.apps.dashboard.reports import views
 
 class ReportsApplication(Application):
     name = None
-    default_permissions = ['is_staff', ]
+    default_permissions = []
 
     index_view = views.IndexView
 

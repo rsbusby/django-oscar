@@ -47,6 +47,9 @@ class AbstractProductClass(models.Model):
     options = models.ManyToManyField('catalogue.Option', blank=True,
                                      verbose_name=_("Options"))
 
+    partner = models.ForeignKey('partner.Partner', verbose_name=_("Partner"), blank=True, null=True)
+
+
     class Meta:
         abstract = True
         ordering = ['name']

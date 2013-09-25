@@ -407,7 +407,7 @@ COMPRESS_OFFLINE_CONTEXT = {
 # compiled but compression isn't enabled.  When this happens, the relative URL
 # is wrong between the generated CSS file and other assets:
 # https://github.com/jezdez/django_compressor/issues/226
-COMPRESS_OUTPUT_DIR = 'oscar'
+COMPRESS_OUTPUT_DIR = 'sites/homemade'
 
 # Logging
 # =======

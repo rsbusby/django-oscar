@@ -28,6 +28,7 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(IndexView, self).get_context_data(**kwargs)
+
         ctx.update(self.get_stats())
         return ctx
 

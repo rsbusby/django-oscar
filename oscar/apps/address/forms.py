@@ -16,7 +16,8 @@ class AbstractAddressForm(forms.ModelForm):
                        set(settings.OSCAR_REQUIRED_ADDRESS_FIELDS))
         for field_name in field_names:
             self.fields[field_name].required = True
-
+        print("required fields??")
+        print(settings.OSCAR_REQUIRED_ADDRESS_FIELDS)    
 
 class UserAddressForm(AbstractAddressForm):
 
@@ -27,3 +28,6 @@ class UserAddressForm(AbstractAddressForm):
     def __init__(self, user, *args, **kwargs):
         super(UserAddressForm, self).__init__(*args, **kwargs)
         self.instance.user = user
+        import pdb;pdb.set_trace()
+        #if not self.instance.country:
+        #    self.instance.country = Country("US")

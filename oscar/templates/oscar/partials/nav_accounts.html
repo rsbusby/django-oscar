@@ -36,8 +36,18 @@
                                     <span class="label label-important">{{ num_unread_notifications }}</span>
                                 {% endif %}</a>
                         </li>
-                        {% if user.is_staff %}
+                        TEST
+                        {{user.email}}
+                        {% if user.get_partner == None %}
+                            OKOKOK
+                        {% endif %}
+
+                        {% if user.get_partner  %}
                             <li><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
+                        {% else %}
+                         <li><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
+                         <li><a href="{% url 'register_store' %}"><i class="icon-hand-up"></i> {% trans "Open A Booth" %}</a></li>
+
                         {% endif %}
                         <li><a href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
                     {% else %}

@@ -26,6 +26,7 @@ class ProductDetailView(DetailView):
         """
         Ensures that the correct URL is used before rendering a response
         """
+        #import pdb;pdb.set_trace()
         self.object = product = self.get_object()
 
         if product.is_variant:
@@ -164,18 +165,28 @@ class ProductListView(ListView):
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
     search_signal = product_search
     model = Product
+    q = None
+    pq = None
+
 
     def get_search_query(self):
         q = self.request.GET.get('q', None)
-        return q.strip() if q else q
+        self.q =  q.strip() if q else None
+        pq = self.request.GET.get('booth', None)
+        self.pq = pq.strip() if pq else None
+        return 
 
     def get_queryset(self):
         q = self.get_search_query()
+        q = self.q
+        pq = self.pq
         qs = Product.browsable.base_queryset()
         if q:
             # Send signal to record the view of this product
             self.search_signal.send(sender=self, query=q, user=self.request.user)
             return qs.filter(title__icontains=q)
+        elif pq:
+            return qs.filter(stockrecord__partner__name=pq)
         else:
             return qs
 
@@ -188,3 +199,25 @@ class ProductListView(ListView):
             context['summary'] = _("Products matching '%(query)s'") % {'query': q}
             context['search_term'] = q
         return context
+
+
+class PartnerListView(ProductListView):
+    """
+    A list of products filtered by partner
+    """
+    context_object_name = "products"
+    template_name = 'catalogue/browseBooth.html'
+    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
+    search_signal = product_search
+    model = Product
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductListView, self).get_context_data(**kwargs)
+        q = self.get_search_query()
+        if not q:
+            context['summary'] = _('Products for all booths')
+        else:
+            context['summary'] = _("Products matching '%(query)s'") % {'query': q}
+            context['search_term'] = q
+        return context
+

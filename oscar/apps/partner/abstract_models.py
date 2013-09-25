@@ -62,6 +62,9 @@ class AbstractPartner(models.Model):
         AUTH_USER_MODEL, related_name="partners",
         blank=True, null=True, verbose_name=_("Users"))
 
+    ## user associated with this store
+    user = models.OneToOneField(AUTH_USER_MODEL, related_name="partner", blank=True, null=True, verbose_name=_("Users"))
+
     @property
     def display_name(self):
         if not self.name:
@@ -127,13 +130,13 @@ class AbstractStockRecord(models.Model):
     product = models.OneToOneField(
         'catalogue.Product', related_name="stockrecord",
         verbose_name=_("Product"))
-    partner = models.ForeignKey('partner.Partner', verbose_name=_("Partner"))
+    partner = models.ForeignKey('partner.Partner', verbose_name=_("Partner"),blank=True, null=True)
 
     #: The fulfilment partner will often have their own SKU for a product, which
     #: we store here.  This will sometimes be the same the product's UPC but not
     #: always.  It should be unique per partner.
     #: See also http://en.wikipedia.org/wiki/Stock-keeping_unit
-    partner_sku = models.CharField(_("Partner SKU"), max_length=128)
+    partner_sku = models.CharField(_("Partner SKU"), max_length=128, blank=True, null=True)
 
     # Price info:
     price_currency = models.CharField(
@@ -330,6 +333,13 @@ class AbstractStockRecord(models.Model):
         Return a product's tax value
         """
         return get_partner_wrapper(self.partner_id).calculate_tax(self)
+
+    def get_seller(self):
+        try:
+            return self.partner.user
+        except:
+            return None
+
 
     def __unicode__(self):
         if self.partner_sku:

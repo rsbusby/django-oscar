@@ -215,6 +215,7 @@ class RegisterUserMixin(object):
         # Raise signal
         user_registered.send_robust(sender=self, user=user)
 
+        print("registering user !!!")
         # We have to authenticate before login
         try:
             user = authenticate(
@@ -231,6 +232,7 @@ class RegisterUserMixin(object):
             for u in users[1:]:
                 u.delete()
 
+        print("done registering")
         auth_login(self.request, user)
 
         return user

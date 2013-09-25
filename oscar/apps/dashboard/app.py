@@ -18,7 +18,7 @@ from oscar.apps.dashboard import views
 
 class DashboardApplication(Application):
     name = 'dashboard'
-    permissions_map = {'index': ['is_staff', ]}
+    permissions_map = {'index': ['email']} #['is_staff' ]}
 
     index_view = views.IndexView
     reports_app = reports_app

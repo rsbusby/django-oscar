@@ -32,6 +32,8 @@ if hasattr(auth_models, 'BaseUserManager'):
                 last_login=now, date_joined=now, **extra_fields)
 
             user.set_password(password)
+            import pdb;pdb.set_trace()
+            print("saving user")
             user.save(using=self._db)
             return user
 
@@ -81,6 +83,13 @@ if hasattr(auth_models, 'BaseUserManager'):
 
         def get_short_name(self):
             return self.first_name
+
+        def get_partner(self):
+            try:
+                return self.partner
+            except:
+                return None
+
 
 
 class AbstractEmail(models.Model):
