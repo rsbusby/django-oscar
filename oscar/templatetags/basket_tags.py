@@ -2,6 +2,9 @@ from django import template
 from django.db.models import get_model
 
 from oscar.core.loading import get_class
+from django.template.loader import render_to_string, select_template
+
+from oscar.apps.basket.views import BasketView
 
 AddToBasketForm = get_class('basket.forms', 'AddToBasketForm')
 SimpleAddToBasketForm = get_class('basket.forms', 'SimpleAddToBasketForm')
@@ -10,6 +13,32 @@ Product = get_model('catalogue', 'product')
 register = template.Library()
 
 QNT_SINGLE, QNT_MULTIPLE = 'single', 'multiple'
+
+
+@register.simple_tag(takes_context=True)
+def render_basket(context, basket):
+    """
+    Render a basket snippet, for multi-vendor.
+
+    
+    """
+    names = ['basket/partials/basket_content.html']
+    template_ = select_template(names)
+    request = context['request']
+    ## set up the context to be as expected for the basket content
+    context['basket'] = basket
+    context['request'].basket = basket
+    bv = BasketView()
+    bv.request = context['request']
+    formset = bv.get_formset()(queryset=bv.get_queryset())
+    bv.object_list = None
+    ctx = bv.get_context_data(formset=formset, basket=basket)
+    bContext = ctx
+
+    #bContext = bv.get_context_data(context=context, object_list=None)
+    for k in bContext.keys():
+        context[k] = bContext[k]
+    return template_.render(context)
 
 
 @register.tag(name="basket_form")
