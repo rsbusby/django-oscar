@@ -13,7 +13,7 @@
     {{ summary }} | {{ block.super }}
 {% endblock %}
 
-{% block headertext %}{{ summary }}{% endblock %}
+{% block headertext %}{% endblock %}
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
@@ -34,6 +34,12 @@
         {% endif %}
     </ul>
 {% endblock breadcrumbs %}
+
+                {% block mini_basket %} 
+
+<div style="font-size:2.2em">{{summary}}</div>
+
+                {% endblock %}
 
 
 
@@ -64,6 +70,15 @@
 {% endblock %}
 
 {% block content %}
+
+
+  {% if u.storePicPath %}
+  <div id="storeBannerWide" style="width: 100%;height:auto;overflow:hidden;">
+  
+     <img src="{% static u.storePicPath %}" class="store_banner" style="width:100%;">
+     
+     </div>
+     {% endif %}
 
  {% if request.user.partner and partner %}
     <div class="row-fluid">

@@ -24,34 +24,52 @@
                         <button class="btn" type="submit">{% trans "Go" %}</button>
                     </form>
                 {% endif %}
+
+                <ul class="nav pull-left">
+              
+                  <li>
+                    <a href="{% url 'about' %}"><i class="icon-home"></i> {% trans "HOME" %}</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'about' %}"><i class="icon-usr"></i> {% trans "ABOUT" %}</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'about' %}"><i class="icon-use"></i> {% trans "CONTACT" %}</a>
+                  </li>
+
+                   <li>
+                    <a href="{% url 'about' %}"><i class="icon-use"></i> {% trans "BLOG" %}</a>
+                  </li>
+                   <li>
+                    <a href="{% url 'about' %}"><i class="icon-use"></i> {% trans "EVENTS" %}</a>
+                  </li>
+
+                </ul>
+
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
                         <li>
-                            <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a>
+                            <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "ACCOUNT" %}</a>
                         </li>
                         <li>
                             <a href="{% url 'customer:notifications-inbox' %}">
-                                <i class="icon-envelope"></i> {% trans "Notifications" %}
+                                <i class="icon-envelope"></i> {% trans "MESSAGES" %}
                                 {% if num_unread_notifications > 0 %}
                                     <span class="label label-important">{{ num_unread_notifications }}</span>
                                 {% endif %}</a>
                         </li>
-                        TEST
-                        {{user.email}}
-                        {% if user.get_partner == None %}
-                            OKOKOK
-                        {% endif %}
+                    
 
-                        {% if user.get_partner  %}
-                            <li><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
+                        {% if user.partner  %}
+                            <li><a href="{% url 'catalogue:index' %}?booth={{request.user.partner.name}}"><i class="icon-hand-u"></i>MY BOOTH</a></li>
                         {% else %}
                          <li><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
-                         <li><a href="{% url 'register_store' %}"><i class="icon-hand-up"></i> {% trans "Open A Booth" %}</a></li>
+                         <li><a href="{% url 'register_store' %}"><i class="icon-hand-up"></i> {% trans "OPEN A BOOTH" %}</a></li>
 
                         {% endif %}
-                        <li><a href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
+                        <li><a href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "LOGOUT" %}</a></li>
                     {% else %}
-                        <li><a href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "Login or register" %}</a></li>
+                        <li><a href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "LOGIN or REGISTER" %}</a></li>
                     {% endif %}
                 </ul>
             </div>
