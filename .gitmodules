@@ -1,4 +1,3 @@
 [submodule "sites/homemade/apps/homemade"]
 	path = sites/homemade/apps/homemade
-	url = git@bitbucket.org:rsbusby/homemade.git
-
+    url = http://rsbusby@bitbucket.org/rsbusby/homemade.git
