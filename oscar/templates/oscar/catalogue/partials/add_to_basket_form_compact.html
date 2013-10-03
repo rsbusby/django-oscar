@@ -8,9 +8,19 @@
 <form action="{% url 'basket:add' %}" method="post">
     {% csrf_token %}
     {{ basket_form.as_p }}
+
+
+ {% if user.is_authenticated and request.user.partner and user == product.stockrecord.partner.user %}   {# edit_item_form #}
+        <input class="pull-right" type="button" value="Edit this Item" onclick=location.href="{% url 'dashboard:catalogue-product' product.id %}">
+ 
+              
+
+{% else %}
     {% if product.is_available_to_buy %}
-        <button type="submit" class="btn btn-primary btn-full">{% trans "Add to basket" %}</button>
+        {% comment %}<button type="submit" class="btn btn-primary btn-full">{% trans "Add to basket" %}</button>{% endcomment %}
+        <input style="float:right;clear:both;" type=submit value="{% trans "Add to basket" %}">
     {% endif %}
+ {% endif %}
 </form>
 {% else %}
     {{ basket_form.reason }}
