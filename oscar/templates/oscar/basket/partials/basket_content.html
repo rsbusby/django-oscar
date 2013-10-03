@@ -22,11 +22,13 @@
     </div>
 {% endif %}
 
+
 {% if not basket.is_empty %}
     {% block basket_form_headers %}
         <div class="basket-title hidden-phone">
             <div class="row-fluid">
-                <h4 class="span6">{#{% trans "Items to buy now" %}#}</h4>
+
+                <h3 class="span6">Items from the booth{#{% trans "Items to buy now" %}#}</h3>
                 <h4 class="span4">{% trans "Quantity" %}</h4>
                 <h4 class="span2 align-right">{% trans "Price" %}</h4>
             </div>
@@ -50,8 +52,13 @@
                                     {% endthumbnail %}
                                 {% endwith %}
                             </div>
+
+
                             <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
                             <p class="availability {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
+
+                            Seller: <a href="{% url 'catalogue:index' %}?booth={{form.instance.product.stockrecord.partner.name}}">{{form.instance.product.stockrecord.partner  }}</a>
+
                         </div>
                         <div class="span4">
                             <div class="checkout-quantity control-group {% if form.errors %}error{% endif %}">
@@ -83,32 +90,13 @@
 
     <div class="row-fluid">
         {% block vouchers %}
-            <div class="span6">
-                <div class="sub-header">
-                    <h2>{% trans "Voucher/promo code" %}</h2>
-                </div>
-                <p id="voucher_form_link"><a href="#voucher" class="btn btn-full">{% trans "I have a voucher code..." %}</a></p>
-
-                <div id="voucher_form_container" style="display:none">
-                    <h4>{% trans "Voucher code" %}</h4>
-                    <form action="{% url 'basket:vouchers-add' %}" method="post" class="form-horizontal">
-                        {% csrf_token %}
-                        {% include "partials/form_fields.html" with form=voucher_form %}
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-info">{% trans "Add voucher" %}</button>
-                            {% trans "or" %} <a href="#" id="voucher_form_cancel">{% trans "cancel" %}</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
+           
         {% endblock vouchers %}
 
         {% block baskettotals %}
-            <div class="span6">
-                <div class="sub-header">
-                    <h2>{% trans "Totals" %}</h2>
-                </div>
-                {% include 'basket/partials/basket_totals.html' with editable=1 %}
+            <div class="span3 pull-right">
+            <th class="total pull-right"><h4>{% trans "Order total" %}</h4></th>
+                <td class="total pull-right"><h4 class="price_color">{{ order_total_incl_tax|currency }}</h4></td>
             </div>
         {% endblock baskettotals %}
     </div>
