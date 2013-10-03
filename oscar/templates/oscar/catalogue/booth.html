@@ -1,4 +1,4 @@
-{% extends "layout_2_col.html" %}
+{% extends "layout_booth.html" %}
 
 {% load url from future %}
 {% load currency_filters %}
@@ -72,7 +72,7 @@
         
     </div>
     <div class="span3" >
-       <a href="{% url 'about' %}"><i class="icon-hand-up"></i> Add new item</a>
+       <a href="../dashboard/catalogue/products/create/1/"><i class="icon-hand-up"></i> Add new item</a>
     </div>
 
     </div>
@@ -91,9 +91,12 @@
     {% if products %}
         <section>
             <div class="mod">
-                <ol class="products four">
+                <ol class="cartitems one">
                     {% for product in products %}
                         <li>{% render_product product %}</li>
+                          <hr class="hrCart" > 
+                          <br>
+
                     {% endfor %}
                 </ol>
                 {% include "partials/pagination.html" %}
@@ -103,4 +106,87 @@
         <p class="nonefound">{% trans "No products found." %}</p>
     {% endif %}
 {% endblock content %}
+
+{% block column_right %} 
+
+
+<!-- <div class="sellerinfo"> -->
+<div class="sellerinfobox">
+
+  <h2 style="margin-right:0.2em;display:inline-block;vertical-align:top;float:left;width:45%">{{user.get_full_name }}</h2>
+
+  <div class="sellerPic">
+  {% if u.personalPicPath %}
+   <img src="{% static u.personalPicPath %}" class="" style="mmargin-left:0.5em;height:auto;mmax-height:7em;border:2px #777777 solid;" > 
+  {% endif %}  
+    </div>
+
+   <div id:"wideClear" style="clear:both;"> </div> 
+    
+   <div class="sellerBio">
+     {%if u.bio %}
+     <pre>{{u.bio}} </pre>
+     {%endif%}
+   </div>
+   <div class="sellerLinks"> 
+    {% comment %}
+     <p><a href="{% url 'favSellers' user_name=u.name %}">Favorite Booths</a> </p>
+     <p><a href="{% url 'favItems' user_name=u.name %}">Favorite Items</a> </p>
+     {% endcomment %}
+     
+     <p>
+     
+     <input style="" type="button" value="Favorite Booths" onclick=location.href="{% url 'about'  %}">
+    </p><p>
+     <input style="" type="button" value="Favorite Items" onclick=location.href="{% url 'about'  %}">
+     </p>
+   </div>
+   {% if u.facebook %}
+   <a href="http://facebook.com/{{u.facebook}}"> <img src="{% static "icons/facebook_small.png" %}" class="socialIcon" > </a>
+   {% endif %}
+   
+
+   {% comment %}
+  {% if g.user.name != u.name %}
+   
+   <p>  <input style="float:left;position:relative;top:-2em;" type="button" value="Contact Seller" onclick=location.href="{% url 'contactPeer' user_name=u.name %}">
+  </p>
+  <br>
+  {%endif %}
+  {% endcomment %}
+
+   
+ </div> 
+
+
+ {% if request.user.partner and partner %}
+
+ {% if not u.stripeSellerToken %} 
+   <div class="stripesignupstore">
+ 
+<br><br>
+
+{% if u.personalName %}
+{{u.getFirstName( %}, c{%else%}C{%endif%}lick below to set up a Stripe account for payment processing.
+
+
+<br><br>
+<a href="{% url 'stripeLogin' %}" > <img src="{% static 'icons/blue.png' %}"></a>
+     
+   </div>
+  
+  {% else %} 
+   
+   <br><br>
+   You are signed up to accept payments using <a href="https://manage.stripe.com/dashboard" target="_blank">Stripe</a>.
+   
+   {% comment %}<a href="{% url 'stripeInfo' %}" > See more details about payments here. </a>{% endcomment %}
+   
+{% endif  %}  {% comment %} if not stripeAccountToken {% endcomment %}
+{% endif  %}
+
+<!-- </div> -->
+ 
+ {% endblock %}
+
 

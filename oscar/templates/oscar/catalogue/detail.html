@@ -55,19 +55,44 @@
 
     <div class="row-fluid">
 
+
+ <div class="sellerinfo span3">
+
+      <div class="sellerName" ><a href="{% url 'about' %}">{{sellerObj.getPersonalNameIfExists}}</a> </div>
+     <div class="sellerBio"> 
+      {%if sellerObj.bio %}
+     <pre>{{sellerObj.bio}} </pre>
+     {%endif%}
+          
+     </div>
+<div style="clear:both;"> </div>
+{% comment %}     {% if g.user.name != g.user.name %}{% endcomment %}
+      {% if request.user.partner and partner %}
+
+<div style="margin-top:8px;">
+     
+         <p>  <input style="" type="button" value="Contact Seller" onclick=location.href="{% url 'about' %}">
+  </p>
+  </div>
+  {%endif %}
+    
+  </div>
+
         {% block product_gallery %}
-        <div class="span6">
+        <div class="span4">
             {% include "catalogue/partials/gallery.html" %}
         </div>
         {% endblock %}
 
         {% block product_main %}
-        <div class="span6">
+        <div class="span4">
             {% comment %} 
             This is a but clunky here.  Better to have some kind of JS-driven dashboard menu that 
             pops out when clicked.  A bit like the Django-Debug-Toolbar button
             {% endcomment %}
-            {% if user.is_authenticated and user.is_staff %}
+
+           
+            {% if user.is_authenticated and user == product.stockrecord.partner.user %}
                 <a class="pull-right" href="{% url 'dashboard:catalogue-product' product.id %}"><i class="icon-edit"></i> {% trans "Edit this item" %}</a>
             {% endif %}
             <h1>{{ product.get_title }}</h1>
@@ -78,14 +103,10 @@
 
             {% iffeature "reviews" %}
                 {% if product.rating != None %}
-                <p class="star {{ product.rating|as_stars }}">
-                    <small><a href="{% url 'catalogue:reviews-list' product.slug product.id %}">
-                            {% blocktrans count reviews|length as num_reviews %}
-                            1 custom review
-                            {% plural %}
-                            {{ num_reviews }} customer reviews
-                            {% endblocktrans %}
-                    </a></small>
+               
+                    <a href="{% url 'catalogue:reviews-list' product.slug product.id %}">
+                     <div class="star {{ product.rating|as_stars }}"></div>
+                    </a>
                     &nbsp;
                 {% else %}
                     <p class="star">
@@ -179,7 +200,7 @@
                 {% if reviews|length > 3 %}
                     <a href="{% url 'catalogue:reviews-list' product.slug product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
                 {% endif %}
-                <h2>{% trans "Reviews" %}</h2>
+                <h2> {#{% trans "Reviews" %}#}</h2>
             </div>
 
             {% if not reviews %}

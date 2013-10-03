@@ -8,7 +8,7 @@
 
 <article class="product_pod">
     {% block product_image %}
-    <div class="image_container">
+    <div class="image_container booth_image">
         {% with image=product.primary_image %}
             {% thumbnail image.original "400x400" upscale=False as thumb %}
                 <a href="{{ product.get_absolute_url }}"><img src="{% static thumb.url %}" alt="{{ product.get_title }}" class="thumbnail"></a>

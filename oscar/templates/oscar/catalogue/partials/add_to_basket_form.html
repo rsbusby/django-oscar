@@ -10,7 +10,11 @@
             {% include "partials/form_fields.html" with form=basket_form %}
             <div class="form-actions">
                 <button type="submit" class="btn btn-large btn-primary btn-full" value="{% trans "Add to basket" %}">{% trans "Add to basket" %}</button>
-            </div>
+               <input style="float:right;clear:both;" type=submit value="{% trans "Add to basket" %}">
+           </div>
+         <input style="" type="button" value="Favorite Booths" onclick=location.href="{% url 'about'  %}">
+
+
         </form>
     {% else %}
         {{ basket_form.reason }}
