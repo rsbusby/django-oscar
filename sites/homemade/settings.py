@@ -336,7 +336,7 @@ INSTALLED_APPS = INSTALLED_APPS + [
     'south',
     'rosetta',          # For i18n testing
     'compressor',
-    'apps.user',        # For profile testing
+    #'apps.user',        # For profile testing
     'apps.homemade',        # include models from local app
     'apps.gateway',     # For allowing dashboard access
 ]
