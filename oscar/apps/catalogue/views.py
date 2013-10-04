@@ -10,7 +10,7 @@ from oscar.core.loading import get_class
 from oscar.apps.catalogue.signals import product_viewed, product_search
 
 from apps.homemade.homeMade import Seller
-from apps.user.models import ExtendedUser
+#from apps.user.models import ExtendedUser
 
 
 Product = get_model('catalogue', 'product')
