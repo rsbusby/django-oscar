@@ -2,7 +2,7 @@
 import os
 import sys
 
-import settings_postgres as settings # Assumed to be in the same directory.
+import settings # Assumed to be in the same directory.
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
