@@ -15,7 +15,7 @@ DATABASES = {
 import mongoengine 
 
 
-#DB_NAME = 'foodb'
+DB_NAME = 'foodb'
 DB_USERNAME = 'heroku_app10788552'
 DB_PASSWORD = 'sdjmq74cqnas81j3jgtttcvvp0'
 DB_HOST_ADDRESS = 'ds047437.mongolab.com:47437/' + DB_USERNAME
@@ -26,6 +26,6 @@ DB_HOST_ADDRESS = 'ds047437.mongolab.com:47437/' + DB_USERNAME
 
 #MONGODB_DB = 'heroku_app10788552'#"my_food_db"
 
-mongoengine.connect(host='mongodb://' + DB_USERNAME + ':' + DB_PASSWORD + '@' + DB_HOST_ADDRESS)
+mongoengine.connect(DB_NAME, host='mongodb://' + DB_USERNAME + ':' + DB_PASSWORD + '@' + DB_HOST_ADDRESS)
 
 MDB_SECRET_KEY="f00dut0pia"
