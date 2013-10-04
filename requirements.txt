@@ -20,7 +20,7 @@ Wand==0.3.5
 WebOb==1.2.3
 WebTest==2.0.9
 Werkzeug==0.9.1
-#Whoosh==2.4.1
+Whoosh==2.4.1
 beautifulsoup4==4.3.1
 blessings==1.5.1
 boto==2.8.0
