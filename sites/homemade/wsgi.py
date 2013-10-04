@@ -1,6 +1,10 @@
 
 import os
 
+# Project root
+root = 'sites/homemade'
+sys.path.insert(0, root)
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 
 # This application object is used by the development server
