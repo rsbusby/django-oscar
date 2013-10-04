@@ -1,6 +1,6 @@
 
 Babel==0.9.6
-Cython==0.19.1
+#Cython==0.19.1
 Django==1.5.4
 Flask==0.10.1
 Flask-S3==0.1.3
@@ -37,7 +37,7 @@ django-debug-toolbar-template-timings==0.5.1
 django-dynamic-fixture==1.6.5
 django-extensions==0.9
 django-extra-views==0.5.5
-django-haystack==2.0.0-beta
+django-haystack
 django-jinja==0.21
 #django-nose==1.1
 #-e git+git@github.com:rsbusby/django-oscar.git@c1d3be31973966de4153a0f60a450f32ffdbc0da#egg=django_oscar-dev
