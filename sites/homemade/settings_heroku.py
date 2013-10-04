@@ -15,6 +15,9 @@ DATABASES = {
     }
 }
 
+## need to commit style files?? 
+USE_LESS = False
+
 
 import mongoengine 
 
