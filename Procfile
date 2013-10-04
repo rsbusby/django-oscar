@@ -1,1 +1,1 @@
-web:cd sites/homemade;gunicorn wsgi
+web: cd sites/homemade;gunicorn wsgi
