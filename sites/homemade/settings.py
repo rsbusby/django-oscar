@@ -1,4 +1,5 @@
 import os
+import sys
 
 ##FORCE_SCRIPT_NAME="/oscar"
 
@@ -342,6 +343,10 @@ INSTALLED_APPS = INSTALLED_APPS + [
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
+
+sys.path.append("sites/homemade")
+
+print sys.path
 
 # Add Oscar's custom auth backend so users can sign in using their email
 # address.
