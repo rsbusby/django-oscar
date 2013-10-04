@@ -338,7 +338,7 @@ INSTALLED_APPS = INSTALLED_APPS + [
     'compressor',
     #'apps.user',        # For profile testing
     'apps.homemade',        # include models from local app
-    'apps.gateway',     # For allowing dashboard access
+    #'apps.gateway',     # For allowing dashboard access
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
