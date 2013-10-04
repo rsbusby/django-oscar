@@ -1,8 +1,8 @@
 from settings import *
 import os
 
-PG_PASS = os.environ("PG_PASS")
-PG_NAME = os.environ("PG_NAME")
+PG_PASS = os.environ["PG_PASS"]
+PG_NAME = os.environ["PG_NAME"]
 
 DATABASES = {
     'default': {
@@ -22,7 +22,7 @@ import mongoengine
 
 DB_NAME = 'fooddb'
 DB_USERNAME = 'heroku_app10788552'
-DB_PASSWORD = os.environ('MONGO_PASS')
+DB_PASSWORD = os.environ['MONGO_PASS']
 DB_HOST_ADDRESS = 'ds047437.mongolab.com:47437/' + DB_USERNAME
 
 #print(DB_HOST_ADDRESS)
