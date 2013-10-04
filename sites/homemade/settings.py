@@ -18,7 +18,7 @@ SEND_BROKEN_LINK_EMAILS = False
 ADMINS = (
     ('Richard Busby', 'rsbusby@gmail.com'),
 )
-EMAIL_SUBJECT_PREFIX = '[Oscar sandbox] '
+EMAIL_SUBJECT_PREFIX = '[Oscar homemade] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MANAGERS = ADMINS
@@ -30,8 +30,8 @@ DATABASES = {
         'NAME': 'oscarhome',
         'USER': 'doscar',
         'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'HOST': 'ec2-54-225-123-71.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
