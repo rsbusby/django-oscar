@@ -54,7 +54,7 @@ flask-mongoengine==0.6
 greenlet==0.4.1
 gunicorn==18.0
 #ipdb==0.7.1
-#ipython==0.13.2
+ipython==0.13.2
 itsdangerous==0.22
 mandrill==1.0.27
 mccabe==0.2.1
