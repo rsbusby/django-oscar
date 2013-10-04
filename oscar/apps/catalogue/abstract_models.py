@@ -49,6 +49,7 @@ class AbstractProductClass(models.Model):
 
     partner = models.ForeignKey('partner.Partner', verbose_name=_("Partner"), blank=True, null=True)
 
+    mongoItemID = models.CharField(max_length=24, blank=True, null=True,  help_text="product ID in external NoSQL database")
 
     class Meta:
         abstract = True

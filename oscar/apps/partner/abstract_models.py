@@ -148,7 +148,7 @@ class AbstractStockRecord(models.Model):
     # price but require a runtime calculation (possible from an external
     # service).
     price_excl_tax = models.DecimalField(
-        _("Price (excl. tax)"), decimal_places=2, max_digits=12,
+        _("Price"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
     #: Retail price for this item.  This is simply the recommended price from
@@ -167,7 +167,7 @@ class AbstractStockRecord(models.Model):
 
     #: Number of items in stock
     num_in_stock = models.PositiveIntegerField(
-        _("Number in stock"), blank=True, null=True)
+        _("Number available"), blank=True, null=True)
 
     #: Threshold for low-stock alerts.  When stock goes beneath this threshold,
     #: an alert is triggered so warehouse managers can order more.
@@ -187,7 +187,7 @@ class AbstractStockRecord(models.Model):
 
     class Meta:
         abstract = True
-        unique_together = ('partner', 'partner_sku')
+        #unique_together = ('partner', 'partner_sku')
         verbose_name = _("Stock Record")
         verbose_name_plural = _("Stock Records")
 

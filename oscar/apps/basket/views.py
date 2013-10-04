@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse, resolve
 from django.utils import simplejson as json
 from django.db.models import get_model
 from django.http import HttpResponseRedirect, Http404, HttpResponse
-from django.views.generic import FormView, View
+from django.views.generic import FormView, View, ListView
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -23,6 +23,9 @@ Applicator = get_class('offer.utils', 'Applicator')
                       'BasketVoucherForm', 'SavedLineFormSet',
                       'SavedLineForm', 'ProductSelectionForm'))
 Repository = get_class('shipping.repository', ('Repository'))
+
+
+Basket = get_model('basket', 'basket')
 
 
 def get_messages(basket, offers_before, offers_after,
@@ -88,6 +91,13 @@ class BasketView(ModelFormSetView):
     can_delete = True
     template_name = 'basket/basket.html'
 
+    #def __init__(self):
+    #   import ipdb;ipdb.set_trace()
+    #   super(BasketView, self).__init__()
+    #   return
+
+
+
     def get_queryset(self):
         return self.request.basket.all_lines()
 
@@ -134,7 +144,6 @@ class BasketView(ModelFormSetView):
         context['shipping_method'] = method
         context['shipping_methods'] = self.get_shipping_methods(
             self.request.basket)
-
         context['order_total_incl_tax'] = (
             self.request.basket.total_incl_tax +
             method.basket_charge_incl_tax())
@@ -168,6 +177,7 @@ class BasketView(ModelFormSetView):
         # any changes
         offers_before = self.request.basket.applied_offers()
         save_for_later = False
+
 
         # Keep a list of messages - we don't immediately call
         # django.contrib.messages as we may be returning an AJAX response in
@@ -259,6 +269,40 @@ class BasketView(ModelFormSetView):
         flash_messages.apply_to_request(self.request)
         return super(BasketView, self).formset_invalid(formset)
 
+class BasketListView(ListView):
+    """
+    A list of baskets
+    """
+    context_object_name = "baskets"
+    template_name = 'basket/basket_multi.html'
+    model = Basket
+    q = None
+    pq = None
+
+    def get_search_query(self):
+        q = self.request.GET.get('q', None)
+        self.q =  q.strip() if q else None
+        pq = self.request.GET.get('booth', None)
+        self.pq = pq.strip() if pq else None
+        return 
+
+  
+
+    def get_context_data(self, **kwargs):
+        context = super(BasketListView, self).get_context_data(**kwargs)
+        #self.get_search_query()
+        #q = self.q
+        #pq = self.pq
+
+        baskets = Basket.objects.filter(owner=self.request.user, status="Open")
+        context['baskets'] = baskets
+        ## give context for each of the baskets?? Or just set it in the damn model
+
+
+        return context
+
+
+
 
 class BasketAddView(FormView):
     """
@@ -302,6 +346,8 @@ class BasketAddView(FormView):
 
     def form_valid(self, form):
         offers_before = self.request.basket.applied_offers()
+        #import ipdb;ipdb.set_trace()
+
         self.request.basket.add_product(
             form.instance, form.cleaned_data['quantity'],
             form.cleaned_options())

@@ -255,7 +255,6 @@ class ProductCreateUpdateView(generic.UpdateView):
         if self.is_stockrecord_submitted():
             # Save stock record
             stockrecord = stockrecord_form.save(commit=False)
-            import pdb;pdb.set_trace()
             stockrecord.product = self.object
             try:
                 stockrecord.partner = self.request.user.partner

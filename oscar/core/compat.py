@@ -1,5 +1,9 @@
 from django.conf import settings
 from django.contrib.auth.models import User
+#from apps.user.models import ExtendedUser
+#from apps.user.models import Profile
+#from oscar.customer.abstract_models import AbstractUser
+
 
 
 def get_user_model():

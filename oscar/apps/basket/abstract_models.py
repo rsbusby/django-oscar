@@ -13,6 +13,8 @@ from oscar.apps.offer import results
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.templatetags.currency_filters import currency
 
+from oscar.apps.partner.models import Partner
+
 
 class AbstractBasket(models.Model):
     """
@@ -23,6 +25,10 @@ class AbstractBasket(models.Model):
     owner = models.ForeignKey(
         AUTH_USER_MODEL, related_name='baskets', null=True,
         verbose_name=_("Owner"))
+
+    seller = models.ForeignKey(
+        Partner, related_name='baskets', null=True,
+        verbose_name=_("Seller"))
 
     # Basket statuses
     # - Frozen is for when a basket is in the process of being submitted

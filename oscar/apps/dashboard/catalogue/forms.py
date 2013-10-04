@@ -70,6 +70,11 @@ class StockRecordForm(forms.ModelForm):
         self.product_class = product_class
         super(StockRecordForm, self).__init__(*args, **kwargs)
 
+        if 'price_excl_tax' in self.fields:
+            self.fields['price_excl_tax'].label = "Price"
+        if 'num_in_stock' in self.fields:
+            self.fields['num_in_stock'].label = "Number in inventory (leave blank if this item is made to order)"
+
         # If not tracking stock, we hide the fields
         if not self.product_class.track_stock:
             del self.fields['num_in_stock']
@@ -77,7 +82,7 @@ class StockRecordForm(forms.ModelForm):
 
     class Meta:
         model = StockRecord
-        exclude = ('product', 'num_allocated', 'price_currency')
+        exclude = ('product', 'num_allocated', 'price_currency', 'low_stock_threshold','price_retail', 'cost_price')
 
 
 def _attr_text_field(attribute):
@@ -159,6 +164,12 @@ class ProductForm(forms.ModelForm):
         super(ProductForm, self).__init__(*args, **kwargs)
         self.add_attribute_fields()
         related_products = self.fields.get('related_products', None)
+        if 'title' in self.fields:
+            self.fields['title'].label = "Item name"
+        if 'description' in self.fields:
+            self.fields['description'].label = "Item description"
+        if 'related_products' in self.fields:
+            self.fields['related_products'].label = "Related items"
         if 'parent' in self.fields and self.instance.pk is not None:
             # Prevent selecting itself as parent
             parent = self.fields['parent']
@@ -199,7 +210,7 @@ class ProductForm(forms.ModelForm):
         model = Product
         exclude = ('slug', 'status', 'score', 'product_class',
                    'recommended_products', 'product_options',
-                   'attributes', 'categories')
+                   'attributes', 'categories', 'parent', 'upc', 'is_discountable')
 
     def save(self):
         object = super(ProductForm, self).save(False)

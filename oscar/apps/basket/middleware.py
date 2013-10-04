@@ -21,20 +21,26 @@ class BasketMiddleware(object):
         manager = Basket.open
         cookie_basket = self.get_cookie_basket(
             settings.OSCAR_BASKET_COOKIE_OPEN, request, manager)
-
+        #import ipdb;ipdb.set_trace()
+        if not hasattr(request, 'seller'):
+            seller = None
         if hasattr(request, 'user') and request.user.is_authenticated():
             # Signed-in user: if they have a cookie basket too, it means
             # that they have just signed in and we need to merge their cookie
             # basket into their user basket, then delete the cookie
             try:
-                basket, _ = manager.get_or_create(owner=request.user)
+                basket, _ = manager.get_or_create(owner=request.user, seller=seller)
             except Basket.MultipleObjectsReturned:
                 # Not sure quite how we end up here with multiple baskets
                 # We merge them and create a fresh one
                 old_baskets = list(manager.filter(owner=request.user))
-                basket = old_baskets[0]
-                for other_basket in old_baskets[1:]:
-                    self.merge_baskets(basket, other_basket)
+                if not hasattr(basket, 'seller'):
+                    basket = old_baskets[0]
+                    for other_basket in old_baskets[1:]:
+                        self.merge_baskets(basket, other_basket)
+                else:
+                    baskets = []
+                    self.merge_baskets_by_seller(baskets, old_baskets)
 
             # Assign user onto basket to prevent further SQL queries when
             # basket.owner is accessed.
@@ -51,7 +57,7 @@ class BasketMiddleware(object):
             # Anonymous user with no basket - we don't save the basket until
             # we need to.
             basket = Basket()
-        return basket
+        return basket ##, baskets
 
     def merge_baskets(self, master, slave):
         """

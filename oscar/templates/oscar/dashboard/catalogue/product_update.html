@@ -40,10 +40,13 @@
                 </div>
                 <ul class="nav nav-list bs-docs-sidenav" id="product_update_tabs">
                     {% if product %}
-                    <li class="active"><a href="#overview" data-toggle="tab">{% trans 'Overview' %}</a></li>
+                    <li ><a href="#overview" data-toggle="tab">{% trans 'Overview' %}</a></li>
                     {% endif %}
                     <li{% if not product %} class="active"{% endif %}><a href="#product_details" data-toggle="tab">{% trans 'Product details' %}</a></li>
-                    <li><a href="#product_recommended" data-toggle="tab">{% trans 'Recommended Products' %}</a></li>
+
+                    {% comment %}
+                    <li><a href="#product_recommended" data-toggle="tab">{% trans 'Recommended Products' %}</a></li>{% endcomment %}
+
                     {% with variants=product.variants.all %}
                     {% if variants|length > 0 %}
                     <li><a href="#product_variants" data-toggle="tab">{% trans 'Product variants' %}</a></li>
@@ -52,6 +55,8 @@
                     <li><a href="#product_attributes" data-toggle="tab">{% trans 'Product attributes' %}</a></li>
                     <li><a href="#product_category" data-toggle="tab">{% trans 'Product category' %}</a></li>
                     <li><a href="#product_images" data-toggle="tab">{% trans 'Product images' %}</a></li>
+                    <li class="active"><a href="#everything" data-toggle="tab">{% trans 'Edit Item' %}</a></li>
+
                     <li><a href="#product_stock" data-toggle="tab">{% trans 'Product stock' %}</a></li>
                 </ul>
             </div>
@@ -59,7 +64,7 @@
         <div class="span9">
             <div class="tab-content">
                 {% if product %}
-                <div class="tab-pane active" id="overview">
+                <div class="tab-pane" id="overview">
                     <div class="table-header">
                         <h3>{% trans "Overview" %}</h3>
                     </div>
@@ -158,6 +163,7 @@
                     </div>
                 </div>
                 {% endif %}
+                {% comment %}
                 <div class="tab-pane {% if not product %}active{% endif %}" id="product_details">
                     <div class="table-header">
                         <h3>{% trans "Product Details" %}</h3>
@@ -204,7 +210,7 @@
                         {% endwith %}
                     </div>
                 </div>
-
+{% endcomment %}
                 {% with variants=product.variants.all %}
                 {% if variants|length > 0 %}
                 <div class="tab-pane" id="product_variants">
@@ -292,7 +298,95 @@
                     </table>
                 </div>
 
-                <div class="tab-pane" id="product_images">
+         <div class="tab-pane active" id="everything">
+               
+{% comment %}
+<div class="table-header">
+                        <h3>{% trans "Edit Item" %}</h3>
+                    </div>
+
+                    <div class="well product-details">
+                    {% endcomment %}
+                        <span class="help-block">{{ form.non_field_errors }}</span>
+                        {% for field in form %}
+                        {% if field.is_hidden %}
+                        {{ field }}
+                        {% endif %}
+                        {% if 'attr' not in field.id_for_label %}
+                        <div class="control-group {% for error in field.errors %}error{% endfor %}">
+                            {% if field.is_hidden %}
+                            {{ field }}
+                            {% else %}
+                            <label for="{{ field.auto_id }}" class="control-label {% if field.field.required %}required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
+                            <div class="controls">
+                                {{ field }}
+                                {% for error in field.errors %}
+                                <span class="help-block">
+                                    {{ error }}
+                                </span>
+                                {% endfor %}
+                                {% if field.help_text %}
+                                <span class='help-block'>
+                                    {{ field.help_text }}
+                                </span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% with parent=product.parent %}
+                        {% if parent %}
+                        <div class="control-group">
+                            <label class="control-label">{% trans "Parent" %}</label>
+                            <div class="controls">
+                                <a href="{% url 'dashboard:catalogue-product' parent.id %}" title="{% blocktrans %}Edit {{ parent.title }}{% endblocktrans %}">{{ parent.title }}</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+                   
+                   {% comment %} </div> {% endcomment %}
+
+
+                <table class="table table-striped table-bordered form-inline">
+                        <caption>{% trans "Please select one or more suitable categories" %}</caption>
+                        {{ category_formset.management_form }}
+                        {{ category_formset.non_form_errors }}
+                        {% for category_form in category_formset %}
+                        <tr>
+                            <td>
+                                {% include "partials/form_fields_inline.html" with form=category_form %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+
+
+{{ stockrecord_form.non_field_errors }}
+                    
+                               <tr>
+                                    <th> Price    -     - {% if field.field.required %} <span>*</span>{% endif %}</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                       {{ stockrecord_form.price_excl_tax }}
+                                        {{ stockrecord_form.price_excl_tax.errors }}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Number in inventory (leave blank if this item is made to order):</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{ stockrecord_form.num_in_stock }}
+                                        {{ stockrecord_form.num_in_stock.errors }}
+                                    </td>
+                              
+                                </tr>
+
                     <div class="table-header">
                         <h3>{% trans "Upload, change or remove images" %}</h3>
                     </div>
@@ -307,47 +401,9 @@
                     </div>
                 </div>
 
-                <div class="tab-pane" id="product_stock">
-                    {{ stockrecord_form.non_field_errors }}
-                    <table class="table table-striped table-bordered">
-                        <caption>{% trans "Stock and price information" %}</caption>
-                        <tr>
-                            {% for field in stockrecord_form %}
-                                {% if "partner" in field.id_for_label %}
-                                    <th width="20%">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</th>
-                                {% endif %}
-                                {% if "price" in field.id_for_label %}
-                                    <th>{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</th>
-                                {% endif %}
-                                {% if "stock" in field.id_for_label %}
-                                    <th>{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</th>
-                                {% endif %}
-                            {% endfor %}
-                        </tr>
-                        <tr>
-                            {% for field in stockrecord_form %}
-                                {% if "partner" in field.id_for_label %}
-                                    <td>
-                                        {{ field }}
-                                        {{ field.errors }}
-                                    </td>
-                                {% endif %}
-                                {% if "price" in field.id_for_label %}
-                                    <td>
-                                        {{ field }}
-                                        {{ field.errors }}
-                                    </td>
-                                {% endif %}
-                                {% if "stock" in field.id_for_label %}
-                                    <td>
-                                        {{ field }}
-                                        {{ field.errors }}
-                                    </td>
-                                {% endif %}
-                            {% endfor %}
-                        </tr>
-                    </table>
-                </div>
+
+
+           
 
                 <div class="tab-pane" id="product_recommended">
                     <table class="table table-striped table-bordered form-inline">

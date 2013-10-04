@@ -17,7 +17,9 @@ from django.db.models import get_model
 from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import get_class, get_profile_class, get_classes
-from oscar.core.compat import get_user_model
+#from oscar.core.compat import get_user_model
+from oscar.apps.customer.models import get_user_model
+
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm = get_classes(

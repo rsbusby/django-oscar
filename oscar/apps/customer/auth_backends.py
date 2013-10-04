@@ -3,7 +3,9 @@ from django.core.mail import mail_admins
 from django.core.exceptions import ImproperlyConfigured
 from oscar.apps.customer.utils import normalise_email
 
-from oscar.core.compat import get_user_model
+#from oscar.core.compat import get_user_model
+from oscar.apps.customer.models import get_user_model
+
 
 User = get_user_model()
 

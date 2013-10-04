@@ -1,4 +1,4 @@
-{% extends "layout_2_col.html" %}
+{% extends "layout_2_col_b.html" %}
 
 {% load url from future %}
 {% load currency_filters %}
@@ -44,7 +44,7 @@
     {% if tree_categories %}
         <div class="side_categories" style="padding: 8px 0;">
             <ul class="nav nav-list">
-                <li class="nav-header">{% trans "Browse categories" %}</li>
+                <li class="nav-header">{#{% trans "Browse categories" %}#}</li>
                 {% for tree_category, info in tree_categories %}
                     <li>
                     {% if tree_category.pk == category.pk %}
@@ -91,7 +91,7 @@
     {% if products %}
         <section>
             <div class="mod">
-                <ol class="products four">
+                <ol class="products three">
                     {% for product in products %}
                         <li>{% render_product product %}</li>
                     {% endfor %}

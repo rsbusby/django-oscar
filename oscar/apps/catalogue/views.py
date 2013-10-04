@@ -9,11 +9,16 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.core.loading import get_class
 from oscar.apps.catalogue.signals import product_viewed, product_search
 
+from apps.homemade.homeMade import Seller
+from apps.user.models import ExtendedUser
+
+
 Product = get_model('catalogue', 'product')
 ProductReview = get_model('reviews', 'ProductReview')
 Category = get_model('catalogue', 'category')
 ProductAlert = get_model('customer', 'ProductAlert')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
+Partner = get_model('partner', 'partner')
 
 
 class ProductDetailView(DetailView):
@@ -53,6 +58,20 @@ class ProductDetailView(DetailView):
         ctx['reviews'] = self.get_reviews()
         ctx['alert_form'] = self.get_alert_form()
         ctx['has_active_alert'] = self.get_alert_status()
+
+        try:
+            product = self.object
+            partner = product.stockrecord.partner
+            ctx['partner'] = partner
+            ctx['seller'] = partner.user
+            ctx['sellerObj'] = Seller.objects.filter(oscarUserID=partner.user.id)[0]
+        except:
+            pass
+        try:
+            ctx['muser'] = Seller.objects.filter(oscarUserID=self.request.user.id)[0]
+            ctx['u'] = Seller.objects.filter(oscarUserID=self.request.user.id)[0]
+        except:
+            pass
         return ctx
 
     def get_alert_status(self):
@@ -192,13 +211,93 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
+        self.get_search_query()
+        q = self.q
+        pq = self.pq
+        if not q and not pq:
+            context['summary'] = _('All items')
+        else:
+            context['summary'] = _("Products matching '%(query)s'") % {'query': q}
+            context['search_term'] = q
+            if pq:
+
+                try:
+                    #partner = self.request.user.partner
+                    partner = Partner.objects.filter(name=pq)[0]
+                    context['partner'] = partner
+                    context['summary'] = partner.name
+                    ## current user in MongoDB
+                    context['muser'] = Seller.objects.filter(oscarUserID=self.request.user.id)[0]
+                    ## seller (booth owner) in Mongo
+                    context['u'] = Seller.objects.filter(oscarUserID=partner.user.id)[0]
+
+                    self.template_name = 'catalogue/booth.html'
+                    #self.template_name = '../../sites/homemade/apps/homemade/templates/store.dj.html' 
+
+                except:
+                    pass
+
+        return context
+
+class ProductWithPartnerListView(ListView):
+    """
+    A list of products
+    """
+    context_object_name = "products"
+    template_name = 'catalogue/browse.html'
+    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
+    search_signal = product_search
+    model = Product
+    q = None
+    pq = None
+
+
+    def get_search_query(self):
+        q = self.request.GET.get('q', None)
+        self.q =  q.strip() if q else None
+        pq = self.request.GET.get('booth', None)
+        self.pq = pq.strip() if pq else None
+        return 
+
+    def get_queryset(self):
         q = self.get_search_query()
-        if not q:
+        q = self.q
+        pq = self.pq
+        qs = Product.browsable.base_queryset()
+        if q:
+            # Send signal to record the view of this product
+            self.search_signal.send(sender=self, query=q, user=self.request.user)
+            return qs.filter(title__icontains=q)
+        elif pq:
+            return qs.filter(stockrecord__partner__name=pq)
+        else:
+            return qs
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductWithPartnerListView, self).get_context_data(**kwargs)
+        self.get_search_query()
+        q = self.q
+        pq = self.pq
+        if not q and not pq:
             context['summary'] = _('All products')
         else:
             context['summary'] = _("Products matching '%(query)s'") % {'query': q}
             context['search_term'] = q
+            if pq:
+
+                try:
+                    partner = self.request.user.partner
+                    context['partner'] = partner
+                    context['summary'] = partner.name
+                    mongo_key = self.request.user.email
+                    context['muser'] = Seller.objects.filter(email=self.request.user.email)
+                    self.template_name = 'catalogue/booth.html'
+
+                except:
+                    pass
+
         return context
+
 
 
 class PartnerListView(ProductListView):
@@ -206,7 +305,7 @@ class PartnerListView(ProductListView):
     A list of products filtered by partner
     """
     context_object_name = "products"
-    template_name = 'catalogue/browseBooth.html'
+    template_name = 'catalogue/browse.html'
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
     search_signal = product_search
     model = Product

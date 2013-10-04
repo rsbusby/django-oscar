@@ -6,7 +6,9 @@ from django.views.generic import TemplateView
 from django.db.models.loading import get_model
 from django.db.models import Avg, Sum, Count
 
-from oscar.core.compat import get_user_model
+#from oscar.core.compat import get_user_model
+from oscar.apps.customer.models import get_user_model
+
 from oscar.apps.promotions.models import AbstractPromotion
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
