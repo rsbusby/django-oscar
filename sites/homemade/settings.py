@@ -30,8 +30,8 @@ DATABASES = {
         'NAME': 'oscarhome',
         'USER': 'doscar',
         'PASSWORD': '',
-        'HOST': 'ec2-54-225-123-71.compute-1.amazonaws.com',
-        'PORT': '5432',
+        'HOST': '',
+        'PORT': '',
     }
 }
 
