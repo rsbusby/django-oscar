@@ -30,7 +30,7 @@ class BasketMiddleware(object):
             # basket into their user basket, then delete the cookie
             try:
                 basket, _ = manager.get_or_create(owner=request.user) #seller=seller
-             except Basket.MultipleObjectsReturned:
+            except Basket.MultipleObjectsReturned:
                 # Not sure quite how we end up here with multiple baskets
                 # We merge them and create a fresh one
                 old_baskets = list(manager.filter(owner=request.user))
