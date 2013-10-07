@@ -1,4 +1,4 @@
-{% load i18n compress %}
+{% load i18n  %}
 {% load staticfiles %}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html lang="{{ LANGUAGE_CODE|default:"en-gb" }}" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -37,7 +37,7 @@
                 executable is available and you have COMPRESS_PRECOMPILERS specified
                 correctly.
                 {% endcomment %}
-                {% compress css %}
+                {# {% compress css %} #}
                     {% if use_less %}
                         <link rel="stylesheet" type="text/less" href="{% static "oscar/less/styles.less" %}" />
                         <link rel="stylesheet" type="text/less" href="{% static "oscar/less/responsive.less" %}" />
@@ -45,7 +45,7 @@
                         <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />
                         <link rel="stylesheet" type="text/css" href="{% static "oscar/css/responsive.css" %}" />
                     {% endif %}
-                {% endcompress %}
+               {# {% endcompress %}  #}
             {% endblock %}
         {% endblock %}
 
@@ -80,12 +80,12 @@
 
         {# Local scripts #}
         {% block scripts %}
-            {% compress js %}
+          {#  {% compress js %} #}
             <!-- Twitter Bootstrap -->
             <script type="text/javascript" src="{% static "oscar/js/bootstrap/bootstrap.min.js" %}"></script>
             <!-- Oscar -->
             <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
-            {% endcompress %}
+         {#   {% endcompress %} #}
         {% endblock %}
 
         {# Additional JS scripts #}

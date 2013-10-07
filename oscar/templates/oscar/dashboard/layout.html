@@ -6,27 +6,25 @@
 {% load category_tags %}
 {% load dashboard_tags %}
 {% load i18n %}
-{% load compress %}
+{#{% load compress %}#}
 {% load staticfiles %}
 
 {% block mainstyles %}
-    {% compress css %}
+{#    {% compress css %}#}
         <link rel="stylesheet" href="{% static "oscar/css/bootstrap.min.css" %}" />
         {% if use_less %}
             <link rel="stylesheet" type="text/less" href="{% static "oscar/less/dashboard.less" %}" />
         {% else %}
             <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
         {% endif %}
-    {% endcompress %}
+    {#{% endcompress %}#}
 {% endblock %}
 
 {% block extrastyles %}
     {{ block.super }}
-    {% compress css %}
         <link rel="stylesheet" href="{% static "oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css" %}" />
         <link rel="stylesheet" href="{% static "oscar/js/select2/select2.css" %}" />
         <link rel="stylesheet" href="{% static "oscar/js/jquery/bootstrap-datepicker.css" %}" />
-    {% endcompress %}
 {% endblock %}
 
 {% block title %}
@@ -132,7 +130,7 @@
 
 {% block extrascripts %}
     {{ block.super }}
-    {% compress js %}
+    {#{% compress js %}#}
 
     {# jQuery plugins #}
     <!-- Custom Jquery UI, only contains date picker -->
@@ -146,7 +144,7 @@
     <script src="{% static "oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.js" %}" type="text/javascript" charset="utf-8"></script>
 
     <script src="{% static "oscar/js/oscar/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
-    {% endcompress %}
+    {#{% endcompress %}#}
 {% endblock %}
 
 {% block onbodyload %}
