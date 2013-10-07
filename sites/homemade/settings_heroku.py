@@ -70,5 +70,5 @@ AWS_PRELOAD_METADATA = True # necessary to fix manage.py collectstatic command t
 
 
 STATIC_URL = 'https://foodbucket.s3.amazonaws.com/'
-MEDIA_URL = 'https://foodbucket.s3.amazonaws.com/uploads'
+MEDIA_URL = 'https://foodbucket.s3.amazonaws.com/uploads/'
 ADMIN_MEDIA_PREFIX = 'https://bucket-name.s3.amazonaws.com/static/dj/admin/'
