@@ -15,6 +15,8 @@ DATABASES = {
     }
 }
 
+DEBUG=False
+
 ## need to commit style files?? 
 USE_LESS = False
 
