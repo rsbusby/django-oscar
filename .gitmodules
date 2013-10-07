@@ -1,3 +1,4 @@
 [submodule "sites/homemade/apps/homemade"]
 	path = sites/homemade/apps/homemade
-    url = https://github.com/rsbusby/homemade.git
+    url = https://github.com/rsbusby/homemade.git  
+    branch = oscar01
