@@ -1,0 +1,12 @@
+from django import template
+
+register = template.Library()
+
+
+@register.filter(name='cut')
+def cut(value, arg):
+    return value.replace(arg, '')
+
+@register.filter(name='replace')
+def replace(value, arg1, arg2):
+    return value.replace(arg,arg2)
