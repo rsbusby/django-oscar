@@ -49,5 +49,5 @@ AWS_STORAGE_BUCKET_NAME = 'fooddb'
 AWS_PRELOAD_METADATA = True # necessary to fix manage.py collectstatic command to only upload changed files instead of all files
 
 
-STATIC_URL = 'https://foodbucket.s3.amazonaws.com/static/dj'
+STATIC_URL = 'https://foodbucket.s3.amazonaws.com/static/dj/'
 ADMIN_MEDIA_PREFIX = 'https://bucket-name.s3.amazonaws.com/static/dj/admin/'
