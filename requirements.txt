@@ -42,6 +42,7 @@ django-jinja==0.21
 #django-nose==1.1
 #-e git+git@github.com:rsbusby/django-oscar.git@c1d3be31973966de4153a0f60a450f32ffdbc0da#egg=django_oscar-dev
 django-rosetta==0.6.8
+django-s3-folder-storage
 django-treebeard==2.0b2
 #django-webtest==1.5.7
 #docopt==0.4.0
