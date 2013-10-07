@@ -30,6 +30,15 @@ COMPRESS_OFFLINE_CONTEXT = {
 }
 
 
+COMPRESS_OFFLINE = True
+COMPRESS_URL = STATIC_URL
+COMPRESS_ROOT = STATIC_ROOT
+COMPRESS_STORAGE = 'foodbucket.storage.CachedS3BotoStorage'
+STATICFILES_STORAGE = 'foodbucket.storage.CachedS3BotoStorage'
+AWS_LOCATION = 'static'
+AWS_QUERYSTRING_EXPIRE = 7200
+ 
+
 import mongoengine 
 
 
