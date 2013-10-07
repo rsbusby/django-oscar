@@ -18,6 +18,15 @@ DATABASES = {
 ## need to commit style files?? 
 USE_LESS = False
 
+COMPRESS_ENABLED = False
+COMPRESS_PRECOMPILERS = (
+    ('text/less', 'lessc {infile} {outfile}'),
+)
+COMPRESS_OFFLINE_CONTEXT = {
+    'STATIC_URL': 'STATIC_URL',
+    'use_less': USE_LESS,
+}
+
 
 import mongoengine 
 
