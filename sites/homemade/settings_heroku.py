@@ -37,3 +37,17 @@ DB_HOST_ADDRESS = 'ds047437.mongolab.com:47437/' + DB_USERNAME
 mongoengine.connect(DB_NAME, host='mongodb://' + DB_USERNAME + ':' + DB_PASSWORD + '@' + DB_HOST_ADDRESS)
 
 MDB_SECRET_KEY="f00dut0pia"
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+# the following should be enviroment variables
+#AWS_ACCESS_KEY_ID = 'access-id'
+#AWS_SECRET_ACCESS_KEY = 'secret-key'
+
+AWS_STORAGE_BUCKET_NAME = 'fooddb'
+AWS_PRELOAD_METADATA = True # necessary to fix manage.py collectstatic command to only upload changed files instead of all files
+
+
+STATIC_URL = 'https://foodbucket.s3.amazonaws.com/static/dj'
+ADMIN_MEDIA_PREFIX = 'https://bucket-name.s3.amazonaws.com/static/dj/admin/'
