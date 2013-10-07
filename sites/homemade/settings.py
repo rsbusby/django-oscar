@@ -1,5 +1,4 @@
 import os
-import sys
 
 ##FORCE_SCRIPT_NAME="/oscar"
 
@@ -145,7 +144,7 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = location('public/static')
 STATICFILES_DIRS = (
-    location('/static/'),   location('oscar/public/static')
+    location('static/'),   location('../../oscar/static/oscar'),location('apps/homemade/static')
         )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -334,19 +333,16 @@ INSTALLED_APPS = INSTALLED_APPS + [
     #'debug_toolbar',
     'cache_panel',
     'template_timings_panel',
+    'storages',
     'south',
     'rosetta',          # For i18n testing
     'compressor',
-    #'apps.user',        # For profile testing
+    'apps.user',        # For profile testing
     'apps.homemade',        # include models from local app
     #'apps.gateway',     # For allowing dashboard access
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
-
-sys.path.append("sites/homemade")
-
-print sys.path
 
 # Add Oscar's custom auth backend so users can sign in using their email
 # address.
@@ -445,6 +441,15 @@ OSCAR_ORDER_STATUS_PIPELINE = {
     'Cancelled': (),
 }
 
+
+## S3 stuff
+
+AWS_STORAGE_BUCKET_NAME = 'foodbucket'
+S3_URL = 'http://foodbucket.s3.amazonaws.com/'
+MEDIA_URL= S3_URL + "media/"
+
+#from S3 import CallingFormat
+#AWS_CALLING_FORMAT = CallingFormat.SUBDOMAIN
 
 # LESS/CSS/statics
 # ================
