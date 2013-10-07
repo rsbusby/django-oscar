@@ -45,7 +45,7 @@ STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 #AWS_ACCESS_KEY_ID = 'access-id'
 #AWS_SECRET_ACCESS_KEY = 'secret-key'
 
-AWS_STORAGE_BUCKET_NAME = 'fooddb'
+AWS_STORAGE_BUCKET_NAME = 'foodbucket'
 AWS_PRELOAD_METADATA = True # necessary to fix manage.py collectstatic command to only upload changed files instead of all files
 
 
