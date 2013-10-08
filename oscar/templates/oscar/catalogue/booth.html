@@ -98,7 +98,7 @@
         <div class="row-fluid">
             <div class="span9"><p>{{ category.description|safe }}</p></div>
             {% if category.image %}
-                <div class="span3"><img src="{% static category.image.url %}" alt="{{ summary }}" /></div>
+                <div class="span3"><img src="{% static category.image.name %}" alt="{{ summary }}" /></div>
             {% endif %}
         </div>
     {% endif %}
