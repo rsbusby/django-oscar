@@ -984,7 +984,7 @@ class MissingProductImage(object):
 
     def __init__(self, name=None):
         self.name = name if name else settings.OSCAR_MISSING_IMAGE_URL
-        #media_file_path = os.path.join(settings.MEDIA_ROOT, self.name)
+        media_file_path = settings.STATIC_URL + "oscar/img" + self.name #os.path.join(settings.STATIC_URL, self.name)
         # don't try to symlink if MEDIA_ROOT is not set (e.g. running tests)
         #if settings.MEDIA_ROOT and not os.path.exists(media_file_path):
         #    self.symlink_missing_image(media_file_path)
