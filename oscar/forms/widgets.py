@@ -39,8 +39,12 @@ class ImageInput(FileInput):
             final_attrs['value'] = force_unicode(self._format_value(value))
 
         image_url = final_attrs.get('value', '')
-        if image_url:
-            image_url = "%s/%s" % (settings.STATIC_URL, image_url)
+        
+        ## if using storages, Amazon S3 don't give the entire path as it will be contructed automatically
+        if not settings.USE_S3:
+            if image_url:
+                image_url = "%s/%s" % (settings.STATIC_URL, image_url)
+
 
         return render_to_string(self.template_name, Context({
             'input_attrs': flatatt(final_attrs),
