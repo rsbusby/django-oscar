@@ -1,12 +1,17 @@
 
 
 
+
 sites/homemade/apps/gateway/*
 sites/homemade/apps/user/*
 sites/homemade/apps/home/*
 sites/homemade/apps/homemade/public/*
 sites/homemade/public/*
-
+sites/homemade/old_public/*
+sites/homemade/old_settings.py
+sites/homemade/static/oscar/css/responsive.43eece77b264.css
+sites/homemade/static/oscar/css/styles.bd6a1e184bb8.css
+sites/homemade/static_bk/*
 
 
 
