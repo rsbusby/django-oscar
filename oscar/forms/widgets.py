@@ -40,7 +40,7 @@ class ImageInput(FileInput):
 
         image_url = final_attrs.get('value', '')
         if image_url:
-            image_url = "%s/%s" % (settings.MEDIA_URL, image_url)
+            image_url = "%s/%s" % (settings.STATIC_URL, image_url)
 
         return render_to_string(self.template_name, Context({
             'input_attrs': flatatt(final_attrs),
