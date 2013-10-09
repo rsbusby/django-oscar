@@ -58,8 +58,7 @@
                                     <span class="label label-important">{{ num_unread_notifications }}</span>
                                 {% endif %}</a>
                         </li>
-                        USER.PARTNER
-                        {{user.partner}}
+                        
                         {% if user.partner  %}
                             <li><a href="{% url 'catalogue:index' %}?booth={{request.user.partner.name}}"><i class="icon-hand-u"></i>MY BOOTH</a></li>
                         {% else %}
