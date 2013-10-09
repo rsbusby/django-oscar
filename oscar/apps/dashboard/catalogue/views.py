@@ -229,9 +229,8 @@ class ProductCreateUpdateView(generic.UpdateView):
             image_formset.is_valid(),
             recommended_formset.is_valid(),
             # enforce if self.require_user_stockrecord, skip if not submitted
-            stockrecord_form.is_valid() or
-            (not self.require_user_stockrecord and not self.is_stockrecord_submitted()),
-            ])
+            stockrecord_form.is_valid(), ##or            (not self.require_user_stockrecord and not self.is_stockrecord_submitted()),
+                        ])
 
         if is_valid:
             return self.forms_valid(form, stockrecord_form, category_formset,
@@ -252,7 +251,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         if not self.creating:
             # a just created product was already saved in process_all_forms()
             self.object = form.save()
-        if self.is_stockrecord_submitted():
+        if True: ##self.is_stockrecord_submitted():
             # Save stock record
             stockrecord = stockrecord_form.save(commit=False)
             stockrecord.product = self.object
