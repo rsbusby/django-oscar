@@ -1,3 +1,14 @@
+
+
+sites/homemade/apps/gateway/*
+sites/homemade/apps/user/*
+sites/homemade/apps/home/*
+sites/homemade/apps/homemade/public/*
+
+
+
+
+
 # Packaging
 *.pyc
 *.egg-info
