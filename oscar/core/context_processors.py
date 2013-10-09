@@ -10,5 +10,7 @@ def metadata(request):
             'shop_name': settings.OSCAR_SHOP_NAME,
             'shop_tagline': settings.OSCAR_SHOP_TAGLINE,
             'use_less': getattr(settings, 'USE_LESS', False),
+            'use_s3': getattr(settings, 'USE_S3', False),
+
             'google_analytics_id': getattr(settings,
                                            'GOOGLE_ANALYTICS_ID', None)}
