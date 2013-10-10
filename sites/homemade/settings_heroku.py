@@ -77,6 +77,6 @@ MEDIA_ROOT=''
 
 
 STATIC_URL = 'https://foodbucket.s3.amazonaws.com/'
-MEDIA_URL = 'https://foodbucket.s3.amazonaws.com/uploads'
+MEDIA_URL = 'https://foodbucket.s3.amazonaws.com/uploads/'
 FALSE_MEDIA_URL = STATIC_URL
 ADMIN_MEDIA_PREFIX = 'https://bucket-name.s3.amazonaws.com/static/dj/admin/'
