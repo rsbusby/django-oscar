@@ -14,18 +14,10 @@
     <div class="image_container booth_image">
         {% with image=product.primary_image %}
             {% thumbnail image.original "400x400" upscale=False as thumb %}
-
                 <a href="{{ product.get_absolute_url }}">
-
-                <img 
-
-                {% if use_s3 %}
-                  src="{{stat_url}}thumb.name %}" 
-                {% else %}
-                  src="{{MEDIA_URL}}{{thumb.name}}" 
-                {% endif %}
-                
-                alt="{{ product.get_title }}" class="thumbnail"></a>
+                <img src="{{stat_url}}{{thumb.name}}" 
+                alt="{{ product.get_title }}" 
+                class="thumbnail"></a>
             {% endthumbnail %}
         {% endwith %}
     </div>
