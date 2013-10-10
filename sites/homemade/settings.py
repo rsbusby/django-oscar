@@ -134,7 +134,6 @@ MEDIA_ROOT = location("public/media")
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/media/'
 
-
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
@@ -144,7 +143,7 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = location('public/static')
 STATICFILES_DIRS = (
-    location('static/'),   location('../../oscar/static/oscar'),location('apps/homemade/static')
+    location('static/'),   location('../../oscar/static/oscar')
         )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -336,7 +335,7 @@ INSTALLED_APPS = INSTALLED_APPS + [
     'storages',
     'south',
     'rosetta',          # For i18n testing
-    'compressor',
+    #'compressor',
     #'apps.user',        # For profile testing
     'apps.homemade',        # include models from local app
     #'apps.gateway',     # For allowing dashboard access
@@ -442,15 +441,6 @@ OSCAR_ORDER_STATUS_PIPELINE = {
 }
 
 
-## S3 stuff
-
-AWS_STORAGE_BUCKET_NAME = 'foodbucket'
-S3_URL = 'http://foodbucket.s3.amazonaws.com/'
-MEDIA_URL= S3_URL + "media/"
-
-#from S3 import CallingFormat
-#AWS_CALLING_FORMAT = CallingFormat.SUBDOMAIN
-
 # LESS/CSS/statics
 # ================
 
@@ -463,7 +453,7 @@ MEDIA_URL= S3_URL + "media/"
 #
 # which will install node.js and less in your virtualenv.
 
-USE_LESS = True
+USE_LESS = False
 
 COMPRESS_ENABLED = False
 COMPRESS_PRECOMPILERS = (

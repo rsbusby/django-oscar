@@ -56,7 +56,7 @@
   
 
     <div  class="catIcon"  >    
-       <a href="{{ tree_category.get_absolute_url }}"><img style="position:relative;left:-1.0em;top:{% if  tree_category.name == "Granola and Cereals"%}-1.5em {%else %}-0.4em{%endif%};"src="{{MEDIA_URL}}{{tree_category.image.name}}" onmouseover="this.src={{MEDIA_URL}}{{tree_category.image.name}}" onmouseout="this.src={{MEDIA_URL}}{{tree_category.image.name}}" /></a>
+       <a href="{{ tree_category.get_absolute_url }}"><img style="position:relative;left:-1.0em;top:{% if  tree_category.name == "Granola and Cereals"%}-1.5em {%else %}-0.4em{%endif%};"src="{{stat_url}}{{tree_category.image.name}}" onmouseover="this.src={{stat_url}}{{tree_category.image.name}}" onmouseout="this.src={{stat_url}}{{tree_category.image.name}}" /></a>
     </div> 
     <div class="catText"> 
             {% if tree_category.pk == category.pk %}
