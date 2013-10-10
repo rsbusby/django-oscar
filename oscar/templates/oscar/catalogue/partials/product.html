@@ -31,7 +31,19 @@
     {% endblock %}
 {% endcomment %}
     {% block product_title %}
+    <ul style="margin:0;list-style:none">
+    <li>    
     <a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:4 }}</a>
+    </li>
+    {% if show_seller %}
+    {% block product_seller %}
+      <li>
+        Seller:
+        <a href="{% url 'catalogue:index' %}?booth={{product.stockrecord.partner.name}}"> {{ product.stockrecord.partner.name|truncatewords:4 }}</a>
+      </li>
+    {% endblock %}
+    {% endif %}
+    </ul>
     {% endblock %}
 
     {% block product_price %}

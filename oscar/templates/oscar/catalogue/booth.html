@@ -13,6 +13,7 @@
     {{ summary }} | {{ block.super }}
 {% endblock %}
 
+
 {% block headertext %}{% endblock %}
 
 {% block breadcrumbs %}
@@ -71,6 +72,8 @@
 
 {% block content %}
 
+{% block product_seller%} {% endblock %}
+
 
   {% if u.storePicPath %}
   <div id="storeBannerWide" style="width: 100%;height:auto;overflow:hidden;">
@@ -111,7 +114,7 @@
             <div class="mod">
                 <ol class="cartitems one">
                     {% for product in products %}
-                        <li>{% render_product product %}</li>
+                        <li>{% render_product product show_seller=False %}</li>
                           <hr class="hrCart" > 
                           <br>
 
