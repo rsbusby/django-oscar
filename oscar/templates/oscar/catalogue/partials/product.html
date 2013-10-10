@@ -25,9 +25,9 @@
                 <img 
 
                 {% if use_s3 %}
-                  src="{% static thumb.name %}" 
+                  src="{{stat_url}}thumb.name %}" 
                 {% else %}
-                  src="{% static thumb.url %}" 
+                  src="{{MEDIA_URL}}{{thumb.name}}" 
                 {% endif %}
                 
                 alt="{{ product.get_title }}" class="thumbnail"></a>
