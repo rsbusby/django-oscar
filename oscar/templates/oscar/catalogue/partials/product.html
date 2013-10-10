@@ -14,11 +14,6 @@
     <div class="image_container booth_image">
         {% with image=product.primary_image %}
             {% thumbnail image.original "400x400" upscale=False as thumb %}
-                {{thumb.name}}<br>
-                {{thumb.url}}<br>
-                {% static thumb.name %}<br>
-                {% static thumb.url %}<br>
-
 
                 <a href="{{ product.get_absolute_url }}">
 
