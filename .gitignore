@@ -2,6 +2,7 @@
 
 
 
+sites/homemade/logs/*
 sites/homemade/apps/gateway/*
 sites/homemade/apps/user/*
 sites/homemade/apps/home/*
