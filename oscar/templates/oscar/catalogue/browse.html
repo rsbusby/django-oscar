@@ -8,10 +8,17 @@
 {% load product_tags %}
 {% load i18n %}
 {% load staticfiles %}
+{% load macros %}
 
 {% block title %}
     {{ summary }} | {{ block.super }}
 {% endblock %}
+
+ {% block extrastyles %}
+ {{ block.super }}
+  <link rel='stylesheet' type='text/css' href="{% static 'style_modal.css' %}"/>
+
+        {% endblock %}
 
 {% block headertext %}{{ summary }}{% endblock %}
 
@@ -35,11 +42,40 @@
     </ul>
 {% endblock breadcrumbs %}
 
-
-
 {% block column_left %}
 
-   
+
+  {% category_tree as tree_categories %}
+    {% if tree_categories %}
+<div class="categoryBox">
+
+                  {% for tree_category, info in tree_categories %}
+
+{% comment %}  {% for c  in cList %}{% endcomment %}
+  <div class="category">
+  
+
+    <div  class="catIcon"  >    
+       <a href="{{ tree_category.get_absolute_url }}"><img style="position:relative;left:-1.0em;top:{% if  tree_category.name == "Granola and Cereals"%}-1.5em {%else %}-0.4em{%endif%};"src="{{MEDIA_URL}}{{tree_category.image.name}}" onmouseover="this.src={{MEDIA_URL}}{{tree_category.image.name}}" onmouseout="this.src={{MEDIA_URL}}{{tree_category.image.name}}" /></a>
+    </div> 
+    <div class="catText"> 
+            {% if tree_category.pk == category.pk %}
+                 <strong>{{ tree_category.name }}</strong>
+            {% else %}
+                 <a href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
+            {% endif %}
+
+      {#} <a href="{% url 'filter' category=c.name) }} " style="">{{c.name|upper|replace:{"AND ", " & "} }</a> #}
+    </div>
+  </div> 
+
+  
+  {% endfor %}
+</div> 
+    {% endif %}
+
+
+    {% comment %}
     {% category_tree as tree_categories %}
     {% if tree_categories %}
         <div class="side_categories" style="padding: 8px 0;">
@@ -61,6 +97,43 @@
             </ul>
         </div>
     {% endif %}
+{% endcomment %}
+<div class="giveBackBox">
+
+  <img src="{% static 'icons/Icon-Heart.png' %}" class="giveBackHeart"  >
+  <div class="helpGiveText"> 
+  <a style="color:#ff6666;font-size:1.0em;float:left;" href="#openModalGive">HELP US GIVE BACK</a>
+ </div>
+     <div id="openModalGive" class="modalGiveBackDialog">
+    <div> 
+        <a href="#close" title="Close" class="close">X</a>
+        <h2>Giving Back To The Local Food Community</h2>
+       <p> Every time you buy something on homemade1616.com, we donate 10% of our proceeds to an amazing California-based food-related nonprofit organization, and you get to choose which organization receives that donation upon checkout! </p> <p> Sellers pay nothing extra. You pay nothing extra. We think giving back is the right thing to do.
+    </p>
+    <form action="#close" method="" >
+      <article>
+      <label>
+      <span></span>
+      </label>
+      </article>
+      <input type="hidden" name="return" value="True" /> 
+      <div class=deleteButto><input type=submit value="Close window"></div>
+      
+     </form>      
+    </div> 
+       </div> 
+     
+    <div style="clear:both;"  > </div>
+    <ul>
+      <li> Browse the delectable goods  </li>
+      <li> Add items to your basket </li>
+      <li> Make a payment  </li>
+      <li> Select from the list of nonprofits you'd like to support. </li>
+      <li> Enjoy your goodies and feel good about your good deeds. Got it? Good. </li>
+    </ul>
+  
+</div> 
+
 {% endblock %}
 
 {% block content %}

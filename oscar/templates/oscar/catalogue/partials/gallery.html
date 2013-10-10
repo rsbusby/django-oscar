@@ -64,7 +64,6 @@
             {% thumbnail image.original "400x400" upscale=False as thumb %}
             {% if not image.is_missing %}
               {% if use_s3 %} 
-
                 <a href="{{ image.original.url }}" rel="lightbox"><img src="{% static thumb.name %}" data-large="{{ image.original.name }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /></a>
               {%else%}
                 <a href="{{ image.original.url }}" rel="lightbox"><img src="{% static thumb.url %}" data-large="{{ image.original.name }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /></a>

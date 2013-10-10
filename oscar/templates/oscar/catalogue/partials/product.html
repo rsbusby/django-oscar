@@ -6,29 +6,43 @@
 {% load display_tags %}
 {% load staticfiles %}
 
-<article class="product_pod">
+<article class="product_po">
+
+
+
     {% block product_image %}
     <div class="image_container booth_image">
         {% with image=product.primary_image %}
             {% thumbnail image.original "400x400" upscale=False as thumb %}
-                <a href="{{ product.get_absolute_url }}"><img src="{% static thumb.name %}" alt="{{ product.get_title }}" class="thumbnail"></a>
+                <a href="{{ product.get_absolute_url }}">
+
+                <img 
+
+                {% if use_s3 %}
+                  src="{% static thumb.name %}" 
+                {% else %}
+                  src="{% static thumb.url %}" 
+                {% endif %}
+                
+                alt="{{ product.get_title }}" class="thumbnail"></a>
             {% endthumbnail %}
         {% endwith %}
     </div>
     {% endblock %}
 
+    {% comment %}
     {% block product_review %}
         {% iffeature "reviews" %}
             <p class="star {{ product.rating|as_stars }}"></p>
         {% endiffeature %}
     {% endblock %}
-
+{% endcomment %}
     {% block product_title %}
-    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:4 }}</a></h3>
+    <a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:4 }}</a>
     {% endblock %}
 
     {% block product_price %}
-    <div class="product_price">
+    <div class="product_pric">
         {% include "catalogue/partials/stock_record.html" %}
         {% if product.is_group %}
             <a class="btn btn-full" href="{% url 'catalogue:detail' product.slug product.id %}">{% trans "View" %}</a>

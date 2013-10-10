@@ -87,7 +87,15 @@
                 {% with image=product.primary_image %}
                     {% thumbnail image.original "70x70" upscale=False as thumb %}
                         <a href="{{ image.original.name }}" rel="lightbox_{{ product.upc|default:"-" }}" class="sub-image">
-                            <img src="{% static thumb.name %}" alt="{{ product.get_title }}" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
+
+
+                            <img 
+                            {% if use_s3 %}
+                              src="{% static thumb.name %}" 
+                            {% else %}
+                              src="{% static thumb.url %}" 
+                            {% endif %}
+                            alt="{{ product.get_title }}" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
                         </a>
                     {% endthumbnail %}
                 {% endwith %}
