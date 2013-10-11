@@ -22,12 +22,15 @@
                     {% endblock %}
                 </aside>
 
-                <div class="span8">
+                <div class="span9">
                     {% block header %}
+                    {% comment %}
                     <div class="page-header action">
                         <h1>{% block headertext %}{% endblock %}</h1>
                     </div>
+                    {% endcomment %}
                     {% endblock %}
+
                     {% include "partials/alert_messages.html" %}
 
                     <div id="promotions">

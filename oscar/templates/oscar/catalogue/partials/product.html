@@ -31,21 +31,23 @@
     {% endblock %}
 {% endcomment %}
     {% block product_title %}
-    <ul style="margin:0;list-style:none">
-    <li>    
-    <a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:4 }}</a>
-    </li>
-    {% if show_seller %}
+    {#<ul style="margin-left:0;list-style:none;display:block;"> #}
+   {# <li style="float:right">    #}
+    <a style="float:left;font-weight:bold" href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:4 }}</a>
+    <!-- </li> -->
+    <div style="clear:both"></div>
+    {% if not is_booth %}
     {% block product_seller %}
-      <li>
+      <!-- <li> -->
         Seller:
         <a href="{% url 'catalogue:index' %}?booth={{product.stockrecord.partner.name}}"> {{ product.stockrecord.partner.name|truncatewords:4 }}</a>
-      </li>
+      <!-- </li> -->
     {% endblock %}
     {% endif %}
-    </ul>
+    <!-- </ul> -->
     {% endblock %}
 
+    {% if is_booth %}
     {% block product_price %}
     <div class="product_pric">
         {% include "catalogue/partials/stock_record.html" %}
@@ -56,4 +58,5 @@
         {% endif %}
    </div>
     {% endblock %}
+    {% endif %}
 </article>

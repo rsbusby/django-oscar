@@ -114,7 +114,7 @@
             <div class="mod">
                 <ol class="cartitems one">
                     {% for product in products %}
-                        <li>{% render_product product show_seller=False %}</li>
+                        <li>{% render_product product is_booth=True %}</li>
                           <hr class="hrCart" > 
                           <br>
 
