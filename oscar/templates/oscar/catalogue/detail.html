@@ -58,7 +58,9 @@
 
  <div class="sellerinfo span3">
 
-      <div class="sellerName" ><a href="{% url 'about' %}">{{sellerObj.getPersonalNameIfExists}}</a> </div>
+ Seller:
+       
+      <div class="sellerName" ><a href="{% url 'catalogue:index' %}?booth={{product.stockrecord.partner.name}}">{{sellerObj.storeName}}</a> </div>
      <div class="sellerBio"> 
       {%if sellerObj.bio %}
      <pre>{{sellerObj.bio}} </pre>
