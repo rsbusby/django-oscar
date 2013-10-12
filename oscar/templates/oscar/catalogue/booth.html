@@ -37,9 +37,27 @@
 {% endblock breadcrumbs %}
 
                 {% block mini_basket %} 
+ <div class="row-fluid">
 
+    <div class="span6" >
 <div style="font-size:2.2em">{{summary}}</div>
 
+ {% if request.user.partner == partner %}
+   
+        
+    </div>
+    <div class="span6" style="block-inline">
+       {#<a href="../dashboard/catalogue/products/create/1/"><i class="icon-hand-up"></i> Add new item</a> #}
+        <input class="pull-lef" style="margin:0;margin-left:1em" type="button" value="Add New Item" onclick=location.href="../dashboard/catalogue/products/create/1/">
+
+        <input class="pull-left" style="margin:0" type="button" value="Edit this Booth" onclick=location.href="{% url 'edit_store' %}">
+
+
+    {% endif %}
+
+    </div>
+
+    </div>
                 {% endblock %}
 
 
@@ -83,18 +101,7 @@
      </div>
      {% endif %}
 
- {% if request.user.partner and partner %}
-    <div class="row-fluid">
 
-    <div class="span9" >
-        
-    </div>
-    <div class="span3" >
-       <a href="../dashboard/catalogue/products/create/1/"><i class="icon-hand-up"></i> Add new item</a>
-    </div>
-
-    </div>
-    {% endif %}
 
 
     {% if category.description %}
@@ -106,7 +113,6 @@
         </div>
     {% endif %}
 
-        <input class="pull-right" type="button" value="Edit this Booth" onclick=location.href="{% url 'edit_store' %}">
 
 
     {% if products %}

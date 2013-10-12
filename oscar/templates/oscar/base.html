@@ -49,30 +49,7 @@
             {% endblock %}
         {% endblock %}
 
-        {# Additional CSS - specific to certain pages #}
-        {% block extrastyles %}
- <link rel='stylesheet' type='text/css' href="{% static 'style_colors.css' %}"/>
-  <link rel='stylesheet' media='screen and (max-width: 802px)' href="{% static 'style_narrow.css' %}"/>
-
-        {% endblock %}
-
-        {% block extrahead %}{% endblock %}
-    </head>
-
-    <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
-        {# Main content goes in this 'layout' block #}
-        {% block layout %}{% endblock %}
-
-        {% block tracking %}
-            {# Default to using Google analytics #}
-            {% include "partials/google_analytics.html" %}
-        {% endblock %}
-
-        {% comment %}
-        Scripts loaded from a CDN.  These can't be wrapped by the 'compress' tag and so we
-        use a separate block for them.
-        {% endcomment %}
-        {% block cdn_scripts %}
+{% block cdn_scripts %}
             <!-- jQuery -->
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
             <script>window.jQuery || document.write('<script src="{% static "oscar/js/jquery/jquery-1.9.1.min.js" %}"><\/script>')</script>
@@ -83,14 +60,43 @@
           {#  {% compress js %} #}
             <!-- Twitter Bootstrap -->
             <script type="text/javascript" src="{% static "oscar/js/bootstrap/bootstrap.min.js" %}"></script>
+
             <!-- Oscar -->
             <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
          {#   {% endcompress %} #}
         {% endblock %}
 
+        {# Additional CSS - specific to certain pages #}
+        {% block extrastyles %}
+            <link rel='stylesheet' type='text/css' href="{% static 'style_colors.css' %}"/>
+            <link rel='stylesheet' media='screen and (max-width: 802px)' href="{% static 'style_narrow.css' %}"/>
+
+        {% endblock %}
+
+        {% block extrahead %}{% endblock %}
+    </head>
+
+    <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
+        {# Main content goes in this 'layout' block #}
+        {% block layout %}{% endblock %}
+
+
+
+        {% block tracking %}
+            {# Default to using Google analytics #}
+            {% include "partials/google_analytics.html" %}
+        {% endblock %}
+
+        {% comment %}
+        Scripts loaded from a CDN.  These can't be wrapped by the 'compress' tag and so we
+        use a separate block for them.
+        {% endcomment %}
+
+
         {# Additional JS scripts #}
         {% block extrascripts %}{% endblock %}
 
+        {% block init_oscar %}
         {# Block for body onload functions #}
         <script type="text/javascript">
             $(function() {
@@ -98,6 +104,7 @@
                 {% block onbodyload %}{% endblock %}
             });
         </script>
+        {% endblock %}
 
         {# Page meta-data - this is populated by the 'metadata' template context processor #}
         <!-- {% trans "Version:" %} {{ version }} -->

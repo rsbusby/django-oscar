@@ -37,11 +37,26 @@
                     <a href="{% url 'about' %}"><i class="icon-use"></i> {% trans "CONTACT" %}</a>
                   </li>
 
+                   
+
                    <li>
                     <a href="{% url 'blogAll' %}"><i class="icon-use"></i> {% trans "BLOG" %}</a>
                   </li>
-                   <li>
-                    <a href="{% url 'about' %}"><i class="icon-use"></i> {% trans "EVENTS" %}</a>
+                   <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'showEvents' %}"><i class="icon-use"></i> {% trans "EVENTS" %}<b class="caret"></b></a>
+
+                      <ul class="dropdown-menu">
+  <li>
+                    <a href="{% url 'filterEvents' %}?workshop=True"><i class="icon-use"></i> {% trans "Workshops" %}</a>
+                    </li>
+                    <li>
+                    <a href="{% url 'filterEvents' %}?swap=True"><i class="icon-use"></i> {% trans "Food Swaps" %}</a>
+                    </li>
+                    <li>
+                    <a href="{% url 'showEvents' %}"><i class="icon-use"></i> {% trans "All Events" %}</a>
+                    </li>
+                      </ul>
+
                   </li>
 
                 </ul>
