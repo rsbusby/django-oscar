@@ -17,7 +17,7 @@ class BasketApplication(Application):
     def get_urls(self):
         urlpatterns = patterns('',
             # url(r'^$', self.summary_view.as_view(), name='summary'),
-            url(r'^$', self.multi_vendor_view.as_view(), name='summary'),            
+            url(r'^$', self.summary_view.as_view(), name='summary'),            
             url(r'^multi$', self.summary_view.as_view(), name='multi'),
             url(r'^list/$', self.multi_vendor_view.as_view(), name='list'),
             url(r'^add/$', self.add_view.as_view(), name='add'),
