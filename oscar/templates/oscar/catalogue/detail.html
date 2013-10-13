@@ -95,7 +95,10 @@
 
            
             {% if user.is_authenticated and user == product.stockrecord.partner.user %}
-                <a class="pull-right" href="{% url 'dashboard:catalogue-product' product.id %}"><i class="icon-edit"></i> {% trans "Edit this item" %}</a>
+                {#<a class="pull-right" href="{% url 'dashboard:catalogue-product' product.id %}"><i class="icon-edit"></i> {% trans "Edit this item" %}</a>#}
+
+                <input class="pull-right" type="button" value="Edit this item" onclick=location.href="{% url 'dashboard:catalogue-product' product.id  %}">
+
             {% endif %}
             <h1>{{ product.get_title }}</h1>
 

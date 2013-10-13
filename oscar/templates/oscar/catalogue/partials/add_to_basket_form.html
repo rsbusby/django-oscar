@@ -9,8 +9,8 @@
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=basket_form %}
             <div class="form-actions">
-                <button type="submit" class="btn btn-large btn-primary btn-full" value="{% trans "Add to basket" %}">{% trans "Add to basket" %}</button>
-               <input style="float:right;clear:both;" type=submit value="{% trans "Add to basket" %}">
+        {% comment %}        <button type="submit" class="btn btn-large btn-primary btn-full" value="{% trans "Add to basket" %}">{% trans "Add to basket" %}</button> {% endcomment %}
+               <input style="clear:both;" type=submit value="{% trans "Add to basket" %}">
            </div>
          <input style="" type="button" value="Favorite Booths" onclick=location.href="{% url 'about'  %}">
 

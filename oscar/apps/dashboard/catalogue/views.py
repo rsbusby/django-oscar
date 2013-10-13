@@ -152,7 +152,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         if 'recommended_formset' not in ctx:
             ctx['recommended_formset'] = self.recommendations_formset(instance=self.object)
         if self.object is None:
-            ctx['title'] = _('Create new %s product') % self.product_class.name
+            ctx['title'] = _('New item') ## % self.product_class.name
         else:
             ctx['title'] = ctx['product'].get_title()
         return ctx
