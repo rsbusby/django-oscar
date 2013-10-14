@@ -14,7 +14,12 @@
 {% endblock %}
 
 
-{% block headertext %}{% endblock %}
+{% block headertext %}
+
+
+
+
+{% endblock %}
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
@@ -37,10 +42,14 @@
 {% endblock breadcrumbs %}
 
                 {% block mini_basket %} 
- <div class="row-fluid">
+                                {% endblock %}
+
+ {% block product_seller%}
+   <div class="row-fluid" style="margin: 2em 0 1.3em 1em">
 
     <div class="span6" >
 <div style="font-size:2.2em">{{summary}}</div>
+
 
  {% if request.user.partner == partner %}
    
@@ -58,8 +67,10 @@
     </div>
 
     </div>
-                {% endblock %}
 
+
+
+ {% endblock %}
 
 
 {% block column_left %}
@@ -90,7 +101,7 @@
 
 {% block content %}
 
-{% block product_seller%} {% endblock %}
+
 
 
   {% if u.storePicPath %}
@@ -113,6 +124,8 @@
         </div>
     {% endif %}
 
+
+ 
 
 
     {% if products %}
