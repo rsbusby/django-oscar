@@ -66,6 +66,7 @@
                         <li>
                             <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "ACCOUNT" %}</a>
                         </li>
+                        {% comment %}
                         <li>
                             <a href="{% url 'customer:notifications-inbox' %}">
                                 <i class="icon-envelope"></i> {% trans "MESSAGES" %}
@@ -73,7 +74,7 @@
                                     <span class="label label-important">{{ num_unread_notifications }}</span>
                                 {% endif %}</a>
                         </li>
-                        
+                        {% endcomment %}
                         {% if user.partner  %}
                             <li><a href="{% url 'catalogue:index' %}?booth={{request.user.partner.name}}"><i class="icon-hand-u"></i>MY BOOTH</a></li>
                         {% else %}

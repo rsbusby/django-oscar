@@ -74,9 +74,7 @@ AWS_QUERYSTRING_AUTH = False
 
 MEDIA_ROOT=''
 
-
-
-STATIC_URL = 'https://foodbucket.s3.amazonaws.com/'
+STATIC_URL = 'https://foodbucket.s3.amazonaws.com/static'
 MEDIA_URL = 'https://foodbucket.s3.amazonaws.com/static/uploads/'
-FALSE_MEDIA_URL = STATIC_URL
+FALSE_MEDIA_URL = MEDIA_URL
 ADMIN_MEDIA_PREFIX = 'https://bucket-name.s3.amazonaws.com/static/dj/admin/'
