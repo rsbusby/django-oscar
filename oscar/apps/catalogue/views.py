@@ -230,6 +230,7 @@ class ProductListView(ListView):
                     context['muser'] = Seller.objects.filter(oscarUserID=self.request.user.id)[0]
                     ## seller (booth owner) in Mongo
                     context['u'] = Seller.objects.filter(oscarUserID=partner.user.id)[0]
+                    context['sellerObj'] = Seller.objects.filter(oscarUserID=partner.user.id)[0]
 
                     self.template_name = 'catalogue/booth.html'
                     #self.template_name = '../../sites/homemade/apps/homemade/templates/store.dj.html' 
