@@ -74,10 +74,9 @@ AWS_QUERYSTRING_AUTH = False
 
 MEDIA_ROOT=''
 
-from S3 import CallingFormat
-AWS_CALLING_FORMAT = CallingFormat.SUBDOMAIN
 
-STATIC_URL = 'https://foodbucket.s3.amazonaws.com/static/'
-MEDIA_URL = 'https://foodbucket.s3.amazonaws.com/static/uploads/'
-FALSE_MEDIA_URL = MEDIA_URL
+
+STATIC_URL = 'https://foodbucket.s3.amazonaws.com/'
+MEDIA_URL = 'https://foodbucket.s3.amazonaws.com/uploads/'
+FALSE_MEDIA_URL = STATIC_URL
 ADMIN_MEDIA_PREFIX = 'https://bucket-name.s3.amazonaws.com/static/dj/admin/'
