@@ -179,6 +179,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'oscar.apps.checkout.context_processors.checkout',
     'oscar.core.context_processors.metadata',
     'oscar.apps.customer.notifications.context_processors.notifications',
+    # mine
+    
 )
 
 MIDDLEWARE_CLASSES = (

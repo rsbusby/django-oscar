@@ -173,14 +173,12 @@
    {% endif %}
    
 
-   {% comment %}
-  {% if g.user.name != u.name %}
+  {% if muser.name != u.name %}
    
-   <p>  <input style="float:left;position:relative;top:-2em;" type="button" value="Contact Seller" onclick=location.href="{% url 'contactPeer' user_name=u.name %}">
-  </p>
+   <p>  <input style="float:left;position:relative;top:-2em;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{u.storeName}}"'>
+  </p>  
   <br>
   {%endif %}
-  {% endcomment %}
 
    
  </div> 

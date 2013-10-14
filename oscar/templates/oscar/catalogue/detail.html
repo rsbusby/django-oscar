@@ -73,7 +73,10 @@
 
 <div style="margin-top:8px;">
      
-         <p>  <input style="" type="button" value="Contact Seller" onclick=location.href="{% url 'about' %}">
+         <p>  <input type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{sellerObj.storeName}}"'>
+
+        {#<a href="{% url 'contactPeer' %}?store_name={{sellerObj.storeName}}">Contact Seller</a>#}
+
   </p>
   </div>
   {%endif %}
