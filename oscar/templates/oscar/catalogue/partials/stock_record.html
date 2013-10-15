@@ -14,7 +14,7 @@
         </p>
     {% else %}
         <p class="{{ product.stockrecord.availability_code }} availability ">
-            <i class="icon-ok"></i> {% comment %}{{ product.stockrecord.availability|truncatewords:2 }}{% endcomment %}
+            <i class="icon-ok"></i> {% if is_booth %}{{ product.stockrecord.availability|truncatewords:2 }}{% endif  %}
         </p>
     {% endif %}
 {% else %}

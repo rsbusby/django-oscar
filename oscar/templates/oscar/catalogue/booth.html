@@ -50,7 +50,7 @@
     <div class="span6" >
 <div style="font-size:2.2em">{{summary}}</div>
 
-  {{u.storePicPath}}
+
  {% if request.user.partner == partner %}
    
         
@@ -131,7 +131,7 @@
     {% if products %}
         <section>
             <div class="mod">
-                <ol class="cartitems one">
+                <ol class="cartitems one" style="margin: 1.1em 0.6em 0.5em 0px">
                     {% for product in products %}
                         <li>{% render_product product is_booth=True %}</li>
                           <hr class="hrCart" > 
@@ -153,8 +153,9 @@
 <!-- <div class="sellerinfo"> -->
 <div class="sellerinfobox">
 
+{% if u.getPersonalNameIfExists %}
   <h2 style="margin-right:0.2em;display:inline-block;vertical-align:top;float:left;width:45%">{{u.getPersonalNameIfExists }}</h2>
-
+{% endif %}
   <div class="sellerPic">
   {% if u.personalPicPath %}
    <img src="{{stat_url}}{{u.personalPicPath}}" class="" style="mmargin-left:0.5em;height:auto;mmax-height:7em;border:2px #777777 solid;" > 
