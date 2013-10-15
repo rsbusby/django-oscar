@@ -69,7 +69,7 @@
      </div>
 <div style="clear:both;"> </div>
 {% comment %}     {% if g.user.name != g.user.name %}{% endcomment %}
-      {% if request.user.partner and partner %}
+      {% if request.user.partner != partner %}
 
 <div style="margin-top:8px;">
      
@@ -129,9 +129,14 @@
 
             <hr/>
 
+            {% if request.user.partner != partner %}
+
             {% block product_basket_form %}
                 {% include "catalogue/partials/add_to_basket_form.html" %}
             {% endblock %}
+            {% endif %}
+
+
         </div><!-- /span6 -->
         {% endblock %}
 
