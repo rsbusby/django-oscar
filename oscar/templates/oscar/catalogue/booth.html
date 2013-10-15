@@ -50,7 +50,7 @@
     <div class="span6" >
 <div style="font-size:2.2em">{{summary}}</div>
 
-
+  {{u.storePicPath}}
  {% if request.user.partner == partner %}
    
         
@@ -107,7 +107,7 @@
   {% if u.storePicPath %}
   <div id="storeBannerWide" style="width: 100%;height:auto;max-height:12em;overflow:hidden;">
   
-     <img src="{% static u.storePicPath %}" class="store_banner" style="width:100%;">
+     <img src="{{stat_url}}{{u.storePicPath}}" class="store_banner" style="width:100%;">
      
      </div>
   {% endif %}
