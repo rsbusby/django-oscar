@@ -105,12 +105,12 @@
 
 
   {% if u.storePicPath %}
-  <div id="storeBannerWide" style="width: 100%;height:auto;overflow:hidden;">
+  <div id="storeBannerWide" style="width: 100%;height:auto;max-height:12em;overflow:hidden;">
   
      <img src="{% static u.storePicPath %}" class="store_banner" style="width:100%;">
      
      </div>
-     {% endif %}
+  {% endif %}
 
 
 
@@ -153,11 +153,11 @@
 <!-- <div class="sellerinfo"> -->
 <div class="sellerinfobox">
 
-  <h2 style="margin-right:0.2em;display:inline-block;vertical-align:top;float:left;width:45%">{{user.get_full_name }}</h2>
+  <h2 style="margin-right:0.2em;display:inline-block;vertical-align:top;float:left;width:45%">{{u.getPersonalNameIfExists }}</h2>
 
   <div class="sellerPic">
   {% if u.personalPicPath %}
-   <img src="{% static u.personalPicPath %}" class="" style="mmargin-left:0.5em;height:auto;mmax-height:7em;border:2px #777777 solid;" > 
+   <img src="{{stat_url}}{{u.personalPicPath}}" class="" style="mmargin-left:0.5em;height:auto;mmax-height:7em;border:2px #777777 solid;" > 
   {% endif %}  
     </div>
 
@@ -197,15 +197,15 @@
  </div> 
 
 
- {% if request.user.partner and partner %}
+ {% if request.user.partner == partner %}
 
  {% if not u.stripeSellerToken %} 
    <div class="stripesignupstore">
  
 <br><br>
 
-{% if u.personalName %}
-{{u.getFirstName( %}, c{%else%}C{%endif%}lick below to set up a Stripe account for payment processing.
+{% if u.getFirstName %}
+{{u.getFirstName}}, c{%else%}C{%endif%}lick below to set up a Stripe account for payment processing.
 
 
 <br><br>
