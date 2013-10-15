@@ -166,9 +166,10 @@
     
    <div class="sellerBio">
      {%if u.bio %}
-     <pre>{{u.bio}} </pre>
+       <pre>{{u.bio}} </pre>
      {%endif%}
    </div>
+   <div style="clear:both;" ></div>
    <div class="sellerLinks"> 
     {% comment %}
      <p><a href="{% url 'favSellers' user_name=u.name %}">Favorite Booths</a> </p>
@@ -176,11 +177,13 @@
      {% endcomment %}
      
      <p>
-     
+     {% comment %}
      <input style="" type="button" value="Favorite Booths" onclick=location.href="{% url 'about'  %}">
-    </p><p>
+    </p>
+    <p>
      <input style="" type="button" value="Favorite Items" onclick=location.href="{% url 'about'  %}">
      </p>
+{% endcomment %}
    </div>
    {% if u.facebook %}
    <a href="http://facebook.com/{{u.facebook}}"> <img src="{% static "icons/facebook_small.png" %}" class="socialIcon" > </a>
@@ -189,7 +192,7 @@
 
   {% if muser.name != u.name %}
    
-   <p>  <input style="float:left;position:relative;top:-2em;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{u.storeName}}"'>
+   <p>  <input style="position:relative;top:0;margin-bottom:0em;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{u.storeName}}"'>
   </p>  
   <br>
   {%endif %}
