@@ -154,7 +154,7 @@
 <div class="sellerinfobox">
 
 {% if u.getPersonalNameIfExists %}
-  <h2 style="margin-right:0.2em;display:inline-block;vertical-align:top;float:left;width:45%">{{u.getPersonalNameIfExists }}</h2>
+  <h2 style="margin:0.6em 0.2em 4px 4px;display:inline-block;vertical-align:top;float:left;width:45%">{{u.getPersonalNameIfExists }}</h2>
 {% endif %}
   <div class="sellerPic">
   {% if u.personalPicPath %}
@@ -164,8 +164,8 @@
 
    <div id:"wideClear" style="clear:both;"> </div> 
     
-   <div class="sellerBio">
-     {%if u.bio %}
+   <div class="sellerBio" style="margin-top:1em;margin-bottom:1em;">
+     {%if u.bio != None and u.bio != '' %}
        <pre>{{u.bio}} </pre>
      {%endif%}
    </div>
@@ -192,13 +192,13 @@
 
   {% if muser.name != u.name %}
    
-   <p>  <input style="position:relative;top:0;margin-bottom:0em;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{u.storeName}}"'>
+   <p>  <input style="position:relative;top:0;margin-bottom:0em;margin:0;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{u.storeName}}"'>
   </p>  
   <br>
   {%endif %}
 
    
- </div> 
+ </div> {# seller box #}
 
 
  {% if request.user.partner == partner %}

@@ -61,7 +61,7 @@
  Seller:
        
       <div class="sellerName" ><a href="{% url 'catalogue:index' %}?booth={{product.stockrecord.partner.name}}">{{sellerObj.storeName}}</a> </div>
-     <div class="sellerBio"> 
+     <div class="sellerBio" style="margin-top:1em;margin-bottom:1em;"> 
       {%if sellerObj.bio %}
      <pre>{{sellerObj.bio}} </pre>
      {%endif%}
@@ -71,9 +71,9 @@
 {% comment %}     {% if g.user.name != g.user.name %}{% endcomment %}
       {% if request.user.partner != partner %}
 
-<div style="margin-top:8px;">
+<div style="margin:8px 0 0 0;">
      
-         <p>  <input type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{sellerObj.storeName}}"'>
+         <p>  <input type="button" style="margin:0 0 0 0;" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{sellerObj.storeName}}"'>
 
         {#<a href="{% url 'contactPeer' %}?store_name={{sellerObj.storeName}}">Contact Seller</a>#}
 
