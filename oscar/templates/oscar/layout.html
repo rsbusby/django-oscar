@@ -5,8 +5,10 @@
 
 {% block layout %}
     {# Top-horizontal bar with account, notifictions, dashboard links #}
-    {% include "partials/nav_accounts.html" %}
 
+    {% block top-nav%}
+    {% include "partials/nav_accounts.html" %}
+    {% endblock %}
 
     {% block header-stuff %}
     {# Site logo/title, mini-basket, browse dropdown and searchbox #}
