@@ -1,1 +1,16 @@
-{% load i18n %}{% trans 'Thank you for registering.' %}
+{% load i18n %}{% trans 
+
+
+
+			{%if muser.getFirstName %}:
+                "Hi " + muser.getFirstName() + ", w"
+            {% else %}:
+                "W"
+            {% endif %}
+            "e're glad you've joined this community of folks that care about where their food is coming from. We hope you find something on Homemade 1616 that you like, please let us know if you have any ideas or comments. "
+
+
+ %}
+
+
+

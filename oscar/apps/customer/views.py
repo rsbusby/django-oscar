@@ -19,6 +19,7 @@ from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import get_class, get_profile_class, get_classes
 #from oscar.core.compat import get_user_model
 from oscar.apps.customer.models import get_user_model
+from apps.homemade.homeMade import Seller
 
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
@@ -241,7 +242,12 @@ class RegisterUserMixin(object):
 
     def send_registration_email(self, user):
         code = self.communication_type_code
+        try:
+            muser = Seller.objects.filter(oscarUserID=user.id)[0]
+        except:
+            muser = None
         ctx = {'user': user,
+               'muser': muser, 
                'site': get_current_site(self.request)}
         messages = CommunicationEventType.objects.get_and_render(
             code, ctx)

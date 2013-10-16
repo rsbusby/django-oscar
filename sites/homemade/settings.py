@@ -18,10 +18,9 @@ SEND_BROKEN_LINK_EMAILS = False
 ADMINS = (
     ('Richard Busby', 'rsbusby@gmail.com'),
 )
-EMAIL_SUBJECT_PREFIX = '[Oscar homemade] '
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MANAGERS = ADMINS
+
 
 
 DATABASES = {
@@ -332,6 +331,7 @@ INSTALLED_APPS = INSTALLED_APPS + [
     'django_extensions',
     # Debug toolbar + extensions
     #'debug_toolbar',
+    'djrill',
     'cache_panel',
     'template_timings_panel',
     'storages',
@@ -401,6 +401,19 @@ DEBUG_TOOLBAR_PANELS = (
 # ==============
 
 from oscar.defaults import *
+
+
+SITE_ID=2
+
+
+## email/Mandrill setup
+OSCAR_FROM_EMAIL = "support@homemade1616.com"
+print OSCAR_FROM_EMAIL
+MANDRILL_API_KEY = os.environ['MANDRILL_API_KEY']
+
+EMAIL_SUBJECT_PREFIX = ''
+##EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
 
 
 ## MINE

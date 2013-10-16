@@ -17,6 +17,8 @@ DATABASES = {
 
 DEBUG=True
 
+SITE_ID=3  ## set to 2 for www.homemade1616.com, 3 is heroku direct
+
 ## need to commit style files?? 
 USE_LESS = False
 
