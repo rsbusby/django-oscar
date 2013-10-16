@@ -353,7 +353,8 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.RemoteUserBackend',
 )
 
-LOGIN_REDIRECT_URL = '/accounts/'
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/catalogue/'
 APPEND_SLASH = True
 
 # Haystack settings
