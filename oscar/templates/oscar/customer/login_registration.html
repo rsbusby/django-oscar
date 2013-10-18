@@ -6,11 +6,50 @@
 {% block title %}
     {% trans 'Login or register' %} | {{ block.super }}
 {% endblock %}
-{% block bannerFile %}{{STATIC_URL}}icons/BannerImage-3.jpg{% endblock %}
+{#{% block bannerFile %}{{STATIC_URL}}icons/BannerImage-3.jpg{% endblock %}#}
 {% block top-nav %}
 
 
 {% endblock %}
+
+{% block header-stuff %}
+ <header class="header container-fluid">
+        <div class="page_inne">
+            <div class="row-fluid">
+             
+
+                                 <div class="span12">
+
+     <div id="browseBannerWide" style="width: 102%;height:6em;overflow:hidden; float:left;margin-left:-1%;z-index:0;position:relative">
+    <img src="{% block bannerFile %}{{STATIC_URL}}icons/BannerImage-3.jpg{% endblock %}" class="store_banner" style="width:100%;">
+  </div>
+</div>
+                 <div class="span4">
+
+<div class="logoIndex span8">  
+ 
+  <img class="brandLogo" style="z-index:100;margin-top:-125px;" src="{{ STATIC_URL }}icons/H1616-LOGO-BROWN.png">  
+
+</div> 
+
+
+                </div>
+                {% comment %}
+                <div class="span8">
+                    {# Mini-basket wrapped in a block so some templates can now display it #}
+                {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
+                </div>
+{% endcomment %}
+
+            </div>
+        </div>
+        {% block navigation %}
+        {%comment%}    {% include "partials/nav_primary.html" %} {%endcomment%}
+        {% endblock %}
+    </header>
+
+{% endblock %} {# header-stuff #}
+
 
 
 {% block breadcrumbs %}

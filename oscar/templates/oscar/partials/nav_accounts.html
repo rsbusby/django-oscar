@@ -78,14 +78,22 @@
                         {% if user.partner  %}
                             <li><a href="{% url 'catalogue:index' %}?booth={{request.user.partner.name}}"><i class="icon-hand-u"></i>MY BOOTH</a></li>
                         {% else %}
-                         <li><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
+
                          <li><a href="{% url 'register_store' %}"><i class="icon-hand-up"></i> {% trans "OPEN A BOOTH" %}</a></li>
 
                         {% endif %}
+                        {% if user.is_staff %}
+                         <li><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
+                        {% endif %}
+
+
                         <li><a href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "LOGOUT " %}{{user.email}}</a></li>
                     {% else %}
                         <li><a href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "LOGIN or REGISTER" %}</a></li>
                     {% endif %}
+                     <li><a href="/basket/"> <img src="{{STATIC_URL}}icons/Icon-Basket-A.png" class="basketIcon"> </a></li>
+
+
                 </ul>
             </div>
         </div>

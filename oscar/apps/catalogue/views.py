@@ -221,7 +221,8 @@ class ProductListView(ListView):
             context['search_term'] = q
             if pq:
 
-                try:
+                ##try:
+                if True:
                     #partner = self.request.user.partner
                     partner = Partner.objects.filter(name=pq)[0]
                     context['partner'] = partner
@@ -235,8 +236,8 @@ class ProductListView(ListView):
                     self.template_name = 'catalogue/booth.html'
                     #self.template_name = '../../sites/homemade/apps/homemade/templates/store.dj.html' 
 
-                except:
-                    pass
+                ##except:
+                ##    pass
 
         return context
 
