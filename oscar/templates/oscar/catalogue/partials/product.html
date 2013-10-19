@@ -17,7 +17,7 @@
                 <a href="{{ product.get_absolute_url }}">
                 <img src="{{stat_url}}{{thumb.name}}" 
                 alt="{{ product.get_title }}" 
-                class="thumbnail pagination-centered" {% if not is_booth %}style="margin:0 auto;" {% else %} style="margin:0 auto;max-height:220px;" {% endif %}></a>
+                class="thumbnail pagination-centered" {% if not is_booth %}style="margin:0 auto;" {% else %} style="max-height:220px;" {% endif %}></a>
             {% endthumbnail %}
         {% endwith %}
     </div>

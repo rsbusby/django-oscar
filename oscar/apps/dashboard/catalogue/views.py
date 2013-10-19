@@ -148,7 +148,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         if 'category_formset' not in ctx:
             ctx['category_formset'] = self.category_formset(instance=self.object)
         if 'image_formset' not in ctx:
-            ctx['image_formset'] = self.image_formset(instance=self.object)
+            ctx['image_formset'] = self.image_formset(instance=self.object, minimum_forms=1, minimum_forms_message="At least one image is needed for this item.")
         if 'recommended_formset' not in ctx:
             ctx['recommended_formset'] = self.recommendations_formset(instance=self.object)
         if self.object is None:
@@ -219,7 +219,8 @@ class ProductCreateUpdateView(generic.UpdateView):
                                                  instance=self.object)
         image_formset = self.image_formset(self.request.POST,
                                            self.request.FILES,
-                                           instance=self.object)
+                                           instance=self.object,
+                                           minimum_forms=1, minimum_forms_message="At least one image is needed for this item.")
         recommended_formset = self.recommendations_formset(
             self.request.POST, self.request.FILES, instance=self.object)
 
