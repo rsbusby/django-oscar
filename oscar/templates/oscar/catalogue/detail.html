@@ -96,11 +96,26 @@
             pops out when clicked.  A bit like the Django-Debug-Toolbar button
             {% endcomment %}
 
-           
-            {% if user.is_authenticated and user == product.stockrecord.partner.user %}
+           {{product.status}}
+            {% if user.is_authenticated and user == product.stockrecord.partner.user or user.is_staff %}
                 {#<a class="pull-right" href="{% url 'dashboard:catalogue-product' product.id %}"><i class="icon-edit"></i> {% trans "Edit this item" %}</a>#}
 
                 <input class="pull-right" type="button" value="Edit this item" onclick=location.href="{% url 'dashboard:catalogue-product' product.id  %}">
+                {% if "disabled" in product.status  %}
+                 <form action="#" method="post">
+                  <input type="hidden" name="id" value={{product.id}}>
+                  <input type="hidden" name="enable" value="True">
+                  <input style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Item is hidden. Show item to buyers" %}">
+                </form>
+                 {% else %}
+                <form action="#" method="post">
+                  <input type="hidden" name="id" value={{product.id}}>
+                  <input type="hidden" name="disable" value="True">
+                  <input style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Hide item from buyers" %}">
+                </form>
+               
+               
+                {% endif %}
 
             {% endif %}
             <h1>{{ product.get_title }}</h1>

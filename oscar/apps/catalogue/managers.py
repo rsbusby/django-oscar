@@ -24,5 +24,7 @@ class BrowsableProductManager(ProductManager):
     """
 
     def get_query_set(self):
-        return super(BrowsableProductManager, self).get_query_set().filter(
+        qs = super(BrowsableProductManager, self).get_query_set().filter(
             parent=None)
+        qs = qs.exclude(status__contains='disabled')
+        return qs

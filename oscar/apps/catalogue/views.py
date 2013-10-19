@@ -1,6 +1,8 @@
 import warnings
 from django.conf import settings
-from django.http import HttpResponsePermanentRedirect
+from django.shortcuts import redirect
+
+from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.db.models import get_model
@@ -11,6 +13,8 @@ from oscar.apps.catalogue.signals import product_viewed, product_search
 
 from apps.homemade.homeMade import Seller
 #from apps.user.models import ExtendedUser
+from django.db.models import Q
+
 
 
 Product = get_model('catalogue', 'product')
@@ -27,12 +31,44 @@ class ProductDetailView(DetailView):
     view_signal = product_viewed
     template_folder = "catalogue"
 
+    def post(self, request, *args, **kwargs):
+        ##import ipdb;ipdb.set_trace()
+
+        print "WHOASSA in post"
+        self.object = product = self.get_object()
+        partner = product.stockrecord.partner
+        owner = partner.user
+        if self.request.user != owner and not self.request.user.is_staff:
+            return self.get(request, **kwargs)
+        print request.POST
+        if request.POST.has_key('enable'):
+            self.object = product = self.get_object()
+            product.status = None
+            product.save()
+        if request.POST.has_key('disable'):    
+            if request.user.is_staff:
+                product.status = "admin_disabled"
+            else:
+                product.status = "user_disabled"
+            product.save()
+        return self.get(request, **kwargs)
+
+
+
     def get(self, request, **kwargs):
         """
         Ensures that the correct URL is used before rendering a response
         """
         #import pdb;pdb.set_trace()
         self.object = product = self.get_object()
+
+        ## check permissions, if item is disabled reroute.
+        if product.status:
+            partner = product.stockrecord.partner
+            owner = partner.user
+
+            if product.status.count('disable') and self.request.user != owner and not self.request.user.is_staff:
+                return redirect('/catalogue/')
 
         if product.is_variant:
             return HttpResponsePermanentRedirect(
@@ -199,13 +235,29 @@ class ProductListView(ListView):
         q = self.get_search_query()
         q = self.q
         pq = self.pq
+       
+        #if not q:
+        #     q = self.model.objects.exclude(status='disabled')
+        # else:
+        #     q = q.exclude(status='')
+        # if not pq:
+        #     pq = Q(exclude(status=''))
+        # else:
+        #     pq = pq.exclude(status='')        
         qs = Product.browsable.base_queryset()
         if q:
             # Send signal to record the view of this product
-            self.search_signal.send(sender=self, query=q, user=self.request.user)
-            return qs.filter(title__icontains=q)
+            #self.search_signal.send(sender=self, query=q, user=self.request.user)
+            qs = qs.filter(title__icontains=q)
+            return qs
         elif pq:
-            return qs.filter(stockrecord__partner__name=pq)
+            partner = Partner.objects.filter(name=pq)[0]
+            qs = Product.objects.all()
+            qs = qs.filter(stockrecord__partner__name=pq)
+            owner = partner.user
+            if not (self.request.user.is_staff or self.request.user == owner):
+                qs = qs.exclude(status='disabled')
+            return qs
         else:
             return qs
 
