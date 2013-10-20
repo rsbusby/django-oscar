@@ -272,10 +272,12 @@ class ProductListView(ListView):
         # else:
         #     pq = pq.exclude(status='')        
         qs = Product.browsable.base_queryset()
+
         if q:
             # Send signal to record the view of this product
             #self.search_signal.send(sender=self, query=q, user=self.request.user)
             qs = qs.filter(title__icontains=q)
+           
             return qs
         elif pq:
             partner = Partner.objects.filter(name=pq)[0]
@@ -286,6 +288,11 @@ class ProductListView(ListView):
                 qs = qs.exclude(status='disabled')
             return qs
         else:
+            ## if not filtered, don'tshow "Other" items
+            category = Category.objects.filter(name="Other")[0]
+            categories = list(category.get_descendants())
+            categories.append(category)
+            qs = qs.exclude(categories__in=categories)
             return qs
 
     def get_context_data(self, **kwargs):

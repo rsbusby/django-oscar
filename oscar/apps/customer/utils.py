@@ -100,8 +100,57 @@ class Dispatcher(object):
 
         return email
 
+
+
+
     def send_text_message(self, user, event_type):
         raise NotImplementedError
+
+
+    def send_email_messages_with_images(self, recipient, messages):
+        """
+        Plain email sending to the specified recipient
+        """
+        if hasattr(settings, 'OSCAR_FROM_EMAIL'):
+            from_email = settings.OSCAR_FROM_EMAIL
+        else:
+            from_email = None
+
+        ## prepare image
+        f = open(filename, "rb") 
+        image_data = f.read()  # Read from a png file
+        image_cid = make_msgid("img")  # Content ID per RFC 2045 section 7 (with <...>)
+        image_cid_no_brackets = image_cid[1:-1]  # Without <...>, for use as the <img> tag src
+
+        text_content = 'This has an inline image.'
+        html_content = '<p>This has an <img src="cid:%s" alt="inline" /> image.</p>' % image_cid_no_brackets
+
+
+        # Determine whether we are sending a HTML version too
+        if messages['html']:
+            email = EmailMultiAlternatives(messages['subject'],
+                                           messages['body'],
+                                           from_email=from_email,
+                                           to=[recipient])
+            email.attach_alternative(messages['html'], "text/html")
+        else:
+            email = EmailMessage(messages['subject'],
+                                 messages['body'],
+                                 from_email=from_email,
+                                 to=[recipient])
+        self.logger.info("Sending email to %s" % recipient)
+        #email.send()
+
+       
+        email = mail.EmailMultiAlternatives('Subject', text_content, 'from@example.com', ['to@example.com'])
+        email.attach_alternative(html_content, "text/html")
+
+        image = MIMEImage(image_data)
+        image.add_header('Content-ID', image_cid)
+        email.attach(image)
+        email.send()
+
+        return email
 
 
 def get_password_reset_url(user, token_generator=default_token_generator):
