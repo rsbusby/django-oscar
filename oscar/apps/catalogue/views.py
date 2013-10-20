@@ -44,7 +44,7 @@ class ProductDetailView(DetailView):
         if request.POST.has_key('enable'):
             self.object = product = self.get_object()
             product.status = None
-            product.save()
+            product.save()  
         if request.POST.has_key('disable'):    
             if request.user.is_staff:
                 product.status = "admin_disabled"
@@ -222,6 +222,33 @@ class ProductListView(ListView):
     model = Product
     q = None
     pq = None
+
+
+    def post(self, request, *args, **kwargs):
+        ##import ipdb;ipdb.set_trace()
+
+        print "WHOASSA in post"
+        self.get_search_query()
+        qs = self.get_queryset()
+        ps = self.model.objects.all()
+        print request.POST
+        print qs
+        for p in qs:
+            partner = p.stockrecord.partner
+            owner = partner.user
+            if self.request.user != owner and not self.request.user.is_staff:
+                return self.get(request, **kwargs)
+
+            if request.POST.has_key('enable'):
+                p.status = None
+                p.save()  
+            if request.POST.has_key('disable'):    
+                if request.user.is_staff:
+                    p.status = "admin_disabled"
+                else:
+                    p.status = "user_disabled"
+                p.save()
+        return self.get(request, **kwargs)
 
 
     def get_search_query(self):

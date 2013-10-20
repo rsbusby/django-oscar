@@ -8,5 +8,8 @@ def cut(value, arg):
     return value.replace(arg, '')
 
 @register.filter(name='replace')
-def replace(value, arg1, arg2):
-    return value.replace(arg,arg2)
+def replace(value, commaSepArgs):
+	argList = commaSepArgs.split(',')
+	s1 = argList[0]
+	s2 = argList[1]
+   	return value.replace(s1, s2)

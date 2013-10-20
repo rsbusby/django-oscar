@@ -8,6 +8,7 @@
 {% load product_tags %}
 {% load i18n %}
 {% load staticfiles %}
+{% load replace %}
 
 {% block title %}
     {{ summary }} | {{ block.super }}
@@ -48,30 +49,37 @@
    <div class="row-fluid" style="margin: 2em 0 1.3em 1em">
 
     <div class="span6" >
-<div style="font-size:2.2em">{{summary}}</div>
-
-
- {% if request.user.partner == partner %}
-   
-        
+      <div style="font-size:2.2em">{{summary}}</div>   
     </div>
+
+    {% if request.user.partner == partner or user.is_staff %} 
+
+
     <div class="span6" style="block-inline">
        {#<a href="../dashboard/catalogue/products/create/1/"><i class="icon-hand-up"></i> Add new item</a> #}
         <input class="pull-lef" style="margin:0;margin-left:1em" type="button" value="Add New Item" onclick=location.href="../dashboard/catalogue/products/create/1/">
 
         <input class="pull-left" style="margin:0" type="button" value="Edit this Booth" onclick=location.href="{% url 'edit_store' %}">
 
+                 <form action="#" method="post">
+                  <input type="hidden" name="id" value={{partner.id}}>
+                  <input type="hidden" name="enable" value="True">
+                  <input style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Click to make all items visible to buyers" %}">
+                </form>
+                <form action="#" method="post">
+                  <input type="hidden" name="id" value={{partner.id}}>
+                  <input type="hidden" name="disable" value="True">
+                  <input style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Click to hide all items from buyers" %}">
+                </form>
+               
 
     {% endif %}
 
-    </div>
+       </div>
 
     </div>
 
-
-
- {% endblock %}
-
+{% endblock %}
 
 {% block column_left %}
 
