@@ -4,6 +4,12 @@
 {% load currency_filters %}
 {% load staticfiles %}
 
+ {% block extrastyles %}
+  {# {{ block.super }}#}
+   <link rel='stylesheet' type='text/css' href="{% static 'style_modal.css' %}"/>
+
+ {% endblock %}
+
 {% if basket_warnings %}
     <h5>{% trans "Important messages about items in your basket" %}</h5>
     {% for warning in basket_warnings %}
@@ -80,7 +86,7 @@
                             <div style="display:inline-block">
                                 <div class="pull-left" style="float:left;margin:0;">{{ form.quantity }}</div>
 
-                                <div class="price_color align-righ" style="float:right;margin:0.5em 0">{{ form.instance.unit_price_incl_tax|currency }}</div>
+                                <div class="price_color pull-right" style="float:right;margin:0.5em 0">{{ form.instance.unit_price_incl_tax|currency }}</div>
                             </div>
 
                                 <button class="btn orgButton" type="submit">{% trans "Update" %}</button>
@@ -139,8 +145,9 @@
 </div>
         {% block baskettotals %}
             <div class="span4 pull-right"> 
-            <th class="total pull-right"><h4>{% trans "Order total" %}</h4></th>
-                <td class="total pull-right"><h4 class="price_color">{{ order_total_incl_tax|currency }}</h4></td>
+            <th class="total pull-right"><h4 class="pull-right">{% trans "Order total" %}</h4></th>
+                <div style="clear:both"></div>
+                <td class="total pull-right"><h4 class="price_colo pull-right" style="margin-top:0;padding-top:0;color:#777777;font-size:1.4em">{{ order_total_incl_tax|currency }}</h4></td>
            </div>
         {% endblock baskettotals %}
 
@@ -156,7 +163,7 @@
 <p> You have chosen to benefit <b>{{basket.sponsored_org.name}}</b> with this
 transaction. </p>
 
-  <form style="float:right;margins=auto;" method=post action="#">
+  <form style="float:left;margins=auto;" method=post action="#">
     <input type="hidden" name="basket_id" value={{basket.id}} /> 
     <input type="hidden" name="unsetSponsoredOrg" value='' /> 
 
@@ -206,8 +213,30 @@ transaction. </p>
     
     <div class="span8 pull-left" style="margin:0">
 
-  <p>First, please choose the organization you wish to benefit.</p>
+  <p>
+    First, please choose the organization you wish to benefit from this sale: 
+    <a style="color:#ff6666;font-size:1.0em;float:lef;margin-left:0.5em" href="#openModalGive"> What's this?</a>
 
+  </p>
+
+    <div id="openModalGive" class="modalGiveBackDialog">
+      <div> 
+        <a href="#close" title="Close" class="close">X</a>
+        <h2>Giving Back To The Local Food Community</h2>
+        <p> Every time you buy something on homemade1616.com, we donate 10% of our proceeds to an amazing California-based food-related nonprofit organization, and you get to choose which organization receives that donation upon checkout! </p> <p> Sellers pay nothing extra. You pay nothing extra. We think giving back is the right thing to do.
+        </p>
+        <form action="#close" method="" >
+          <article>
+          <label>
+            <span></span>
+          </label>
+          </article>
+          <input type="hidden" name="return" value="True" /> 
+          <div class=deleteButto><input type=submit value="Close window"></div>
+      
+        </form>      
+    </div> 
+  </div>
   {% for sponsored_org in current_sponsored_orgs %}
 
    <form style="float:right;margin:0px;" method=post action="#">
@@ -236,7 +265,7 @@ transaction. </p>
     {% block emptybasket %}
         <p>
             {% trans "Your basket is empty." %}
-            <a href="{% url 'promotions:home' %}">{% trans "Continue shopping" %}</a>
+            <a href="{% url 'catalogue' %}">{% trans "Continue shopping" %}</a>
         </p>
     {% endblock %}
 {% endif %}
@@ -275,7 +304,7 @@ transaction. </p>
                                 {{ form.DELETE }}
                             </div>
                         </div>
-                        <div class="span2 align-center"><p class="price_color">{{ form.instance.unit_price_incl_tax|currency }}</p></div>
+                        <div class="span2 pull-right"><p class="price_color">{{ form.instance.unit_price_incl_tax|currency }}</p></div>
                         <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn pull-right btn-full" data-behaviours="move">{% trans "Move to basket" %}</a></div>
                     </div>
                 {% endfor %}
