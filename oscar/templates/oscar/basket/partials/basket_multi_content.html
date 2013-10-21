@@ -26,7 +26,7 @@
 {% if not basket.is_empty %}
    
 
- <div class="row-fluid" style="margin-bottom:30px;border-bottom: 6px solid #B59FA8;">
+ <div class="row-fluid" style="padding-bottom:1.6em;margin-bottom:30px;border-bottom: 6px solid #B59FA8;">
     <div class="span6">
 
  {% block basket_form_headers %}
@@ -128,17 +128,17 @@
     </div>
    
 
-    <div class="span4">
+    <div class="span5 pull-right">
 
 
 
 {% block simpleCheckout %}
 <br><br>
- <div class="span5 pull-left"> 
+ <div class="span7 pull-left" style="margin:0"> 
 <h3> Pay here for items from {{basket.seller.name }}'s  booth.</h3>
 </div>
         {% block baskettotals %}
-            <div class="span5 pull-right"> 
+            <div class="span4 pull-right"> 
             <th class="total pull-right"><h4>{% trans "Order total" %}</h4></th>
                 <td class="total pull-right"><h4 class="price_color">{{ order_total_incl_tax|currency }}</h4></td>
            </div>
@@ -197,13 +197,13 @@ transaction. </p>
 
 {% else %} {# no org picked #}
     
-
+    <div class="span7 pull-left" style="margin:0">
 
   <p>First, please choose the organization you wish to benefit.</p>
 
   {% for sponsored_org in current_sponsored_orgs %}
 
-   <form style="float:right;margin:0px;" method=post action="#">
+   <form style="float:left;margin:0px;" method=post action="#">
      <input type="hidden" name="basket_id" value={{basket.id}} /> 
      <input type="hidden" name="setSponsoredOrg" value='' /> 
      <input type="hidden" name="sponsored_org_id" value='{{sponsored_org.id}}' /> 
@@ -214,6 +214,8 @@ transaction. </p>
   <div style="clear:both"> </div>
 
   {% endfor %} {# current sponsored orgs #}
+
+  </div>
 
 {% endif %}   {# sponsoredOrg#}
 
