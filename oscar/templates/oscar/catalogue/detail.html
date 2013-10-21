@@ -84,19 +84,23 @@
   </div>
 
         {% block product_gallery %}
-        <div class="span4">
+        <div class="span4 pull-left" style="margin:0;padding-left:1.4em">
             {% include "catalogue/partials/gallery.html" %}
         </div>
         {% endblock %}
 
+        {% comment %}
+        <div class="span1">
+        </div>
+        {% endcomment %}
+
         {% block product_main %}
-        <div class="span4">
+        <div class="span5 pull-right" style="margin:0;padding-left:1.6em">
             {% comment %} 
             This is a but clunky here.  Better to have some kind of JS-driven dashboard menu that 
             pops out when clicked.  A bit like the Django-Debug-Toolbar button
             {% endcomment %}
 
-           {{product.status}}
             {% if user.is_authenticated and user == product.stockrecord.partner.user or user.is_staff %}
                 {#<a class="pull-right" href="{% url 'dashboard:catalogue-product' product.id %}"><i class="icon-edit"></i> {% trans "Edit this item" %}</a>#}
 
@@ -111,7 +115,7 @@
                 <form action="#" method="post">
                   <input type="hidden" name="id" value={{product.id}}>
                   <input type="hidden" name="disable" value="True">
-                  <input style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Hide item from buyers" %}">
+                  <input style="clear:both;background-color:#   ;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Hide item from buyers" %}">
                 </form>
                
                
@@ -135,7 +139,7 @@
                     <p class="star">
                 {% endif %}
                 {% if not product|has_review_by:user %}
-                    <a id="write_review" href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview" class="btn btn-success btn-small">
+                    <a id="write_review" href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview" class="btn btn-successs btn-small " style="margin:-4px 0 0 0 ">
                         {% trans "Write a review" %}
                     </a>
                 {% endif %}
