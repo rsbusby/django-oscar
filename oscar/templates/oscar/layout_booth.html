@@ -10,37 +10,30 @@
 
           <div class="row-fluid">
             <div class="span12">
+               {% block header %}     
+                    {% endblock %}
             {% block product_seller %}{% endblock %}
             </div>
           </div>
           <div class="row-fluid">
 
-                 <aside class="span4 pull-right">
-                    <div id="promotions_right">
-                        {% for promotion in promotions_right %}
-                        {% render_promotion promotion %}
-                        {% endfor %}
-                    </div>
+                <div class="span4 pull-right">
                     {% block column_right %} 
                     {% endblock %}
-                </aside>
+                </div>
 
-                <div class="span8" style="padding-right:1.4em">
-                    {% block header %}
-                   
-                    {% endblock %}
+                <div class="span8 pull-right" style="padding-right:1.4em">
+                 
+
                     {% include "partials/alert_messages.html" %}
-
-                    <div id="promotions">
-                        {% for promotion in promotions_page %}
-                        {% render_promotion promotion %}
-                        {% endfor %}
-                    </div>
 
                     {% block content %}{% endblock %}
                 </div>
 
            
+
+              
+
 
             </div><!-- /row-fluid -->
 
