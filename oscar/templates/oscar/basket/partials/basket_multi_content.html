@@ -147,7 +147,11 @@
   <div style="clear:both" ></div>
 
 
+
 {% if basket.sponsored_org %}
+
+    <div class="span7 pull-left" style="margin:0">
+
 
 <p> You have chosen to benefit <b>{{basket.sponsored_org.name}}</b> with this
 transaction. </p>
@@ -160,6 +164,9 @@ transaction. </p>
 
   </form>
 
+</div> {# grid span #}
+
+<div style="clear:both"></div>
 
 {% if basket.seller.stripeSellerToken and basket.seller.stripeSellerPubKey %}
   
@@ -197,13 +204,13 @@ transaction. </p>
 
 {% else %} {# no org picked #}
     
-    <div class="span7 pull-left" style="margin:0">
+    <div class="span8 pull-left" style="margin:0">
 
   <p>First, please choose the organization you wish to benefit.</p>
 
   {% for sponsored_org in current_sponsored_orgs %}
 
-   <form style="float:left;margin:0px;" method=post action="#">
+   <form style="float:right;margin:0px;" method=post action="#">
      <input type="hidden" name="basket_id" value={{basket.id}} /> 
      <input type="hidden" name="setSponsoredOrg" value='' /> 
      <input type="hidden" name="sponsored_org_id" value='{{sponsored_org.id}}' /> 
@@ -215,7 +222,7 @@ transaction. </p>
 
   {% endfor %} {# current sponsored orgs #}
 
-  </div>
+  </div> {# grid span #}
 
 {% endif %}   {# sponsoredOrg#}
 

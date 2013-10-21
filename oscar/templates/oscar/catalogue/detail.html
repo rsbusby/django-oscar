@@ -237,7 +237,7 @@
 
             {% if not reviews %}
                 <p>
-                    {% trans "This product does not have any reviews yet" %} -
+                    {% trans "This item does not have any reviews yet" %} -
                     <a href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
                 </p>
             {% else %}
