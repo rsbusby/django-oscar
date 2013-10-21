@@ -91,7 +91,7 @@
                     {% else %}
                         <li><a href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "LOGIN or REGISTER" %}</a></li>
                     {% endif %}
-                     <li><a href="/basket/"> <img src="{{STATIC_URL}}icons/Icon-Basket-A.png" class="basketIcon"> </a></li>
+                     <li><a href="{% url 'basket:summary' %}"> <img src="{{STATIC_URL}}icons/Icon-Basket-A.png" class="basketIcon"> </a></li>
 
 
                 </ul>
