@@ -27,6 +27,7 @@ Repository = get_class('shipping.repository', ('Repository'))
 
 Basket = get_model('basket', 'basket')
 
+from oscar.apps.order.models import SponsoredOrganization
 
 def get_messages(basket, offers_before, offers_after,
                  include_buttons=True):
@@ -91,10 +92,10 @@ class BasketView(ModelFormSetView):
     can_delete = True
     template_name = 'basket/basket.html'
 
-    #def __init__(self):
-    #   import ipdb;ipdb.set_trace()
-    #   super(BasketView, self).__init__()
-    #   return
+    def __init__(self):
+       #import ipdb;ipdb.set_trace()
+       super(BasketView, self).__init__()
+       return
 
 
 
@@ -147,6 +148,9 @@ class BasketView(ModelFormSetView):
         context['order_total_incl_tax'] = (
             self.request.basket.total_incl_tax +
             method.basket_charge_incl_tax())
+        context['order_total_incl_tax_in_cents'] = int(100.0 * float(
+            self.request.basket.total_incl_tax +
+            method.basket_charge_incl_tax()))
         context['basket_warnings'] = self.get_basket_warnings(
             self.request.basket)
         context['upsell_messages'] = self.get_upsell_messages(
@@ -170,7 +174,7 @@ class BasketView(ModelFormSetView):
         return context
 
     def get_success_url(self):
-        return self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
+        return self.request.META.get('HTTP_REFERER', reverse('basket:list'))
 
     def formset_valid(self, formset):
         # Store offers before any changes are made so we can inform the user of
@@ -236,7 +240,10 @@ class BasketView(ModelFormSetView):
                                          **kwargs)
             ctx = self.get_context_data(formset=formset,
                                         basket=self.request.basket)
-            return self.json_response(ctx, flash_messages)
+            
+            response = HttpResponseRedirect(self.get_success_url())
+            return response
+            #return self.json_response(ctx, flash_messages)
 
         apply_messages(self.request, offers_before)
 
@@ -279,6 +286,26 @@ class BasketListView(ListView):
     q = None
     pq = None
 
+
+    def post(self, request, *args, **kwargs):
+        ##import ipdb;ipdb.set_trace()
+
+        ##print "WHOA! in post"
+        ## should throw some exceptions?
+
+        if not request.POST.has_key('basket_id'):
+            return self.get(request, **kwargs)
+        basket = Basket.objects.filter(id=request.POST['basket_id'])[0]
+        if request.POST.has_key('setSponsoredOrg'):
+            sOrg = SponsoredOrganization.objects.filter(id=request.POST['sponsored_org_id'])[0]
+            basket.sponsored_org = sOrg
+            basket.save()
+        if request.POST.has_key('unsetSponsoredOrg'):    
+            basket.sponsored_org = None
+            basket.save()
+        return self.get(request, **kwargs)
+
+
     def get_search_query(self):
         q = self.request.GET.get('q', None)
         self.q =  q.strip() if q else None
@@ -294,8 +321,19 @@ class BasketListView(ListView):
         #q = self.q
         #pq = self.pq
 
-        baskets = Basket.objects.filter(owner=self.request.user, status="Open")
+        #import ipdb;ipdb.set_trace()
+
+        from oscar.apps.checkout.views import  PaymentDetailsView
+
+        pdv = PaymentDetailsView()
+
+        print "YOYO"
+        print pdv.handle_payment(5, 5)
+        ##pdv.submit(self, basket)
+
+        baskets = Basket.objects.filter(owner=self.request.user, status="Open").order_by('-id')
         context['baskets'] = baskets
+        context['current_sponsored_orgs']= SponsoredOrganization.objects.filter(status__icontains='current')
         ## give context for each of the baskets?? Or just set it in the damn model
 
 
@@ -345,10 +383,36 @@ class BasketAddView(FormView):
         return url
 
     def form_valid(self, form):
-        offers_before = self.request.basket.applied_offers()
-        #import ipdb;ipdb.set_trace()
 
-        self.request.basket.add_product(
+        ## check if there exists a basket for this seller. If not, create one.
+        print "form.instance"
+        print form.instance
+
+        partner = form.instance.stockrecord.partner
+        bb = Basket.objects.filter(owner=self.request.user, status="Open", seller=partner)
+
+        bask = None
+
+        if len(bb) == 0:
+
+            ## take the default basket if possible
+            if self.request.basket.seller == None:
+                self.request.basket.seller = partner
+                bask = self.request.basket
+                bask.save()
+            else:   
+                ## create a new one
+                bask = Basket(owner=self.request.user, status="Open", seller=partner)
+        elif len(bb) == 1:  
+            bask = bb[0]
+        else:
+            ## should not happen!!! merge 'em
+            pass
+
+        offers_before = bask.applied_offers()
+
+
+        bask.add_product(
             form.instance, form.cleaned_data['quantity'],
             form.cleaned_options())
 

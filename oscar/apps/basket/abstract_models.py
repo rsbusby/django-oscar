@@ -26,9 +26,9 @@ class AbstractBasket(models.Model):
         AUTH_USER_MODEL, related_name='baskets', null=True,
         verbose_name=_("Owner"))
 
-    #seller = models.ForeignKey(
-    #    Partner, related_name='baskets', null=True,
-    #    verbose_name=_("Seller"))
+    seller = models.ForeignKey(
+        Partner, related_name='baskets', null=True,
+        verbose_name=_("Seller"))
 
     # Basket statuses
     # - Frozen is for when a basket is in the process of being submitted
@@ -322,6 +322,13 @@ class AbstractBasket(models.Model):
         Return total price inclusive of tax and discounts
         """
         return self._get_total('line_price_incl_tax_and_discounts')
+
+    @property
+    def total_incl_tax_in_cents(self):
+        """
+        Return total price inclusive of tax and discounts
+        """
+        return int(self._get_total('line_price_incl_tax_and_discounts') * 100.0)
 
     @property
     def total_incl_tax_excl_discounts(self):

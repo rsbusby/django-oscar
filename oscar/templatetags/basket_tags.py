@@ -22,7 +22,7 @@ def render_basket(context, basket):
 
     
     """
-    names = ['basket/partials/basket_content.html']
+    names = ['basket/partials/basket_multi_content.html']
     template_ = select_template(names)
     request = context['request']
     ## set up the context to be as expected for the basket content

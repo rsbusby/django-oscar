@@ -29,13 +29,15 @@
 
     {% block content %}
 
-{% for currentBasket in baskets %}
+{% for basket in baskets %}
 
 
         {# Use a partial template so that AJAX can be used to re-render basket #}
-        {#{% include 'basket/partials/basket_content.html' with basket=currentBasket %} #}
+        {#{% include 'basket/partials/basket_multi_content.html' with basket=currentBasket %} #}
 
-        {% render_basket currentBasket %}
+        {% render_basket basket %}
+
+
 
 {% endfor %}
     {% endblock content %}
