@@ -55,21 +55,29 @@
     {% if request.user.partner == partner or user.is_staff %} 
 
 
-    <div class="span6" style="block-inline">
+    <div class="span3" style="block-inline;max-width:300px;margin:0 auto;">
+
+       <div class="row-fluid">
+        <div class="span6">
        {#<a href="../dashboard/catalogue/products/create/1/"><i class="icon-hand-up"></i> Add new item</a> #}
-        <input class="pull-lef" style="margin:0;margin-left:1em" type="button" value="Add New Item" onclick=location.href="../dashboard/catalogue/products/create/1/">
+        <input class="pull-lef" style="margin:0;margin-lef:1em;width:100%" type="button" value="Add New Item" onclick=location.href="../dashboard/catalogue/products/create/1/">
+        </div>
 
-        <input class="pull-left" style="margin:0" type="button" value="Edit this Booth" onclick=location.href="{% url 'edit_store' %}">
+        <div class="span6">
+          <input class="pull-left" style="margin:0;width:100%" type="button" value="Edit this Booth" onclick=location.href="{% url 'edit_store' %}">
+        </div>
+        <div style="clear:both"></div>
 
-                 <form action="#" method="post">
+
+                 <form action="#" method="post" style="min-width:100%">
                   <input type="hidden" name="id" value={{partner.id}}>
                   <input type="hidden" name="enable" value="True">
-                  <input style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Click to make all items visible to buyers" %}">
+                  <input style="background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.8em;width:100%" type=submit value="{% trans "Click to make all items visible to buyers" %}">
                 </form>
-                <form action="#" method="post">
+                <form action="#" method="post" style="min-width:100%;margin:0">
                   <input type="hidden" name="id" value={{partner.id}}>
                   <input type="hidden" name="disable" value="True">
-                  <input style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Click to hide all items from buyers" %}">
+                  <input style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.8em;width:100%" type=submit value="{% trans "Click to hide all items from buyers" %}">
                 </form>
                
 

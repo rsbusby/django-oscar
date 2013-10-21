@@ -161,6 +161,10 @@
 
     </div><!-- /row-fluid -->
 
+
+    <div class="row-fluid">
+      <div class="span3"> </div>
+        <div class="span9 light-border" style="padding:1em 1em 1.6em 1em;">
     {% block product_description %}
         {% if product.description %}
 {% comment %}        <div id="product_description" class="sub-header">
@@ -169,6 +173,8 @@
         <p>{{ product.description|safe }}</p>
         {% endif %}
     {% endblock %}
+      </div>
+    </div>
 
     {% comment %}
     {% block product_info %}

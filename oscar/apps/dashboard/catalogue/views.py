@@ -279,8 +279,8 @@ class ProductCreateUpdateView(generic.UpdateView):
     def forms_invalid(self, form, stockrecord_form, category_formset,
                       image_formset, recommended_formset):
         messages.error(self.request,
-                       _("Your submitted data was not valid - please "
-                         "correct the below errors"))
+                       _("There is more information needed to create the item - please "
+                         "see below to add or correct the input. Did you add at least one photo?"))
         ctx = self.get_context_data(form=form,
                                     stockrecord_form=stockrecord_form,
                                     category_formset=category_formset,

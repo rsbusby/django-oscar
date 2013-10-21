@@ -21,4 +21,8 @@ def render_product(context, product, is_booth=False):
     # Ensure the passed product is in the context as 'product'
     context['product'] = product
     context['is_booth'] = is_booth
+
+    if is_booth:
+        template_ = select_template(['catalogue/partials/product_booth.html'])
+
     return template_.render(context)
