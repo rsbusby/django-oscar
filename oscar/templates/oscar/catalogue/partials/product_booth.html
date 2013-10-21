@@ -1,0 +1,105 @@
+{% load url from future %}
+{% load currency_filters %}
+{% load reviews_tags %}
+{% load thumbnail %}
+{% load i18n %}
+{% load display_tags %}
+{% load staticfiles %}
+{% load replace %}
+
+
+<article {% if not is_booth %}class="product_po" {%endif %}>
+
+  <div class="row-fluid">
+
+
+   <div class="span5">
+
+    {% block product_image %}
+    <div class="image_container booth_image">
+        {% with image=product.primary_image %}
+            {% thumbnail image.original "400x400" upscale=False as thumb %}
+                <a href="{{ product.get_absolute_url }}">
+                <img src="{{stat_url}}{{thumb.name}}" 
+                alt="{{ product.get_title }}" 
+                class="thumbnail pagination-centered item_pics" {% if not is_booth %}style="margin:0 auto;" {% else %} style="max-height:220px;" {% endif %}></a>
+            {% endthumbnail %}
+        {% endwith %}
+    </div>
+    {% endblock %}
+    </div>
+
+   <div class="span7">
+
+    {% comment %}
+    {% block product_review %}
+        {% iffeature "reviews" %}
+            <p class="star {{ product.rating|as_stars }}"></p>
+        {% endiffeature %}
+    {% endblock %}
+{% endcomment %}
+    {% block product_title %}
+    {#<ul style="margin-left:0;list-style:none;display:block;"> #}
+   {# <li style="float:right">    #}
+    <a style="float:left;font-weight:bold;font-size:1.2em;" href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:4 }}</a>
+    <!-- </li> -->
+    <div style="clear:both"></div>
+    {% if not is_booth %}
+    {% block product_seller %}
+      <!-- <li> -->
+        Seller:
+        <a href="{% url 'catalogue:index' %}?booth={{product.stockrecord.partner.name}}"> {{ product.stockrecord.partner.name|truncatewords:4 }}</a>
+      <!-- </li> -->
+    {% endblock %}
+    {% endif %}
+    <!-- </ul> -->
+    {% endblock %}
+
+    {% if is_booth %}
+
+    {% comment %}
+    {% block product_description %}
+       {% if product.description %}
+         <pre>{{product.description}}</pre>
+       {% endif %}
+    {% endblock %}
+{% endcomment %}
+
+    {% block product_price %}
+    <div class="product_pric">
+        {% include "catalogue/partials/stock_record.html" %}
+
+        {% if user.is_authenticated and request.user.partner and user == product.stockrecord.partner.user %}   {# edit_item_form #}
+        <input class="pull-right" type="button" value="Edit this Item" onclick=location.href="{% url 'dashboard:catalogue-product' product.id %}">
+ 
+
+         {% if "disabled" in product.status  %}
+                 <form action="/catalogue/{{product.title|replace:' ,-' }}_{{product.id}}/" method="post">
+                  <input type="hidden" name="id" value={{product.id}}>
+                  <input type="hidden" name="enable" value="True">
+                  <input style="clear:both;background-color:#FF8533;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Item is hidden. Click to make item visble to buyers" %}">
+                </form>
+                 {% else %}
+                <form action="/catalogue/{{product.title|replace:' ,-' }}_{{product.id}}/" method="post">
+                  <input type="hidden" name="id" value={{product.id}}>
+                  <input type="hidden" name="disable" value="True">
+                  <input style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Hide item from buyers" %}">
+                </form>
+               
+               
+          {% endif %}
+        {% endif %}
+
+        {% if product.is_group %}
+            <a class="btn btn-full" href="{% url 'catalogue:detail' product.slug product.id %}">{% trans "View" %}</a>
+        {% else %}
+            {% include "catalogue/partials/add_to_basket_form_compact.html" %}
+        {% endif %}
+     </div>
+    {% endblock %}
+    {% endif %}
+
+    </div> {#grid span#}
+
+    </div> {# row-fluid#}
+</article>
