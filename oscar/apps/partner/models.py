@@ -4,6 +4,8 @@ from oscar.apps.partner.abstract_models import (
 
 from oscar.apps.catalogue.models import Product
 #from apps.homemade.homeMade import Item
+from django.db import models
+
 
 class Partner(AbstractPartner):
     pass

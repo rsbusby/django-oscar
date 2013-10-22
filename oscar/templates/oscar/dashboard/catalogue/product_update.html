@@ -358,9 +358,10 @@
 
 
 {{ stockrecord_form.non_field_errors }}
-                    
+                                    <table class="table table-striped table-bordered form-inline">
+
                                <tr>
-                                    <th> Price    -     - {% if field.field.required %} <span>*</span>{% endif %}</th>
+                                    <th> Price {% if field.field.required %} <span>*</span>{% endif %}</th>
                                 </tr>
                                 <tr>
                                     <td>
@@ -369,8 +370,10 @@
                                     </td>
                                 </tr>
 
+                              
+                                <div style="clear:both"></div>
                                 <tr>
-                                    <th>Number in inventory (leave blank if this item is made to order):</th>
+                                    <th>Number in inventory (leave this blank if the item is made to order):</th>
                                 </tr>
                                 <tr>
                                     <td>
@@ -379,6 +382,7 @@
                                     </td>
                               
                                 </tr>
+                    </table>
 
                     <div class="table-header">
                         <h3>{% trans "Upload, change or remove images" %}</h3>

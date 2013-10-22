@@ -255,9 +255,9 @@ class ProductCategoryForm(forms.ModelForm):
 class BaseProductCategoryFormSet(BaseInlineFormSet):
 
     def clean(self):
-        if self.instance.is_top_level and self.get_num_categories() == 0:
-            raise forms.ValidationError(
-                _("Please add a category for this item. Choose 'Other' if there is not a more appropriate category."))
+        # if self.instance.is_top_level and self.get_num_categories() == 0:
+        #     raise forms.ValidationError(
+        #         _("Please add a category for this item. Choose 'Other' if there is not a more appropriate category."))
         if self.instance.is_variant and self.get_num_categories() > 0:
             raise forms.ValidationError(
                 _("A variant product should not have categories"))
@@ -279,6 +279,39 @@ ProductCategoryFormSet = inlineformset_factory(
     can_delete=False)
 
 
+
+
+
+class ProductImageForm(forms.ModelForm):
+    class Meta:
+        model = ProductImage
+        exclude = ('display_order',)
+        # use ImageInput widget to create HTML displaying the
+        # actual uploaded image and providing the upload dialog
+        # when clicking on the actual image.
+        widgets = {
+            'original': ImageInput(),
+        }
+
+
+
+    def save(self, *args, **kwargs):
+        # We infer the display order of the image based on the order of the
+        # image fields within the formset.
+        kwargs['commit'] = False
+        obj = super(ProductImageForm, self).save(*args, **kwargs)
+        obj.display_order = self.get_display_order()
+        obj.save()
+        return obj
+
+    def get_display_order(self):
+        return self.prefix.split('-').pop()
+
+## this was the original, not using minimum formset
+# ProductImageFormSet = inlineformset_factory(
+#     Product, ProductImage, form=ProductImageForm, extra=2)
+
+## the following class lets you require a miniumum of one image. 
 class MinimumRequiredFormSet(forms.models.BaseInlineFormSet):
     """
     Inline formset that enforces a minimum number of non-deleted forms
@@ -318,55 +351,14 @@ class MinimumRequiredFormSet(forms.models.BaseInlineFormSet):
 
 
 
+## the following formset lets you require a miniumum of one image. 
 
-class ProductImageForm(forms.ModelForm):
-    class Meta:
-        model = ProductImage
-        exclude = ('display_order',)
-        # use ImageInput widget to create HTML displaying the
-        # actual uploaded image and providing the upload dialog
-        # when clicking on the actual image.
-        widgets = {
-            'original': ImageInput(),
-        }
-
-
-
-    def save(self, *args, **kwargs):
-        # We infer the display order of the image based on the order of the
-        # image fields within the formset.
-        kwargs['commit'] = False
-        obj = super(ProductImageForm, self).save(*args, **kwargs)
-        obj.display_order = self.get_display_order()
-        obj.save()
-        return obj
-
-    def get_display_order(self):
-        return self.prefix.split('-').pop()
-
-
-# ProductImageFormSet = inlineformset_factory(
-#     Product, ProductImage, form=ProductImageForm, extra=2)
-
-# class SamuraiForm(forms.ModelForm):
-#     class Meta:
-#         model = Samuari
-  
 ProductImageFormSet = inlineformset_factory(
     Product,
     ProductImage,
     formset=MinimumRequiredFormSet,
     form=ProductImageForm,
 )
-
-# formset = SamuraiFormset(
-#     request.POST,
-#     instance=instance,
-#     minimum_forms=7,
-#     minimum_forms_message="At least seven samurai are required.",
-# )
-
-
 
 
 ProductRecommendationFormSet = inlineformset_factory(

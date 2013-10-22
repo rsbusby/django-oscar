@@ -273,14 +273,19 @@ class ProductCreateUpdateView(generic.UpdateView):
         category_formset.save()
         image_formset.save()
         recommended_formset.save()
+        #if self.instance.is_top_level and self.get_num_categories() == 0:
+        #    default_category = Category.objects.filter(name="Other")
+        #    self.categories.add(default_category)
 
         return HttpResponseRedirect(self.get_success_url())
 
     def forms_invalid(self, form, stockrecord_form, category_formset,
                       image_formset, recommended_formset):
+        
         messages.error(self.request,
                        _("There is more information needed to create the item - please "
                          "see below to add or correct the input. Did you add at least one photo?"))
+        
         ctx = self.get_context_data(form=form,
                                     stockrecord_form=stockrecord_form,
                                     category_formset=category_formset,
