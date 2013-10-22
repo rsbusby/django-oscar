@@ -4,6 +4,8 @@
 
 {% basket_form request product as basket_form single %}
 
+{% if product.is_available_to_buy %}
+
 {% if basket_form.purchase_permitted %}
 <form action="{% url 'basket:add' %}" method="post">
     {% csrf_token %}
@@ -11,17 +13,32 @@
 
 {% if is_booth %}
 
-            {% if user.is_authenticated and user == product.stockrecord.partner.user or user.is_staff %}
+    {% if user.is_authenticated and user == product.stockrecord.partner.user or user.is_staff %}
 
-            {% else%}
-    {% if product.is_available_to_buy %}
-        {% comment %}<button type="submit" class="btn btn-primary btn-full">{% trans "Add to basket" %}</button>{% endcomment %}
-        <input style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Add to basket" %}">
-    {% endif %}
-  {% endif %}
+    {% else%}
+       {% if product.is_available_to_buy %}
+         {% comment %}<button type="submit" class="btn btn-primary btn-full">{% trans "Add to basket" %}</button>{% endcomment %}
+         <input style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Add to basket" %}">
+       {% endif %}
+    {% endif %}  
 
- {% endif %}
+ {% endif %} {# is_booth #}
 </form>
 {% else %}
+    {% comment %}
     {{ basket_form.reason }}
+    {% endcomment %}
 {% endif %}
+
+{% else %}
+    {% if has_active_alert %}
+        <p>{% trans "You have an active stock alert for this product." %}</p>
+    {% else %}
+        <form id="alert_form" method="post" action="{% url 'customer:alert-create' product.id %}">
+            {% csrf_token %}
+            <p>{% trans "You can get an email alert when this product is available." %}</p>
+            {% include "partials/form_fields.html" with form=alert_form %}
+            <button type="submit" class="btn btn-small btn-info btn-full" style="margin:0">{% trans "Notify me" %}</button>
+        </form>
+    {% endif %}
+{% endif %} {# available #}
