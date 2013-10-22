@@ -31,14 +31,21 @@
 {% endif %}
 
 {% else %}
-    {% if has_active_alert %}
-        <p>{% trans "You have an active stock alert for this product." %}</p>
-    {% else %}
-        <form id="alert_form" method="post" action="{% url 'customer:alert-create' product.id %}">
-            {% csrf_token %}
-            <p>{% trans "You can get an email alert when this product is available." %}</p>
-            {% include "partials/form_fields.html" with form=alert_form %}
-            <button type="submit" class="btn btn-small btn-info btn-full" style="margin:0">{% trans "Notify me" %}</button>
-        </form>
-    {% endif %}
+
+    {% if user.is_authenticated and user == product.stockrecord.partner.user or user.is_staff %}
+
+    {% else%}
+
+        {% if has_active_alert %}
+            <p>{% trans "You have an active stock alert for this product." %}</p>
+        {% else %}
+            <form id="alert_form" method="post" action="{% url 'customer:alert-create' product.id %}">
+                {% csrf_token %}
+                <p>{% trans "You can get an email alert when this product is available." %}</p>
+                {% include "partials/form_fields.html" with form=alert_form %}
+                <button type="submit" class="btn btn-small btn-info btn-full" style="margin:0">{% trans "Notify me" %}</button>
+            </form>
+        {% endif %}
+
+    {% endif %} {# is owner or staff #}
 {% endif %} {# available #}

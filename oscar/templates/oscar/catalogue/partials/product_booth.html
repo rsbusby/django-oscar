@@ -70,20 +70,20 @@
         {% include "catalogue/partials/stock_record.html" %}
 
         {% if user.is_authenticated and request.user.partner and user == product.stockrecord.partner.user %}   {# edit_item_form #}
-        <input class="pull-right" type="button" value="Edit this Item" onclick=location.href="{% url 'dashboard:catalogue-product' product.id %}">
+        <input class="pull-left boothButton" type="button" value="Edit this Item" onclick=location.href="{% url 'dashboard:catalogue-product' product.id %}">
  
 
          {% if "disabled" in product.status  %}
                  <form action="/catalogue/{{product.title|replace:' ,-' }}_{{product.id}}/" method="post">
                   <input type="hidden" name="id" value={{product.id}}>
                   <input type="hidden" name="enable" value="True">
-                  <input style="clear:both;background-color:#FF8533;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Item is hidden. Click to make item visble to buyers" %}">
+                  <input class="boothButton"  type=submit value="{% trans "Item is hidden. Click to make item visble to buyers" %}">
                 </form>
                  {% else %}
                 <form action="/catalogue/{{product.title|replace:' ,-' }}_{{product.id}}/" method="post">
                   <input type="hidden" name="id" value={{product.id}}>
                   <input type="hidden" name="disable" value="True">
-                  <input style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Hide item from buyers" %}">
+                  <input class="boothButton"  type=submit value="{% trans "Hide item from buyers" %}">
                 </form>
                
                
