@@ -103,27 +103,10 @@
 
   <img src="{% static 'icons/Icon-Heart.png' %}" class="giveBackHeart"  >
   <div class="helpGiveText"> 
-  <a style="color:#ff6666;font-size:1.0em;float:left;" href="#openModalGive">HELP US GIVE BACK</a>
- </div>
-     <div id="openModalGive" class="modalGiveBackDialog">
-    <div> 
-        <a href="#close" title="Close" class="close">X</a>
-        <h2>Giving Back To The Local Food Community</h2>
-       <p> Every time you buy something on homemade1616.com, we donate 10% of our proceeds to an amazing California-based food-related nonprofit organization, and you get to choose which organization receives that donation upon checkout! </p> <p> Sellers pay nothing extra. You pay nothing extra. We think giving back is the right thing to do.
-    </p>
-    <form action="#close" method="" >
-      <article>
-      <label>
-      <span></span>
-      </label>
-      </article>
-      <input type="hidden" name="return" value="True" /> 
-      <div class=deleteButto><input type=submit value="Close window"></div>
-      
-     </form>      
-    </div> 
-       </div> 
-     
+    <a style="color:#ff6666;font-size:1.0em;float:left;" href="#openModalGive">HELP US GIVE BACK</a>
+  </div>
+
+  
     <div style="clear:both;"  > </div>
     <ul>
       <li> Browse the delectable goods  </li>
@@ -132,9 +115,15 @@
       <li> Select from the list of nonprofits you'd like to support. </li>
       <li> Enjoy your goodies and feel good about your good deeds. Got it? Good. </li>
     </ul>
+
+
+   
   
 </div> 
 
+
+
+  
 {% endblock %}
 
 {% block content %}
@@ -176,5 +165,28 @@
     {% else %}
         <p class="nonefound">{% trans "No products found." %}</p>
     {% endif %}
+
+
+
+   <div id="openModalGive" class="modalGiveBackDialog">
+    <div> 
+        <a href="#close" title="Close" class="close">X</a>
+        <h2>Giving Back To The Local Food Community</h2>
+       <p> Every time you buy something on homemade1616.com, we donate 10% of our proceeds to an amazing California-based food-related nonprofit organization, and you get to choose which organization receives that donation upon checkout! </p> <p> Sellers pay nothing extra. You pay nothing extra. We think giving back is the right thing to do.
+    </p>
+    <form action="#close" method="" >
+      <article>
+      <label>
+      <span></span>
+      </label>
+      </article>
+      <input type="hidden" name="return" value="True" /> 
+      <div class=deleteButto><input type=submit value="Close window"></div>
+      
+     </form>      
+    </div> 
+       </div> 
+
+
 {% endblock content %}
 
