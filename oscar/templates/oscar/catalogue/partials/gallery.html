@@ -56,7 +56,7 @@
         {% with image=product.primary_image %}
             {% thumbnail image.original "400x400" upscale=False as thumb %}
             {% if not image.is_missing %}
-                <a href="{{ image.original.url }}" rel="lightbox"><img class="itemSolo_pics_blog" src="{{stat_url}}{{thumb.name}}" data-large="{{ image.original.name }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /></a>
+                <a href="{{ image.original.url }}" rel="lightbox"><img class="detailPic" src="{{stat_url}}{{thumb.name}}" data-large="{{ image.original.name }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /></a>
             {% else %}
 
               {% if use_s3 %} 
