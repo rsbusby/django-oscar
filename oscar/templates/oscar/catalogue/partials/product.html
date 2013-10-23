@@ -33,8 +33,11 @@
     {% endblock %}
 {% endcomment %}
     {% block product_title %}
+
+    <div style="margin-left:10px;margin-bottom:8px;">
+
     {#<ul style="margin-left:0;list-style:none;display:block;"> #}
-   {# <li style="float:right">    #}
+   {# <li style="float:right">   </li> #}
     <a style="float:left;font-weight:bold;font-size:1.2em;" href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:4 }}</a>
     <!-- </li> -->
     <div style="clear:both"></div>
@@ -46,8 +49,10 @@
       <!-- </li> -->
     {% endblock %}
     {% endif %}
-    <!-- </ul> -->
+    {# </ul> #}
+      </div>
     {% endblock %}
+
 
     {% if is_booth %}
 
