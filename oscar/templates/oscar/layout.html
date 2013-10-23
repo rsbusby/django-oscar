@@ -23,15 +23,29 @@
     <img src="{% block bannerFile %}{{STATIC_URL}}icons/BannerImage-2.jpg{% endblock %}" class="store_banner" style="width:100%;">
   </div>
 </div>
+
+    <div class="row-fluid">
                  <div class="span4">
-                {% include "partials/brand.html" %}
+                    {% include "partials/brand.html" %}
                 </div>
+
+                <div class="span7 logoIndex">
+
+                  {% block searchBar %}
+                  
+                   
+
+                {% endblock %}
+
                 {% comment %}
-                <div class="span8">
                     {# Mini-basket wrapped in a block so some templates can now display it #}
-                {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
-                </div>
-{% endcomment %}
+                    {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
+                {% endcomment %}    
+
+                </div> {# span8 #}
+
+
+</div> {# row-fluid #}
 
             </div>
         </div>
