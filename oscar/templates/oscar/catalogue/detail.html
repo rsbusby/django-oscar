@@ -111,11 +111,14 @@
                 {% else %}
                     <p class="star">
                 {% endif %}
+{% comment %}
                 {% if not product|has_review_by:user %}
                     <a id="write_review" href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview" class="btn btn-successs btn-small " style="margin:-4px 0 0 0 ">
                         {% trans "Write a review" %}
                     </a>
                 {% endif %}
+                {% endcomment %}
+
                 </p>
             {% endiffeature %}
 
@@ -221,6 +224,7 @@
         </tr>
         {% endfor %}
 
+
         {% iffeature "reviews" %}
             <tr>
                 <th>{% trans "Num reviews" %}</th>
@@ -238,6 +242,7 @@
 
     <br><br>
 
+{% comment %}
     {% iffeature "reviews" %}
         {% block product_review %}
         <section>
@@ -263,7 +268,7 @@
         </section>
         {% endblock product_review %}
     {% endiffeature %}
-
+{% endcomment %}
     <div class="row-fluid">
         {% if product.related_products.count %}
         <div class="span6">
