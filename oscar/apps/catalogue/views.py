@@ -280,7 +280,10 @@ class ProductListView(ListView):
            
             return qs
         elif pq:
-            partner = Partner.objects.filter(name=pq)[0]
+            try:
+                partner = Partner.objects.filter(name=pq)[0]
+            except:
+                return qs
             qs = Product.objects.all()
             qs = qs.filter(stockrecord__partner__name=pq)
             owner = partner.user
@@ -307,8 +310,8 @@ class ProductListView(ListView):
             context['search_term'] = q
             if pq:
 
-                ##try:
-                if True:
+                try:
+                ##if True:
                     #partner = self.request.user.partner
                     partner = Partner.objects.filter(name=pq)[0]
                     context['partner'] = partner
@@ -322,8 +325,8 @@ class ProductListView(ListView):
                     self.template_name = 'catalogue/booth.html'
                     #self.template_name = '../../sites/homemade/apps/homemade/templates/store.dj.html' 
 
-                ##except:
-                ##    pass
+                except:
+                    pass
 
         return context
 
