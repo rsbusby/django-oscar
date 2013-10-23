@@ -33,30 +33,36 @@
                   <li>
                     <a href="{% url 'catalogue:index' %}"><i class="icon-home"></i> {% trans "HOME" %}</a>
                   </li>
+                   <li class="divider-vertical"></li>                   
+
                   <li>
-                    <a href="{% url 'about' %}"><i class="icon-usr"></i> {% trans "ABOUT" %}</a>
+                    <a href="{% url 'about' %}"> {% trans "ABOUT" %}</a>
                   </li>
+                   <li class="divider-vertical"></li>                   
+
                   <li>
-                    <a href="{% url 'contactUs' %}"><i class="icon-use"></i> {% trans "CONTACT US" %}</a>
+                    <a href="{% url 'contactUs' %}">{% trans "CONTACT US" %}</a>
                   </li>
 
-                   
+ <li class="divider-vertical"></li>                   
 
                    <li>
-                    <a href="{% url 'blogAll' %}"><i class="icon-use"></i> {% trans "BLOG" %}</a>
+                    <a href="{% url 'blogAll' %}">{% trans "BLOG" %}</a>
                   </li>
+                   <li class="divider-vertical"></li>                   
+
                    <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'showEvents' %}"><i class="icon-use"></i> {% trans "EVENTS" %}<b class="caret"></b></a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'showEvents' %}">{% trans "EVENTS" %}<b class="caret"></b></a>
 
                       <ul class="dropdown-menu">
   <li>
-                    <a href="{% url 'filterEvents' %}?workshop=True"><i class="icon-use"></i> {% trans "Workshops" %}</a>
+                    <a href="{% url 'filterEvents' %}?workshop=True">{% trans "Workshops" %}</a>
                     </li>
                     <li>
-                    <a href="{% url 'filterEvents' %}?swap=True"><i class="icon-use"></i> {% trans "Food Swaps" %}</a>
+                    <a href="{% url 'filterEvents' %}?swap=True">{% trans "Food Swaps" %}</a>
                     </li>
                     <li>
-                    <a href="{% url 'showEvents' %}"><i class="icon-use"></i> {% trans "All Events" %}</a>
+                    <a href="{% url 'showEvents' %}"> {% trans "All Events" %}</a>
                     </li>
                       </ul>
 
@@ -69,6 +75,8 @@
                         <li>
                             <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "ACCOUNT" %}</a>
                         </li>
+                                           <li class="divider-vertical"></li>                   
+
                         {% comment %}
                         <li>
                             <a href="{% url 'customer:notifications-inbox' %}">
@@ -79,14 +87,18 @@
                         </li>
                         {% endcomment %}
                         {% if user.partner  %}
-                            <li><a href="{% url 'catalogue:index' %}?booth={{request.user.partner.name}}"><i class="icon-hand-u"></i>MY BOOTH</a></li>
+                            <li><a href="{% url 'catalogue:index' %}?booth={{request.user.partner.name}}"></i>MY BOOTH</a></li>
                         {% else %}
 
                          <li><a href="{% url 'register_store' %}"><i class="icon-hand-up"></i> {% trans "OPEN A BOOTH" %}</a></li>
 
                         {% endif %}
+                                           <li class="divider-vertical"></li>                   
+
                         {% if user.is_staff %}
                          <li><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
+                                            <li class="divider-vertical"></li>                   
+
                         {% endif %}
 
 
@@ -94,6 +106,7 @@
                     {% else %}
                         <li><a href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "LOGIN or REGISTER" %}</a></li>
                     {% endif %}
+
                      <li><a href="{% url 'basket:summary' %}"> <img src="{{STATIC_URL}}icons/Icon-Basket-A.png" class="basketIcon"> </a></li>
 
 
