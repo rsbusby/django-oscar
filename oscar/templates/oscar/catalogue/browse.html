@@ -44,14 +44,14 @@
 {% endblock breadcrumbs %}
 
               {% block searchBar %}
-                  
+                    <div class="span7 logoIndex">
                      <form action="#" method="post" class="pull-right" style="margin-top:20px">
                        <input type="hidden" name="search" value="True">
                        <input type="text" style="border-radius:12px;background-color:rgba(255, 255, 255, 0.92);font-size:1.1em" name="searchName" value="" placeholder="Search by item name....">
                        <input style="width:50px;height:45px;margin-left:-50px;background: url('{{STATIC_URL}}icons/Icon-MagnifyingGlassSearch.png') no-repeat 12px 14px;bbackground-color:rgba(255, 255, 255, 0.0);border-width:0px;font-size:0.9em" type=submit value="">
                      </form>
 
-
+                     </div>
                 {% endblock %}
 
 
