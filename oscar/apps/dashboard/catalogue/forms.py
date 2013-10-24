@@ -82,7 +82,7 @@ class StockRecordForm(forms.ModelForm):
 
     class Meta:
         model = StockRecord
-        exclude = ('product', 'num_allocated', 'price_currency', 'low_stock_threshold','price_retail', 'cost_price')
+        exclude = ('product', 'num_allocated', 'price_currency', 'low_stock_threshold','price_retail', 'cost_price', 'partner')
 
 
 def _attr_text_field(attribute):

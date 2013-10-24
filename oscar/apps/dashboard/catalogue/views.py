@@ -230,7 +230,7 @@ class ProductCreateUpdateView(generic.UpdateView):
             image_formset.is_valid(),
             recommended_formset.is_valid(),
             # enforce if self.require_user_stockrecord, skip if not submitted
-            stockrecord_form.is_valid(), ##or            (not self.require_user_stockrecord and not self.is_stockrecord_submitted()),
+            stockrecord_form.is_valid() or not self.require_user_stockrecord, ## and not self.is_stockrecord_submitted()),
                         ])
 
         if is_valid:
@@ -252,15 +252,13 @@ class ProductCreateUpdateView(generic.UpdateView):
         if not self.creating:
             # a just created product was already saved in process_all_forms()
             self.object = form.save()
-        if True: ##self.is_stockrecord_submitted():
+        if self.is_stockrecord_submitted():
             # Save stock record
             cur_stockrecord = self.object.stockrecord
             stockrecord = stockrecord_form.save(commit=False)
             stockrecord.product = self.object
             ## don't change partners once the item is created.
-            import ipdb;ipdb.set_trace()
-            if not cur_stockrecord.partner:
-
+            if not cur_stockrecord.partner and self.require_user_stockrecord:
                 try:
                     stockrecord.partner = self.request.user.partner
                 except ObjectDoesNotExist:
@@ -268,7 +266,7 @@ class ProductCreateUpdateView(generic.UpdateView):
                     partner.save()    
                     stockrecord.partner = self.request.user.partner
 
-                stockrecord.save()
+            stockrecord.save()
         else:
             # delete it
             if self.object.has_stockrecord:
