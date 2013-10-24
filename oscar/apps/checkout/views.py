@@ -374,7 +374,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         """
        
 
-        import ipdb;ipdb.set_trace()
         if request.POST.has_key('place-order'):
             if not request.POST.has_key('basket_id'):
                 return self.get(request, **kwargs)
