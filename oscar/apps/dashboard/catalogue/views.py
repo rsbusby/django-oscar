@@ -254,16 +254,21 @@ class ProductCreateUpdateView(generic.UpdateView):
             self.object = form.save()
         if True: ##self.is_stockrecord_submitted():
             # Save stock record
+            cur_stockrecord = self.object.stockrecord
             stockrecord = stockrecord_form.save(commit=False)
             stockrecord.product = self.object
-            try:
-                stockrecord.partner = self.request.user.partner
-            except ObjectDoesNotExist:
-                partner = Partner.objects.create(user=self.request.user, name=self.request.user.get_full_name())
-                partner.save()    
-                stockrecord.partner = self.request.user.partner
+            ## don't change partners once the item is created.
+            import ipdb;ipdb.set_trace()
+            if not cur_stockrecord.partner:
 
-            stockrecord.save()
+                try:
+                    stockrecord.partner = self.request.user.partner
+                except ObjectDoesNotExist:
+                    partner = Partner.objects.create(user=self.request.user, name=self.request.user.get_full_name())
+                    partner.save()    
+                    stockrecord.partner = self.request.user.partner
+
+                stockrecord.save()
         else:
             # delete it
             if self.object.has_stockrecord:

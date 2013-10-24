@@ -111,7 +111,9 @@ class OrderCreator(object):
                       'total_excl_tax': total_excl_tax,
                       'shipping_incl_tax': shipping_method.basket_charge_incl_tax(),
                       'shipping_excl_tax': shipping_method.basket_charge_excl_tax(),
-                      'shipping_method': shipping_method.name}
+                      'shipping_method': shipping_method.name,
+                      'sponsored_org': basket.sponsored_org,
+                      }
         if shipping_address:
             order_data['shipping_address'] = shipping_address
         if billing_address:
