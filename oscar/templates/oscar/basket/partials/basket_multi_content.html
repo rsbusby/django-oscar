@@ -175,6 +175,15 @@ transaction. </p>
 
 <div style="clear:both"></div>
 
+ <form style="float:left;margin:1.2em 0 0 0" method=post action="{% url 'checkout:payment-details' %}">
+    <input type="hidden" name="basket_id" value={{basket.id}} /> 
+    <input type="hidden" name="place-order" value="True" /> 
+
+    <button style="width:100%;background-color:#D9E9FF;" class="orgButton" type="submit" name="sponsoredOrg" value="">Place Order</button>
+
+  </form>
+
+
 {% if basket.seller.stripeSellerToken and basket.seller.stripeSellerPubKey %}
   
   <div style="margin-top:100px;">
@@ -204,7 +213,7 @@ transaction. </p>
 
  {% else %} {# no stripe setup #}
     <br><br>
-    <h3> Unfortunately this seller has not registered with any of our payment methods. </h3>
+{#    <h3> Unfortunately this seller has not registered with any of our payment methods. </h3> #}
 
  {% endif %}  {# seller is registered with payment #}
 

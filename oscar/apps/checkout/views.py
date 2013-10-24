@@ -372,6 +372,16 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         validate the forms from the payment details page.  If the forms are
         valid then the method can call submit()
         """
+       
+
+        import ipdb;ipdb.set_trace()
+        if request.POST.has_key('place-order'):
+            if not request.POST.has_key('basket_id'):
+                return self.get(request, **kwargs)
+            basket = Basket.objects.filter(id=request.POST['basket_id'])[0]
+            return self.submit(basket, payment_kwargs=None, order_kwargs=None)
+
+
         error_response = self.get_error_response()
         if error_response:
             return error_response

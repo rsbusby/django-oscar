@@ -303,6 +303,14 @@ class BasketListView(ListView):
         if request.POST.has_key('unsetSponsoredOrg'):    
             basket.sponsored_org = None
             basket.save()
+
+
+        # if request.POST.has_key('place-order'):
+
+        #     from oscar.apps.checkout.views import  PaymentDetailsView
+        #     pdv = PaymentDetailsView(request=request)
+        #     return pdv.submit(basket, payment_kwargs=None, order_kwargs=None)
+
         return self.get(request, **kwargs)
 
 
