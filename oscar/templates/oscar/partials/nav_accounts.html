@@ -107,8 +107,10 @@
                         <li><a href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "LOGIN or REGISTER" %}</a></li>
                     {% endif %}
 
-                     <li><a href="{% url 'basket:summary' %}"> <img src="{{STATIC_URL}}icons/Icon-Basket-A.png" class="basketIcon"> </a></li>
+                    {% if user.is_authenticated %}
 
+                     <li><a href="{% url 'basket:summary' %}"> <img src="{{STATIC_URL}}icons/Icon-Basket-A.png" class="basketIcon"> </a></li>
+                     {% endif  %}
 
                 </ul>
             </div>
