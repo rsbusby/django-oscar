@@ -182,7 +182,8 @@ class BasketView(ModelFormSetView):
         offers_before = self.request.basket.applied_offers()
         save_for_later = False
 
-
+        #import ipdb;ipdb.set_trace()
+        print self.request.POST
         # Keep a list of messages - we don't immediately call
         # django.contrib.messages as we may be returning an AJAX response in
         # which case we pass the messages back in a JSON payload.
@@ -293,6 +294,9 @@ class BasketListView(ListView):
         ##print "WHOA! in post"
         ## should throw some exceptions?
 
+        #import ipdb;ipdb.set_trace()
+        print self.request.POST
+
         if not request.POST.has_key('basket_id'):
             return self.get(request, **kwargs)
         basket = Basket.objects.filter(id=request.POST['basket_id'])[0]
@@ -303,6 +307,28 @@ class BasketListView(ListView):
         if request.POST.has_key('unsetSponsoredOrg'):    
             basket.sponsored_org = None
             basket.save()
+        if request.POST.has_key('remove-line'):
+            try:
+                basket.lines.get(id=request.POST['line_id']).delete()
+                ## if last line, delete basket or make default
+                if not len(basket.lines.all()):
+                    if len(Basket.objects.filter(status="Open"))  == 1:
+                        basket.seller = None
+                    else:
+                        basket.delete()
+            except:
+                "line not deleted"
+        if request.POST.has_key('update-quantity'):
+            try:
+                cur_line = basket.lines.get(id=request.POST['line_id'])
+                cur_line.quantity = request.POST['quantity']
+                cur_line.save()
+
+                print request.POST['quantity']
+                basket.save()
+            except:
+                "line not deleted"            
+
 
 
         # if request.POST.has_key('place-order'):
@@ -416,6 +442,9 @@ class BasketAddView(FormView):
         else:
             ## should not happen!!! merge 'em
             pass
+
+        ## set the current basket to be the default basket in the request
+        self.request.basket = bask
 
         offers_before = bask.applied_offers()
 

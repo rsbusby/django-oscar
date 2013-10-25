@@ -10,7 +10,12 @@
             {% include "partials/form_fields.html" with form=basket_form %}
             <div class="form-actions">
         {% comment %}        <button type="submit" class="btn btn-large btn-primary btn-full" value="{% trans "Add to basket" %}">{% trans "Add to basket" %}</button> {% endcomment %}
+
+           {% if request.user.is_authenticated %}
+
                <input style="clear:both;" type=submit value="{% trans "Add to basket" %}">
+           {% endif %}
+
            </div>
 
         </form>

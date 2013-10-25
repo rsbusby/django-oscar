@@ -128,7 +128,7 @@
 
             <hr/>
 
-            {% if request.user.partner != partner %}
+            {% if request.user.partner != partner  %}
 
             {% block product_basket_form %}
                 {% include "catalogue/partials/add_to_basket_form.html" %}
