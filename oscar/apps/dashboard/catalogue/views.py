@@ -191,11 +191,13 @@ class ProductCreateUpdateView(generic.UpdateView):
         form = self.stockrecord_form(**form_kwargs)
         if self.require_user_stockrecord:
             # only show partners that have current user in their users
-            partners = Partner._default_manager.filter(users__pk=
-                                                       self.request.user.pk)
-            if len(partners) == 0:  # len instead of .count() -> only one query
-                raise ImproperlyConfigured("User can't set a valid stock record. Add her to at least one partner")
-            form.fields['partner'].queryset = partners
+            t = 9
+            ## commented this out since partner not part of the form
+            # partners = Partner._default_manager.filter(users__pk=
+            #                                            self.request.user.pk)
+            # if len(partners) == 0:  # len instead of .count() -> only one query
+            #     raise ImproperlyConfigured("User can't set a valid stock record. Add her to at least one partner")
+            # form.fields['partner'].queryset = partners
         return form
 
     def form_valid(self, form):
