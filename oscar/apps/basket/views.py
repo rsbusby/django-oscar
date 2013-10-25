@@ -442,9 +442,12 @@ class BasketAddView(FormView):
         else:
             ## should not happen!!! merge 'em
             pass
-
+        bask.save()
         ## set the current basket to be the default basket in the request
         self.request.basket = bask
+        print "SELLER"
+        print bask.id
+        print self.request.basket.seller
 
         offers_before = bask.applied_offers()
 

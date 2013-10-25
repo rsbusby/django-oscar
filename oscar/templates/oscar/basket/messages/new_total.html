@@ -3,12 +3,13 @@
 {% load currency_filters %}
 
 <p>
+
     {% if basket.is_empty %}
         {% trans "Your basket is now empty" %}
     {% else %}
-        {% blocktrans with total=basket.total_incl_tax|currency %}
-        Basket total now <strong>{{ total }}</strong>.
-        {% endblocktrans %}
+        {#{% blocktrans with total=basket.total_incl_tax|currency %}#}
+        Basket total from <strong>{{basket.seller}}</strong> is now <strong>{{ basket.total_incl_tax|currency}}</strong>.
+       {#{% endblocktrans %}#}
     {% endif %}
 </p>
 
