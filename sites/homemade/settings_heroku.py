@@ -89,7 +89,8 @@ ADMIN_MEDIA_PREFIX = 'https://bucket-name.s3.amazonaws.com/static/dj/admin/'
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': os.environ['SEARCHBOX_URL'],
+        #'URL': os.environ['SEARCHBOX_URL'],
+        'URL': os.environ['BONSAI_URL'],
         'INDEX_NAME': 'haystack',
         },
     }
