@@ -39,7 +39,7 @@
         <div class="basket-title hidden-phone">
             <div class="row-fluid">
 
-                <h3 class="span6">Items {% if basket.seller %}from {{basket.seller.name}} {% endif %}{#{% trans "Items to buy now" %}#}</h3>
+                <h3 class="span6">Items {% if basket.seller %}from <a href="{% url 'catalogue:index' %}?booth={{basket.seller.name}}">{{basket.seller.name}}</a>{% endif %}{#{% trans "Items to buy now" %}#}</h3>
             {% comment %}
                 <h4 class="span4">{% trans "Quantity" %}</h4>
                 <h4 class="span2 align-right">{% trans "Price" %}</h4>

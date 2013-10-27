@@ -2,5 +2,9 @@
 {% block body %}{% endblock %}
 
 {% block footer %}
-<p>{% trans "Thanks for using our site!" %}</p>
-<p>{% blocktrans with name=site.name %}The {{ name }} team{% endblocktrans %}</p>{% endblock %}
+
+{% comment %}
+<p>{% trans "Thanks for usi!" %}</p>
+<p>{% blocktrans with name=site.name %}The {{ name }} team{% endblocktrans %}</p>
+{% endcomment %}
+{% endblock %}
