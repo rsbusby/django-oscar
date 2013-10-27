@@ -6,6 +6,7 @@
 {% load display_tags %}
 {% load staticfiles %}
 {% load replace %}
+{% load string_filters %}
 
 
 <article {% if not is_booth %}class="product_po" {%endif %}>
@@ -57,13 +58,13 @@
 
     {% if is_booth %}
 
-    {% comment %}
+
     {% block product_description %}
        {% if product.description %}
-         <pre>{{product.description}}</pre>
+         <pre>{{product.description|two_sentences}}</pre>
        {% endif %}
     {% endblock %}
-{% endcomment %}
+
 
     {% block product_price %}
     <div class="product_pric" style="width:70%">
