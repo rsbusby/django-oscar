@@ -254,25 +254,34 @@ class ProductCreateUpdateView(generic.UpdateView):
         if not self.creating:
             # a just created product was already saved in process_all_forms()
             self.object = form.save()
+     
+
         if self.is_stockrecord_submitted():
             # Save stock record
-            cur_stockrecord = self.object.stockrecord
             stockrecord = stockrecord_form.save(commit=False)
             stockrecord.product = self.object
-            ## don't change partners once the item is created.
-            if not cur_stockrecord.partner and self.require_user_stockrecord:
-                try:
-                    stockrecord.partner = self.request.user.partner
-                except ObjectDoesNotExist:
-                    partner = Partner.objects.create(user=self.request.user, name=self.request.user.get_full_name())
-                    partner.save()    
-                    stockrecord.partner = self.request.user.partner
+            stockrecord.save()
+        elif self.creating:
+            stockrecord = stockrecord_form.save(commit=False)
+            stockrecord.product = self.object
+            stockrecord.save()
+
+        ## don't change partners once the item is created.
+        if not self.object.stockrecord.partner and self.require_user_stockrecord:
+            try:
+                stockrecord.partner = self.request.user.partner
+            except ObjectDoesNotExist:
+                partner = Partner.objects.create(user=self.request.user, name=self.request.user.get_full_name())
+                partner.save()    
+                stockrecord.partner = self.request.user.partner
 
             stockrecord.save()
-        else:
-            # delete it
-            if self.object.has_stockrecord:
-                self.object.stockrecord.delete()
+        ## don't delete since we want a partner
+
+        #else:
+        #    # delete it
+        #    if self.object.has_stockrecord:
+        #        self.object.stockrecord.delete()
 
         # Save formsets
         category_formset.save()
