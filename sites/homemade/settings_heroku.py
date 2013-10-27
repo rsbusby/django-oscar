@@ -82,3 +82,19 @@ STATIC_URL = 'https://foodbucket.s3.amazonaws.com/'
 MEDIA_URL = 'https://foodbucket.s3.amazonaws.com/uploads/'
 FALSE_MEDIA_URL = STATIC_URL
 ADMIN_MEDIA_PREFIX = 'https://bucket-name.s3.amazonaws.com/static/dj/admin/'
+
+
+
+# Haystack settings
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': os.environ['SEARCHBOX_URL'],
+        'INDEX_NAME': 'documents',
+        },
+    }
+
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+
+
