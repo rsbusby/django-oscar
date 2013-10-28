@@ -35,9 +35,29 @@
                   </li>
                    <li class="divider-vertical"></li>                   
 
-                  <li>
-                    <a href="{% url 'about' %}"> {% trans "ABOUT" %}</a>
+            
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'about' %}">{% trans "ABOUT" %}<b class="caret"></b></a>
+
+                      <ul class="dropdown-menu">
+                    <li>
+                      <a href="{% url 'about' %}">{% trans "Our Mission" %}</a>
+                    </li>
+                    <li>
+                      <a href="{% url 'aboutCaliLaw' %}">{% trans "About CA1616" %}</a>
+                    </li>
+                    <li>
+                      <a href="{% url 'bios' %}">{% trans "Our Team" %}</a>
+                    </li>
+                    </ul>
+
                   </li>
+
+
+
+
+
                    <li class="divider-vertical"></li>                   
 
                   <li>
