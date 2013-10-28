@@ -34,10 +34,17 @@ class ProductCreationTests(ProductTests):
         product.save()
 
 
+
+
 class TopLevelProductTests(ProductTests):
 
     def test_top_level_products_must_have_titles(self):
         self.assertRaises(ValidationError, Product.objects.create, product_class=self.product_class)
+
+    def test_checkThatProductHasPartner(self):
+        p =  product = Product(product_class=self.product_class, title='test45')
+        self.assertTrue(p.has_attr('stockrecord'))
+
 
 
 class VariantProductTests(ProductTests):

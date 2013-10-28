@@ -8,6 +8,7 @@ from oscar.apps.promotions.models import PagePromotion, KeywordPromotion
 from oscar.apps.catalogue.views import ProductListView
 
 #from homemade.apps.homemade.homeMade import invite
+
 from apps.homemade.homeMade import *
 
 

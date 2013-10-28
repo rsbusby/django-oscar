@@ -9,6 +9,7 @@ from oscar.apps.customer.history_helpers import _get_list_from_json_string, _get
 
 Applicator = get_class('offer.utils', 'Applicator')
 Basket = get_model('basket', 'basket')
+Seller = get_model('homemade', 'Seller')
 
 
 from apps.homemade.homeMade import *

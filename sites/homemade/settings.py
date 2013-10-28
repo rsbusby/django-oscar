@@ -332,6 +332,7 @@ INSTALLED_APPS = INSTALLED_APPS + [
     # Debug toolbar + extensions
     #'debug_toolbar',
     'djrill',
+    'haystack',
     'cache_panel',
     'template_timings_panel',
     'storages',
@@ -405,6 +406,10 @@ from oscar.defaults import *
 
 SITE_ID=2
 
+## testing 
+SOUTH_TESTS_MIGRATE = False
+
+IMPORTING=False
 
 ## email/Mandrill setup
 OSCAR_FROM_EMAIL = "support@homemade1616.com"

@@ -11,11 +11,11 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.core.loading import get_class
 from oscar.apps.catalogue.signals import product_viewed, product_search
 
-from apps.homemade.homeMade import Seller
+#from homemade.apps.homemade.homeMade import Seller
 #from apps.user.models import ExtendedUser
 from django.db.models import Q
 
-
+Seller = get_model('homemade', 'Seller')
 
 Product = get_model('catalogue', 'product')
 ProductReview = get_model('reviews', 'ProductReview')

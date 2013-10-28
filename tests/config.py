@@ -6,6 +6,9 @@ from oscar import OSCAR_CORE_APPS, OSCAR_MAIN_TEMPLATE_DIR
 
 
 def configure():
+
+    print "configure settings"
+
     if not settings.configured:
         from oscar.defaults import OSCAR_SETTINGS
 
@@ -20,6 +23,7 @@ def configure():
                     'NAME': ':memory:',
                 },
             },
+            'MONGO_TEST': True,
             'INSTALLED_APPS': [
                 'django.contrib.auth',
                 'django.contrib.admin',
@@ -73,6 +77,16 @@ def configure():
         if django.VERSION >= (1, 5):
             test_settings['INSTALLED_APPS'] += ['tests._site.myauth', ]
             test_settings['AUTH_USER_MODEL'] = 'myauth.User'
+
         test_settings.update(OSCAR_SETTINGS)
+    
+
+        import mongoengine 
 
         settings.configure(**test_settings)
+        settings.MONGODB_DB = "test_db"
+        mongoengine.connect(settings.MONGODB_DB) 
+        print "YEAH setting Mongo DB in test config,  " + settings.MONGODB_DB
+
+
+
