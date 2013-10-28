@@ -19,9 +19,10 @@ from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import get_class, get_profile_class, get_classes
 #from oscar.core.compat import get_user_model
 from oscar.apps.customer.models import get_user_model
-#from apps.homemade.homeMade import Seller
+from apps.homemade.homeMade import Seller
 
-Seller = get_model('homemade', 'Seller')
+
+##Seller = get_model('homemade', 'Seller')
 
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
