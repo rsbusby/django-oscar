@@ -38,7 +38,7 @@
                         <ul>
                             {% for image in all_images %}
                             <li>
-                                {% thumbnail image.original "100x100" upscale=False as thumb %}
+                                {% thumbnail image.original "x110" upscale=False as thumb %}
                                  <a href="{{ image.original.url }}" rel="lightbox"><img src="{{stat_url}}{{thumb.name}}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /> </a>
                                 {% endthumbnail %}
                             </li>
@@ -54,7 +54,7 @@
         {# Only one image to show #}
 
         {% with image=product.primary_image %}
-            {% thumbnail image.original "400x400" upscale=False as thumb %}
+            {% thumbnail image.original "x410" upscale=False as thumb %}
             {% if not image.is_missing %}
                 <a href="{{ image.original.url }}" rel="lightbox"><img class="detailPic" src="{{stat_url}}{{thumb.name}}" data-large="{{ image.original.name }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /></a>
             {% else %}
