@@ -190,7 +190,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     # Allow languages to be selected
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -198,7 +198,7 @@ MIDDLEWARE_CLASSES = (
     'oscar.apps.basket.middleware.BasketMiddleware',
     # Enable the ProfileMiddleware, then add ?cprofile to any
     # URL path to print out profile details
-    #'oscar.profiling.middleware.ProfileMiddleware',
+    'oscar.profiling.middleware.ProfileMiddleware',
 )
 
 
@@ -330,11 +330,11 @@ INSTALLED_APPS = INSTALLED_APPS + [
     'django.contrib.staticfiles',
     'django_extensions',
     # Debug toolbar + extensions
-    #'debug_toolbar',
+    'debug_toolbar',
     'djrill',
     'haystack',
-    'cache_panel',
-    'template_timings_panel',
+    #'cache_panel',
+    #'template_timings_panel',
     'storages',
     'south',
     'rosetta',          # For i18n testing
@@ -370,18 +370,20 @@ HAYSTACK_CONNECTIONS = {
 # Debug Toolbar
 # =============
 
-INTERNAL_IPS = ('127.0.0.1',)
+#INTERNAL_IPS = ('127.0.0.1',)
+
+def show_toolbar(request):
+    return request.user.is_staff
 
 
-# Allow internal IPs to see the debug toolbar.  This is just for Tangent's QA
-# department to be able to create better issues when something goes wrong.
+# Allow internal IP's to see the debug toolbar.  
 def is_internal(request):
     ip_addr = request.META['REMOTE_ADDR']
     return ip_addr in INTERNAL_IPS or ip_addr.startswith('192.168')
 
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
-    'SHOW_TOOLBAR_CALLBACK': is_internal
+    'SHOW_TOOLBAR_CALLBACK': show_toolbar,
 }
 DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.headers.HeaderDebugPanel',
@@ -389,8 +391,8 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.template.TemplateDebugPanel',
     'debug_toolbar.panels.timer.TimerDebugPanel',
     'debug_toolbar.panels.sql.SQLDebugPanel',
-    'template_timings_panel.panels.TemplateTimings.TemplateTimings',
-    'cache_panel.panel.CacheDebugPanel',
+    #'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+    #'cache_panel.panel.CacheDebugPanel',
     'debug_toolbar.panels.signals.SignalDebugPanel',
     'debug_toolbar.panels.logger.LoggingPanel',
     'debug_toolbar.panels.version.VersionDebugPanel',

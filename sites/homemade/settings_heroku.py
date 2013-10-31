@@ -15,6 +15,14 @@ DATABASES = {
     }
 }
 
+
+TEMPLATE_LOADERS = (
+    ('django.template.loaders.cached.Loader', (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )),
+)
+
 DEBUG=True
 
 SITE_ID=3  ## set to 2 for www.homemade1616.com, 3 is heroku direct
