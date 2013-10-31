@@ -190,7 +190,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     # Allow languages to be selected
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -330,7 +330,7 @@ INSTALLED_APPS = INSTALLED_APPS + [
     'django.contrib.staticfiles',
     'django_extensions',
     # Debug toolbar + extensions
-    'debug_toolbar',
+    #'debug_toolbar',
     'djrill',
     'haystack',
     #'cache_panel',
