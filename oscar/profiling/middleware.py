@@ -41,7 +41,8 @@ class BaseMiddleware(object):
                 #     pyprof2calltree -o /tmp/callgrind.stats -i /tmp/out.stats
                 #
                 # then open the file in kcachegrind.
-                self.tmpfile = open('/tmp/out.stats', 'w')
+                ##self.tmpfile = open('/tmp/out.stats', 'w')
+                self.tmpfile = open('out.stats', 'w')                
             else:
                 self.tmpfile = tempfile.NamedTemporaryFile()
             self.profile = self.profiler()
