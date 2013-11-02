@@ -122,7 +122,7 @@
                         {% endif %}
 
 
-                        <li><a href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "LOGOUT " %}{{user.email}}</a></li>
+                        <li><a href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "LOGOUT " %}{#{{user.email}}#}</a></li>
                     {% else %}
                         <li><a href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "LOGIN or REGISTER" %}</a></li>
                     {% endif %}
