@@ -252,7 +252,6 @@
 
     <br><br>
 
-{% comment %}
     {% iffeature "reviews" %}
         {% block product_review %}
         <section>
@@ -266,7 +265,11 @@
             {% if not reviews %}
                 <p>
                     {% trans "This item does not have any reviews yet" %} -
+                
+                    {% comment %}
+                    {# only allowing review writing if you've bought the product #}
                     <a href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
+                    {% endcomment %}
                 </p>
             {% else %}
                 <div>
@@ -278,7 +281,7 @@
         </section>
         {% endblock product_review %}
     {% endiffeature %}
-{% endcomment %}
+
     <div class="row-fluid">
         {% if product.related_products.count %}
         <div class="span6">
