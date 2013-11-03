@@ -6,6 +6,8 @@ from django.template.loader import render_to_string, select_template
 
 from oscar.apps.basket.views import BasketView
 
+from apps.homemade.homeMade import *
+
 AddToBasketForm = get_class('basket.forms', 'AddToBasketForm')
 SimpleAddToBasketForm = get_class('basket.forms', 'SimpleAddToBasketForm')
 Product = get_model('catalogue', 'product')
@@ -27,6 +29,9 @@ def render_basket(context, basket):
     request = context['request']
     ## set up the context to be as expected for the basket content
     context['basket'] = basket
+    if basket.seller:
+        context['mseller'] = getSellerFromOscarID(basket.seller.user.id)
+    context['mu'] = getSellerFromOscarID(request.user.id)
     context['request'].basket = basket
     bv = BasketView()
     bv.request = context['request']

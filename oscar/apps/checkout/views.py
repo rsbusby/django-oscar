@@ -375,10 +375,16 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
        
 
         if request.POST.has_key('place-order'):
+            ##import ipdb;ipdb.set_trace()
             if not request.POST.has_key('basket_id'):
                 return self.get(request, **kwargs)
             basket = Basket.objects.filter(id=request.POST['basket_id'])[0]
-            return self.submit(basket, payment_kwargs=None, order_kwargs=None)
+            from apps.homemade.homeMade import chargeSharedOscar
+            order_number = self.generate_order_number(basket)
+            if request.POST.has_key('stripe'):
+                amountInCents = request.POST['order_total_incl_tax_in_cents']
+                chargeSharedOscar(request, basket, order_number, amountInCents)
+            return self.submit(basket, order_number, payment_kwargs=None, order_kwargs=None)
 
 
         error_response = self.get_error_response()
@@ -465,7 +471,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         except UserAddress.DoesNotExist:
             return None
 
-    def submit(self, basket, payment_kwargs=None, order_kwargs=None):
+    def submit(self, basket, order_number, payment_kwargs=None, order_kwargs=None):
         """
         Submit a basket for order placement.
 
@@ -500,7 +506,10 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # created).  We also save it in the session for multi-stage
         # checkouts (eg where we redirect to a 3rd party site and place
         # the order on a different request).
-        order_number = self.generate_order_number(basket)
+        # order_number = self.generate_order_number(basket)
+
+
+
         self.checkout_session.set_order_number(order_number)
         logger.info("Order #%s: beginning submission process for basket #%d", order_number, basket.id)
 

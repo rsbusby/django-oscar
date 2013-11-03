@@ -196,35 +196,44 @@ transaction. </p>
 
 <div style="clear:both"></div>
 
- <form style="float:left;margin:1.2em 0 0 0" method=post action="{% url 'checkout:payment-details' %}">
+ <form style="float:left;margin:1.2em 0 0 0" method="POST" action="{% url 'checkout:payment-details' %}">
     <input type="hidden" name="basket_id" value={{basket.id}} /> 
     <input type="hidden" name="place-order" value="True" /> 
 
-    <button style="width:100%;background-color:#D9E9FF;" class="orgButton" type="submit" name="sponsoredOrg" value="">Place Order</button>
+    <button style="width:100%;background-color:#D9E9FF;" class="orgButton" type="submit" name="sponsoredOrg" value="">Place order without payment</button>
 
   </form>
-
-
-{% if basket.seller.stripeSellerToken and basket.seller.stripeSellerPubKey %}
+{% if mseller.stripeSellerToken and mseller.stripeSellerPubKey %}
   
   <div style="margin-top:100px;">
-    <form action="/charge_shared" method="post" >
+   {# <form action="/charge_shared" method="post" >#}
+<form style="float:left;margin:1.2em 0 0 0" method="POST" action="{% url 'checkout:payment-details' %}">
+    <input type="hidden" name="basket_id" value={{basket.id}} /> 
+    <input type="hidden" name="place-order" value="True" /> 
+    <input type="hidden" name="stripe" value="True" /> 
+
+    <input type="hidden" name="order_total_incl_tax" value="{{order_total_incl_tax}}" /> 
+    <input type="hidden" name="order_total_incl_tax_in_cents" value="{{order_total_incl_tax_in_cents}}" /> 
+
+     {% comment %}
       <article>
         <label>
-          <span>Your total is ${{basket.order_total_incl_tax}}</span>
+          <span>Your total is {{order_total_incl_tax|currency}}</span>
         </label>
       </article>
-
-
+{% endcomment %}
+{{order_total_incl_tax_in_cents}}
+{{mseller.stripeSellerPubKey}}
+{{mseller}}
+alsdalsdl
     {% if mu.stripeHasCard %}
       <input type=submit value="Pay now" onclick=loopSelected();>
     {% else %}
 
       <script src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
-            data-key="{{o.seller.stripeSellerPubKey}}"
-            data-description="Checkout (for testing, enter 4242 4242 4242 4242 as
-            the credit card number)"
-            data-amount="{{basket.order_total_incl_tax_in_cents}}"></script>
+            data-key="{{mseller.stripeSellerPubKey}}"
+            data-description="Checkout"
+            data-amount="{{order_total_incl_tax_in_cents}}"></script>
     {% endif %}
 
     <input type="hidden" name="orderSeqId" value={{basket.id}} /> 
