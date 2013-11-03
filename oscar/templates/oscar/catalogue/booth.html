@@ -126,10 +126,16 @@
   {% if u.storePicPath %}
   <div id="storeBannerWide" style="margin-bottom:2.4em;width: 100%;height:auto;max-height:16em;overflow:hidden;">
   
+  {% comment %}
+        {% with image=stat_url+u.storePicPath %}
 
-  {% thumbnail u.storePicPath "x256" as im %}   
+  {% thumbnail  "x256" as im %}   
      <img src="{{im.url}}" class="store_banner" style="max-width:100%;max-height:256px;">
   {% endthumbnail %}
+
+  {% endcomment %}
+     <img src="{{stat_url}}{{u.storePicPath}}" class="store_banner" style="max-width:100%;max-height:256px;">
+
 
      </div>
   {% endif %}
