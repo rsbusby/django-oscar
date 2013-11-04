@@ -15,7 +15,7 @@
     {% block product_image %}
     <div class="image_container booth_image">
         {% with image=product.primary_image %}
-            {% thumbnail image.original "x400" upscale=False as thumb %}
+            {% thumbnail image.original "x155" upscale=False as thumb %}
                 <a href="{{ product.get_absolute_url }}">
                 <img src="{{stat_url}}{{thumb.name}}" 
                 alt="{{ product.get_title }}" 

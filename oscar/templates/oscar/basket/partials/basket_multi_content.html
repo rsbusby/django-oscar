@@ -203,11 +203,13 @@ transaction. </p>
     <button style="width:100%;background-color:#D9E9FF;" class="orgButton" type="submit" name="sponsoredOrg" value="">Place order without payment</button>
 
   </form>
+  <div style="clear:both"></div>
+
 {% if mseller.stripeSellerToken and mseller.stripeSellerPubKey %}
   
-  <div style="margin-top:100px;">
+  <div style="margin-top:10px;">
    {# <form action="/charge_shared" method="post" >#}
-<form style="float:left;margin:1.2em 0 0 0" method="POST" action="{% url 'checkout:payment-details' %}">
+<form style="float:left;margin:0 0 0 0" method="POST" action="{% url 'checkout:payment-details' %}">
     <input type="hidden" name="basket_id" value={{basket.id}} /> 
     <input type="hidden" name="place-order" value="True" /> 
     <input type="hidden" name="stripe" value="True" /> 
@@ -224,7 +226,7 @@ transaction. </p>
 {% endcomment %}
 
     {% if mu.stripeHasCard %}
-      <input type=submit value="Pay now" onclick=loopSelected();>
+      <input style="margin:0 0 0 0 ;width:100%;background-color:#2B86FF;color:#ffffff;font-weight:bold" type=submit value="Pay with card" onclick=loopSelected();>
     {% else %}
 
       <script src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
