@@ -383,7 +383,10 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             order_number = self.generate_order_number(basket)
             if request.POST.has_key('stripe'):
                 amountInCents = request.POST['order_total_incl_tax_in_cents']
-                chargeSharedOscar(request, basket, order_number, amountInCents)
+                chargeSuccess = chargeSharedOscar(request, basket, order_number, amountInCents)
+                if not chargeSuccess:
+                    return HttpResponseRedirect(reverse('basket:summary'))
+
             return self.submit(basket, order_number, payment_kwargs=None, order_kwargs=None)
 
 
