@@ -448,7 +448,7 @@ OSCAR_SHOP_TAGLINE = ''
 #GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
 
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
-OSCAR_ALLOW_ANON_CHECKOUT = True
+OSCAR_ALLOW_ANON_CHECKOUT = False
 
 # This is added to each template context by the core context processor.  It is
 # useful for test/stage/qa sites where you want to show the version of the site
@@ -511,6 +511,35 @@ if not os.path.exists(LOG_ROOT):
 
 THUMBNAIL_DEBUG = True
 THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
+
+
+# Search facets
+from django.utils.translation import ugettext_lazy as _
+
+OSCAR_SEARCH_FACETS = {
+    'fields': {
+        # The key for these dicts will be used when passing facet data
+        # to the template. Same for the 'queries' dict below.
+        'category': {
+            'name': _('Category'),
+            'field': 'category'
+        }
+    },
+    'queries': {
+        'price_range': {
+            'name': _('Price range'),
+            'field': 'price',
+            'queries': [
+                # This is a list of (name, query) tuples where the name will
+                # be displayed on the front-end.
+                (_('0 to 2'), '[0 TO 2]'),
+                (_('2 to 4'), '[2 TO 4]'),
+                (_('4 to 6'), '[4 TO 6]'),
+                (_('6+'), '[6 TO *]'),
+            ]
+        }
+    }
+}
 
 
 # Try and import local settings which can be used to override any of the above.

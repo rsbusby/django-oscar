@@ -58,7 +58,7 @@ class FacetedSearchView(views.FacetedSearchView):
 
     def extra_context(self):
         extra = super(FacetedSearchView, self).extra_context()
-
+        ##import ipdb;ipdb.set_trace()
         if 'fields'  not in extra['facets']:
             # Looks like Solr is not responding correctly
             return extra
@@ -97,6 +97,7 @@ class FacetedSearchView(views.FacetedSearchView):
                 facet_data[field].append(datum)
 
         # Query facets
+
         for key, facet in settings.OSCAR_SEARCH_FACETS['queries'].items():
             facet_data[key] = []
             for name, query in facet['queries']:
@@ -144,6 +145,7 @@ class MultiFacetedSearchView(FacetedSearchView):
         """
         # Look for UPC match
         query = request.GET.get('q', '').strip()
+        import ipdb;ipdb.set_trace()
         try:
             item = Product._default_manager.get(upc=query)
             return HttpResponseRedirect(item.get_absolute_url())

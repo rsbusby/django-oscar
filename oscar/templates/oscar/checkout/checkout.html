@@ -12,6 +12,12 @@
 {% block header %}
 {% endblock header %}
 
+{% block extrastyles %}
+   {{ block.super }}
+   <link rel='stylesheet' type='text/css' href="{% static 'style_modal.css' %}"/>
+
+ {% endblock %}
+
 {% block checkout_nav %}
     {% include 'checkout/nav.html' %}
 {% endblock %}
@@ -86,14 +92,170 @@
                 <div class="sub-header">
                     <h2>{% trans "Payment" %}</h2>
                 </div>
+          
                 <div class="well well-success">
                     <h4>Payment</h4>
-                    <p>{% trans "Payment details to go here" %}</p>
-                    <div class="alert-actions">
-                        <a href="{% url 'checkout:payment-details' %}" class="btn">{% trans "Change payment details" %}</a>
-                    </div>
-                </div>
-            </div>
+
+
+
+{% if basket.sponsored_org %}
+
+    <div class="span11 pull-right" style="margin:0">
+
+
+<p> You have chosen to benefit <b>{{basket.sponsored_org.name}}</b> with this
+transaction. </p>
+
+
+
+{% if payment_method %}
+
+    {% if payment_method == "in_person" %}
+        Paying in person at time of pick-up.
+    {% endif %}
+
+    {% if payment_method == "stripe" %}
+        Paying with card.
+    {% endif %}
+
+
+{% endif %}
+
+
+
+{% comment %}
+  <form style="float:left;margins=auto;" method=post action="{% url 'checkout:preview' %}">
+    <input type="hidden" name="basket_id" value={{basket.id}} /> 
+    <input type="hidden" name="unsetSponsoredOrg" value='' /> 
+
+    <button style="width:100%;" class="orgButton" type="submit" name="sponsoredOrg" value="">Choose again</button>
+
+  </form>
+{% endcomment %}
+</div> {# grid span #}:
+
+<div style="clear:both"></div>
+{% comment %}
+ <form style="float:left;margin:1.2em 0 0 0" method="POST" action="{% url 'checkout:preview' %}">
+    <input type="hidden" name="basket_id" value={{basket.id}} /> 
+    <input type="hidden" name="place-order" value="True" /> 
+
+    <button style="width:100%;background-color:#D9E9FF;" class="orgButton" type="submit" name="sponsoredOrg" value="">Pay in person during pickup</button>
+
+  </form>
+  <div style="clear:both"></div>
+{% endcomment %}
+  <div class="alert-actions">
+    <a href="{% url 'checkout:payment-method' %}" class="btn">{% trans "Change payment options" %}</a>
+    </div>
+
+
+{% if mseller.stripeSellerToken and mseller.stripeSellerPubKey %}
+  
+  <div style="margin-top:10px;">
+   {# <form action="/charge_shared" method="post" >#}
+<form style="float:left;margin:0 0 0 0" method="POST" action="{% url 'checkout:payment-details' %}">
+    <input type="hidden" name="basket_id" value={{basket.id}} /> 
+    <input type="hidden" name="place-order" value="True" /> 
+    <input type="hidden" name="stripe" value="True" /> 
+
+    <input type="hidden" name="order_total_incl_tax" value="{{order_total_incl_tax}}" /> 
+    <input type="hidden" name="order_total_incl_tax_in_cents" value="{{order_total_incl_tax_in_cents}}" /> 
+
+     {% comment %}
+      <article>
+        <label>
+          <span>Your total is {{order_total_incl_tax|currency}}</span>
+        </label>
+      </article>
+{% endcomment %}
+
+    {% if mu.stripeHasCard %}
+      <input style="margin:0 0 0 0 ;width:100%;background-color:#2B86FF;color:#ffffff;font-weight:bold" type=submit value="Pay with card" onclick=loopSelected();>
+    {% else %}
+
+      <script src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
+            data-key="{{mseller.stripeSellerPubKey}}"
+            data-description="Checkout"
+            data-amount="{{order_total_incl_tax_in_cents}}"></script>
+    {% endif %}
+
+    <input type="hidden" name="orderSeqId" value={{basket.id}} /> 
+
+    </form>
+  </div>  {#charge form wrapper #}
+
+ {% else %} {# no stripe setup #}
+    <br><br>
+{#    <h3> Unfortunately this seller has not registered with any of our payment methods. </h3> #}
+
+ {% endif %}  {# seller is registered with payment #}
+
+
+{% else %} {# no org picked #}
+    
+    <div class="span8 pull-left" style="margin:0">
+
+  <p>
+    First, please choose the organization you wish to benefit from this sale: 
+    <a style="color:#ff6666;font-size:1.0em;float:lef;margin-left:0.5em" href="#openModalGive"> What's this?</a>
+
+  </p>
+
+    <div id="openModalGive" class="modalGiveBackDialog">
+      <div> 
+        <a href="#close" title="Close" class="close">X</a>
+        <h2>Giving Back To The Local Food Community</h2>
+        <p> Every time you buy something on homemade1616.com, we donate 10% of our proceeds to an amazing California-based food-related nonprofit organization, and you get to choose which organization receives that donation upon checkout! </p> <p> Sellers pay nothing extra. You pay nothing extra. We think giving back is the right thing to do.
+        </p>
+        <form action="#close" method="" >
+          <article>
+          <label>
+            <span></span>
+          </label>
+          </article>
+          <input type="hidden" name="return" value="True" /> 
+          <div class=deleteButto><input type=submit value="Close window"></div>
+      
+        </form>      
+    </div> 
+  </div>
+  {% for sponsored_org in current_sponsored_orgs %}
+
+   <form style="float:right;margin:0px;" method=post action="#">
+     <input type="hidden" name="basket_id" value={{basket.id}} /> 
+     <input type="hidden" name="setSponsoredOrg" value='' /> 
+     <input type="hidden" name="sponsored_org_id" value='{{sponsored_org.id}}' /> 
+
+     <button style="width:170px;hheight:3em;padding:5px 6px 5px 6px" class="orgButton" type="submit" name="sponsoredOrg" value="">{{sponsored_org.name}}</button>
+
+  </form>
+  <div style="clear:both"> </div>
+
+  {% endfor %} {# current sponsored orgs #}
+
+  </div> {# grid span #}
+
+{% endif %}   {# sponsoredOrg#}
+
+
+
+
+
+
+
+                </div> {# well-success#}
+
+
+
+            </div> {# span6#}
+
+
+
+
+
+
+
         {% endblock payment_method %}
     </div>
 
@@ -141,7 +303,7 @@
 
         {% block order_contents_actions %}
             <div class="form-actions">
-                <a href="{% url 'basket:summary' %}" class="btn">{% trans "Edit order contents" %}</a>
+                <a href="{% url 'basket:summary' %}?basket_id={{basket.id}}" class="btn">{% trans "Edit order contents" %}</a>
             </div>
         {% endblock %}
 

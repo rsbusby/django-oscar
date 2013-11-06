@@ -162,7 +162,7 @@
 {% block simpleCheckout %}
 <br><br>
  <div class="span7 pull-left" style="margin:0"> 
-<h3> Pay here for items from {{basket.seller.name }}'s  booth.</h3>
+{#<h3> Pay here for items from {{basket.seller.name }}'s  booth.</h3>#}
 </div>
         {% block baskettotals %}
             <div class="span4 pull-right"> 
@@ -174,8 +174,10 @@
 
   <div style="clear:both" ></div>
 
+     <input style="" type="button" value="Go to Checkout" onclick=location.href="{% url 'checkout:preview'  %}">
 
 
+{% comment %}
 {% if basket.sponsored_org %}
 
     <div class="span7 pull-left" style="margin:0">
@@ -191,6 +193,9 @@ transaction. </p>
     <button style="width:100%;" class="orgButton" type="submit" name="sponsoredOrg" value="">Choose again</button>
 
   </form>
+
+
+
 
 </div> {# grid span #}
 
@@ -217,13 +222,7 @@ transaction. </p>
     <input type="hidden" name="order_total_incl_tax" value="{{order_total_incl_tax}}" /> 
     <input type="hidden" name="order_total_incl_tax_in_cents" value="{{order_total_incl_tax_in_cents}}" /> 
 
-     {% comment %}
-      <article>
-        <label>
-          <span>Your total is {{order_total_incl_tax|currency}}</span>
-        </label>
-      </article>
-{% endcomment %}
+ 
 
     {% if mu.stripeHasCard %}
       <input style="margin:0 0 0 0 ;width:100%;background-color:#2B86FF;color:#ffffff;font-weight:bold" type=submit value="Pay with card" onclick=loopSelected();>
@@ -292,9 +291,9 @@ transaction. </p>
   </div> {# grid span #}
 
 {% endif %}   {# sponsoredOrg#}
+{% endcomment %}
 
-
-{% endblock %}
+{% endblock %} {#simple checkout #}
 
 </div> {# grid span 4 #}
 </div> {# row fluid#}

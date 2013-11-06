@@ -19,6 +19,20 @@ class Free(ShippingMethod):
         return D('0.00')
 
 
+class LocalPickup(ShippingMethod):
+    """
+    Simple method for local pickup
+    """
+    code = 'local-pickup'
+    name = _('Local pickup')
+
+    def basket_charge_incl_tax(self):
+        return D('0.00')
+
+    def basket_charge_excl_tax(self):
+        return D('0.00')
+
+
 class NoShippingRequired(Free):
     """
     This is a special shipping method that indicates that no shipping is

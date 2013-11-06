@@ -14,6 +14,9 @@ from oscar.apps.customer.utils import normalise_email
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
 
+from oscar.apps.order.models import SponsoredOrganization
+
+
 ShippingAddressForm, GatewayForm = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
 OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
 CheckoutSessionData = get_class('checkout.utils', 'CheckoutSessionData')
@@ -247,9 +250,9 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
             return self.get_success_response()
 
         # Check that shipping address has been completed
-        if not self.checkout_session.is_shipping_address_set():
-            messages.error(request, _("Please choose a shipping address"))
-            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+        #if not self.checkout_session.is_shipping_address_set():
+        #    messages.error(request, _("Please choose a shipping address"))
+        #    return HttpResponseRedirect(reverse('checkout:shipping-address'))
 
         # Save shipping methods as instance var as we need them both here
         # and when setting the context vars.
@@ -258,10 +261,10 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
             # No shipping methods available for given address
             messages.warning(request, _("Shipping is not available for your chosen address - please choose another"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
-        elif len(self._methods) == 1:
-            # Only one shipping method - set this and redirect onto the next step
-            self.checkout_session.use_shipping_method(self._methods[0].code)
-            return self.get_success_response()
+        #elif len(self._methods) == 1:
+        #    # Only one shipping method - set this and redirect onto the next step
+        #    self.checkout_session.use_shipping_method(self._methods[0].code)
+        #    return self.get_success_response()
 
         # Must be more than one available shipping method, we present them to
         # the user to make a choice.
@@ -358,9 +361,18 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     template_name = 'checkout/payment_details.html'
     template_name_preview = 'checkout/preview.html'
     preview = False
+    basket = None
 
     def get(self, request, *args, **kwargs):
         error_response = self.get_error_response()
+
+        if request.GET.has_key('basket_id'):
+            try:
+                self.basket = Basket.objects.filter(id=request.GET['basket_id'])[0]
+                request.basket = self.basket
+            except:
+                ## ignore input, give default basket from request. Could also check that basket is for user here
+                pass
         if error_response:
             return error_response
 
@@ -373,12 +385,30 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         valid then the method can call submit()
         """
        
+        if request.POST.has_key('payment_method'):
+            method_code = request.POST['payment_method']
+            self.checkout_session.pay_by(method_code)
+
+        if request.POST.has_key('setSponsoredOrg') or request.POST.has_key('unsetSponsoredOrg'):
+            basket = Basket.objects.filter(id=request.POST['basket_id'])[0]
+
+            if request.POST.has_key('setSponsoredOrg'):
+                sOrg = SponsoredOrganization.objects.filter(id=request.POST['sponsored_org_id'])[0]
+                basket.sponsored_org = sOrg
+                basket.save()
+            if request.POST.has_key('unsetSponsoredOrg'):   
+                basket.sponsored_org = None
+                basket.save()
+            ## ok, now should GET this page....
+            request.basket = basket
+            return self.get(request, *args, **kwargs)
+
 
         if request.POST.has_key('place-order'):
-            ##import ipdb;ipdb.set_trace()
             if not request.POST.has_key('basket_id'):
                 return self.get(request, **kwargs)
             basket = Basket.objects.filter(id=request.POST['basket_id'])[0]
+
             from apps.homemade.homeMade import chargeSharedOscar
             order_number = self.generate_order_number(basket)
             if request.POST.has_key('stripe'):
@@ -430,6 +460,11 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
 
         # Add guest email if one is set
         ctx['guest_email'] = self.checkout_session.get_guest_email()
+
+        if self.basket:
+            ctx['basket'] = self.basket
+
+        ctx['current_sponsored_orgs']= SponsoredOrganization.objects.filter(status__icontains='current')
 
         ctx.update(kwargs)
         return ctx

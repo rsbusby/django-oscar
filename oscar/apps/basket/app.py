@@ -18,6 +18,8 @@ class BasketApplication(Application):
         urlpatterns = patterns('',
             #url(r'^$', self.summary_view.as_view(), name='summary'),
             url(r'^$', self.summary_view.as_view(), name='single'),            
+            url(r'^/(?P<basket_id>\d+)/$', self.summary_view.as_view(), name='single'),            
+
             url(r'^multi$', self.summary_view.as_view(), name='multi'),
             url(r'^list/$', self.multi_vendor_view.as_view(), name='summary'),
             url(r'^add/$', self.add_view.as_view(), name='add'),

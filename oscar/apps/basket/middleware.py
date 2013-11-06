@@ -181,6 +181,7 @@ class BasketMiddleware(object):
         if hasattr(response, 'context_data'):
             if response.context_data is None:
                 response.context_data = {}
+
             if 'basket' not in response.context_data:
                 response.context_data['basket'] = request.basket
             else:

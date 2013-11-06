@@ -97,6 +97,17 @@ class BasketView(ModelFormSetView):
        super(BasketView, self).__init__()
        return
 
+    def get(self, request, *args, **kwargs):
+        
+        if request.GET.has_key('basket_id'):
+            try:
+                self.basket = Basket.objects.filter(id=request.GET['basket_id'])[0]
+                request.basket = self.basket
+            except:
+                ## ignore input, give default basket from request. Could also check that basket is for user here
+                pass
+
+        return super(BasketView, self).get(request, *args, **kwargs)        
 
 
     def get_queryset(self):

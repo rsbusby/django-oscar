@@ -2,7 +2,7 @@ import logging
 
 from django.db.models import get_model
 
-from oscar.apps.shipping.methods import Free
+from oscar.apps.shipping.methods import Free, LocalPickup
 from oscar.core.loading import get_class
 OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
 CheckoutSessionData = get_class('checkout.utils', 'CheckoutSessionData')
@@ -49,9 +49,9 @@ class CheckoutSessionMixin(object):
     def get_shipping_method(self, basket=None):
         method = self.checkout_session.shipping_method(basket)
 
-        # We default to using free shipping
+        # We default to using free local pickup
         if not method:
-            method = Free()
+            method = LocalPickup()
 
         return method
 
@@ -82,5 +82,7 @@ class CheckoutSessionMixin(object):
             ctx['shipping_total_incl_tax'] = method.basket_charge_incl_tax()
 
         ctx['order_total_incl_tax'], ctx['order_total_excl_tax'] = self.get_order_totals()
+
+        ctx['payment_method'] = self.checkout_session.payment_method()
 
         return ctx

@@ -366,10 +366,11 @@ class AbstractAddress(models.Model):
         fields = [self.salutation, self.line1, self.line2,
                   self.line3, self.line4, self.state, self.postcode]
         fields = map(string.strip, filter(bool, fields))
-        try:
-            fields.append(self.country.name)
-        except exceptions.ObjectDoesNotExist:
-            pass
+        ## not appending country for now
+        #try:
+        #    fields.append(self.country.name)
+        #except exceptions.ObjectDoesNotExist:
+        #    pass
         return fields
 
 

@@ -43,6 +43,9 @@ class CheckoutApplication(Application):
                 self.payment_details_view.as_view(), name='payment-details'),
 
             # Preview and thankyou
+            url(r'preview/(?P<basket_id>\d+)/$',
+                self.payment_details_view.as_view(preview=True),
+                name='preview'),
             url(r'preview/$',
                 self.payment_details_view.as_view(preview=True),
                 name='preview'),
