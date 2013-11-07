@@ -7,15 +7,38 @@
 {% endblock %}
 
 {% block checkout_nav %}
-    {% include 'checkout/nav.html' with step=1 %}
+    {% include 'checkout/nav.html' with step=2 %}
 {% endblock %}
 
 {% block order_contents %}{% endblock %}
 
+
+method
+{{ shipping_method }}
+
+
 {% block shipping_address %}
+{% if shipping_method.code == "local-pickup" %}
+
+<br><br>
+<b>No shipping needed since you have chosen local pickup.</b>
+<br><br>
+
+  <div class="alert-actions">
+                                <a href="{% url 'checkout:shipping-method' %}?basket_id={{basket.id}}" class="btn">{% trans "Change delivery method" %}</a>
+                            </div>
+
+    <a href="{% url 'checkout:preview' %}?basket_id={{basket.id}}" class="btn btn-primary btn-large">{% trans "Continue" %}</a>
+
+
+{% else %} {# not local pickup #}
+
+
     <div class="sub-header">
         <h2>{% trans "Where should we ship to?" %}</h2>
     </div>
+
+
     {% if request.user.is_authenticated %}
         {% if addresses %}
             
@@ -60,7 +83,13 @@
             {% trans "or" %} <a href="{% url 'basket:summary' %}?basket_id={{basket.id}}">{% trans "return to basket" %}</a>
         </div>
     </form>
+
+{% endif %} {# if not local-pickup #}
+
+
 {% endblock shipping_address %}
+
+
 
 {% block shipping_method %}{% endblock %}
 {% block payment_method %}{% endblock %}

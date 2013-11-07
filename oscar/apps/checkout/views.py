@@ -319,7 +319,7 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         return self.get_success_response()
 
     def get_success_response(self):
-        return HttpResponseRedirect(reverse('checkout:payment-method'))
+        return HttpResponseRedirect(reverse('checkout:preview'))
 
 
 # ==============
@@ -488,6 +488,14 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         ##if shipping_required and  ##not self.checkout_session.is_shipping_address_set():
             messages.error(self.request, _("Please choose a shipping address"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
+
+
+        # Check that payment method has been set
+        if self.preview:
+            payment_method = self.checkout_session.payment_method()
+            if not payment_method:
+                messages.error(self.request, _("Please choose a payment method"))
+                return HttpResponseRedirect(reverse('checkout:payment-method'))
 
 
     def get_context_data(self, **kwargs):
