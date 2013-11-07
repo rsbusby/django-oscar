@@ -380,7 +380,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     basket = None
 
     def get(self, request, *args, **kwargs):
-        error_response = self.get_error_response()
+
 
 
         if request.GET.has_key('basket_id'):
@@ -395,6 +395,11 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             except:
                 ## ignore input, give default basket from request. Could also check that basket is for user here
                 pass
+  
+
+        error_response = self.get_error_response()
+
+
         if error_response:
             return error_response
 
