@@ -34,9 +34,10 @@
         {% block shipping_address %}
             <div class="span6">
                 <div class="sub-header">
-                    <h2>{% trans "Shipping / Local Pickup" %}</h2>
+                    <h2>{% trans "Delivery / Local Pickup" %}</h2>
                 </div>
-                {% if shipping_address %}
+              
+                {% if shipping_address and shipping_method.code != "local-pickup" %}
                     <div class="well well-info">
                         <h4>{% trans "Address" %}</h4>
                         <address>
@@ -69,7 +70,7 @@
 
                 {% if shipping_method %}
                     <div class="well well-info">
-                        <h4>{% trans "Shipping method" %}</h4>
+                        <h4>{% trans "Delivery method" %}</h4>
                         <p>{{ shipping_method.name }}
                             {% if shipping_method.description %}
                                 - {{ shipping_method.description|safe }}
@@ -78,7 +79,7 @@
 
                         {% block shipping_method_actions %}
                             <div class="alert-actions">
-                                <a href="{% url 'checkout:shipping-method' %}" class="btn">{% trans "Change shipping method" %}</a>
+                                <a href="{% url 'checkout:shipping-method' %}" class="btn">{% trans "Change delivery method" %}</a>
                             </div>
                         {% endblock %}
                     </div>
@@ -132,7 +133,7 @@ transaction. </p>
 
   </form>
 {% endcomment %}
-</div> {# grid span #}:
+</div> {# grid span #}
 
 <div style="clear:both"></div>
 {% comment %}
