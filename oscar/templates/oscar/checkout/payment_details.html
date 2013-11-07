@@ -48,20 +48,32 @@ transaction. </p>
 
 	
 <div style="margin:1em 0 1em 0">
+    <b style="font-size:1.2em">
     {% if payment_method == "in_person" %}
         Paying in person at time of pick-up.
     {% endif %}
 
     {% if payment_method == "stripe" %}
         Paying with card.
+            {% if mu.stripeHasCard %}
+            	{#Your card is authorized for payments with this booth.#}
+            {% else %}
+            	You'll enter card information when you place your order.
+            {% endif %}
+
     {% endif %}
+    </b>
 </div>
+{% endif %}
+
 <div style="clear:both"></div>
 
 
-	<a href="{% url 'checkout:preview' %}?basket_id={{basket.id}}" class="btn btn-primary btn-large">{% trans "Continue" %}</a>
 
-{% else %}
+
+
+
+
 
  <form style="float:left;margin:1.2em 0 0 0" method="POST" action="{% url 'checkout:payment-details' %}">
     <input type="hidden" name="basket_id" value={{basket.id}} /> 
@@ -69,12 +81,34 @@ transaction. </p>
 
     {#<input type="hidden" name="place-order" value="True" /> #}
 
-    <button style="width:100%;background-color:#D9E9FF;" class="orgButton" type="submit" name="sponsoredOrg" value="">Pay in person during pickup</button>
+    <button style="width:100%;background-color:#D9E9FF;" class="orgButton" type="submit" name="sponsoredOrg" value="">Pay in person at time of pickup</button>
 
   </form>
-  {% endif %}
 
   <div style="clear:both"></div>
+
+  {% if mseller.stripeSellerToken and mseller.stripeSellerPubKey %}
+
+<form style="float:left;margin:1.2em 0 0 0" method="POST" action="{% url 'checkout:payment-details' %}">
+    <input type="hidden" name="basket_id" value={{basket.id}} /> 
+    <input type="hidden" name="payment_method" value="stripe" /> 
+
+    {#<input type="hidden" name="place-order" value="True" /> #}
+
+    <button style="width:100%;background-color:#D9E9FF;" class="orgButton" type="submit" name="sponsoredOrg" value="">Use card for payment</button>
+
+  </form>
+
+  {% endif %} {# seller has Stripe #}
+
+
+
+
+  <div style="clear:both"></div>
+
+	<a href="{% url 'checkout:preview' %}?basket_id={{basket.id}}" class="btn btn-primary btn-large">{% trans "Continue" %}</a>
+
+  
 
 {% if mseller.stripeSellerToken and mseller.stripeSellerPubKey %}
   

@@ -436,15 +436,15 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                 return self.get(request, **kwargs)
             basket = Basket.objects.filter(id=request.POST['basket_id'])[0]
 
-            from apps.homemade.homeMade import chargeSharedOscar
-            order_number = self.generate_order_number(basket)
-            if request.POST.has_key('stripe'):
-                amountInCents = request.POST['order_total_incl_tax_in_cents']
-                chargeSuccess = chargeSharedOscar(request, basket, order_number, amountInCents)
-                if not chargeSuccess:
-                    return HttpResponseRedirect(reverse('basket:summary'))
+            # from apps.homemade.homeMade import chargeSharedOscar
+            # order_number = self.generate_order_number(basket)
+            # if request.POST.has_key('stripe'):
+            #     amountInCents = request.POST['order_total_incl_tax_in_cents']
+            #     chargeSuccess = chargeSharedOscar(request, basket, order_number, amountInCents)
+            #     if not chargeSuccess:
+            #         return HttpResponseRedirect(reverse('basket:summary'))
 
-            return self.submit(basket, order_number, payment_kwargs=None, order_kwargs=None)
+            return self.submit(basket, payment_kwargs=None, order_kwargs=None)
 
 
         error_response = self.get_error_response()
@@ -506,8 +506,14 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # Add guest email if one is set
         ctx['guest_email'] = self.checkout_session.get_guest_email()
 
-        if self.basket:
-            ctx['basket'] = self.basket
+        if self.request.basket:
+            ctx['basket'] = self.request.basket
+
+        from apps.homemade.homeMade import getSellerFromOscarID
+
+        if self.request.basket:
+            ctx['mseller'] = getSellerFromOscarID(self.request.basket.seller.user.id)
+        ctx['mu'] = getSellerFromOscarID(self.request.user.id)
 
         ctx['current_sponsored_orgs']= SponsoredOrganization.objects.filter(status__icontains='current')
 
@@ -554,7 +560,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         except UserAddress.DoesNotExist:
             return None
 
-    def submit(self, basket, order_number, payment_kwargs=None, order_kwargs=None):
+    def submit(self, basket, payment_kwargs=None, order_kwargs=None):
         """
         Submit a basket for order placement.
 
@@ -578,6 +584,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         if order_kwargs is None:
             order_kwargs = {}
 
+
         # Domain-specific checks on the basket
         is_valid, reason, url = self.can_basket_be_submitted(basket)
         if not is_valid:
@@ -589,9 +596,9 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # created).  We also save it in the session for multi-stage
         # checkouts (eg where we redirect to a 3rd party site and place
         # the order on a different request).
-        # order_number = self.generate_order_number(basket)
 
 
+        order_number = self.generate_order_number(basket)
 
         self.checkout_session.set_order_number(order_number)
         logger.info("Order #%s: beginning submission process for basket #%d", order_number, basket.id)
@@ -697,7 +704,22 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         events (using add_payment_event) so they can be
         linked to the order when it is saved later on.
         """
-        pass
+
+        payment_method = self.checkout_session.payment_method()
+        if payment_method == "in-person":
+            pass
+
+        if payment_method == "stripe":
+            from apps.homemade.homeMade import chargeSharedOscar
+            from math import floor
+            if self.request.POST.has_key('stripe'):
+                amountInCents = int(floor(float(total) * 100.0))
+                chargeSuccess = chargeSharedOscar(self.request, self.request.basket, order_number, amountInCents)
+                if not chargeSuccess:
+                    return HttpResponseRedirect(reverse('checkout:preview'))
+
+
+        return
 
 
 # =========

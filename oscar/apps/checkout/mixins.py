@@ -177,7 +177,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         if not basket:
             basket = self.request.basket
-        if not basket.is_shipping_required():
+        if not basket.is_shipping_required() or self.checkout_session.shipping_method().code == 'local-pickup':
             return None
 
         addr_data = self.checkout_session.new_shipping_address_fields()

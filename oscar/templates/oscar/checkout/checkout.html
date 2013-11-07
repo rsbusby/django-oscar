@@ -97,8 +97,6 @@
                 <div class="well well-success">
                     <h4>Payment</h4>
 
-
-
 {% if basket.sponsored_org %}
 
     <div class="span11 pull-right" style="margin:0">
@@ -151,46 +149,6 @@ transaction. </p>
     </div>
 
 
-{% if mseller.stripeSellerToken and mseller.stripeSellerPubKey %}
-  
-  <div style="margin-top:10px;">
-   {# <form action="/charge_shared" method="post" >#}
-<form style="float:left;margin:0 0 0 0" method="POST" action="{% url 'checkout:payment-details' %}">
-    <input type="hidden" name="basket_id" value={{basket.id}} /> 
-    <input type="hidden" name="place-order" value="True" /> 
-    <input type="hidden" name="stripe" value="True" /> 
-
-    <input type="hidden" name="order_total_incl_tax" value="{{order_total_incl_tax}}" /> 
-    <input type="hidden" name="order_total_incl_tax_in_cents" value="{{order_total_incl_tax_in_cents}}" /> 
-
-     {% comment %}
-      <article>
-        <label>
-          <span>Your total is {{order_total_incl_tax|currency}}</span>
-        </label>
-      </article>
-{% endcomment %}
-
-    {% if mu.stripeHasCard %}
-      <input style="margin:0 0 0 0 ;width:100%;background-color:#2B86FF;color:#ffffff;font-weight:bold" type=submit value="Pay with card" onclick=loopSelected();>
-    {% else %}
-
-      <script src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
-            data-key="{{mseller.stripeSellerPubKey}}"
-            data-description="Checkout"
-            data-amount="{{order_total_incl_tax_in_cents}}"></script>
-    {% endif %}
-
-    <input type="hidden" name="orderSeqId" value={{basket.id}} /> 
-
-    </form>
-  </div>  {#charge form wrapper #}
-
- {% else %} {# no stripe setup #}
-    <br><br>
-{#    <h3> Unfortunately this seller has not registered with any of our payment methods. </h3> #}
-
- {% endif %}  {# seller is registered with payment #}
 
 
 {% else %} {# no org picked #}
@@ -303,7 +261,7 @@ transaction. </p>
         </div>
 
         {% block order_contents_actions %}
-            <div class="form-actions">
+            <div class="form-actions pull-right">
                 <a href="{% url 'basket:summary' %}?basket_id={{basket.id}}" class="btn">{% trans "Edit order contents" %}</a>
             </div>
         {% endblock %}

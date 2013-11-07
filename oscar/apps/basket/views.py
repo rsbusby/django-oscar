@@ -372,16 +372,6 @@ class BasketListView(ListView):
         #q = self.q
         #pq = self.pq
 
-        #import ipdb;ipdb.set_trace()
-
-        from oscar.apps.checkout.views import  PaymentDetailsView
-
-        pdv = PaymentDetailsView()
-
-        print "YOYO"
-        print pdv.handle_payment(5, 5)
-        ##pdv.submit(self, basket)
-
         baskets = Basket.objects.filter(owner=self.request.user, status="Open").order_by('-id')
         context['baskets'] = baskets
         context['current_sponsored_orgs']= SponsoredOrganization.objects.filter(status__icontains='current')
