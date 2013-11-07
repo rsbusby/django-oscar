@@ -18,8 +18,8 @@ class BasketMiddleware(object):
 
     def process_request(self, request):
         request.cookies_to_delete = []
-        print "in basket middleware, yay"
-        print request.user
+        #print "in basket middleware, yay"
+        #print request.user
         basket = self.get_basket(request)
         #   baskets = self.get_baskets(request)        
         self.apply_offers_to_basket(request, basket)
@@ -35,6 +35,7 @@ class BasketMiddleware(object):
 
     def get_basket(self, request):
         manager = Basket.open
+
         cookie_basket = self.get_cookie_basket(
             settings.OSCAR_BASKET_COOKIE_OPEN, request, manager)
         #import ipdb;ipdb.set_trace()
@@ -58,7 +59,13 @@ class BasketMiddleware(object):
                 #    baskets = []
                 #    self.merge_baskets_by_seller(baskets, old_baskets)
                 baskets = manager.filter(owner=request.user)
-                basket = baskets[0]
+                if request.session.has_key('cur_basket_id'):
+                    try:
+                        basket = Basket.objects.filter(id=request.session['cur_basket_id'])[0]
+                    except:
+                        basket = baskets[0]
+                else:
+                    basket = baskets[0]
             # Assign user onto basket to prevent further SQL queries when
             # basket.owner is accessed.
             #basket.owner = request.user

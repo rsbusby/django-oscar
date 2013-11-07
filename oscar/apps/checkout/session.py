@@ -20,6 +20,7 @@ class CheckoutSessionMixin(object):
     """
 
     def dispatch(self, request, *args, **kwargs):
+
         self.checkout_session = CheckoutSessionData(request)
         return super(CheckoutSessionMixin, self).dispatch(request, *args, **kwargs)
 
@@ -47,6 +48,7 @@ class CheckoutSessionMixin(object):
         return None
 
     def get_shipping_method(self, basket=None):
+
         method = self.checkout_session.shipping_method(basket)
 
         # We default to using free local pickup
@@ -72,8 +74,12 @@ class CheckoutSessionMixin(object):
         """
         Assign common template variables to the context.
         """
+
         ctx = super(CheckoutSessionMixin, self).get_context_data(**kwargs)
-        ctx['shipping_address'] = self.get_shipping_address()
+        try:
+            ctx['shipping_address'] = self.get_shipping_address()
+        except:
+            ctx['shipping_address'] = None
 
         method = self.get_shipping_method()
         if method:

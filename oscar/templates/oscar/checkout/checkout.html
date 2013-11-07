@@ -62,7 +62,7 @@
 
                         {% block shipping_address_actions %}
                             <div class="alert-actions">
-                                <a href="{% url 'checkout:shipping-address' %}" class="btn">{% trans "Change shipping address" %}</a>
+                                <a href="{% url 'checkout:shipping-address' %}?basket_id={{basket.id}}" class="btn">{% trans "Change shipping address" %}</a>
                             </div>
                         {% endblock %}
                     </div>
@@ -79,7 +79,7 @@
 
                         {% block shipping_method_actions %}
                             <div class="alert-actions">
-                                <a href="{% url 'checkout:shipping-method' %}" class="btn">{% trans "Change delivery method" %}</a>
+                                <a href="{% url 'checkout:shipping-method' %}?basket_id={{basket.id}}" class="btn">{% trans "Change delivery method" %}</a>
                             </div>
                         {% endblock %}
                     </div>
@@ -147,7 +147,7 @@ transaction. </p>
   <div style="clear:both"></div>
 {% endcomment %}
   <div class="alert-actions">
-    <a href="{% url 'checkout:payment-method' %}" class="btn">{% trans "Change payment options" %}</a>
+    <a href="{% url 'checkout:payment-method' %}?basket_id={{basket.id}}" class="btn">{% trans "Change payment options" %}</a>
     </div>
 
 
@@ -318,6 +318,8 @@ transaction. </p>
     {% endblock payment_details %}
 
     {% block place_order %}
+ <button id='place-er' type="subt" class="pull-right btn btn-primary btn-large js-disable-on-click" data-loading-text="{% trans 'Submitting...' %}">{% trans "Place order (fake)" %}</button>
+
     {% endblock place_order %}
 
 {% endblock content %}

@@ -323,10 +323,16 @@ class BasketListView(ListView):
                 basket.lines.get(id=request.POST['line_id']).delete()
                 ## if last line, delete basket or make default
                 if not len(basket.lines.all()):
-                    if len(Basket.objects.filter(status="Open"))  == 1:
-                        basket.seller = None
-                    else:
-                        basket.delete()
+                    #if len(Basket.objects.filter(status="Open"))  == 1:
+                    #    basket.seller = None
+                    #else:
+                    ## hack ,fix later
+                    try:
+                        self.request.session['checkout_data'+"_" + str(basket.id)] = {}
+                        
+                    except:
+                        pass
+                    basket.delete()
             except:
                 "line not deleted"
         if request.POST.has_key('update-quantity'):

@@ -12,6 +12,9 @@
 {% endblock %}
 
 {% block place_order %}
+PLACE ORDER HERE
+
+{% comment %}
     <form method="post" action="{% url 'checkout:preview' %}" id="place-order-form">
         {% csrf_token %}
         <input type="hidden" name="action" value="place_order" />
@@ -25,9 +28,12 @@
         <div style="display:none">
             {% block hiddenforms %}{% endblock %}
         </div>
-
+{% comment %}
         <div class="form-actions">
             <button id='place-order' type="submit" class="pull-right btn btn-primary btn-large js-disable-on-click" data-loading-text="{% trans 'Submitting...' %}">{% trans "Place order" %}</button>
         </div>
+            {% endcomment %}
+
     </form>
+
 {% endblock place_order %}

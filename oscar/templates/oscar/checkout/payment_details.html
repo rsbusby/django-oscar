@@ -59,7 +59,7 @@ transaction. </p>
 <div style="clear:both"></div>
 
 
-	<a href="{% url 'checkout:preview' %}" class="btn btn-primary btn-large">{% trans "Continue" %}</a>
+	<a href="{% url 'checkout:preview' %}?basket_id={{basket.id}}" class="btn btn-primary btn-large">{% trans "Continue" %}</a>
 
 {% else %}
 

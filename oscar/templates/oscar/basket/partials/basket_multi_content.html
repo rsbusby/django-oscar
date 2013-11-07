@@ -174,7 +174,7 @@
 
   <div style="clear:both" ></div>
 
-     <input style="" type="button" value="Go to Checkout" onclick=location.href="{% url 'checkout:preview'  %}">
+     <input style="" type="button" value="Go to Checkout" onclick=location.href="{% url 'checkout:preview'  %}?basket_id={{basket.id}}">
 
 
 {% comment %}

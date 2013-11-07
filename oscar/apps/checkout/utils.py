@@ -7,10 +7,11 @@ class CheckoutSessionData(object):
     """
     Class responsible for marshalling all the checkout session data
     """
-    SESSION_KEY = 'checkout_data'
+    SESSION_KEY_STUB = 'checkout_data'
 
     def __init__(self, request):
         self.request = request
+        self.SESSION_KEY = self.SESSION_KEY_STUB + "_" + str(request.basket.id)
         if self.SESSION_KEY not in self.request.session:
             self.request.session[self.SESSION_KEY] = {}
 
@@ -213,3 +214,18 @@ class CheckoutSessionData(object):
     def get_submitted_basket_id(self):
         return self._get('submission', 'basket_id')
 
+
+
+# @receiver(pre_delete, sender=Basket())
+#     def removeCheckoutSessionForBasket(sender, instance, **kwargs):
+
+#         print "Receiver called for removeCheckoutSessionForBasket, attempting to delete a checkout session corresponding to a basket"
+#         try:
+#             cs =  CheckoutSessionData._get(namespace, key, default=None):
+
+#             self.checkout_session = CheckoutSessionData(request)
+
+#             print "user with email " + instance.email + " was deleted from Mongo DB"
+#         except:
+#             print "Was unable to delete the Mongo User with email " + instance.email
+#             pass

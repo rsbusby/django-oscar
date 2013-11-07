@@ -239,6 +239,22 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
     template_name = 'checkout/shipping_methods.html'
 
     def get(self, request, *args, **kwargs):
+
+
+        if request.GET.has_key('basket_id'):
+            try:
+                self.basket = Basket.objects.filter(id=request.GET['basket_id'])[0]
+                request.basket = self.basket
+
+                self.checkout_session = CheckoutSessionData(request)
+                if self.checkout_session == {}:
+                    return HttpResponseRedirect(reverse('checkout:shipping-method', basket_id=self.basket.id))
+
+            except:
+                ## ignore input, give default basket from request. Could also check that basket is for user here
+                pass
+
+
         # Check that the user's basket is not empty
         if request.basket.is_empty:
             messages.error(request, _("You need to add some items to your basket to checkout"))
@@ -328,14 +344,14 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
         shipping_required = request.basket.is_shipping_required()
 
         # Check that shipping address has been completed
-        if shipping_required and not self.checkout_session.is_shipping_address_set():
-            messages.error(request, _("Please choose a shipping address"))
-            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+        #if shipping_required and not self.checkout_session.is_shipping_address_set():
+        #    messages.error(request, _("Please choose a shipping address"))
+        #    return HttpResponseRedirect(reverse('checkout:shipping-address'))
 
         # Check that shipping method has been set
-        if shipping_required and not self.checkout_session.is_shipping_method_set():
-            messages.error(request, _("Please choose a shipping method"))
-            return HttpResponseRedirect(reverse('checkout:shipping-method'))
+        #if shipping_required and not self.checkout_session.is_shipping_method_set():
+        #    messages.error(request, _("Please choose a shipping method"))
+        #    return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
         return self.get_success_response()
 
@@ -366,10 +382,16 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         error_response = self.get_error_response()
 
+
         if request.GET.has_key('basket_id'):
             try:
                 self.basket = Basket.objects.filter(id=request.GET['basket_id'])[0]
                 request.basket = self.basket
+
+                self.checkout_session = CheckoutSessionData(request)
+                request.session['cur_basket_id'] = str(request.basket.id)
+                if self.checkout_session == {}:
+                    return HttpResponseRedirect(reverse('checkout:shipping-method', basket_id=self.basket.id))
             except:
                 ## ignore input, give default basket from request. Could also check that basket is for user here
                 pass
@@ -445,8 +467,13 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
 
         shipping_method = self.checkout_session.shipping_method(self.basket)
 
+        try:
+            shipping_code = shipping_method.code
+        except:
+            shipping_code = None
+
         # Check that shipping method has been set
-        if shipping_required and shipping_method.code != "local-pickup" and not self.checkout_session.is_shipping_method_set():
+        if shipping_required and shipping_code != "local-pickup" and not self.checkout_session.is_shipping_method_set():
             messages.error(self.request, _("Please choose a shipping method"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
