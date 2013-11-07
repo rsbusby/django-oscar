@@ -278,7 +278,7 @@ transaction. </p>
                         <div class="image_container">
                             {% with image=line.product.primary_image %}
                                 {% thumbnail image.original "200x200" upscale=False as thumb %}
-                                <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{% static thumb.url %}" alt="{{ product.get_title }}"></a>
+                                <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{stat_url}}{{thumb.name}}" alt="{{ product.get_title }}"></a>
                                 {% endthumbnail %}
                             {% endwith %}
                         </div>
