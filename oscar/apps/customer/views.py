@@ -34,6 +34,7 @@ UserAddressForm = get_class('address.forms', 'UserAddressForm')
 user_registered = get_class('customer.signals', 'user_registered')
 Order = get_model('order', 'Order')
 Line = get_model('basket', 'Line')
+OrderLine = get_model('order', 'Line')
 Basket = get_model('basket', 'Basket')
 UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'Email')
@@ -116,6 +117,7 @@ class AccountSummaryView(TemplateView):
         ctx['default_billing_address'] = self.get_default_billing_address(
             self.request.user)
         ctx['orders'] = self.get_orders(self.request.user)
+        ctx['sales'] = self.get_sales(self.request.user)
         ctx['emails'] = self.get_emails(self.request.user)
         ctx['alerts'] = self.get_product_alerts(self.request.user)
         ctx['profile_fields'] = self.get_profile_fields(self.request.user)
@@ -125,6 +127,12 @@ class AccountSummaryView(TemplateView):
 
     def get_orders(self, user):
         return Order._default_manager.filter(user=user)[0:5]
+
+    def get_sales(self, user):
+        basketsForThisSeller = Basket.objects.filter(seller__user=user)
+        basketIds = [b.id for b in basketsForThisSeller]
+        sales = Order._default_manager.filter(basket_id__in=basketIds)
+        return sales[0:5]
 
     def get_profile_fields(self, user):
         field_data = []
@@ -410,6 +418,7 @@ class OrderHistoryView(ListView):
     Customer order history
     """
     context_object_name = "orders"
+    template_header = "Order"
     template_name = 'customer/order_list.html'
     paginate_by = 20
     model = Order
@@ -435,7 +444,27 @@ class OrderHistoryView(ListView):
     def get_context_data(self, *args, **kwargs):
         ctx = super(OrderHistoryView, self).get_context_data(*args, **kwargs)
         ctx['form'] = self.form
+        ctx['order_or_sales_title'] = self.template_header
         return ctx
+
+
+class SalesHistoryView(OrderHistoryView):
+    """
+    Customer sales history
+    """
+    #context_object_name = "orders"
+    template_header = "Sales"
+    template_name = 'customer/sales_list.html'
+
+    def get_queryset(self):
+        basketsForThisSeller = Basket.objects.filter(seller__user=self.request.user)
+        basketIds = [b.id for b in basketsForThisSeller]
+        ##sales = Order._default_manager.filter(basket_id__in=basketIds)
+
+        qs = self.model._default_manager.filter(basket_id__in=basketIds)
+        if self.form.is_bound and self.form.is_valid():
+            qs = qs.filter(**self.form.get_filters())
+        return qs
 
 
 class OrderDetailView(PostActionMixin, DetailView):
@@ -446,8 +475,30 @@ class OrderDetailView(PostActionMixin, DetailView):
         return ["customer/order.html"]
 
     def get_object(self, queryset=None):
-        return get_object_or_404(self.model, user=self.request.user,
+
+        if self.request.GET.has_key('user_id'):
+            user = User.objects.filter(id=self.request.GET['user_id'])
+        else:
+            user = self.request.user
+
+        
+
+        o =  get_object_or_404(self.model, user=user,
                                  number=self.kwargs['order_number'])
+
+
+        if user != self.request.user and not self.request.user.is_staff:
+            ## don't show this order unless admin, buyer, or seller
+            firstLine = OrderLine.objects.filter(order=o)[0]
+            partner = firstLine.partner
+            seller = partner.user
+            if seller != self.request.user:
+                self.response = HttpResponseRedirect(
+                reverse('catalogue:index'))
+                return
+
+        return o
+                
 
     def do_reorder(self, order):
         """
@@ -458,7 +509,11 @@ class OrderDetailView(PostActionMixin, DetailView):
 
         # Collect lines to be added to the basket and any warnings for lines
         # that are no longer available.
-        basket = self.request.basket
+        firstLine in order.lines.all()[0]
+        seller = firstLine.partner
+        #basket = getBasket(seller)
+        #try:
+        #    basketForBooth = Basket.objects.filter
         lines_to_add = []
         warnings = []
         for line in order.lines.all():

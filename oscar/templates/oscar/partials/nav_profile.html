@@ -14,6 +14,9 @@
                 <ul class="nav nav-tabs">
                     <li class="{{ profile }}"><a href="{% url 'customer:summary' %}#profile" >{% trans "Profile" %}</a></li>
                     <li class="{{ order_history }}"><a href="{% url 'customer:summary' %}#orders"  >{% trans "Order History" %}</a></li>
+                     {% if user.partner %}
+                        <li class="{{ sales_history }}"><a href="{% url 'customer:summary' %}#sales"  >{% trans "Sales History" %}</a></li>
+                    {% endif %}
                     <li class="{{ address_book }}"><a href="{% url 'customer:summary' %}#addresses" >{% trans "Address Book" %}</a></li>
                     <li class="{{ email_history }}"><a href="{% url 'customer:summary' %}#emails" >{% trans "Email History" %}</a></li>
                     <li class="{{ alerts }}"><a href="{% url 'customer:summary' %}#alerts" >{% trans "Alerts" %}</a></li>

@@ -46,6 +46,9 @@
                     <ul class="nav nav-tabs">
                         <li {% if active_tab == 'profile' %}class="active"{% endif %}><a href="#profile" data-toggle="tab">{% trans 'Profile' %}</a></li>
                         <li {% if active_tab == 'orders' %}class="active"{% endif %}><a href="#orders" data-toggle="tab">{% trans 'Order History' %}</a></li>
+                        {% if user.partner %}
+                             <li {% if active_tab == 'sales' %}class="active"{% endif %}><a href="#sales" data-toggle="tab">{% trans 'Sales History' %}</a></li>
+                        {% endif %}
                         <li {% if active_tab == 'addresses' %}class="active"{% endif %}><a href="#addresses" data-toggle="tab">{% trans 'Address Book' %}</a></li>
                         <li {% if active_tab == 'emails' %}class="active"{% endif %}><a href="#emails" data-toggle="tab">{% trans 'Email History' %}</a></li>
                         {% comment %}<li {% if active_tab == 'alerts' %}class="active"{% endif %}><a href="#alerts" data-toggle="tab">{% trans "Alerts" %}</a></li>{% endcomment %}
@@ -119,12 +122,14 @@
                     <td>{{ order.date_placed }}</td>
                     <td>
                         <a class="btn btn-info" href="{% url 'customer:order' order.number %}">{% trans 'View' %}</a>
+                        {% comment %}
                         <form action="{% url 'customer:order' order.number %}" method="post">
                             {% csrf_token %}
                             <input type="hidden" name="order_id" value="{{ order.id }}" />
                             <input type="hidden" name="action" value="reorder" />
                             <button type="submit" class="btn btn-success">{% trans 'Re-order' %}</button>
                         </form>
+                        {% endcomment %}
                     </td>
                 </tr>
                 {% endfor %}
@@ -138,6 +143,51 @@
             {% endif %}
             {% endblock %}
         </div>
+
+
+        <div class="tab-pane {% if active_tab == 'sales' %}active{% endif %}" id="sales">
+            {% block tab_saleshistory %}
+            <div class="sub-header">
+                <h3>{% trans 'Sales history' %}</h3>
+            </div>
+
+            {% if sales %}
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>{% trans 'Order number' %}</th>
+                    <th>{% trans 'Total inc tax' %}</th>
+                    <th>{% trans 'Date received' %}</th>
+                    <th></th>
+                </tr>
+                {% for order in sales %}
+                <tr>
+                    <td>{{ order.number }}</td>
+                    <td>{{ order.total_incl_tax|currency }}</td>
+                    <td>{{ order.date_placed }}</td>
+                    <td>
+                        <a class="btn btn-info" href="{% url 'customer:order' order.number %}?user_id={{order.user.id}}">{% trans 'View' %}</a>
+                        {% comment %}
+                        <form action="{% url 'customer:order' order.number %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{ order.id }}" />
+                            <input type="hidden" name="action" value="reorder" />
+                            <button type="submit" class="btn btn-success">{% trans 'Re-order' %}</button>
+                        </form>
+                        {% endcomment %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <div class="form-actions">
+                <a href="{% url 'customer:sales-list' %}" class="btn btn-primary">{% trans 'View sales history' %}</a>
+            </div>
+            {% else %}
+            <p>{% trans "You haven't received any orders yet." %}</p>
+            {% endif %}
+            {% endblock %}
+        </div>
+
 
         <div class="tab-pane {% if active_tab == 'addresses' %}active{% endif %}" id="addresses">
             {% block tab_addressbook %}

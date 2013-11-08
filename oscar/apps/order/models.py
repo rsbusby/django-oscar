@@ -10,7 +10,8 @@ class Order(AbstractOrder):
     sponsored_org = models.ForeignKey(
         'order.SponsoredOrganization', null=True, blank=True,
         verbose_name=("Organization to Benefit"))
-    
+   
+    #seller  
 
 class SponsoredOrganization(models.Model):
 
