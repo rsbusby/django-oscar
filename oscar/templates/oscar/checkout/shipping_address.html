@@ -7,14 +7,11 @@
 {% endblock %}
 
 {% block checkout_nav %}
-    {% include 'checkout/nav.html' with step=2 %}
+    {% include 'checkout/nav.html' with step=1 %}
 {% endblock %}
 
 {% block order_contents %}{% endblock %}
 
-
-method
-{{ shipping_method }}
 
 
 {% block shipping_address %}
@@ -23,6 +20,16 @@ method
 <br><br>
 <b>No shipping needed since you have chosen local pickup.</b>
 <br><br>
+<div class="span2">
+            <form method="post" action="{% url 'checkout:shipping-method' %}?basket_id={{basket.id}}">
+                {% csrf_token %}
+                <input type="hidden" name="method_code" value="" class="btn" />
+                <input type="hidden" name="method_unset" value="True" class="btn" />
+
+                <button type="submit" class="btn btn-large btn-primary pull-right">{% trans "Choose delivery" %}</button>
+            </form>
+        </div>    
+
 
   <div class="alert-actions">
                                 <a href="{% url 'checkout:shipping-method' %}?basket_id={{basket.id}}" class="btn">{% trans "Change delivery method" %}</a>

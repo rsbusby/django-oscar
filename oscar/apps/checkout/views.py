@@ -304,6 +304,9 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         # Need to check that this code is valid for this user
+        if request.POST.get('method_reset'):
+            self.checkout_session.unset_shipping_method()
+
         method_code = request.POST.get('method_code', None)
         is_valid = False
         for method in self.get_available_shipping_methods():

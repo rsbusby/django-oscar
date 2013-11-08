@@ -68,13 +68,7 @@ transaction. </p>
 
 <div style="clear:both"></div>
 
-
-
-
-
-
-
-
+{% if shipping_method.code == 'local-pickup' %}
  <form style="float:left;margin:1.2em 0 0 0" method="POST" action="{% url 'checkout:payment-details' %}">
     <input type="hidden" name="basket_id" value={{basket.id}} /> 
     <input type="hidden" name="payment_method" value="in_person" /> 
@@ -84,6 +78,10 @@ transaction. </p>
     <button style="width:100%;background-color:#D9E9FF;" class="orgButton" type="submit" name="sponsoredOrg" value="">Pay in person at time of pickup</button>
 
   </form>
+{% endif %}
+
+
+{% if shipping_method.code == 'local-pickup' or shipping_method != None %}
 
   <div style="clear:both"></div>
 
@@ -101,6 +99,7 @@ transaction. </p>
 
   {% endif %} {# seller has Stripe #}
 
+{% endif %}
 
   <div style="clear:both"></div>
 

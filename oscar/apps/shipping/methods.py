@@ -59,6 +59,33 @@ class FixedPrice(ShippingMethod):
         return self.charge_excl_tax
 
 
+class uspsShipping(ShippingMethod):
+    code = 'usps-shipping'
+    name = _('U.S. Postal Service')
+
+    def __init__(self):
+        self.has_rate = False
+
+    # def __init__(self, charge_incl_tax, charge_excl_tax=None):
+    #     self.charge_incl_tax = charge_incl_tax
+    #     if not charge_excl_tax:
+    #         charge_excl_tax = charge_incl_tax
+    #     self.charge_excl_tax = charge_excl_tax
+
+    def basket_charge_incl_tax(self):
+        return D('0.00')
+
+    def basket_charge_excl_tax(self):
+        return D('0.00')
+
+    #def basket_charge_incl_tax(self):
+    #    return self.charge_incl_tax
+
+    #def basket_charge_excl_tax(self):
+    #    return self.charge_excl_tax
+
+
+
 class OfferDiscount(ShippingMethod):
     """
     Wrapper class that applies a discount to an existing shipping method's

@@ -2,7 +2,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.methods import (
-    Free, LocalPickup, NoShippingRequired, OfferDiscount)
+    Free, LocalPickup, uspsShipping, NoShippingRequired, OfferDiscount)
 
 from decimal import Decimal as D
 
@@ -12,7 +12,7 @@ class Repository(object):
     Repository class responsible for returning ShippingMethod
     objects for a given user, basket etc
     """
-    methods = (LocalPickup(),)
+    methods = (LocalPickup(), uspsShipping())
 
     def get_shipping_methods(self, user, basket, shipping_addr=None, **kwargs):
         """

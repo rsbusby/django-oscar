@@ -126,6 +126,12 @@ class CheckoutSessionData(object):
         """
         self._set('shipping', 'method_code', code)
 
+    def unset_shipping_method(self, code):
+        """
+        Set shipping method code to session
+        """
+        self._unset('shipping', 'method_code')
+
     def shipping_method(self, basket=None):
         """
         Returns the shipping method model based on the
