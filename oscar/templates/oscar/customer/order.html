@@ -37,9 +37,23 @@
 {% endblock %}
 
 {% block subheader %}
-<div class="sub-header">
-    <h2>{% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}</h2>
+<div class="sub-header" style="display:block-inline">
+    <h2 class="pull-left" >{% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}</h2>
+
+{% if user == order.user %}
+<div class="pull-right">
+  <input style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{order.lines.all.0.partner.name}}"'>
+{% else %}
+{% comment %}
+  <input style="position:relative;top:0;margin-bottom:0em;margin:0;" type="button" value="Contact Buyer" onclick='location.href="/homemade/contact?store_name={{user.partner.name}}"'>
+{% endcomment %}
+{% endif %}
 </div>
+                <div style="clear:both"></div>
+
+</div>
+
+
 {% endblock subheader %}
 
 {% block content %}
