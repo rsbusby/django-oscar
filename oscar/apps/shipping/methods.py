@@ -135,9 +135,12 @@ class uspsShipping(ShippingMethod):
 
         for line in self.basket.lines.all():
             p = line.product
-            if p.attr.weight:
+            try:
                 weight = weight + p.attr.weight
-
+            except:
+                #messages.error(request, "Some items in your basket do not have listed weights so the shipping estimate will be low.")
+                print "Some items in your basket do not have listed weights so the shipping estimate will be low."
+                pass
 
         try:
             to_address = easypost.Address.create(
@@ -176,7 +179,7 @@ class uspsShipping(ShippingMethod):
             )
         except:
             print "problem with easypost call"
-            messages.warning(request, _("Shipping information unavailable - please check yuor network connection"))
+            messages.warning(request, _("Shipping information unavailable - please check your network connection"))
 
             return None
 

@@ -256,6 +256,9 @@ class CheckoutSessionData(object):
 
     def payment_method(self):
         return self._get('payment', 'method')
+    
+    def unset_payment_method(self):
+        return self._set('payment', 'method', None)
 
     # Submission methods
 

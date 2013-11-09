@@ -9,7 +9,9 @@
 
 {% block layout %}
 
+
 {% block header-stuff %}
+
  <header class="header container-fluid">
         <div class="page_inne">
             <div class="row-fluid">
@@ -31,12 +33,7 @@
 
 
                 </div>
-                {% comment %}
-                <div class="span8">
-                    {# Mini-basket wrapped in a block so some templates can now display it #}
-                {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
-                </div>
-{% endcomment %}
+               
 
             </div>
 
@@ -45,10 +42,9 @@
 
         </div>
         {% block navigation %}
-        {%comment%}    {% include "partials/nav_primary.html" %} {%endcomment%}
+       
         {% endblock %}
     </header>
-
 {% endblock %} {# header-stuff #}
 
 

@@ -512,24 +512,22 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # Check that shipping address has been completed
         if shipping_required and shipping_code != "local-pickup" and not self.checkout_session.is_shipping_address_set():
         ##if shipping_required and  ##not self.checkout_session.is_shipping_address_set():
-            messages.info(self.request, _("Please choose a shipping address"))
+            messages.info(self.request, _("Please choose a delivery address"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
 
 
         # Check that shipping method has been set
         if shipping_required and shipping_code != "local-pickup" and not self.checkout_session.is_shipping_method_set():
-            messages.info(self.request, _("Please choose a shipping method"))
+            messages.info(self.request, _("Please choose a delivery method"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
-
-        # Check that shipping method has been set
-        if shipping_required and shipping_code != "local-pickup" and not self.checkout_session.is_shipping_method_set():
-            messages.info(self.request, _("Please choose a shipping method"))
-            return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
         # Check that payment method has been set
         if self.preview:
             payment_method = self.checkout_session.payment_method()
+            if shipping_code != "local-pickup" and payment_method == 'in_person':
+                payment_method = None
+                self.checkout_session.unset_payment_method()
             if not payment_method:
                 messages.info(self.request, _("Please choose a payment method"))
                 return HttpResponseRedirect(reverse('checkout:payment-method'))
