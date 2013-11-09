@@ -51,10 +51,10 @@ class CheckoutSessionMixin(object):
 
         method = self.checkout_session.shipping_method(basket)
 
-        # We default to using free local pickup
+        # We default to nothing (or could be using free local pickup)
         if not method:
-            method = LocalPickup()
-
+            #method = LocalPickup()
+            method = None
         return method
 
     def get_order_totals(self, basket=None, shipping_method=None, **kwargs):
@@ -83,11 +83,28 @@ class CheckoutSessionMixin(object):
 
         method = self.get_shipping_method()
         if method:
+            method_code = method.code
             ctx['shipping_method'] = method
-            ctx['shipping_total_excl_tax'] = method.basket_charge_excl_tax()
-            ctx['shipping_total_incl_tax'] = method.basket_charge_incl_tax()
+            #if self.checkout_session.get_shipping_cost(method_code):
+            #    ctx['shipping_total_excl_tax'] = self.checkout_session.get_shipping_cost(method_code)
+            #else:
+            charge = method.basket_charge_excl_tax()
+            ctx['shipping_total_excl_tax'] = charge
+            self.checkout_session.set_shipping_cost(method_code, charge)
 
-        ctx['order_total_incl_tax'], ctx['order_total_excl_tax'] = self.get_order_totals()
+            #if self.checkout_session.get_shipping_cost(method_code):
+            #    ctx['shipping_total_incl_tax'] = self.checkout_session.get_shipping_cost(method_code)
+            #else:
+            charge = method.basket_charge_incl_tax()
+            ctx['shipping_total_incl_tax'] = charge
+            self.checkout_session.set_shipping_cost(method_code, charge) 
+
+        
+        cur_totals = self.checkout_session.order_totals()
+        if not cur_totals[0] or cur_totals[1]:
+            ti, te = self.get_order_totals()
+            self.checkout_session.set_order_totals(ti, te)            
+        ctx['order_total_incl_tax'], ctx['order_total_excl_tax'] = self.checkout_session.order_totals()
 
         ctx['payment_method'] = self.checkout_session.payment_method()
 

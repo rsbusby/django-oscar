@@ -152,16 +152,16 @@ class BasketView(ModelFormSetView):
         # cost.  It is also important for PayPal Express where the customer
         # gets redirected away from the basket page and needs to see what the
         # estimated order total is beforehand.
-        method = self.get_default_shipping_method(self.request.basket)
-        context['shipping_method'] = method
-        context['shipping_methods'] = self.get_shipping_methods(
-            self.request.basket)
+        #method = self.get_default_shipping_method(self.request.basket)
+        #context['shipping_method'] = method
+        #context['shipping_methods'] = self.get_shipping_methods(
+        #    self.request.basket)
         context['order_total_incl_tax'] = (
-            self.request.basket.total_incl_tax +
-            method.basket_charge_incl_tax())
+            self.request.basket.total_incl_tax) #+
+            ##method.basket_charge_incl_tax())
         context['order_total_incl_tax_in_cents'] = int(100.0 * float(
-            self.request.basket.total_incl_tax +
-            method.basket_charge_incl_tax()))
+            self.request.basket.total_incl_tax)) #+
+            ##method.basket_charge_incl_tax()))
         context['basket_warnings'] = self.get_basket_warnings(
             self.request.basket)
         context['upsell_messages'] = self.get_upsell_messages(

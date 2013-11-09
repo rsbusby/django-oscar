@@ -15,6 +15,7 @@
 
 
 {% block shipping_address %}
+
 {% if shipping_method.code == "local-pickup" %}
 
 <br><br>
@@ -62,9 +63,16 @@
 								{% csrf_token %}
 								<input type="hidden" name="action" value="ship_to" />
 								<input type="hidden" name="address_id" value="{{ address.id }}" />
-								<button type="submit" class="btn btn-primary btn-full ship-address">{% trans "Ship to this address" %}</button>
+								
+
 								<a class="btn btn-small btn-info" href="{% url 'checkout:user-address-update' address.id %}?basket_id={{basket.id}}">{% trans "Edit" %}</a>
 								<a href="{% url 'checkout:user-address-delete' address.id %}?basket_id={{basket.id}}" class="btn btn-small btn-danger">{% trans "Delete" %}</a>
+
+                                                                <div style="clear:both"></div>
+
+
+                        <button type="submit" style="position:relative;margin:10 0 10 0" class="btn btn-primary btn-full ship-address js-disable-on-click" data-loading-text="{% trans 'Getting shipping options, please wait...' %}">{% trans "Ship to this address" %}</button>
+
 							</form>
 						</div>
 					</li>

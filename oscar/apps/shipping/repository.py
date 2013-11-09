@@ -23,7 +23,42 @@ class Repository(object):
         this behaviour can easily be overridden by subclassing this class
         and overriding this method.
         """
+
+        if not self.userAcceptsRemotePayments(basket):
+            self.methods = (LocalPickup(),)
+
+
+        for m in self.methods:
+            m.basket_total_shipping = None
+
         return self.prime_methods(basket, self.methods)
+
+
+    def get_shipping_methods_no_reset(self, user, basket, shipping_addr=None, **kwargs):
+        """
+        Return a list of all applicable shipping method objects
+        for a given basket.
+
+        We default to returning the Method models that have been defined but
+        this behaviour can easily be overridden by subclassing this class
+        and overriding this method.
+        """
+
+        if not self.userAcceptsRemotePayments(basket):
+            self.methods = (LocalPickup(),)
+
+        return self.methods
+
+    def userAcceptsRemotePayments(self, basket):
+
+        from apps.homemade.homeMade import getSellerFromOscarID
+
+        seller = getSellerFromOscarID(basket.seller.user.id)
+
+        if seller.stripeSellerToken and seller.stripeSellerPubKey:
+            return True
+
+        return False
 
     def get_default_shipping_method(self, user, basket, shipping_addr=None,
                                     **kwargs):
@@ -54,6 +89,11 @@ class Repository(object):
         """
         Prime an individual method instance
         """
+
+        if method.is_primed:
+            return method
+
+        method.basket_total_shipping = None
         method.set_basket(basket)
         # If the basket has a shipping offer, wrap the shipping method with a
         # decorating class that applies the offer discount to the shipping
@@ -71,7 +111,7 @@ class Repository(object):
         """
         for method in self.methods:
             if method.code == code:
-                return self.prime_method(basket, method)
+                return method #self.prime_method(basket, method)
 
         # Check for NoShippingRequired as that is a special case
         if code == NoShippingRequired.code:

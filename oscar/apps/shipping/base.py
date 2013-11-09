@@ -26,6 +26,8 @@ class ShippingMethod(object):
     # These are not intended to be overridden
     is_discounted = False
     discount = D('0.00')
+    is_primed = False
+    basket_total_shipping = None
 
     def __init__(self, *args, **kwargs):
         self.exempt_from_tax = False

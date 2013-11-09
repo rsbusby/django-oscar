@@ -62,7 +62,7 @@
 
                         {% block shipping_address_actions %}
                             <div class="alert-actions">
-                                <a href="{% url 'checkout:shipping-address' %}?basket_id={{basket.id}}" class="btn">{% trans "Change delivery address" %}</a>
+                                <a href="{% url 'checkout:shipping-address' %}?basket_id={{basket.id}}" class="btn js-disable-on-click" >{% trans "Change delivery address" %}</a>
                             </div>
                         {% endblock %}
                     </div>
@@ -79,7 +79,7 @@
 
                         {% block shipping_method_actions %}
                             <div class="alert-actions">
-                                <a href="{% url 'checkout:shipping-method' %}?basket_id={{basket.id}}" class="btn">{% trans "Change delivery method" %}</a>
+                                <a href="{% url 'checkout:shipping-method' %}?basket_id={{basket.id}}" class="btn js-disable-on-click" data-loading-text="{% trans 'Getting delivery options, please wait...' %}">{% trans "Change delivery method" %}</a>
                             </div>
                         {% endblock %}
                     </div>

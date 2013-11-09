@@ -3,6 +3,9 @@ from decimal import Decimal as D
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.base import ShippingMethod
+from django.conf import settings
+from django.contrib import messages
+
 
 
 class Free(ShippingMethod):
@@ -62,6 +65,8 @@ class FixedPrice(ShippingMethod):
 class uspsShipping(ShippingMethod):
     code = 'usps-shipping'
     name = _('U.S. Postal Service')
+    basket_total_shipping = None
+    is_primed = False
 
     def __init__(self):
         self.has_rate = False
@@ -72,11 +77,123 @@ class uspsShipping(ShippingMethod):
     #         charge_excl_tax = charge_incl_tax
     #     self.charge_excl_tax = charge_excl_tax
 
+    #def set_basket(self, basket):
+    #    self.basket = basket
+
     def basket_charge_incl_tax(self):
-        return D('0.00')
+
+        if self.basket_total_shipping:
+            return self.basket_total_shipping
+        else:
+            return self.calc_basket_charge_incl_tax()
+
+
+    def calc_basket_charge_incl_tax(self):
+
+        # import postmaster
+
+        # postmaster.config.api_key = settings.POSTMASTER_IO_KEY
+ 
+        # rates = postmaster.get_rate(
+        #     from_zip='28771',
+        #     to_zip='90291',
+        #     weight='1.0',
+        # ##carrier='ups',
+        # )
+
+        # print rates
+
+
+
+        # time_ups = postmaster.get_transit_time(
+        #     from_zip='28771',
+        #     to_zip='78704',
+        #     weight='1.0',
+        #  carrier='ups'  
+        # )
+
+        # try:
+        #     time_usps = postmaster.get_transit_time(
+        #         from_zip='28771',
+        #         to_zip='78704',
+        #         weight='1.0',
+        #      carrier='usps'  
+        #     )
+        # except:
+        #     time_usps = None
+        # print time_ups
+        # print time_usps
+
+        #import ipdb;ipdb.set_trace()
+
+        import easypost
+        easypost.api_key = settings.EASYPOST_KEY
+
+        ## calculate total weight of basket.
+
+        weight = 0.0
+
+        for line in self.basket.lines.all():
+            p = line.product
+            if p.attr.weight:
+                weight = weight + p.attr.weight
+
+
+        try:
+            to_address = easypost.Address.create(
+              #name = 'Dr. Steve Brule',
+              #street1 = '179 N Harbor Dr',
+              #city = 'Redondo Beach',
+              #state = 'CA',
+              zip = '90277',
+              country = 'US',
+            #email = 'dr_steve_brule@gmail.com'
+            )
+
+            from_address = easypost.Address.create(
+                zip = '90291',
+                )
+            import random
+
+            if weight == 0.0:
+                print "setting weight randomly"
+                w = random.randrange(4,60)
+            else:
+                w = weight
+            print w
+            parcel = easypost.Parcel.create(
+                length = 20.2, 
+                width = 10.9,
+                height = 5,
+                weight = w,
+            )
+
+            shi = easypost.Shipment.create(
+                to_address = to_address,
+                from_address = from_address,
+                parcel = parcel,
+
+            )
+        except:
+            print "problem with easypost call"
+            messages.warning(request, _("Shipping information unavailable - please check yuor network connection"))
+
+            return None
+
+        print shi.lowest_rate()
+
+        usps_rate = None
+        for r in shi.rates:
+            if r.carrier == "USPS":
+                if usps_rate == None or float(r.rate) < usps_rate:
+                    usps_rate = float(r.rate)
+
+        #self.is_primed = True
+        self.basket_total_shipping = D(usps_rate)
+        return D(usps_rate)
 
     def basket_charge_excl_tax(self):
-        return D('0.00')
+        return D('2.00')
 
     #def basket_charge_incl_tax(self):
     #    return self.charge_incl_tax

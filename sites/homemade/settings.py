@@ -418,6 +418,11 @@ OSCAR_FROM_EMAIL = "support@homemade1616.com"
 print OSCAR_FROM_EMAIL
 MANDRILL_API_KEY = os.environ['MANDRILL_API_KEY']
 
+
+## shipping setup
+POSTMASTER_IO_KEY = os.environ['POSTMASTER_IO_KEY_TEST']
+EASYPOST_KEY = os.environ['EASYPOST_KEY_TEST']
+
 EMAIL_SUBJECT_PREFIX = ''
 ##EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"

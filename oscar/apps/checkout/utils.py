@@ -126,11 +126,26 @@ class CheckoutSessionData(object):
         """
         self._set('shipping', 'method_code', code)
 
-    def unset_shipping_method(self, code):
+
+    # def use_shipping_method(self, code, cost):
+    #     """
+    #     Set shipping method code to session
+    #     """
+    #     self._set('shipping', 'method_code', code)
+        
+    #     #self._set('shipping', 'order_total_incl_tax', order_total_incl_tax)
+    #     #self._set('shipping', 'order_total_excl_tax', order_total_excl_tax)
+
+
+
+    def unset_shipping_method(self):
         """
         Set shipping method code to session
         """
         self._unset('shipping', 'method_code')
+        #self.unset_shipping_cost()
+        self.unset_order_totals()
+
 
     def shipping_method(self, basket=None):
         """
@@ -146,6 +161,42 @@ class CheckoutSessionData(object):
 
     def is_shipping_method_set(self):
         return bool(self._get('shipping', 'method_code'))
+
+
+    def set_shipping_cost(self, method_code, cost):
+        """
+        Set shipping method code to session
+        """
+        self._set('shipping' + method_code, 'cost', cost)
+
+    def get_shipping_cost(self, method_code):
+        """
+        Set shipping method code to session
+        """
+        return self._get('shipping' + method_code, 'cost')
+
+    def unset_shipping_cost(self, method_code):
+        """
+        Set shipping method code to session
+        """
+        self._unset('shipping'+ method_code, 'cost')
+
+
+
+    ## order totals with shipping
+
+    def set_order_totals(self, order_total_incl_tax, order_total_excl_tax):
+        self._set('submission', 'order_total_incl_tax', order_total_incl_tax)
+        self._set('submission', 'order_total_excl_tax', order_total_excl_tax)
+
+    def unset_order_totals(self):
+        self._unset('submission', 'order_total_incl_tax')
+        self._unset('submission', 'order_total_excl_tax')
+
+    def order_totals(self):
+        return self._get('submission', 'order_total_incl_tax'), self._get('submission', 'order_total_excl_tax')
+
+
 
     # Billing address fields
     # ======================

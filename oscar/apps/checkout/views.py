@@ -248,12 +248,14 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
 
                 self.checkout_session = CheckoutSessionData(request)
                 if self.checkout_session == {}:
-                    return HttpResponseRedirect(reverse('checkout:shipping-method', basket_id=self.basket.id))
+                    return HttpResponseRedirect(reverse('checkout:shipping-address', basket_id=self.basket.id))
 
             except:
                 ## ignore input, give default basket from request. Could also check that basket is for user here
                 pass
 
+
+        self.checkout_session.unset_shipping_method()
 
         # Check that the user's basket is not empty
         if request.basket.is_empty:
@@ -265,14 +267,25 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
             self.checkout_session.use_shipping_method(NoShippingRequired().code)
             return self.get_success_response()
 
+        shipping_method = self.checkout_session.shipping_method(self.request.basket)
+
+        try:
+            shipping_code = shipping_method.code
+        except:
+            shipping_code = None
+
         # Check that shipping address has been completed
-        #if not self.checkout_session.is_shipping_address_set():
-        #    messages.error(request, _("Please choose a shipping address"))
-        #    return HttpResponseRedirect(reverse('checkout:shipping-address'))
+        if not self.checkout_session.is_shipping_address_set() and shipping_code != "local-pickup":
+            messages.info(request, _("Please choose a shipping address"))
+            return HttpResponseRedirect(reverse('checkout:shipping-address'))
 
         # Save shipping methods as instance var as we need them both here
         # and when setting the context vars.
         self._methods = self.get_available_shipping_methods()
+
+        #for m in self._methods:
+        #    m.basket_total_shipping = None
+
         if len(self._methods) == 0:
             # No shipping methods available for given address
             messages.warning(request, _("Shipping is not available for your chosen address - please choose another"))
@@ -284,6 +297,9 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
 
         # Must be more than one available shipping method, we present them to
         # the user to make a choice.
+
+
+
         return super(ShippingMethodView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -299,6 +315,9 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         # Shipping methods can depend on the user, the contents of the basket
         # and the shipping address.  I haven't come across a scenario that doesn't
         # fit this system.
+
+        ## if Seller is not set up for card payments, only allow local pickup
+
         return Repository().get_shipping_methods(self.request.user, self.request.basket,
                                                  self.get_shipping_address())
 
@@ -309,16 +328,26 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
 
         method_code = request.POST.get('method_code', None)
         is_valid = False
-        for method in self.get_available_shipping_methods():
+        newMethod = None
+        methods = Repository().get_shipping_methods_no_reset(self.request.user, self.request.basket,
+                                                 self.get_shipping_address())
+        #for method in self.get_available_shipping_methods():
+        for method in methods:
             if method.code == method_code:
                 is_valid = True
+                newMethod = method
         if not is_valid:
             messages.error(request, _("Your submitted shipping method is not permitted"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
         # Save the code for the chosen shipping method in the session
         # and continue to the next step.
+        order_total_incl_tax = newMethod.basket_charge_incl_tax()
+        order_total_excl_tax = newMethod.basket_charge_excl_tax()
+
         self.checkout_session.use_shipping_method(method_code)
+
+        #import ipdb;ipdb.set_trace()
         return self.get_success_response()
 
     def get_success_response(self):
@@ -385,7 +414,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     def get(self, request, *args, **kwargs):
 
 
-
         if request.GET.has_key('basket_id'):
             try:
                 self.basket = Basket.objects.filter(id=request.GET['basket_id'])[0]
@@ -394,7 +422,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                 self.checkout_session = CheckoutSessionData(request)
                 request.session['cur_basket_id'] = str(request.basket.id)
                 if self.checkout_session == {}:
-                    return HttpResponseRedirect(reverse('checkout:shipping-method', basket_id=self.basket.id))
+                    return HttpResponseRedirect(reverse('checkout:shipping-address', basket_id=self.basket.id))
             except:
                 ## ignore input, give default basket from request. Could also check that basket is for user here
                 pass
@@ -480,24 +508,30 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         except:
             shipping_code = None
 
+
+        # Check that shipping address has been completed
+        if shipping_required and shipping_code != "local-pickup" and not self.checkout_session.is_shipping_address_set():
+        ##if shipping_required and  ##not self.checkout_session.is_shipping_address_set():
+            messages.info(self.request, _("Please choose a shipping address"))
+            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+
+
         # Check that shipping method has been set
         if shipping_required and shipping_code != "local-pickup" and not self.checkout_session.is_shipping_method_set():
-            messages.error(self.request, _("Please choose a shipping method"))
+            messages.info(self.request, _("Please choose a shipping method"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
 
-        # Check that shipping address has been completed
-        if shipping_required and shipping_method.code != "local-pickup" and not self.checkout_session.is_shipping_address_set():
-        ##if shipping_required and  ##not self.checkout_session.is_shipping_address_set():
-            messages.error(self.request, _("Please choose a shipping address"))
-            return HttpResponseRedirect(reverse('checkout:shipping-address'))
-
+        # Check that shipping method has been set
+        if shipping_required and shipping_code != "local-pickup" and not self.checkout_session.is_shipping_method_set():
+            messages.info(self.request, _("Please choose a shipping method"))
+            return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
         # Check that payment method has been set
         if self.preview:
             payment_method = self.checkout_session.payment_method()
             if not payment_method:
-                messages.error(self.request, _("Please choose a payment method"))
+                messages.info(self.request, _("Please choose a payment method"))
                 return HttpResponseRedirect(reverse('checkout:payment-method'))
 
 
