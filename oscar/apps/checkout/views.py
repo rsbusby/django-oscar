@@ -4,6 +4,8 @@ from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.core.urlresolvers import reverse, reverse_lazy
 
 from django.contrib import messages
+from django.conf import settings
+
 from django.contrib.auth import login
 from django.db.models import get_model
 from django.utils.translation import ugettext as _
@@ -15,6 +17,7 @@ from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
 
 from oscar.apps.order.models import SponsoredOrganization
+from oscar.apps.payment.models import SourceType, Source
 
 
 ShippingAddressForm, GatewayForm = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
@@ -743,16 +746,34 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         payment_method = self.checkout_session.payment_method()
         if payment_method == "in-person":
             pass
-
+        import ipdb;ipdb.set_trace()
         if payment_method == "stripe":
             from apps.homemade.homeMade import chargeSharedOscar
             from math import floor
             if self.request.POST.has_key('stripe'):
                 amountInCents = int(floor(float(total) * 100.0))
-                chargeSuccess = chargeSharedOscar(self.request, self.request.basket, order_number, amountInCents)
+                chargeResponse = chargeSharedOscar(self.request, self.request.basket, order_number, amountInCents)
+                try:
+                    chargeSuccess = not chargeResponse.failure_code 
+                except:
+                    chargeSuccess = False
                 if not chargeSuccess:
                     return HttpResponseRedirect(reverse('checkout:preview'))
 
+        stripe_ref = chargeResponse.id
+        # Request was successful - record the "payment source".  As this
+        # request was a 'pre-auth', we set the 'amount_allocated' - if we had
+        # performed an 'auth' request, then we would set 'amount_debited'.
+        source_type, _ = SourceType.objects.get_or_create(name='Stripe')
+        source = Source(source_type=source_type,
+                        currency=settings.OSCAR_DEFAULT_CURRENCY,
+                        amount_allocated=total,
+                        reference=stripe_ref)
+        self.add_payment_source(source)
+
+        # Also record payment event
+        self.add_payment_event(
+            'paid', total, reference=stripe_ref)
 
         return
 

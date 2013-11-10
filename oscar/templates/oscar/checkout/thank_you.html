@@ -19,13 +19,13 @@
     </div>
     <p>{% trans "Your order has been placed and a confirmation email has ben sent - your order number is" %}
         <span class="label label-success">{{ order.number }}</span></p>
-    <p>{% trans "Please make a note of this reference or print this page and quote it in any communication with us regarding your order." %}</p>
+    <p>{% trans "Please quote this order number in any communication with us regarding your order." %}</p>
 
     <div class="row-fluid shipping-payment">
         <div class="span6">
             {% block shipping_info %}
                 <div class="well well-info">
-                    <h3>{% trans "Shipping" %}</h3>
+                    <h3>{% trans "Delivery" %}</h3>
                     {% if order.shipping_address %}
                         <dl>
                             <dt>{% trans "Address" %}</dt>
@@ -42,11 +42,11 @@
                                 <dt>{% trans "Shipping notes" %}</dt>
                                 <dd>{{ order.shipping_address.notes }}</dd>
                             {% endif %}
-                            <dt>{% trans "Shipping method" %}</dt>
+                            <dt>{% trans "Delivery method" %}</dt>
                             <dd>{{ order.shipping_method }}</dd>
                         </dl>
                     {% else %}
-                        {% trans "No shipping is required for this order." %}
+                        {% trans "No shipping or delivery is required for this order." %}
                     {% endif %}
                 </div>
             {% endblock %}
@@ -138,15 +138,15 @@
                     {% endwith %}
 
                     <tr>
-                        <th colspan="2"><h4>{% trans "Shipping" %}</h4></th>
+                        <th colspan="2"><h4>{% trans "Delivery" %}</h4></th>
                     </tr>
                     <tr>
-                        <td>{% trans "Shipping method" %}</td>
+                        <td>{% trans "Delivery method" %}</td>
                         <td class="align-right">{{ order.shipping_method }}</td>
                     </tr>
                     {% if order.has_shipping_discounts %}
                         <tr>
-                            <td>{% trans "Shipping charge (before discounts)" %}</td>
+                            <td>{% trans "Charge (before discounts)" %}</td>
                             <td class="align-right">{{ order.shipping_before_discounts_incl_tax|currency }}</td>
                         </tr>
                         {% for discount in order.shipping_discounts %}
@@ -156,12 +156,12 @@
                             </tr>
                         {% endfor %}
                         <tr>
-                            <th class="total">{% trans "Shipping charge (after discounts)" %}</th>
+                            <th class="total">{% trans "Charge (after discounts)" %}</th>
                             <th class="total align-right">{{ order.shipping_incl_tax|currency }}</th>
                         </tr>
                     {% else %}
                         <tr>
-                            <th class="total">{% trans "Shipping charge" %}</th>
+                            <th class="total">{% trans "Delivery charge" %}</th>
                             <th class="total align-right">{{ order.shipping_incl_tax|currency }}</th>
                         </tr>
                     {% endif %}
