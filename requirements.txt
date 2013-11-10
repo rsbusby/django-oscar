@@ -54,6 +54,7 @@ eventlet==0.14.0
 flake8==2.0
 #flann
 flask-mongoengine==0.6
+geopy==0.95.1
 greenlet==0.4.1
 gunicorn==18.0
 #ipdb==0.7.1

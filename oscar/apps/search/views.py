@@ -8,6 +8,9 @@ from haystack.query import SearchQuerySet
 from haystack import views
 from purl import URL
 
+from haystack.query import SearchQuerySet
+from haystack.utils.geo import Point, D
+
 Product = get_model('catalogue', 'Product')
 
 
@@ -56,6 +59,20 @@ class SuggestionsView(View):
 
 class FacetedSearchView(views.FacetedSearchView):
 
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(FacetedSearchView, self).get_context_data()
+    #     import ipdb;ipdb.set_trace()
+    #     sqs = SearchQuerySet().raw_search('price:[1.1 TO 5.4]')
+
+    #     context['test'] = sqs
+
+    #     return context
+
+
+
+
+
     def extra_context(self):
         extra = super(FacetedSearchView, self).extra_context()
         ##import ipdb;ipdb.set_trace()
@@ -67,6 +84,7 @@ class FacetedSearchView(views.FacetedSearchView):
 
         # Field facets
         facet_data = {}
+
         base_url = URL(self.request.get_full_path())
         selected = dict(
             map(lambda x: x.split(':'), self.form.selected_facets))
@@ -97,7 +115,7 @@ class FacetedSearchView(views.FacetedSearchView):
                 facet_data[field].append(datum)
 
         # Query facets
-
+        # import ipdb;ipdb.set_trace()
         for key, facet in settings.OSCAR_SEARCH_FACETS['queries'].items():
             facet_data[key] = []
             for name, query in facet['queries']:
@@ -126,7 +144,36 @@ class FacetedSearchView(views.FacetedSearchView):
                         datum['select_url'] = url.as_string()
                     facet_data[key].append(datum)
 
+
+        # datum = {
+        #     'name': "YEAH",
+        #     'count': extra['facets']['queries']["price_exact: 2 TO 8"]
+        # }
+        # datum['selected'] = False   
+        # url = base_url.append_query_param(
+        #     'selected_facets', match)
+        #     datum['select_url'] = url.as_string()
+
+
+        # facet_data['price2'].append(dataum)
+
+        sqs = SearchQuerySet().raw_search('price:[1.1 TO 5.4]')
+
+        #        context['test'] = sqs
+
         extra['facet_data'] = facet_data
+        extra['my_facets'] = sqs        
+
+        import ipdb;ipdb.set_trace()
+        base_point = Point(-118.2, 33.985)
+        # Within two miles.
+        max_dist = D(mi=5)
+
+        # Do the radius query.
+        sqs = SearchQuerySet().dwithin('location', base_point, max_dist)
+
+        extra['spatial_results'] = sqs        
+
 
         return extra
 

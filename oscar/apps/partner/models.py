@@ -6,16 +6,36 @@ from oscar.apps.catalogue.models import Product
 #from apps.homemade.homeMade import Item
 from django.db import models
 
+from haystack.utils.geo import Point, D
+
 
 class Partner(AbstractPartner):
     pass
 
 
 class PartnerAddress(AbstractPartnerAddress):
+
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+
+    def get_location(self):
+        # Remember, longitude FIRST!
+        return Point(self.longitude, self.latitude)
+
     pass
 
 
 class StockRecord(AbstractStockRecord):
+
+
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+
+    def get_location(self):
+        # Remember, longitude FIRST!
+        return Point(self.longitude, self.latitude)
+
+
     pass
 
 

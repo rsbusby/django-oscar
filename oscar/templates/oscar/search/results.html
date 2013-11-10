@@ -26,6 +26,8 @@
 {% endblock %}
 
 {% block column_left %}
+    {{spatial_results}}
+
     {# TODO - generate this block automatically using the facets setting #}
     <h4>{% trans "Refine your search" %}</h4>
     <dl>
@@ -37,15 +39,35 @@
             {% include 'search/partials/facet.html' with name='Price range' items=facet_data.price_range %}
         {% endif %}
     </dl>
+
 {% endblock %}
 
 {% block headertext %}
     {% blocktrans with q=query %}
-        Products matching "{{ q }}"
+        Products matching"{{ q }}"
     {% endblocktrans %}
 {% endblock %}
 
 {% block content %}
+
+
+
+
+        <section>
+            <div class="mod">
+                {% include "search/partials/pagination.html" %}
+                <ol class="products four">
+ {% for res in spatial_results %}
+
+        <li>{% render_product res.object %}</li>
+
+    {% endfor %}
+
+                </ol>
+
+            </div>
+        </section>
+   
 
     {% if suggestion %}
         {% trans 'Did you mean' %} <a href="{% url 'search:search' %}?q={{ suggestion }}">{{ suggestion }}</a>?

@@ -522,14 +522,15 @@ THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
 from django.utils.translation import ugettext_lazy as _
 
 OSCAR_SEARCH_FACETS = {
-    'fields': {
-        # The key for these dicts will be used when passing facet data
-        # to the template. Same for the 'queries' dict below.
-        'category': {
-            'name': _('Category'),
-            'field': 'category'
-        }
-    },
+    'fields': {},
+    # 'fields': {
+    #     # The key for these dicts will be used when passing facet data
+    #     # to the template. Same for the 'queries' dict below.
+    #     'category': {
+    #         'name': _('Category'),
+    #         'field': 'category'
+    #     }
+    # },
     'queries': {
         'price_range': {
             'name': _('Price range'),
@@ -537,8 +538,8 @@ OSCAR_SEARCH_FACETS = {
             'queries': [
                 # This is a list of (name, query) tuples where the name will
                 # be displayed on the front-end.
-                (_('0 to 2'), '[0 TO 2]'),
-                (_('2 to 4'), '[2 TO 4]'),
+                (_('0 to 2.25'), '[0 TO 2.25]'),
+                (_('2.25 to 4'), '[2.25 TO 4]'),
                 (_('4 to 6'), '[4 TO 6]'),
                 (_('6+'), '[6 TO *]'),
             ]

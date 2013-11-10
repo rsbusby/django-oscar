@@ -12,6 +12,8 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     upc = indexes.CharField(model_attr="upc", null=True)
     title = indexes.EdgeNgramField(model_attr='title', null=True)
 
+    location = indexes.LocationField(model_attr='get_location')
+
     # Fields for faceting
     category = indexes.CharField(null=True, faceted=True)
     price = indexes.DecimalField(null=True, faceted=True)
@@ -38,9 +40,11 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         if obj.has_stockrecord:
             return obj.stockrecord.num_in_stock
 
+
     def index_queryset(self, using=None):
         # Only index browsable products (not each individual variant)
-        return self.get_model().browsable.order_by('-date_updated')
+        #return self.get_model().browsable.order_by('-date_updated')
+        return self.get_model().objects.all()##filter(pub_date__lte=datetime.datetime.now())
 
     def get_updated_field(self):
         """
