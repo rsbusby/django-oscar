@@ -92,6 +92,8 @@ FALSE_MEDIA_URL = STATIC_URL
 ADMIN_MEDIA_PREFIX = 'https://bucket-name.s3.amazonaws.com/static/dj/admin/'
 
 
+GEOS_LIBRARY_PATH = '/app/.geodjango/geos/lib/libgeos_c.so'
+GDAL_LIBRARY_PATH = '/app/.geodjango/gdal/lib/libgdal.so'
 
 # Haystack settings
 HAYSTACK_CONNECTIONS = {
