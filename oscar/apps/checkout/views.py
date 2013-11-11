@@ -350,7 +350,6 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
 
         self.checkout_session.use_shipping_method(method_code)
 
-        #import ipdb;ipdb.set_trace()
         return self.get_success_response()
 
     def get_success_response(self):
@@ -746,7 +745,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         payment_method = self.checkout_session.payment_method()
         if payment_method == "in-person":
             pass
-        import ipdb;ipdb.set_trace()
+
         if payment_method == "stripe":
             from apps.homemade.homeMade import chargeSharedOscar
             from math import floor

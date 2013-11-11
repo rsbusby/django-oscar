@@ -2,9 +2,16 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.methods import (
-    Free, LocalPickup, uspsShipping, NoShippingRequired, OfferDiscount)
+    Free, LocalPickup, uspsShipping, First, UPSGround, Priority, NoShippingRequired, OfferDiscount)
 
 from decimal import Decimal as D
+
+from django.conf import settings
+from django.contrib import messages
+import json
+
+
+
 
 
 class Repository(object):
@@ -12,7 +19,81 @@ class Repository(object):
     Repository class responsible for returning ShippingMethod
     objects for a given user, basket etc
     """
-    methods = (LocalPickup(), uspsShipping())
+    methods = (LocalPickup(), First(), Priority(), UPSGround())
+
+    availableMethods = []
+
+    easyPostServicesToIgnore = ("LibraryMail", "MediaMail", "CriticalMail")
+
+    services = []
+
+    def getShippingInfo(self, basket):
+        import easypost
+        easypost.api_key = settings.EASYPOST_KEY
+
+        weight = 0.0
+
+        for line in basket.lines.all():
+            p = line.product
+            try:
+                weight = weight + p.attr.weight
+            except:
+                #messages.error(request, "Some items in your basket do not have listed weights so the shipping estimate will be low.")
+                print "Some items in your basket do not have listed weights so the shipping estimate will be low."
+                pass
+
+        try:
+            to_address = easypost.Address.create(
+              #name = 'Dr. Steve Brule',
+              #street1 = '179 N Harbor Dr',
+              #city = 'Redondo Beach',
+              #state = 'CA',
+              zip = '90277',
+              country = 'US',
+            #email = 'dr_steve_brule@gmail.com'
+            )
+
+            from_address = easypost.Address.create(
+                zip = '90291',
+                )
+            import random
+
+            if weight == 0.0:
+                print "setting weight randomly"
+                w = random.randrange(4,7)
+            else:
+                w = weight
+            print w
+            parcel = easypost.Parcel.create(
+                length = 20.2, 
+                width = 10.9,
+                height = 5,
+                weight = w,
+            )
+
+            shi = easypost.Shipment.create(
+                to_address = to_address,
+                from_address = from_address,
+                parcel = parcel,
+
+            )
+        except:
+            print "problem with easypost call"
+            messages.warning(request, _("Shipping information unavailable - please check your network connection"))
+
+            return None
+
+        basket.shipping_info = json.dumps(shi.to_dict())
+        basket.save()
+
+        serviceList = []
+        for r in shi.rates:
+            if r.service not in self.easyPostServicesToIgnore:
+                serviceList.append(r.service)
+
+        return serviceList
+
+
 
     def get_shipping_methods(self, user, basket, shipping_addr=None, **kwargs):
         """
@@ -27,11 +108,25 @@ class Repository(object):
         if not self.userAcceptsRemotePayments(basket):
             self.methods = (LocalPickup(),)
 
+        self.services = ()
+        self.services = self.getShippingInfo(basket)
+        print self.services
 
         for m in self.methods:
             m.basket_total_shipping = None
 
-        return self.prime_methods(basket, self.methods)
+        availableMethods = ()
+        self.availableMethods.append(LocalPickup())
+        for m in self.methods:
+            if m.service in self.services:
+                self.availableMethods.append(m)
+
+
+
+
+        #return self.availableMethods
+
+        return self.prime_methods(basket, self.availableMethods)
 
 
     def get_shipping_methods_no_reset(self, user, basket, shipping_addr=None, **kwargs):
@@ -44,10 +139,10 @@ class Repository(object):
         and overriding this method.
         """
 
-        if not self.userAcceptsRemotePayments(basket):
-            self.methods = (LocalPickup(),)
+        #if not self.userAcceptsRemotePayments(basket):
+        #    self.methods = (LocalPickup(),)
 
-        return self.methods
+        return self.availableMethods
 
     def userAcceptsRemotePayments(self, basket):
 

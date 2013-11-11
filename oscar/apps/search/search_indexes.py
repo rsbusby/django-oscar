@@ -10,9 +10,11 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         template_name='oscar/search/indexes/product/item_text.txt')
 
     upc = indexes.CharField(model_attr="upc", null=True)
-    title = indexes.EdgeNgramField(model_attr='title', null=True)
+    #title = indexes.EdgeNgramField(model_attr='title', null=True)
 
-    location = indexes.LocationField(model_attr='get_location')
+    #location = indexes.LocationField(model_attr='get_location')
+    location = indexes.LocationField()    
+
 
     # Fields for faceting
     category = indexes.CharField(null=True, faceted=True)
@@ -24,6 +26,13 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return get_model('catalogue', 'Product')
+
+    def prepare_location(self, obj):
+        # If you're just storing the floats...
+        print "preparing location"
+        loc = "%s,%s" % (obj.stockrecord.latitude, obj.stockrecord.longitude)
+        print loc
+        return "%s,%s" % (obj.stockrecord.latitude, obj.stockrecord.longitude)
 
     def prepare_category(self, obj):
         categories = obj.categories.all()

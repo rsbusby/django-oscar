@@ -7,6 +7,9 @@ from django.conf import settings
 from django.contrib import messages
 
 
+import easypost
+import json
+
 
 class Free(ShippingMethod):
     """
@@ -62,6 +65,53 @@ class FixedPrice(ShippingMethod):
         return self.charge_excl_tax
 
 
+class dotdict(dict):
+    def __getattr__(self, attr):
+        return self.get(attr, None)
+    __setattr__= dict.__setitem__
+    __delattr__= dict.__delitem__
+
+
+# def getEasyPostRate(basket, service):
+#     shipping_info = basket.shipping_info
+#     if shipping_info:
+#         shipDict = json.loads(shipping_info)
+#         easypost.api_key = settings.EASYPOST_KEY
+#         eo =  easypost.convert_to_easypost_object(shipDict, easypost.api_key)
+
+#         rate = None
+#         for r in eo.rates:
+#             if r.carrier == "USPS" and r.service = service:
+#                 rate = D(r.rate)
+
+#         return rate
+
+class First(ShippingMethod):
+
+    code = 'First'
+    service = 'First'
+    carrier = "USPS"
+    name = _('First Class USPS Mail')
+    basket_total_shipping = None
+
+
+class Priority(ShippingMethod):
+
+    code = 'Priority'
+    service = 'Priority'
+    carrier = "USPS"
+    name = _('USPS Priority Mail')
+    basket_total_shipping = None
+
+class UPSGround(ShippingMethod):
+
+    code = 'ups-ground'
+    service = "Ground"
+    carrier = "UPS"
+    name = _('UPS Ground')
+    basket_total_shipping = None
+
+
 class uspsShipping(ShippingMethod):
     code = 'usps-shipping'
     name = _('U.S. Postal Service')
@@ -82,7 +132,31 @@ class uspsShipping(ShippingMethod):
 
     def basket_charge_incl_tax(self):
 
-        if self.basket_total_shipping:
+        shipping_info = self.basket.shipping_info
+
+        servicesToIgnore = ("LibraryMail", "MediaMail")
+
+        if shipping_info:
+            shipDict = json.loads(shipping_info)
+            import easypost
+            easypost.api_key = settings.EASYPOST_KEY
+            eo =  easypost.convert_to_easypost_object(shipDict, easypost.api_key)
+
+            lowRateService = None
+            lowRate = None
+            for r in eo.rates:
+                if r.carrier == "USPS":
+                    if r.service not in servicesToIgnore:
+                        if not lowRate or float(r.rate) < lowRate:
+                            lowRate = float(r.rate)
+                            lowRateService = r.service
+
+            return D(lowRate)
+
+
+
+
+        elif self.basket_total_shipping:
             return self.basket_total_shipping
         else:
             return self.calc_basket_charge_incl_tax()
@@ -160,7 +234,7 @@ class uspsShipping(ShippingMethod):
 
             if weight == 0.0:
                 print "setting weight randomly"
-                w = random.randrange(4,60)
+                w = random.randrange(4,7)
             else:
                 w = weight
             print w
@@ -184,6 +258,9 @@ class uspsShipping(ShippingMethod):
             return None
 
         print shi.lowest_rate()
+
+        self.basket.shipping_info = json.dumps(shi.to_dict())
+        self.basket.save()
 
         usps_rate = None
         for r in shi.rates:

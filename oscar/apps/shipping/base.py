@@ -1,5 +1,12 @@
 from decimal import Decimal as D
 
+from django.conf import settings
+from django.contrib import messages
+
+import easypost
+import json
+
+
 
 class ShippingMethod(object):
     """
@@ -29,6 +36,27 @@ class ShippingMethod(object):
     is_primed = False
     basket_total_shipping = None
 
+    carrier = None
+    service = None
+
+    def getEasyPostRate(self):
+
+        shipping_info = self.basket.shipping_info
+        if shipping_info:
+            shipDict = json.loads(shipping_info)
+            easypost.api_key = settings.EASYPOST_KEY
+            eo =  easypost.convert_to_easypost_object(shipDict, easypost.api_key)
+
+            rate = None
+            for r in eo.rates:
+                if r.carrier == self.carrier and r.service == self.service:
+                    rate = D(r.rate)
+
+            return rate
+
+
+
+
     def __init__(self, *args, **kwargs):
         self.exempt_from_tax = False
         super(ShippingMethod, self).__init__(*args, **kwargs)
@@ -40,10 +68,13 @@ class ShippingMethod(object):
         """
         Return the shipping charge including any taxes
         """
-        raise NotImplemented()
+        return self.getEasyPostRate()
+
+        ##raise NotImplemented()
 
     def basket_charge_excl_tax(self):
         """
         Return the shipping charge excluding taxes
         """
-        raise NotImplemented()
+        return self.basket_charge_incl_tax()
+        #raise NotImplemented()

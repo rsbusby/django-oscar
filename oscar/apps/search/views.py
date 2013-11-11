@@ -164,10 +164,10 @@ class FacetedSearchView(views.FacetedSearchView):
         extra['facet_data'] = facet_data
         extra['my_facets'] = sqs        
 
-        import ipdb;ipdb.set_trace()
+
         base_point = Point(-118.2, 33.985)
-        # Within two miles.
-        max_dist = D(mi=5)
+        # Within ?? miles.
+        max_dist = D(mi=10)
 
         # Do the radius query.
         sqs = SearchQuerySet().dwithin('location', base_point, max_dist)
