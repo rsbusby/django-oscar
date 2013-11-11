@@ -30,9 +30,14 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_location(self, obj):
         # If you're just storing the floats...
         print "preparing location"
-        loc = "%s,%s" % (obj.stockrecord.latitude, obj.stockrecord.longitude)
-        print loc
-        return "%s,%s" % (obj.stockrecord.latitude, obj.stockrecord.longitude)
+        loc = None
+        try:
+            loc = "%s,%s" % (obj.stockrecord.latitude, obj.stockrecord.longitude)
+            print loc
+        except:
+            pass
+
+        return loc
 
     def prepare_category(self, obj):
         categories = obj.categories.all()
