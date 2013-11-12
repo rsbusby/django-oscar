@@ -54,7 +54,18 @@ class ShippingMethod(object):
 
             return rate
 
+    def get_shipping_rate_id(self):
+        shipping_info = self.basket.shipping_info
+        if shipping_info:
+            shipDict = json.loads(shipping_info)
+            easypost.api_key = settings.EASYPOST_KEY
+            eo =  easypost.convert_to_easypost_object(shipDict, easypost.api_key)
 
+
+            for r in eo.rates:
+                if r.carrier == self.carrier and r.service == self.service:
+                    return r.id
+            return None
 
 
     def __init__(self, *args, **kwargs):

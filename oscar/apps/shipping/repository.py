@@ -6,6 +6,10 @@ from oscar.apps.shipping.methods import (
 
 from decimal import Decimal as D
 
+from oscar.apps.address.models import UserAddress
+
+
+
 from django.conf import settings
 from django.contrib import messages
 import json
@@ -27,7 +31,7 @@ class Repository(object):
 
     services = []
 
-    def getShippingInfo(self, basket):
+    def getShippingInfo(self, basket, shippingAddress):
         import easypost
         easypost.api_key = settings.EASYPOST_KEY
 
@@ -42,19 +46,31 @@ class Repository(object):
                 print "Some items in your basket do not have listed weights so the shipping estimate will be low."
                 pass
 
+        ##oscarToAddress = get_object_or_404(UserAddress, id=shippingAddress.id)
+        import ipdb;ipdb.set_trace()
+        ota = UserAddress.objects.filter(id=shippingAddress.id)[0]
+
+        ofa = basket.seller.primary_address
+
+
         try:
             to_address = easypost.Address.create(
-              #name = 'Dr. Steve Brule',
-              #street1 = '179 N Harbor Dr',
-              #city = 'Redondo Beach',
-              #state = 'CA',
-              zip = '90277',
-              country = 'US',
+              name = ota.name,
+              street1 = ota.line1,
+              city = ota.city,
+              state = ota.state,
+              zip = ota.postcode,
+              country = ota.country.iso_3166_1_a2,
             #email = 'dr_steve_brule@gmail.com'
             )
 
             from_address = easypost.Address.create(
-                zip = '90291',
+              name = ofa.name,
+              street1 = ofa.line1,
+              city = ofa.city,
+              state = ofa.state,
+              zip = ofa.postcode,
+              country = ofa.country.iso_3166_1_a2,
                 )
             import random
 
@@ -79,7 +95,7 @@ class Repository(object):
             )
         except:
             print "problem with easypost call"
-            messages.warning(request, _("Shipping information unavailable - please check your network connection"))
+            #messages.warning(request, _("Shipping information unavailable - please check your network connection"))
 
             return None
 
@@ -109,7 +125,7 @@ class Repository(object):
             self.methods = (LocalPickup(),)
 
         self.services = ()
-        self.services = self.getShippingInfo(basket)
+        self.services = self.getShippingInfo(basket, shipping_addr)
         print self.services
 
         for m in self.methods:

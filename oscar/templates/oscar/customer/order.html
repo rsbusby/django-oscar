@@ -95,10 +95,10 @@
 
                             <form id="line_form_{{ line.id }}" action="{% url 'customer:order-line' order.number line.id %}" method="POST">
                                 {% csrf_token %}
-                                {% comment %}
+
                                 <input type="hidden" name="action" value="reorder" />
                                 <button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
-                                {% endcomment %}
+
                                 {% iffeature "reviews" %}
                                     <a class="btn btn-info" href="{% url 'catalogue:reviews-add' line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
                                 {% endiffeature %}

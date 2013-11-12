@@ -10,8 +10,16 @@ class Order(AbstractOrder):
     sponsored_org = models.ForeignKey(
         'order.SponsoredOrganization', null=True, blank=True,
         verbose_name=("Organization to Benefit"))
-   
-    #seller  
+
+    ## shipping rate id for EasyPost  
+
+    shipping_rate_id = models.CharField(("Shipping Rate ID"), max_length=128, null=True, blank=True)
+    shipping_carrier = models.CharField(("Shipping Carrier"), max_length=128, null=True, blank=True)
+    shipping_service = models.CharField(("Shipping Service"), max_length=128, null=True, blank=True)
+
+    ## JSON shipping info from shipping SAAS, i.e. EasyPost or Postmaster.io Could use JSON field but I don't care if it's valid
+    shipping_info_json = models.TextField(("Shipping Info"), blank=True, null=True)
+    shipping_label_json = models.TextField(("Shipping Label Info"), blank=True, null=True)
 
 class SponsoredOrganization(models.Model):
 

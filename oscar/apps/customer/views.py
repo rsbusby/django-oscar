@@ -21,6 +21,12 @@ from oscar.core.loading import get_class, get_profile_class, get_classes
 from oscar.apps.customer.models import get_user_model
 from apps.homemade.homeMade import Seller
 
+## for getting shipping labels
+import json
+import easypost
+
+
+
 
 ##Seller = get_model('homemade', 'Seller')
 
@@ -455,6 +461,7 @@ class SalesHistoryView(OrderHistoryView):
     #context_object_name = "orders"
     template_header = "Sales"
     template_name = 'customer/sales_list.html'
+    #template_name = 'customer/order_list.html'
 
     def get_queryset(self):
         basketsForThisSeller = Basket.objects.filter(seller__user=self.request.user)
@@ -498,7 +505,53 @@ class OrderDetailView(PostActionMixin, DetailView):
                 return
 
         return o
+
+    def do_show_label(self, order):
+        """
+        show shipping label for a previous order.
+
+        """
+        #import ipdb;ipdb.set_trace()
+        basket = get_object_or_404(Basket, id = order.basket_id)
+
+        shipping_info = basket.shipping_info
+        if shipping_info:
+            shipDict = json.loads(shipping_info)
+            easypost.api_key = settings.EASYPOST_KEY
+            eo =  easypost.convert_to_easypost_object(shipDict, easypost.api_key)
+
+            selectedRate = None
+            ## get the rate from what is saved in the basket.
+            for r in eo.rates:
+                if r.carrier == order.shipping_carrier and r.service == order.shipping_service:
+                    selectedRate = r
+
+            print eo
+            eo.refresh()
+            #import ipdb;ipdb.set_trace()
+            if not eo.postage_label:
+                labelInfo = eo.buy(rate=selectedRate)
+                order.shipping_label_json = labelInfo  
+            else:
+                labelInfo = eo.postage_label
                 
+            #print self.request.POST
+            ## can switch to show PDF, get hidden POST data
+            self.response = HttpResponseRedirect(eo.postage_label.label_url) 
+            ##self.response = HttpResponseRedirect(eo.postage_label.label_pdf_url) 
+            return
+
+
+        self.response = HttpResponseRedirect(reverse('customer:sales-list'))
+        messages.warning(
+                self.request,
+                _("It is not possible to get a label for order %(number)s "
+                  "as the service is unavailable, please contact support") %
+                {'number': order.number})
+
+
+
+
 
     def do_reorder(self, order):
         """

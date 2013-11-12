@@ -621,7 +621,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         if order_kwargs is None:
             order_kwargs = {}
 
-
         # Domain-specific checks on the basket
         is_valid, reason, url = self.can_basket_be_submitted(basket)
         if not is_valid:

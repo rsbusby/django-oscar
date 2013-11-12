@@ -55,6 +55,17 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         order = self.place_order(
             order_number, basket, total_incl_tax,
             total_excl_tax, user, **kwargs)
+
+        ## for easyPost
+        method= self.checkout_session.shipping_method(basket)
+
+        order.shipping_rate_id = method.get_shipping_rate_id()
+        order.shipping_carrier = method.carrier
+        order.shipping_service = method.service                       
+        if basket.shipping_info:
+            order.shipping_info_json = basket.shipping_info 
+        order.save()
+
         basket.submit()
         return self.handle_successful_order(order)
 

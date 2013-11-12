@@ -40,6 +40,7 @@ class OrderCreator(object):
 
     def place_order(self, basket, total_incl_tax=None, total_excl_tax=None,
                     user=None, shipping_method=None, shipping_address=None,
+                    shipping_rate_id = None, shipping_carrier=None, shipping_service=None,
                     billing_address=None, order_number=None, status=None, **kwargs):
         """
         Placing an order involves creating all the relevant models based on the
@@ -50,7 +51,8 @@ class OrderCreator(object):
         if basket.is_empty:
             raise ValueError(_("Empty baskets cannot be submitted"))
         if not shipping_method:
-            shipping_method = Free()
+            shipping_method = LocalPickup()
+
         if total_incl_tax is None or total_excl_tax is None:
             total_incl_tax = basket.total_incl_tax + shipping_method.basket_charge_incl_tax()
             total_excl_tax = basket.total_excl_tax + shipping_method.basket_charge_excl_tax()
@@ -73,6 +75,16 @@ class OrderCreator(object):
         for line in basket.all_lines():
             self.create_line_models(order, line)
             self.update_stock_records(line)
+
+        ## for easyPost
+        if shipping_rate_id:
+            order.shipping_rate_id = shipping_rate_id
+        if shipping_carrier:
+            order.shipping_carrier = shipping_carrier
+        if shipping_service:
+            order.shipping_service = shipping_service                       
+        if basket.shipping_info:
+            order.shipping_info_json = basket.shipping_info                             
 
         for application in basket.offer_applications:
             # Trigger any deferred benefits from offers and capture the
