@@ -23,19 +23,35 @@ class AbstractAddressForm(forms.ModelForm):
 
 class UserAddressForm(AbstractAddressForm):
 
+
+    no_checkboxes = None
+
     class Meta:
         model = UserAddress
-        exclude = ('user', 'num_orders', 'hash', 'search_text')
+        exclude = ('user', 'num_orders', 'hash', 'search_text', 'latitude', 'longitude')
 
-    #def __init__(self, user, *args, **kwargs):
-    #    super(UserAddressForm, self).__init__(*args, **kwargs)
+    # def __init__(self, user, *args, **kwargs):
+    #     import ipdb;ipdb.set_trace()
+
+    #     super(UserAddressForm, self).__init__(*args, **kwargs)
 
 
     #    #if not self.instance.country:
     #    #    self.instance.country = Country("US")
 
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, user, no_checkboxes=False, *args, **kwargs):
+
         super(UserAddressForm, self).__init__(*args, **kwargs)
+
+        ## only show choice for default store address if a seller
+        if not hasattr(user, 'partner'):
+            self.fields.pop('is_default_for_store')
+
+        if no_checkboxes == True:
+            self.fields.pop('is_default_for_store')
+            self.fields.pop('is_default_for_shipping')
+            self.fields.pop('is_default_for_billing')                        
+
         self.instance.user = user
         countries = Country._default_manager.filter(
             is_shipping_country=True)
@@ -47,7 +63,6 @@ class UserAddressForm(AbstractAddressForm):
         else:
             self.fields['country'].queryset = countries
             self.fields['country'].empty_label = None
-
 
 
 

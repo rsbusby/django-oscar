@@ -21,6 +21,10 @@ class CustomerApplication(Application):
     address_create_view = views.AddressCreateView
     address_update_view = views.AddressUpdateView
     address_delete_view = views.AddressDeleteView
+
+
+    store_shipping_address_view = views.StoreShippingAddressView
+
     email_list_view = views.EmailHistoryView
     email_detail_view = views.EmailDetailView
     login_view = views.AccountAuthView
@@ -83,6 +87,10 @@ class CustomerApplication(Application):
             url(r'^addresses/(?P<pk>\d+)/delete/$',
                 login_required(self.address_delete_view.as_view()),
                 name='address-delete'),
+
+
+            url(r'store-shipping-address/$',
+                self.store_shipping_address_view.as_view(), name='store-shipping-address'),
 
             # Email history
             url(r'^emails/$',

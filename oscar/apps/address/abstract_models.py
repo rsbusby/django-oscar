@@ -449,7 +449,7 @@ class AbstractUserAddress(AbstractShippingAddress):
     user = models.ForeignKey(
         AUTH_USER_MODEL, related_name='addresses', verbose_name=_("User"))
 
-    #: Whether this address is the default for shipping
+    #: Whether this address is the default for shipping TO, i.e. receiving
     is_default_for_shipping = models.BooleanField(
         _("Default shipping address?"), default=False)
 
@@ -492,6 +492,12 @@ class AbstractUserAddress(AbstractShippingAddress):
                 user=self.user,
                 is_default_for_billing=True).update(
                     is_default_for_billing=False)
+        if self.is_default_for_store:
+            self.__class__._default_manager.filter(
+                user=self.user,
+                is_default_for_store=True).update(
+                    is_default_for_billing=False)
+
 
     class Meta:
         abstract = True

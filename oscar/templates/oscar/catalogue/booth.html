@@ -256,6 +256,12 @@
 {% endif  %}  {% comment %} if not stripeAccountToken {% endcomment %}
 
 </div>
+
+
+{# pick an outgoing shipping address #}
+  <a class="btn btn-info" href="{% url 'customer:store-shipping-address' %}">{% trans 'Choose an outgoing address' %}</a>
+
+
 {% endif  %} {# is seller#}
 
 <!-- </div> -->

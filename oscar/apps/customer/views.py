@@ -728,6 +728,104 @@ class AddressDeleteView(DeleteView):
         return reverse('customer:address-list')
 
 
+# ================
+# SHIPPING ADDRESS
+# ================
+
+
+class StoreShippingAddressView(FormView):
+    """
+    Determine the outgoing shipping address for the seller.
+
+    The default behaviour is to display a list of addresses from the users's
+    address book, from which the user can choose one to be their default outgoing shipping address.
+    They can add/edit/delete these USER addresses. 
+
+    Alternatively, the user can enter a USER address directly which will be
+    saved as the default outgoing shipping address.
+    """
+    template_name = 'customer/store_address.html'
+    form_class = UserAddressForm
+
+    #def __init__(self):
+    #   super(StoreShippingAddressView, self).__init__(no_checkboxes=True)
+    #   return
+
+    def get(self, request, *args, **kwargs):
+
+        return super(StoreShippingAddressView, self).get(request, *args, **kwargs)
+
+    #def get_initial(self):
+    #    return self.checkout_session.new_shipping_address_fields()
+
+    # def get_form(self, form_class):
+    #     # Initialize the form with initial values and the subscriber object
+    #     # to be used in EmailPreferenceForm for populating fields
+    #     import ipdb;ipdb.set_trace()
+    #     return form_class(
+    #         initial=self.get_initial(),
+    #         #subscriber=self.subscriber,
+    #         no_checkboxes = True
+    #     )
+
+
+    def get_form_kwargs(self):
+        kwargs = super(StoreShippingAddressView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        kwargs['no_checkboxes'] = True
+
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        kwargs = super(StoreShippingAddressView, self).get_context_data(**kwargs)
+        if self.request.user.is_authenticated():
+            # Look up address book data
+            kwargs['addresses'] = self.get_available_addresses()
+        return kwargs
+
+    def get_available_addresses(self):
+        return UserAddress._default_manager.filter(user=self.request.user).order_by('-is_default_for_store')
+
+    def post(self, request, *args, **kwargs):
+        # Check if a store address was selected directly (eg no form was
+        # filled in)
+        if self.request.user.is_authenticated() and 'address_id' in self.request.POST:
+            address = UserAddress._default_manager.get(
+                pk=self.request.POST['address_id'], user=self.request.user)
+            action = self.request.POST.get('action', None)
+            if action == 'ship_to':
+                # User has selected a previous address to ship to
+                address.is_default_for_store = True
+                address.save()
+                return HttpResponseRedirect(self.get_success_url())
+            elif action == 'delete':
+                # Delete the selected address
+                address.delete()
+                messages.info(self.request, _("Address deleted from your address book"))
+                return HttpResponseRedirect(reverse('customer:address-list'))
+            else:
+                return HttpResponseBadRequest()
+        else:
+            return super(StoreShippingAddressView, self).post(
+                request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # Store the address details in the session and redirect to next step
+        #address_fields = dict(
+        #    (k, v) for (k, v) in form.instance.__dict__.items()
+        #    if not k.startswith('_'))
+        #self.checkout_session.ship_to_new_address(address_fields)
+        ## set as default shipping address, since that's what this is all about
+        form.cleaned_data['is_default_for_store'] = True
+        return super(StoreShippingAddressView, self).form_valid(form)
+
+    def get_success_url(self):
+        messages.success(self.request, _("Outgoing Shipping Address saved"))
+        return reverse('customer:address-list')
+
+
+
+
 # ------------
 # Order status
 # ------------
@@ -773,3 +871,6 @@ class ChangePasswordView(FormView):
 
     def get_success_url(self):
         return reverse('customer:summary')
+
+
+
