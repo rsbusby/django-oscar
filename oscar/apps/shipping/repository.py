@@ -13,6 +13,7 @@ from oscar.apps.address.models import UserAddress
 from django.conf import settings
 from django.contrib import messages
 import json
+import easypost
 
 
 
@@ -48,7 +49,7 @@ class Repository(object):
 
         ##oscarToAddress = get_object_or_404(UserAddress, id=shippingAddress.id)
         #import ipdb;ipdb.set_trace()
-        ota = UserAddress.objects.filter(id=shippingAddress.id)[0]
+        ota = shippingAddress
 
         ofa = basket.seller.primary_address
 
@@ -109,7 +110,21 @@ class Repository(object):
 
         return serviceList
 
+    def getServicesFromJSON(self, basket):
+        shipping_info = basket.shipping_info
+        if shipping_info:
+            shipDict = json.loads(shipping_info)
+            easypost.api_key = settings.EASYPOST_KEY
+            eo =  easypost.convert_to_easypost_object(shipDict, easypost.api_key)
 
+            serviceList = []
+            for r in eo.rates:
+                if r.service not in self.easyPostServicesToIgnore:
+                    serviceList.append(r.service)
+
+            return serviceList
+        return None
+     
 
     def get_shipping_methods(self, user, basket, shipping_addr=None, **kwargs):
         """
@@ -131,12 +146,12 @@ class Repository(object):
         for m in self.methods:
             m.basket_total_shipping = None
 
-        availableMethods = ()
+        self.availableMethods = []
+        
         self.availableMethods.append(LocalPickup())
         for m in self.methods:
             if m.service in self.services:
                 self.availableMethods.append(m)
-
 
 
 
@@ -157,8 +172,21 @@ class Repository(object):
 
         #if not self.userAcceptsRemotePayments(basket):
         #    self.methods = (LocalPickup(),)
+        #import ipdb;ipdb.set_trace()
 
-        return self.availableMethods
+        self.services = self.getServicesFromJSON(basket)
+        if not self.services:
+            return self.get_shipping_methods()
+
+        self.availableMethods = []
+        
+        self.availableMethods.append(LocalPickup())
+        for m in self.methods:
+            if m.service in self.services:
+                self.availableMethods.append(m)
+
+        return self.prime_methods(basket, self.availableMethods)
+
 
     def userAcceptsRemotePayments(self, basket):
 

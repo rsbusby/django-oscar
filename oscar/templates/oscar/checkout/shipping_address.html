@@ -94,8 +94,13 @@
             {% include "partials/form_fields.html" with form=form %}
         </div>
         <div class="form-actions">
-            <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
+
+            <button type="submit" style="position:relative;margin:10 0 10 0" class="btn btn-primary btn-full ship-address js-disable-on-click" data-loading-text="{% trans 'Getting shipping options, please wait...' %}">{% trans "Continue" %}</button>
+
+            {#<button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>#}
+        {% comment %}
             {% trans "or" %} <a href="{% url 'basket:summary' %}?basket_id={{basket.id}}">{% trans "return to basket" %}</a>
+        {% endcomment %}
         </div>
     </form>
 

@@ -328,7 +328,7 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         # Need to check that this code is valid for this user
         if request.POST.get('method_reset'):
             self.checkout_session.unset_shipping_method()
-
+        #import ipdb;ipdb.set_trace()
         method_code = request.POST.get('method_code', None)
         is_valid = False
         newMethod = None
