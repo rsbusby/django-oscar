@@ -47,7 +47,7 @@ class Repository(object):
                 pass
 
         ##oscarToAddress = get_object_or_404(UserAddress, id=shippingAddress.id)
-        import ipdb;ipdb.set_trace()
+        #import ipdb;ipdb.set_trace()
         ota = UserAddress.objects.filter(id=shippingAddress.id)[0]
 
         ofa = basket.seller.primary_address
