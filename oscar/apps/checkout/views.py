@@ -321,7 +321,6 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         # fit this system.
 
         ## if Seller is not set up for card payments, only allow local pickup
-        ##import ipdb;ipdb.set_trace()
         try:
             methods =  Repository().get_shipping_methods(self.request.user, self.request.basket,
                                                  self.get_shipping_address())
@@ -333,7 +332,7 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         # Need to check that this code is valid for this user
         if request.POST.get('method_reset'):
             self.checkout_session.unset_shipping_method()
-        #import ipdb;ipdb.set_trace()
+
         method_code = request.POST.get('method_code', None)
         is_valid = False
         newMethod = None
@@ -747,7 +746,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         """
 
         payment_method = self.checkout_session.payment_method()
-        if payment_method == "in-person":
+
+        if payment_method == "in_person":
             pass
 
         if payment_method == "stripe":
@@ -763,20 +763,27 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                 if not chargeSuccess:
                     return HttpResponseRedirect(reverse('checkout:preview'))
 
-        stripe_ref = chargeResponse.id
-        # Request was successful - record the "payment source".  As this
-        # request was a 'pre-auth', we set the 'amount_allocated' - if we had
-        # performed an 'auth' request, then we would set 'amount_debited'.
-        source_type, _ = SourceType.objects.get_or_create(name='Stripe')
-        source = Source(source_type=source_type,
-                        currency=settings.OSCAR_DEFAULT_CURRENCY,
-                        amount_allocated=total,
-                        reference=stripe_ref)
-        self.add_payment_source(source)
+            stripe_ref = chargeResponse.id
+            # Request was successful - record the "payment source".  As this
+            # request was a 'pre-auth', we set the 'amount_allocated' - if we had
+            # performed an 'auth' request, then we would set 'amount_debited'.
+            source_type, _ = SourceType.objects.get_or_create(name='Stripe')
+            source = Source(source_type=source_type,
+                            currency=settings.OSCAR_DEFAULT_CURRENCY,
+                            amount_allocated=total,
+                            reference=stripe_ref)
+            self.add_payment_source(source)
 
-        # Also record payment event
-        self.add_payment_event(
-            'paid', total, reference=stripe_ref)
+            # Also record payment event
+            self.add_payment_event(
+                'paid', total, reference=stripe_ref)
+        # else:
+        #     print "Assuming paying local"
+        #     source_type, _ = SourceType.objects.get_or_create(name=payment_method)
+        #     source = Source(source_type=source_type,
+        #                     currency=settings.OSCAR_DEFAULT_CURRENCY,
+        #                     amount_allocated=total,
+        #                     reference=order.id)
 
         return
 

@@ -31,7 +31,6 @@ class UserAddressForm(AbstractAddressForm):
         exclude = ('user', 'num_orders', 'hash', 'search_text', 'latitude', 'longitude')
 
     # def __init__(self, user, *args, **kwargs):
-    #     import ipdb;ipdb.set_trace()
 
     #     super(UserAddressForm, self).__init__(*args, **kwargs)
 

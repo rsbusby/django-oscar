@@ -198,7 +198,6 @@ class uspsShipping(ShippingMethod):
         # print time_ups
         # print time_usps
 
-        #import ipdb;ipdb.set_trace()
 
         import easypost
         easypost.api_key = settings.EASYPOST_KEY

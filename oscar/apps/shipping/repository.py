@@ -60,7 +60,7 @@ class Repository(object):
                 pass
 
         ##oscarToAddress = get_object_or_404(UserAddress, id=shippingAddress.id)
-        #import ipdb;ipdb.set_trace()
+
         ota = shippingAddress
 
         ofa = basket.seller.primary_address
@@ -198,7 +198,7 @@ class Repository(object):
 
         #if not self.userAcceptsRemotePayments(basket):
         #    self.methods = (LocalPickup(),)
-        #import ipdb;ipdb.set_trace()
+
 
         self.services = self.getServicesFromJSON(basket)
         if not self.services:

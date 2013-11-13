@@ -511,7 +511,6 @@ class OrderDetailView(PostActionMixin, DetailView):
         show shipping label for a previous order.
 
         """
-        #import ipdb;ipdb.set_trace()
         basket = get_object_or_404(Basket, id = order.basket_id)
 
         shipping_info = basket.shipping_info
@@ -528,7 +527,6 @@ class OrderDetailView(PostActionMixin, DetailView):
 
             print eo
             eo.refresh()
-            #import ipdb;ipdb.set_trace()
             if not eo.postage_label:
                 labelInfo = eo.buy(rate=selectedRate)
                 order.shipping_label_json = labelInfo  
@@ -761,7 +759,7 @@ class StoreShippingAddressView(FormView):
     # def get_form(self, form_class):
     #     # Initialize the form with initial values and the subscriber object
     #     # to be used in EmailPreferenceForm for populating fields
-    #     import ipdb;ipdb.set_trace()
+
     #     return form_class(
     #         initial=self.get_initial(),
     #         #subscriber=self.subscriber,
