@@ -78,9 +78,11 @@
   <li>
                     <a href="{% url 'filterEvents' %}?workshop=True">{% trans "Workshops" %}</a>
                     </li>
+                    {% comment %}
                     <li>
                     <a href="{% url 'filterEvents' %}?swap=True">{% trans "Food Swaps" %}</a>
                     </li>
+                    {% endcomment %}
                     <li>
                     <a href="{% url 'showEvents' %}"> {% trans "All Events" %}</a>
                     </li>
