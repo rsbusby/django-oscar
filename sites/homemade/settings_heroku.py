@@ -23,7 +23,7 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-DEBUG=True
+DEBUG=False
 
 SITE_ID=3  ## set to 2 for www.homemade1616.com, 3 is heroku direct
 
