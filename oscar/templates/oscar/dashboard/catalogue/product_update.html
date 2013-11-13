@@ -347,7 +347,7 @@
           {#      </div> #}
 
 
-                <table class="table table-striped table-bordered form-inline">
+                <table class="table table-striped table-bordered fform-inline">
                         <caption>{% trans "Please select one or more suitable categories" %}</caption>
                         {{ category_formset.management_form }}
                         {{ category_formset.non_form_errors }}
@@ -362,7 +362,7 @@
 
 
 {{ stockrecord_form.non_field_errors }}
-                                    <table class="table table-striped table-bordered form-inline">
+                                    <table class="table table-striped table-bordered fform-inline">
 
                                <tr>
                                     <th> Price {% if field.field.required %} <span>*</span>{% endif %}</th>
@@ -374,7 +374,7 @@
                                     </td>
                                 </tr>
 
-          <table class="table table-striped table-bordered form-inline">
+          <table class="table table-striped table-bordered fform-inline">
                        
                         {% for field in form %}
                         {% if 'attr' in field.id_for_label %}
@@ -420,7 +420,7 @@
                     </table>
 
                     <div class="table-header">
-                        <h3>{% trans "Upload, change or remove images" %}</h3>
+                        <h4>{% trans "Upload, change or remove images" %}</h4>
                     </div>
                     <div class="well">
                         {{ image_formset.management_form }}
@@ -438,7 +438,7 @@
            
 
                 <div class="tab-pane" id="product_recommended">
-                    <table class="table table-striped table-bordered form-inline">
+                    <table class="table table-striped table-bordered fform-inline">
                         <caption>{% trans "Recommended products" %}</caption>
                         {{ recommended_formset.management_form }}
                         {{ recommended_formset.non_form_errors }}
