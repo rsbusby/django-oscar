@@ -89,7 +89,10 @@ class AbstractPartner(models.Model):
         """
         addresses = self.addresses.all()
         if len(addresses) == 0:  # intentionally using len() to save queries
-            sellerDefaultAddress = self.user.addresses.all()[0]
+            try:
+                sellerDefaultAddress = self.user.addresses.all()[0]
+            except:
+                sellerDefaultAddress = None
             return sellerDefaultAddress
 
         elif len(addresses) == 1:

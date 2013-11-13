@@ -52,7 +52,9 @@ class Repository(object):
         ota = shippingAddress
 
         ofa = basket.seller.primary_address
-
+        if not ofa:
+            raise SellerCannotShip
+            return None
 
         try:
             to_address = easypost.Address.create(
@@ -140,7 +142,14 @@ class Repository(object):
             self.methods = (LocalPickup(),)
 
         self.services = ()
-        self.services = self.getShippingInfo(basket, shipping_addr)
+        try:
+            self.services = self.getShippingInfo(basket, shipping_addr)
+        except SellerCannotShip, e:
+            ## only do local pickup
+            self.availableMethods = []
+            self.availableMethods.append(LocalPickup())
+            return self.prime_methods(basket, self.availableMethods)
+
         print self.services
 
         for m in self.methods:

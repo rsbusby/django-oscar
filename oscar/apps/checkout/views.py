@@ -320,9 +320,13 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         # fit this system.
 
         ## if Seller is not set up for card payments, only allow local pickup
-
-        return Repository().get_shipping_methods(self.request.user, self.request.basket,
+        import ipdb;ipdb.set_trace()
+        try:
+            methods =  Repository().get_shipping_methods(self.request.user, self.request.basket,
                                                  self.get_shipping_address())
+        except SellerCannotShip, e:
+            print "order_kwargs"
+        return methods
 
     def post(self, request, *args, **kwargs):
         # Need to check that this code is valid for this user
