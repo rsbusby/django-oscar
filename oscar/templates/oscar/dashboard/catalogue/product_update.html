@@ -24,10 +24,11 @@
 <form action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors" autocomplete="off">
     {% csrf_token %}
     <div class="row-fluid">
-        <div class="span1">
+        <div class="span1 pull-left hidden-phone">
+            {% comment %}
             <div data-spy="affix" class="affix-top" data-offset-top="200">
 
-            {% comment %}
+
                 <div class="table-header">
                     <h3>{% trans "Sections" %}</h3>
                 </div>
@@ -51,8 +52,9 @@
 
                     <li><a href="#product_stock" data-toggle="tab">{% trans 'Product stock' %}</a></li>
                 </ul>
-{% endcomment %}
+
             </div>
+{% endcomment %}
         </div>
         <div class="span9">
             <div class="tab-content">
