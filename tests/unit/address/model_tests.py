@@ -23,6 +23,7 @@ class TestUserAddress(TestCase):
             title="Dr",
             first_name="Barry",
             last_name='Barrington')
+
         self.assertEquals("Dr Barry Barrington", a.salutation)
 
     def test_strips_whitespace_from_salutation(self):
@@ -59,7 +60,7 @@ class TestUserAddress(TestCase):
             postcode="SW1 9RE",
             country=c)
         self.assertEquals(
-            "Dr Barry Barrington, 1 King Road, London, SW1 9RE, UNITED KINGDOM",
+            "Dr Barry Barrington, 1 King Road, London, SW1 9RE",
             a.summary)
 
     def test_can_be_hashed(self):
@@ -174,7 +175,7 @@ class TestUserAddress(TestCase):
             country=self.country)
         a.clean()
         self.assertEquals(
-            u"Terry Barrington, 75 Smith Road, N4 8TY, UNITED KINGDOM",
+            u"Terry Barrington, 75 Smith Road, N4 8TY",
             a.summary)
 
 VALID_POSTCODES = [
