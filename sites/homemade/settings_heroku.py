@@ -68,7 +68,7 @@ mongoengine.connect(DB_NAME, host='mongodb://' + DB_USERNAME + ':' + DB_PASSWORD
 
 MDB_SECRET_KEY="f00dut0pia"
 
-USE_S3 = False
+USE_S3 = True
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
