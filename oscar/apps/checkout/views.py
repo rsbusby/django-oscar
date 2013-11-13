@@ -27,6 +27,7 @@ pre_payment, post_payment = get_classes('checkout.signals', ['pre_payment', 'pos
 OrderNumberGenerator, OrderCreator = get_classes('order.utils', ['OrderNumberGenerator', 'OrderCreator'])
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 Repository = get_class('shipping.repository', 'Repository')
+SellerCannotShip = get_class('shipping.repository', 'SellerCannotShip')
 AccountAuthView = get_class('customer.views', 'AccountAuthView')
 RedirectRequired, UnableToTakePayment, PaymentError = get_classes(
     'payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 'PaymentError'])
@@ -320,7 +321,7 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         # fit this system.
 
         ## if Seller is not set up for card payments, only allow local pickup
-        import ipdb;ipdb.set_trace()
+        #import ipdb;ipdb.set_trace()
         try:
             methods =  Repository().get_shipping_methods(self.request.user, self.request.basket,
                                                  self.get_shipping_address())

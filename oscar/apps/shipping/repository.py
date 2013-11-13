@@ -16,6 +16,9 @@ import json
 import easypost
 
 
+class SellerCannotShip(Exception):
+    """ Easy to understand naming conventions work best! """
+    pass
 
 
 
@@ -31,6 +34,8 @@ class Repository(object):
     easyPostServicesToIgnore = ("LibraryMail", "MediaMail", "CriticalMail")
 
     services = []
+
+
 
     def getShippingInfo(self, basket, shippingAddress):
         import easypost
@@ -111,6 +116,7 @@ class Repository(object):
                 serviceList.append(r.service)
 
         return serviceList
+
 
     def getServicesFromJSON(self, basket):
         shipping_info = basket.shipping_info
