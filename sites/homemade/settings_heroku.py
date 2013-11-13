@@ -68,10 +68,13 @@ mongoengine.connect(DB_NAME, host='mongodb://' + DB_USERNAME + ':' + DB_PASSWORD
 
 MDB_SECRET_KEY="f00dut0pia"
 
-USE_S3 = True
+USE_S3 = False
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+
+ALLOWED_HOSTS = ['www.homemade1616.com','homemade1616.com']
 
 # the following should be enviroment variables
 #AWS_ACCESS_KEY_ID = 'access-id'
