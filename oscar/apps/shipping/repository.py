@@ -20,6 +20,9 @@ class SellerCannotShip(Exception):
     """ Easy to understand naming conventions work best! """
     pass
 
+class ItemHasNoWeight(Exception):
+    """ Easy to understand naming conventions work best! """
+    pass
 
 
 class Repository(object):
@@ -50,6 +53,10 @@ class Repository(object):
             except:
                 #messages.error(request, "Some items in your basket do not have listed weights so the shipping estimate will be low.")
                 print "Some items in your basket do not have listed weights so the shipping estimate will be low."
+                    
+                weight = None
+                raise ItemHasNoWeight
+                break
                 pass
 
         ##oscarToAddress = get_object_or_404(UserAddress, id=shippingAddress.id)
@@ -82,12 +89,16 @@ class Repository(object):
                 )
             import random
 
-            if weight == 0.0:
-                print "setting weight randomly"
-                w = random.randrange(4,7)
-            else:
-                w = weight
-            print w
+            # if weight == 0.0:
+            #     print "setting weight randomly"
+            #     w = random.randrange(4,7)
+            # else:
+            #     w = weight
+            # print w
+
+            if not weight:
+                raise ItemHasNoWeight
+
             parcel = easypost.Parcel.create(
                 length = 20.2, 
                 width = 10.9,
@@ -150,7 +161,7 @@ class Repository(object):
         self.services = ()
         try:
             self.services = self.getShippingInfo(basket, shipping_addr)
-        except SellerCannotShip, e:
+        except (SellerCannotShip, ItemHasNoWeight) as e:
             ## only do local pickup
             self.availableMethods = []
             self.availableMethods.append(LocalPickup())
@@ -191,7 +202,7 @@ class Repository(object):
 
         self.services = self.getServicesFromJSON(basket)
         if not self.services:
-            return self.get_shipping_methods()
+            return self.get_shipping_methods(user, basket, shipping_addr)
 
         self.availableMethods = []
         
