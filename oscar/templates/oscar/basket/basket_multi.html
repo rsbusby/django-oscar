@@ -29,6 +29,23 @@
 
     {% block content %}
 
+{# show something if no baskets #}
+
+{% if baskets|length == 0 %}
+        <div class="row-fluid" style="font-size:1.2em">
+
+            <div class="span3 offset1">
+              {% trans "Your basket is empty." %}
+            </div>
+            <div class="span2">
+              {#<a href="{% url 'catalogue:index' %}">{% trans "Continue shopping" %}</a>#}
+              <input style="margin-left:0" class="boothButton" type="button" value="Continue shopping" onclick=location.href="{% url 'catalogue:index' %}">
+            </div>
+        <div> {# row-fluid#}
+        
+        
+{% endif %}
+
 {% for basket in baskets %}
 
 
