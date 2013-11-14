@@ -96,9 +96,9 @@
                 </form>
                
                
-                {% endif %}
-
-            {% endif %}
+                {% endif %}  {# product status disabled #}
+ 
+            {% endif %} {# user == seller or admin #}
             <h3>{{ product.get_title }}</h3>
 
             {% block product_stock_record %}

@@ -70,26 +70,29 @@
     <div class="product_pric" style="width:70%">
         {% include "catalogue/partials/stock_record.html" %}
 
-        {% if user.is_authenticated and request.user.partner and user == product.stockrecord.partner.user %}   {# edit_item_form #}
-        <input class="pull-left boothButton" type="button" value="Edit this Item" onclick=location.href="{% url 'dashboard:catalogue-product' product.id %}">
- 
+      
 
-         {% if "disabled" in product.status  %}
-                 <form action="/catalogue/{{product.title|replace:' ,-' }}_{{product.id}}/" method="post">
+         {% if user.is_authenticated and user == product.stockrecord.partner.user or user.is_staff %}
+                {#<a class="pull-right" href="{% url 'dashboard:catalogue-product' product.id %}"><i class="icon-edit"></i> {% trans "Edit this item" %}</a>#}
+
+                <input class="pull-right" type="button" value="Edit this item" onclick=location.href="{% url 'dashboard:catalogue-product' product.id  %}">
+                {% if "disabled" in product.status  %}
+                 <form action="{% url 'catalogue:detail' product.slug product.id %}" method="post">
                   <input type="hidden" name="id" value={{product.id}}>
                   <input type="hidden" name="enable" value="True">
-                  <input class="boothButton"  type=submit value="{% trans "Item is hidden. Click to make item visble to buyers" %}">
+                  <input style="clear:both;background-color:#FF8533;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Item is hidden. Click to make item visible to buyers" %}">
                 </form>
                  {% else %}
-                <form action="/catalogue/{{product.title|replace:' ,-' }}_{{product.id}}/" method="post">
+                <form action="{% url 'catalogue:detail' product.slug product.id %}" method="post">
                   <input type="hidden" name="id" value={{product.id}}>
                   <input type="hidden" name="disable" value="True">
-                  <input class="boothButton"  type=submit value="{% trans "Hide item from buyers" %}">
+                  <input style="clear:both;background-color:#   ;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Hide item from buyers" %}">
                 </form>
                
                
-          {% endif %}
-        {% endif %}
+                {% endif %}  {# product status disabled #}
+ 
+            {% endif %} {# user == seller or admin #}
 
         {% if product.is_group %}
             <a class="btn btn-full" href="{% url 'catalogue:detail' product.slug product.id %}">{% trans "View" %}</a>
