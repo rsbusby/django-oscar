@@ -30,9 +30,13 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_location(self, obj):
         # If you're just storing the floats...
         print "preparing location"
+        loc = "0.0, 0.0"
         try:
             loc = "%s,%s" % (obj.stockrecord.latitude, obj.stockrecord.longitude)
             print loc
+            if obj.stockrecord.latitude == None or  obj.stockrecord.longitude==None:
+                loc = "0.0, 0.0"
+
         except:
             ## get the location from the booth location, whether zipcode or County
             loc = "0.0,0.0" 
