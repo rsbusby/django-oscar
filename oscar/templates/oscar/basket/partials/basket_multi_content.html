@@ -62,7 +62,7 @@
                             {{ form.id }}
                             <div class="image_containe" style="width:80%">
                                 {% with image=form.instance.product.primary_image %}
-                                    {% thumbnail image.original "200x200" upscale=False as thumb %}
+                                    {% thumbnail image.original "180x180" upscale=False as thumb %}
                                     <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{stat_url}}{{thumb.name}}" alt="{{ form.instance.product.get_title }}" /></a>
                                     {% endthumbnail %}
                                 {% endwith %}

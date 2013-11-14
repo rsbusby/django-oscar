@@ -9,6 +9,48 @@ from oscar.apps.customer.models import CommunicationEventType
 
 User = get_user_model()
 
+from django.core.urlresolvers import reverse
+from oscar.apps.basket.models import Basket
+from oscar.test.factories import create_product
+from oscar.test.testcases import ClientTestCase, add_permissions
+
+
+class HomemadeTest(ClientTestCase):
+
+
+    def setUp(self):
+        self.basket = Basket()
+        self.product = create_product()
+
+    def test_create_user_simple(self):
+
+
+        email = 'testuser@example.com'
+        user = User.objects.create_user('testuser', email,
+                                        'somesimplepassword')
+
+        print user.username
+        #order_number = '12345'
+        #order = create_order(number=order_number, user=user)
+        #et = CommunicationEventType.objects.create(code="ORDER_PLACED",
+        #                                           name="Order Placed",
+        #                                           category="Order related")
+
+        
+        print self.product.title
+        p2 = create_product()
+        print p2.id
+        print self.product.id
+
+        urls = [reverse('dashboard:catalogue-product-list'),
+                reverse('dashboard:catalogue-category-list'),
+                reverse('dashboard:stock-alert-list'),
+               ]
+        for url in urls:
+            self.assertIsOk(self.client.get(url))
+
+        user.delete()
+
 
 class CommunicationTypeTest(TestCase):
     keys = ('body', 'html', 'sms', 'subject')
