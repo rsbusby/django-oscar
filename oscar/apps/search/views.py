@@ -157,22 +157,22 @@ class FacetedSearchView(views.FacetedSearchView):
 
         # facet_data['price2'].append(dataum)
 
-        sqs = SearchQuerySet().raw_search('price:[1.1 TO 5.4]')
+        #sqs = SearchQuerySet().raw_search('price:[1.1 TO 5.4]')
 
         #        context['test'] = sqs
 
-        extra['facet_data'] = facet_data
-        extra['my_facets'] = sqs        
+        #extra['facet_data'] = facet_data
+        #extra['my_facets'] = sqs        
 
 
-        base_point = Point(-118.2, 33.985)
+        #base_point = Point(-118.2, 33.985)
         # Within ?? miles.
-        max_dist = D(mi=10)
+        #max_dist = D(mi=10)
 
         # Do the radius query.
-        sqs = SearchQuerySet().dwithin('location', base_point, max_dist)
+        #sqs = SearchQuerySet().dwithin('location', base_point, max_dist)
 
-        extra['spatial_results'] = sqs        
+        #extra['spatial_results'] = sqs        
 
 
         return extra
