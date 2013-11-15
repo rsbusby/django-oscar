@@ -278,7 +278,7 @@ class ProductListView(ListView):
             #self.search_signal.send(sender=self, query=q, user=self.request.user)
             qs = qs.filter(title__icontains=q)
            
-            return qs
+            return qs.order_by('?')
         elif pq:
             try:
                 partner = Partner.objects.filter(name=pq)[0]
@@ -289,7 +289,7 @@ class ProductListView(ListView):
             owner = partner.user
             if not (self.request.user.is_staff or self.request.user == owner):
                 qs = qs.exclude(status='disabled')
-            return qs
+            return qs.order_by('?')
         else:
             ## if not filtered, don'tshow "Other" items
             category = Category.objects.filter(name="Other")[0]
