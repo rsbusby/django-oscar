@@ -296,6 +296,8 @@ class ProductListView(ListView):
             categories = list(category.get_descendants())
             categories.append(category)
             qs = qs.exclude(categories__in=categories)
+            ## randomize
+            qs = qs.order_by('?')
             return qs
 
     def get_context_data(self, **kwargs):
