@@ -289,7 +289,7 @@ class ProductListView(ListView):
             owner = partner.user
             if not (self.request.user.is_staff or self.request.user == owner):
                 qs = qs.exclude(status='disabled')
-            return qs.order_by('?')
+            return qs ##.order_by('?')
         else:
             ## if not filtered, don'tshow "Other" items
             category = Category.objects.filter(name="Other")[0]
@@ -297,7 +297,7 @@ class ProductListView(ListView):
             categories.append(category)
             qs = qs.exclude(categories__in=categories)
             ## randomize
-            qs = qs.order_by('?')
+            qs = qs ##.order_by('?')
             return qs
 
     def get_context_data(self, **kwargs):
