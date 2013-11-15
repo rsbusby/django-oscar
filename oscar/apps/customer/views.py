@@ -731,7 +731,7 @@ class AddressDeleteView(DeleteView):
 # ================
 
 
-class StoreShippingAddressView(FormView):
+class StoreShippingAddressView(CreateView):
     """
     Determine the outgoing shipping address for the seller.
 
@@ -744,6 +744,7 @@ class StoreShippingAddressView(FormView):
     """
     template_name = 'customer/store_address.html'
     form_class = UserAddressForm
+    model = UserAddress
 
     #def __init__(self):
     #   super(StoreShippingAddressView, self).__init__(no_checkboxes=True)
@@ -752,6 +753,12 @@ class StoreShippingAddressView(FormView):
     def get(self, request, *args, **kwargs):
 
         return super(StoreShippingAddressView, self).get(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = {}
+        initial['is_default_for_store']=True
+
+        return initial
 
     #def get_initial(self):
     #    return self.checkout_session.new_shipping_address_fields()
@@ -787,6 +794,7 @@ class StoreShippingAddressView(FormView):
     def post(self, request, *args, **kwargs):
         # Check if a store address was selected directly (eg no form was
         # filled in)
+
         if self.request.user.is_authenticated() and 'address_id' in self.request.POST:
             address = UserAddress._default_manager.get(
                 pk=self.request.POST['address_id'], user=self.request.user)
@@ -814,10 +822,13 @@ class StoreShippingAddressView(FormView):
         #    if not k.startswith('_'))
         #self.checkout_session.ship_to_new_address(address_fields)
         ## set as default shipping address, since that's what this is all about
-        form.cleaned_data['is_default_for_store'] = True
+
+        #form.cleaned_data['is_default_for_store'] = True
+        form.instance.is_default_for_store = True
         return super(StoreShippingAddressView, self).form_valid(form)
 
     def get_success_url(self):
+
         messages.success(self.request, _("Outgoing Shipping Address saved"))
         return "../../catalogue?booth=" + self.request.user.partner.name
 

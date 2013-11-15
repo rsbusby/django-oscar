@@ -90,7 +90,7 @@ class CustomerApplication(Application):
 
 
             url(r'store-shipping-address/$',
-                self.store_shipping_address_view.as_view(), name='store-shipping-address'),
+                login_required(self.store_shipping_address_view.as_view()), name='store-shipping-address'),
 
             # Email history
             url(r'^emails/$',

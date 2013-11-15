@@ -25,7 +25,7 @@
 {% endcomment %}
             <div style="clear:both;margin-top:8px"></div>
 
-            Note that until you have set up a valid address to ship from, your items will only be available for local pickup . 
+            Note that until you have set up a valid address to ship from, your items will only be available for local pickup. 
 
             </div>
 
@@ -76,19 +76,17 @@
     </div>
     {% endif %}
 
-    <form action="{% url 'customer:store-shipping-address' %}" method="post" class="form-horizontal">
+    <form action="{% url 'customer:store-shipping-address' %}" method="post" class="form-horizontal"  data-behaviours="lock">
         <div class="well well-info">
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=form %}
         </div>
         <div class="form-actions">
 
-            <button type="submit" style="position:relative;margin:10 0 10 0" class="btn btn-primary btn-full ship-address" data-loading-text="{% trans 'Setting your address, please wait...' %}">{% trans "Continue" %}</button>
+            <button type="submit" style="position:relative;margin:10 0 10 0" class="btn btn-primary btn-full ship-address">{% trans "Save the new address" %}</button>
 
             {#<button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>#}
-        {% comment %}
-            {% trans "or" %} <a href="{% url 'basket:summary' %}?basket_id={{basket.id}}">{% trans "return to basket" %}</a>
-        {% endcomment %}
+      
         </div>
     </form>
 
