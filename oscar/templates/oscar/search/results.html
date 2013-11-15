@@ -80,7 +80,12 @@
                 {% include "search/partials/pagination.html" %}
                 <ol class="products four">
                     {% for result in page.object_list %}
+                        {{result.object.status}}444
+                        {#{% if not "disable" in result.object.status or request.user.is_staff %}#}
+                        {% if False %}
                         <li>{% render_product result.object %}</li>
+                        {% endif %}
+                        }
                     {% endfor %}
                 </ol>
                 {% include "search/partials/pagination.html" %}
@@ -92,7 +97,9 @@
             <div class="mod">
                 <ol class="products three">
                     {% for result in page.object_list %}
+                      {% if not "disable" in result.object.status or request.user.is_staff %}
                         <li>{% render_product result.object %}</li>
+                      {% endif %}
                     {% endfor %}
                 </ol>
                 {% include "partials/pagination.html" %}
