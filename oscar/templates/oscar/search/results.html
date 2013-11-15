@@ -44,7 +44,7 @@
 
 {% block headertext %}
     {% blocktrans with q=query %}
-        Products matching"{{ q }}"
+        <div style="font-size:0.8em">Products matching "{{ q }}" </div>
     {% endblocktrans %}
 {% endblock %}
 
@@ -74,6 +74,7 @@
     {% endif %}
 
     {% if page.object_list %}
+        {% comment %}
         <section>
             <div class="mod">
                 {% include "search/partials/pagination.html" %}
@@ -85,8 +86,24 @@
                 {% include "search/partials/pagination.html" %}
             </div>
         </section>
+        {% endcomment %}
+
+          <section>
+            <div class="mod">
+                <ol class="products three">
+                    {% for result in page.object_list %}
+                        <li>{% render_product result.object %}</li>
+                    {% endfor %}
+                </ol>
+                {% include "partials/pagination.html" %}
+            </div>
+        </section>
+
+
     {% else %}
         <p>{% trans 'No search results found.' %}</p>
     {% endif %}
+
+
 
 {% endblock %}
