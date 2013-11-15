@@ -208,7 +208,7 @@ class ProductCategoryView(ListView):
     def get_queryset(self):
         return Product.browsable.base_queryset().filter(
             categories__in=self.categories
-        ).distinct().order_by('?')
+        ).distinct()
 
 
 class ProductListView(ListView):
