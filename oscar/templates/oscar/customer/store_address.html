@@ -13,11 +13,29 @@
 {% block shipping_address %}
 
 
-    <div class="sub-header">
+    <div class="ssub-header">
         <h2>{% trans "Where would you like your items to be shipped from?" %}</h2>
+
+
+           <div class="span4 pull-right">
+              <a style="font-size:1.2em" href="{% url 'catalogue:index' %}?booth={{request.user.partner.name}}">{% trans "Click here to skip this step and continue to your booth" %}</a>
+              {% comment %}
+              <input style="margin:0 0 1em 0" class="boothButton" type="button" value="Skip, continue to booth" onclick=location.href="/catalogue/?booth={{request.user.partner.name}}">
+            <div style="clear:both;"></div>
+{% endcomment %}
+            <div style="clear:both;margin-top:8px"></div>
+
+            Note that until you have set up a valid address to ship from, your items will only be available for local pickup . 
+
+            </div>
+
+
     </div>
+            <div style="clear:both;"></div>
 
     {% if request.user.is_authenticated %}
+
+
         {% if addresses %}
             
             <h3>{% trans "An address from your address book?" %}</h3>
