@@ -59,7 +59,7 @@
 
     {% block product_description %}
        {% if product.description %}
-         <pre>{{product.description}}</pre>
+         <pre>{{product.description|safe }}</pre>
        {% endif %}
     {% endblock %}
 
