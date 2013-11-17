@@ -557,7 +557,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         ctx['mu'] = getSellerFromOscarID(self.request.user.id)
 
         ctx['current_sponsored_orgs']= SponsoredOrganization.objects.filter(status__icontains='current')
-        ctx['stripeAppPubKey'] = stripe.api_key
+        ctx['stripeAppPubKey'] = stripe_keys['publishable_key']
         ctx.update(kwargs)
         return ctx
 

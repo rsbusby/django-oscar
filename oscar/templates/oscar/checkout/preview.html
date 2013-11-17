@@ -50,7 +50,7 @@
     {% else %}
 
       <script src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
-            data-key="{{stripeAppPubKey}}"
+            data-key="{{mseller.stripeSellerPubKey}}"
             data-description="Checkout"
             data-amount="{{order_total_incl_tax_in_cents}}"></script>
     {% endif %}
