@@ -15,6 +15,9 @@ from apps.homemade.homeMade import Seller
 #from apps.user.models import ExtendedUser
 from django.db.models import Q
 
+from django.core.paginator import Paginator
+import random
+
 #Seller = get_model('homemade', 'Seller')
 
 Product = get_model('catalogue', 'product')
@@ -34,7 +37,6 @@ class ProductDetailView(DetailView):
     def post(self, request, *args, **kwargs):
         ##import ipdb;ipdb.set_trace()
 
-        print "WHOASSA in post"
         self.object = product = self.get_object()
         partner = product.stockrecord.partner
         owner = partner.user
@@ -211,6 +213,16 @@ class ProductCategoryView(ListView):
         ).distinct()
 
 
+class ShuffledPaginator(Paginator):
+    def page(self, number):
+        page = super(ShuffledPaginator, self).page(number)
+        #import ipdb;ipdb.set_trace()
+        items = sorted(page.object_list, key=lambda x: random.random())
+        #random.shuffle(page.object_list)
+        page.object_list = items
+        return page
+
+
 class ProductListView(ListView):
     """
     A list of products
@@ -218,16 +230,25 @@ class ProductListView(ListView):
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
+    paginator_class = ShuffledPaginator
     search_signal = product_search
     model = Product
     q = None
     pq = None
 
 
+    def randomItem(self):
+        count = self.aggregate(count=Count('id'))['count']
+        random_index = randint(0, count - 1)
+        return self.all()[random_index]
+
+
+
+
+
     def post(self, request, *args, **kwargs):
         ##import ipdb;ipdb.set_trace()
 
-        print "WHOASSA in post"
         self.get_search_query()
         qs = self.get_queryset()
         ps = self.model.objects.all()
@@ -236,6 +257,7 @@ class ProductListView(ListView):
         for p in qs:
             partner = p.stockrecord.partner
             owner = partner.user
+            ## permissions
             if self.request.user != owner and not self.request.user.is_staff:
                 return self.get(request, **kwargs)
 
@@ -278,7 +300,7 @@ class ProductListView(ListView):
             #self.search_signal.send(sender=self, query=q, user=self.request.user)
             qs = qs.filter(title__icontains=q)
            
-            return qs.order_by('?')
+            return qs ##.order_by('?')
         elif pq:
             try:
                 partner = Partner.objects.filter(name=pq)[0]
@@ -297,11 +319,29 @@ class ProductListView(ListView):
             categories.append(category)
             qs = qs.exclude(categories__in=categories)
             ## randomize
-            qs = qs ##.order_by('?')
+            #qs = qs
+            #import random
+            if not self.request.session.get('random_seed', False) or self.request.GET.has_key('shuffle'):
+                self.request.session['random_seed'] = random.randint(1, 10000)
+
+            seed = self.request.session['random_seed']
+
+            #products = products.extra(select={'sort_key': 'RAND(%s)' % seed}).order_by('sort_key')
+            #if not request.GET.has_key('random_seed');
+            #    seed= random.randint(1, 10000)
+            #seed = self.request.session['random_seed']
+            #qs= qs.extra(select={'sort_key': 'random(%s)' % seed}).order_by('sort_key')
+            #qs= qs.extra(select={'sort_key': 'random()' % seed})##.order_by('sort_key')
+
+            ##.order_by('?')
+            random.seed(seed)
+            items = sorted(qs, key=lambda x: random.random())
+            qs = items
             return qs
 
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
+        #import ipdb;ipdb.set_trace()
         self.get_search_query()
         q = self.q
         pq = self.pq

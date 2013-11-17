@@ -10,6 +10,8 @@
 {% load staticfiles %}
 {% load macros %}
 
+{% load endless %}
+
 
 {% block title %}
     {{ summary }} | {{ block.super }}
@@ -175,9 +177,13 @@
         <section>
             <div class="mod">
                 <ol class="products three">
+                {#{% paginate products %}#}
+
                     {% for product in products %}
                         <li>{% render_product product %}</li>
                     {% endfor %}
+                    {#{% show_pages %}#}
+
                 </ol>
                 {% include "partials/pagination.html" %}
             </div>
