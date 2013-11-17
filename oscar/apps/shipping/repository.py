@@ -68,7 +68,7 @@ class Repository(object):
             raise SellerCannotShip
             return None
 
-        try:
+        if True:
             to_address = easypost.Address.create(
               name = ota.name,
               street1 = ota.line1,
@@ -103,7 +103,7 @@ class Repository(object):
                 length = 20.2, 
                 width = 10.9,
                 height = 5,
-                weight = w,
+                weight = weight,
             )
 
             shi = easypost.Shipment.create(
@@ -112,11 +112,11 @@ class Repository(object):
                 parcel = parcel,
 
             )
-        except:
-            print "problem with easypost call"
-            #messages.warning(request, _("Shipping information unavailable - please check your network connection"))
-
-            return None
+        #except:
+        #    print "problem with easypost call"
+        #    #messages.warning(request, _("Shipping information unavailable - please check your network connection"))
+        #
+        #    return None
 
         basket.shipping_info = json.dumps(shi.to_dict())
         basket.save()
@@ -175,9 +175,10 @@ class Repository(object):
         self.availableMethods = []
         
         self.availableMethods.append(LocalPickup())
-        for m in self.methods:
-            if m.service in self.services:
-                self.availableMethods.append(m)
+        if self.services:
+            for m in self.methods:
+                if m.service in self.services:
+                    self.availableMethods.append(m)
 
 
 
