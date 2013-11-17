@@ -22,7 +22,10 @@
 
 {% if mseller.stripeSellerToken and mseller.stripeSellerPubKey %}
   
+  {# This is where the user pays #}
   <div class="pull-right" style="margin:1em;">
+
+
    {# <form action="/charge_shared" method="post" >#}
 <form style="" method="POST" action="{% url 'checkout:payment-details' %}">
     <input type="hidden" name="basket_id" value={{basket.id}} /> 
@@ -47,7 +50,7 @@
     {% else %}
 
       <script src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
-            data-key="{{mseller.stripeSellerPubKey}}"
+            data-key="{{stripeAppPubKey}}"
             data-description="Checkout"
             data-amount="{{order_total_incl_tax_in_cents}}"></script>
     {% endif %}
