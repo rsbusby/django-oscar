@@ -179,7 +179,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'oscar.core.context_processors.metadata',
     'oscar.apps.customer.notifications.context_processors.notifications',
     # mine
-    'django.core.context_processors.request',
     
 )
 
@@ -343,7 +342,7 @@ INSTALLED_APPS = INSTALLED_APPS + [
     #'apps.user',        # For profile testing
     'apps.homemade',        # include models from local app
     #'apps.gateway',     # For allowing dashboard access
-    'endless_pagination',
+    ##'endless_pagination',
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
