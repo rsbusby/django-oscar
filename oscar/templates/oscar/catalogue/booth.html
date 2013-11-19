@@ -67,7 +67,7 @@
         </div>
 
         <div class="span6">
-          <input class="pull-left" style="margin:0;width:100%" type="button" value="Edit this Booth" onclick=location.href="{% url 'edit_store' %}">
+          <input class="pull-left" style="margin:0;width:100%" type="button" value="Edit this Booth" onclick=location.href="/homemade/edit_store/">
         </div>
         <div style="clear:both"></div>
 
@@ -160,8 +160,9 @@
         <section>
             <div class="mod">
                 <ol class="cartitems one" style="margin: 1.1em 0.6em 0.5em 0px">
+
                     {% for product in products %}
-                     {% if not "disabled" in product.status or request.user.is_admin %}
+                     {% if not "disabled" in product.status or request.user.is_admin or request.user == partner.user %}
 
                         <li style="padding-bottom:15px;">{% render_product product is_booth=True %}</li>
                           <hr class="hrCart" > 
