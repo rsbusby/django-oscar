@@ -51,6 +51,7 @@ class Dispatcher(object):
         """
         Send messages to a site user
         """
+
         if messages['subject'] and (messages['body'] or messages['html']):
             self.send_user_email_messages(user, sender, messages)
         if messages['sms']:

@@ -113,7 +113,7 @@
                             <li><a href="{% url 'catalogue:index' %}?booth={{request.user.partner.name}}"></i>MY BOOTH</a></li>
                         {% else %}
 
-                         <li><a href="{% url 'register_store' %}"> {% trans "SELL" %}</a></li>
+                         <li><a id="open-booth" href="{% url 'register_store' %}"> {% trans "SELL" %}</a></li>
 
                         {% endif %}
                                            <li class="divider-vertical"></li>                   

@@ -309,9 +309,16 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
     def setUp(self):
 
+        #from apps.homemade.homeMade import *
+        #for s in Seller.objects.all(): s.delete()
+
         #self.client = Client()
         self.user1 = self.create_user(username='user1@example.com')
         self.user2 = self.create_user(username='user2@example.com')
+        self.user1.email = self.user1.username
+        self.user2.email = self.user2.username        
+        self.user1.save()
+        self.user2.save()        
         self.partner1 = G(Partner, users=[self.user1])
         self.partner2 = G(Partner, users=[self.user2])
         self.product1 = create_product(partner=self.partner1)
@@ -326,19 +333,21 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         browser.get(surl)
 
 
-    def loginUser1(self, browser=None):
+    def loginUser(self, user = None, browser=None):
 
         if not browser:
             browser=self.browser
+        if not user:
+            user = self.user1
 
-        self.go(reverse("catalogue:index"), browser)
+        self.go("/accounts/login/", browser)
 
-        elem = browser.find_element_by_class_name('icon-signin')
-        elem.click()
+        #elem = browser.find_element_by_class_name('icon-signin')
+        #elem.click()
 
         ## fill in login form
         lin = browser.find_element_by_id('id_login-username')
-        lin.send_keys(self.user1.username)
+        lin.send_keys(user.email)
         lpw = browser.find_element_by_id('id_login-password')
         lpw.send_keys(self.password) 
         browser.find_element_by_name("login_submit").click()
@@ -347,8 +356,6 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ''' 
         make sure the shipping address is saved. This was a problem at one point
         '''
-
-
 
         browser = webdriver.Firefox()
         #browser.get('http://seleniumhq.org/')
@@ -439,7 +446,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## --- send msg from user1 to user2
         ## login as user1
-        self.loginUser1(browser)
+        self.loginUser(user=self.user1, browser=browser)
 
         ## make sure user2 has a boo        ## make a booth/partner
         #self.user2.partner = self.partner2
@@ -491,6 +498,91 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## ok done
         browser.quit()
+
+
+
+    def test_open_booth(self):
+
+        ''' send msg from one user to another and check that the sent msges display'''
+
+        browser = webdriver.Firefox()
+        self.browser = browser
+
+        pw = "ASDASda"
+
+        user3 = User.objects.create_user(username="user3",
+                                         email="rsbusby+234234@gmail.com", password=self.password)
+
+        ## --- send msg from user1 to user2
+        ## make a new user
+        #user3 = self.create_user(username='rsbusby+34534@gmail.com')
+
+
+        self.loginUser(user3, browser)
+
+
+        ## go to open booth page
+        browser.find_element_by_id
+        elem = browser.find_element_by_id('open-booth')
+        elem.click()
+
+        ## fill out form
+        b = browser
+
+        ff(b, 'store_name', 'Test Store #2')
+        ff(b, 'zipcode', "90291")
+        #ff(b, 'filter', "Los Angeles")
+
+
+        from apps.homemade.homeMade import *
+        county = Counties(county = "Kern", state="CA")
+        county.save()
+
+
+        from selenium.webdriver.common.keys import Keys
+
+
+
+
+        bcc = browser.find_element_by_class_name("select2-choice")
+        bcc.click()
+        bb = browser.find_element_by_class_name('select2-input')
+        bb.send_keys("Kern")
+        bb.send_keys(Keys.RETURN)
+
+
+        elem = browser.find_element_by_id('submit-booth').click()
+
+        ##
+
+        browser.find_element_by_id('skip-stripe').click()        
+
+
+        ## now can deal with the address form!
+
+
+
+        ## ok done
+
+        ## test the edit form
+        self.go(reverse('register_store'), browser)
+        elem = browser.find_element_by_id('submit-booth').click()
+
+
+        ## clean up Mongo seller?
+        user3.delete()
+
+
+
+        browser.quit()
+
+    def tearDown(self):
+
+        from apps.homemade.homeMade import *
+        print "YOYOYOYOYO"
+        #for s in Seller.objects.all(): s.delete()
+        return
+
 
 ##/dashboard/catalogue/products/132/
 
