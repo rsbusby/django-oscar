@@ -324,7 +324,7 @@ class MinimumRequiredFormSet(forms.models.BaseInlineFormSet):
         self.minimum_forms = kwargs.pop('minimum_forms', 0)
         ## show one extra place to upload images
         self.extra = 2
-        self.max_num = 4
+        self.max_num = 3 #4
         minimum_forms_message = kwargs.pop('minimum_forms_message', None)
         if minimum_forms_message:
             self.minimum_forms_message = minimum_forms_message
