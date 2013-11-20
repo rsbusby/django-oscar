@@ -42,10 +42,12 @@ class StockRecord(AbstractStockRecord):
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 @receiver(post_save, sender=Product)
-def createLinkFromUserToPartner(sender, instance, **kwargs):
-    print "OK receiver called for createStockRecord"
+
+def createLinkFromUserToPartner(sender, instance, created, **kwargs):
+    #print "OK receiver called for createStockRecord"
     #i = Item()
-    print "OK makin' a stockrecorddddddddd"	
+    if created:
+        print "OK makin' a stockrecorddddddddd"	
     ## create stockrecord, maybe don't need to???
 
     ## create new Partner if necessary

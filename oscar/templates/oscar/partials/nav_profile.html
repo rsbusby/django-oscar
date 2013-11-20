@@ -19,7 +19,8 @@
                     {% endif %}
                     <li class="{{ address_book }}"><a href="{% url 'customer:summary' %}#addresses" >{% trans "Address Book" %}</a></li>
                     <li class="{{ email_history }}"><a href="{% url 'customer:summary' %}#emails" >{% trans "Email History" %}</a></li>
-                    <li class="{{ alerts }}"><a href="{% url 'customer:summary' %}#alerts" >{% trans "Alerts" %}</a></li>
+                    <li class="{{ sent_email_history }}"><a href="{% url 'customer:summary' %}#sent_emails" >{% trans "Sent Email History" %}</a></li>
+                   {# <li class="{{ alerts }}"><a href="{% url 'customer:summary' %}#alerts" >{% trans "Alerts" %}</a></li>#}
                 </ul>
             </div>
         </div>

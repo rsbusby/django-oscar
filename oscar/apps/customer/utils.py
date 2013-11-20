@@ -22,6 +22,7 @@ class Dispatcher(object):
     def dispatch_direct_messages(self, recipient, messages):
         """
         Dispatch one-off messages to explicitly specified recipient(s).
+        Without keeping a record. Not used as of Nov 2013
         """
         if messages['subject'] and messages['body']:
             self.send_email_messages(recipient, messages)
@@ -39,25 +40,25 @@ class Dispatcher(object):
             else:
                 return
         else:
-            self.dispatch_user_messages(order.user, messages)
+            self.dispatch_user_messages(order.user, None, messages)
 
         # Create order comms event for audit
         if event_type:
             CommunicationEvent._default_manager.create(order=order,
                                                        event_type=event_type)
 
-    def dispatch_user_messages(self, user, messages):
+    def dispatch_user_messages(self, user, sender, messages):
         """
         Send messages to a site user
         """
         if messages['subject'] and (messages['body'] or messages['html']):
-            self.send_user_email_messages(user, messages)
+            self.send_user_email_messages(user, sender, messages)
         if messages['sms']:
             self.send_text_message(user, messages['sms'])
 
     # Internal
 
-    def send_user_email_messages(self, user, messages):
+    def send_user_email_messages(self, user, sender, messages):
         """
         Sends message to the registered user / customer and collects data in database
         """
@@ -65,16 +66,28 @@ class Dispatcher(object):
             self.logger.warning("Unable to send email messages as user #%d has no email address", user.id)
             return
 
-        email = self.send_email_messages(user.email, messages)
+
+        #create headers
+        ## allow replies-
+        replyTo = None
+        if user.is_staff:
+            ## set reply-to ?? 
+            try:
+                replyTo = sender.email
+            except:
+                pass
+
+        email = self.send_email_messages(user.email, messages, replyTo = replyTo)
 
         # Is user is signed in, record the event for audit
         if email and user.is_authenticated():
             Email._default_manager.create(user=user,
+                                          sender=sender,
                                           subject=email.subject,
                                           body_text=email.body,
                                           body_html=messages['html'])
 
-    def send_email_messages(self, recipient, messages):
+    def send_email_messages(self, recipient, messages, replyTo=None):
         """
         Plain email sending to the specified recipient
         """
@@ -83,18 +96,26 @@ class Dispatcher(object):
         else:
             from_email = None
 
+        if replyTo:
+            headers = {'Reply-To': replyTo}
+        else:
+            headers = None
+
+
         # Determine whether we are sending a HTML version too
         if messages['html']:
             email = EmailMultiAlternatives(messages['subject'],
                                            messages['body'],
                                            from_email=from_email,
-                                           to=[recipient])
+                                           to=[recipient],
+                                           headers=headers)
             email.attach_alternative(messages['html'], "text/html")
         else:
             email = EmailMessage(messages['subject'],
                                  messages['body'],
                                  from_email=from_email,
-                                 to=[recipient])
+                                 to=[recipient], 
+                                 headers = headers)
         self.logger.info("Sending email to %s" % recipient)
         email.send()
 

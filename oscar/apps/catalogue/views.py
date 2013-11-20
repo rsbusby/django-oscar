@@ -35,7 +35,6 @@ class ProductDetailView(DetailView):
     template_folder = "catalogue"
 
     def post(self, request, *args, **kwargs):
-        ##import ipdb;ipdb.set_trace()
 
         self.object = product = self.get_object()
         partner = product.stockrecord.partner
@@ -61,7 +60,7 @@ class ProductDetailView(DetailView):
         """
         Ensures that the correct URL is used before rendering a response
         """
-        #import pdb;pdb.set_trace()
+
         self.object = product = self.get_object()
 
         ## check permissions, if item is disabled reroute.
@@ -208,15 +207,19 @@ class ProductCategoryView(ListView):
         return context
 
     def get_queryset(self):
-        return Product.browsable.base_queryset().filter(
+        qs = Product.browsable.base_queryset().filter(
             categories__in=self.categories
         ).distinct()
 
+        #if not (self.request.user.is_staff or self.request.user == owner):
+        #qs = qs.exclude(status__icontains='disabled')
+
+        return qs
 
 class ShuffledPaginator(Paginator):
     def page(self, number):
         page = super(ShuffledPaginator, self).page(number)
-        #import ipdb;ipdb.set_trace()
+  
         items = sorted(page.object_list, key=lambda x: random.random())
         #random.shuffle(page.object_list)
         page.object_list = items
@@ -247,7 +250,6 @@ class ProductListView(ListView):
 
 
     def post(self, request, *args, **kwargs):
-        ##import ipdb;ipdb.set_trace()
 
         self.get_search_query()
         qs = self.get_queryset()
@@ -294,30 +296,38 @@ class ProductListView(ListView):
         # else:
         #     pq = pq.exclude(status='')        
         qs = Product.browsable.base_queryset()
+        #qs = qs.exclude(status__icontains='disabled')
 
         if q:
             # Send signal to record the view of this product
             #self.search_signal.send(sender=self, query=q, user=self.request.user)
             qs = qs.filter(title__icontains=q)
-           
+            #qs = qs.exclude(status__contains='disabled')
             return qs ##.order_by('?')
         elif pq:
             try:
                 partner = Partner.objects.filter(name=pq)[0]
             except:
                 return qs
+
             qs = Product.objects.all()
             qs = qs.filter(stockrecord__partner__name=pq)
             owner = partner.user
-            if not (self.request.user.is_staff or self.request.user == owner):
-                qs = qs.exclude(status='disabled')
+            #if not (self.request.user.is_staff or self.request.user == owner):
+            #    qs = qs.exclude(status__icontains='disabled')
             return qs ##.order_by('?')
         else:
             ## if not filtered, don'tshow "Other" items
-            category = Category.objects.filter(name="Other")[0]
-            categories = list(category.get_descendants())
-            categories.append(category)
-            qs = qs.exclude(categories__in=categories)
+            try:
+                category = Category.objects.filter(name="Other")[0]
+                categories = list(category.get_descendants())
+                categories.append(category)
+                qs = qs.exclude(categories__in=categories)
+
+            except:
+                pass
+
+            #qs = qs.exclude(status__contains='disabled')
             ## randomize
             #qs = qs
             #import random
@@ -341,7 +351,7 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
-        #import ipdb;ipdb.set_trace()
+
         self.get_search_query()
         q = self.q
         pq = self.pq
@@ -359,10 +369,15 @@ class ProductListView(ListView):
                     context['partner'] = partner
                     context['summary'] = partner.name
                     ## current user in MongoDB
-                    context['muser'] = Seller.objects.filter(oscarUserID=self.request.user.id)[0]
-                    ## seller (booth owner) in Mongo
-                    context['u'] = Seller.objects.filter(oscarUserID=partner.user.id)[0]
-                    context['sellerObj'] = Seller.objects.filter(oscarUserID=partner.user.id)[0]
+                    try:
+                        context['muser'] = Seller.objects.filter(oscarUserID=self.request.user.id)[0]
+                        ## seller (booth owner) in Mongo
+                        context['u'] = Seller.objects.filter(oscarUserID=partner.user.id)[0]
+                        context['sellerObj'] = Seller.objects.filter(oscarUserID=partner.user.id)[0]
+                    except:
+                        context['muser'] = None
+                        context['u'] = None
+                        context['sellerObj'] = None
 
                     self.template_name = 'catalogue/booth.html'
                     #self.template_name = '../../sites/homemade/apps/homemade/templates/store.dj.html' 

@@ -51,6 +51,7 @@
                         {% endif %}
                         <li {% if active_tab == 'addresses' %}class="active"{% endif %}><a href="#addresses" data-toggle="tab">{% trans 'Address Book' %}</a></li>
                         <li {% if active_tab == 'emails' %}class="active"{% endif %}><a href="#emails" data-toggle="tab">{% trans 'Email History' %}</a></li>
+                        <li {% if active_tab == 'sent_emails' %}class="active"{% endif %}><a href="#sent_emails" data-toggle="tab">{% trans 'Sent Email History' %}</a></li>
                         {% comment %}<li {% if active_tab == 'alerts' %}class="active"{% endif %}><a href="#alerts" data-toggle="tab">{% trans "Alerts" %}</a></li>{% endcomment %}
                         {% block extra_tabs_nav %}
                         {% endblock %}
@@ -253,6 +254,43 @@
             {% endif %}
             {% endblock %}
         </div>
+
+        <div class="tab-pane {% if active_tab == 'emails' %}active{% endif %}" id="sent_emails">
+            {% block tab_sent_emailhistory %}
+            <div class="sub-header">
+                <h3>{% trans 'Sent email history' %}</h3>
+            </div>
+            {% if not sent_emails %}
+
+            <p>{% trans "You haven't sent any emails yet." %}</p>
+
+            {% else %}
+
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>{% trans 'Date sent' %}</th>
+                    <th>{% trans 'Subject' %}</th>
+                    <th></th>
+                </tr>
+                {% for email in sent_emails %}
+                <tr>
+                    <td>{{ email.date_sent }}</td>
+                    <td>{{ email.subject }}</td>
+                    <td>
+                        <a href="{% url 'customer:email-detail' email.id %}?sent=True" class="btn btn-info">{% trans 'View' %}</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            
+            <div class="form-actions">
+                <a href="{% url 'customer:email-list' %}?sent=True" class="btn btn-primary">{% trans 'View sent email history' %}</a>
+            </div>
+            
+            {% endif %}
+            {% endblock %}
+        </div>
+
 
         <div class="tab-pane {% if active_tab == 'alerts' %}active{% endif %}" id="alerts">
             {% block tab_alerts %}

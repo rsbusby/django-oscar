@@ -300,13 +300,9 @@ class BasketListView(ListView):
 
 
     def post(self, request, *args, **kwargs):
-        ##import ipdb;ipdb.set_trace()
-
-        ##print "WHOA! in post"
         ## should throw some exceptions?
 
-        #import ipdb;ipdb.set_trace()
-        print self.request.POST
+
 
         if not request.POST.has_key('basket_id'):
             return self.get(request, **kwargs)

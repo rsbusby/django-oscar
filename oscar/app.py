@@ -16,6 +16,7 @@ from oscar.apps.customer import forms
 from oscar.views.decorators import login_forbidden
 
 
+
 class Shop(Application):
     name = None
 

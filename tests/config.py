@@ -10,11 +10,17 @@ def configure():
     print "configure settings"
 
     if not settings.configured:
+        #from oscar.defaults import OSCAR_SETTINGS
         from oscar.defaults import OSCAR_SETTINGS
 
         # Helper function to extract absolute path
         location = lambda x: os.path.join(
             os.path.dirname(os.path.realpath(__file__)), x)
+
+        import sys
+        sys.path.append("./sites/homemade")
+        sys.path.append("./apps/homemade")
+
 
         test_settings = {
             'DATABASES': {
@@ -24,6 +30,7 @@ def configure():
                 },
             },
             'MONGO_TEST': True,
+            'USE_S3':False,
             'INSTALLED_APPS': [
                 'django.contrib.auth',
                 'django.contrib.admin',
@@ -34,6 +41,7 @@ def configure():
                 'django.contrib.staticfiles',
                 'sorl.thumbnail',
                 'compressor',
+                'apps.homemade',
             ] + OSCAR_CORE_APPS,
             'TEMPLATE_CONTEXT_PROCESSORS': (
                 "django.contrib.auth.context_processors.auth",
@@ -65,7 +73,9 @@ def configure():
                 }
             },
             'PASSWORD_HASHERS': ['django.contrib.auth.hashers.MD5PasswordHasher'],
-            'ROOT_URLCONF': 'tests._site.urls',
+            ##'ROOT_URLCONF': 'tests._site.urls',
+            'ROOT_URLCONF': 'urls',
+
             'LOGIN_REDIRECT_URL': '/accounts/',
             'STATIC_URL': '/static/',
             'COMPRESS_ENABLED': False,
@@ -73,10 +83,15 @@ def configure():
             'DEBUG': False,
             'SITE_ID': 1,
             'APPEND_SLASH': True,
+            'MONGODB_DB' :'my_test_db',
+            'MDB_SECRET_KEY':"f00dut0pia",
+
+
         }
-        if django.VERSION >= (1, 5):
-            test_settings['INSTALLED_APPS'] += ['tests._site.myauth', ]
-            test_settings['AUTH_USER_MODEL'] = 'myauth.User'
+        #if django.VERSION >= (1, 5):
+        #    #test_settings['INSTALLED_APPS'] += ['tests._site.myauth', ]
+        #    #test_settings['AUTH_USER_MODEL'] = 'myauth.User'
+        #    test_settings['AUTH_USER_MODEL'] = 'auth.User'            
 
         test_settings.update(OSCAR_SETTINGS)
     
@@ -84,9 +99,9 @@ def configure():
         import mongoengine 
 
         settings.configure(**test_settings)
-        settings.MONGODB_DB = "test_db"
+        #settings.MONGODB_DB = "test_db"
+
         mongoengine.connect(settings.MONGODB_DB) 
         print "YEAH setting Mongo DB in test config,  " + settings.MONGODB_DB
-
 
 

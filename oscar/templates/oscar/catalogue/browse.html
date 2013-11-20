@@ -157,7 +157,7 @@
         
     </div>
     <div class="span3" >
-       <a href="{% url 'about' %}"><i class="icon-hand-up"></i> Add new item</a>
+       <a href="/homemade/about.html"><i class="icon-hand-up"></i> Add new item</a>
     </div>
 
     </div>
@@ -180,7 +180,9 @@
                 {#{% paginate products %}#}
 
                     {% for product in products %}
+
                         <li>{% render_product product %}</li>
+                    
                     {% endfor %}
                     {#{% show_pages %}#}
 

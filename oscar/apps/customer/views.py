@@ -125,6 +125,7 @@ class AccountSummaryView(TemplateView):
         ctx['orders'] = self.get_orders(self.request.user)
         ctx['sales'] = self.get_sales(self.request.user)
         ctx['emails'] = self.get_emails(self.request.user)
+        ctx['sent_emails'] = self.get_sent_emails(self.request.user)        
         ctx['alerts'] = self.get_product_alerts(self.request.user)
         ctx['profile_fields'] = self.get_profile_fields(self.request.user)
 
@@ -196,6 +197,9 @@ class AccountSummaryView(TemplateView):
         return HttpResponseRedirect(
             reverse('customer:summary')+'?tab=alerts'
         )
+   
+    def get_sent_emails(self, user):
+        return Email.objects.filter(sender=user)
 
     def get_emails(self, user):
         return Email.objects.filter(user=user)
@@ -404,8 +408,12 @@ class EmailHistoryView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        """Return a customer's orders"""
-        return Email._default_manager.filter(user=self.request.user)
+        """Return a customer's emails """
+        if self.request.GET.has_key('sent'):
+            self.template_name='customer/sent_email_list.html'
+            return Email._default_manager.filter(sender=self.request.user)
+        else:
+            return Email._default_manager.filter(user=self.request.user)
 
 
 class EmailDetailView(DetailView):
@@ -415,7 +423,12 @@ class EmailDetailView(DetailView):
 
     def get_object(self, queryset=None):
         """Return an order object or 404"""
-        return get_object_or_404(Email, user=self.request.user,
+
+        if self.request.GET.has_key('sent'):
+            return get_object_or_404(Email, sender=self.request.user,
+                                 id=self.kwargs['email_id'])
+        else:
+            return get_object_or_404(Email, user=self.request.user,
                                  id=self.kwargs['email_id'])
 
 
@@ -794,6 +807,12 @@ class StoreShippingAddressView(CreateView):
     def post(self, request, *args, **kwargs):
         # Check if a store address was selected directly (eg no form was
         # filled in)
+        ## invalid POST if not store...
+
+        try:
+            p = self.request.user.partner
+        except:
+            return HttpResponseRedirect(reverse('customer:address-list'))
 
         if self.request.user.is_authenticated() and 'address_id' in self.request.POST:
             address = UserAddress._default_manager.get(
@@ -812,6 +831,7 @@ class StoreShippingAddressView(CreateView):
             else:
                 return HttpResponseBadRequest()
         else:
+
             return super(StoreShippingAddressView, self).post(
                 request, *args, **kwargs)
 

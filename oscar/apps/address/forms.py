@@ -43,15 +43,15 @@ class UserAddressForm(AbstractAddressForm):
         super(UserAddressForm, self).__init__(*args, **kwargs)
 
         ## only show choice for default store address if a seller
-        if not hasattr(user, 'partner'):
+        if not hasattr(user, 'partner') or no_checkboxes == True:
             self.fields.pop('is_default_for_store')
 
         if no_checkboxes == True:
-            self.fields.pop('is_default_for_store')
             self.fields.pop('is_default_for_shipping')
             self.fields.pop('is_default_for_billing')                        
 
         self.instance.user = user
+   
         countries = Country._default_manager.filter(
             is_shipping_country=True)
 
