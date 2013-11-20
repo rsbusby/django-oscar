@@ -47,7 +47,7 @@ class Dispatcher(object):
             CommunicationEvent._default_manager.create(order=order,
                                                        event_type=event_type)
 
-    def dispatch_user_messages(self, user, sender, messages):
+    def dispatch_user_messages(self, user, messages, sender=None):
         """
         Send messages to a site user
         """
