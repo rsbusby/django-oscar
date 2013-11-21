@@ -88,7 +88,7 @@ transaction. </p>
   {% if mseller.stripeSellerToken and mseller.stripeSellerPubKey %}
   {# This is where the user picks payment method#}
 
-<form style="float:left;margin:1.2em 0 0 0" method="POST" action="{% url 'checkout:payment-details' %}">
+<form style="float:left;margin:1.2em 0 0 0" method="POST" action="{% url 'checkout:preview' %}">
     <input type="hidden" name="basket_id" value={{basket.id}} /> 
     <input type="hidden" name="payment_method" value="stripe" /> 
 

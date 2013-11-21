@@ -453,6 +453,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             method_code = request.POST['payment_method']
             self.checkout_session.pay_by(method_code)
 
+
         if request.POST.has_key('setSponsoredOrg') or request.POST.has_key('unsetSponsoredOrg'):
             basket = Basket.objects.filter(id=request.POST['basket_id'])[0]
 
@@ -556,7 +557,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             ctx['mseller'] = getSellerFromOscarID(self.request.basket.seller.user.id)
         ctx['mu'] = getSellerFromOscarID(self.request.user.id)
 
-        ctx['current_sponsored_orgs']= SponsoredOrganization.objects.filter(status__icontains='current')
+        ctx['current_sponsored_orgs']= SponsoredOrganization.objects.filter(is_current=True)
         ctx['stripeAppPubKey'] = stripe_keys['publishable_key']
         ctx.update(kwargs)
         return ctx
