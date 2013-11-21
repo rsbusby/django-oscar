@@ -2,6 +2,8 @@ from oscar.apps.order.abstract_models import *
 from oscar.apps.address.abstract_models import AbstractShippingAddress, AbstractBillingAddress
 
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
+
 
 
 class Order(AbstractOrder):
@@ -27,6 +29,7 @@ class SponsoredOrganization(models.Model):
     status = models.CharField(("Status"), max_length=128, null=True, blank=True)
     website = models.CharField(("Website"), max_length=256, null=True, blank=True)
     description = models.TextField(("Description"), null=True, blank=True)
+    is_current = models.BooleanField(_("Is Current"), default=False, db_index=True)
 
 class OrderNote(AbstractOrderNote):
     pass

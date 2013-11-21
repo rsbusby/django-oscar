@@ -15,6 +15,7 @@ PaymentEventType = get_model('order', 'PaymentEventType')
 PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
 LineAttribute = get_model('order', 'LineAttribute')
 OrderDiscount = get_model('order', 'OrderDiscount')
+SponsoredOrganization = get_model('order', 'SponsoredOrganization')
 
 
 class LineInline(admin.TabularInline):
@@ -74,6 +75,8 @@ class OrderDiscountAdmin(admin.ModelAdmin):
     list_display = ('order', 'category', 'offer', 'voucher',
                     'voucher_code', 'amount')
 
+class SponsoredOrganizationAdmin(admin.ModelAdmin):
+    list_display = ['name'] 
 
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderNote, OrderNoteAdmin)
@@ -87,3 +90,5 @@ admin.site.register(PaymentEventType, PaymentEventTypeAdmin)
 admin.site.register(LineAttribute)
 admin.site.register(OrderDiscount, OrderDiscountAdmin)
 admin.site.register(CommunicationEvent)
+admin.site.register(SponsoredOrganization, SponsoredOrganizationAdmin)
+
