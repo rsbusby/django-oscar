@@ -40,7 +40,7 @@ class Dispatcher(object):
             else:
                 return
         else:
-            self.dispatch_user_messages(order.user, None, messages)
+            self.dispatch_user_messages(order.user, messages, None)
 
         # Create order comms event for audit
         if event_type:
@@ -53,13 +53,13 @@ class Dispatcher(object):
         """
 
         if messages['subject'] and (messages['body'] or messages['html']):
-            self.send_user_email_messages(user, sender, messages)
+            self.send_user_email_messages(user, messages, sender)
         if messages['sms']:
             self.send_text_message(user, messages['sms'])
 
     # Internal
 
-    def send_user_email_messages(self, user, sender, messages):
+    def send_user_email_messages(self, user,  messages, sender):
         """
         Sends message to the registered user / customer and collects data in database
         """
