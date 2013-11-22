@@ -5,6 +5,8 @@ from oscar.apps.partner.abstract_models import (
 from oscar.apps.catalogue.models import Product
 #from apps.homemade.homeMade import Item
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
+
 
 from haystack.utils.geo import Point, D
 
@@ -35,6 +37,7 @@ class StockRecord(AbstractStockRecord):
         # Remember, longitude FIRST!
         return Point(self.longitude, self.latitude)
 
+    made_to_order = models.BooleanField(_("Made To Order"), default=False, db_index=True)
 
     pass
 

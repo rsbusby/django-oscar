@@ -423,11 +423,14 @@
                         </tr>
                         {% endif %}
                         {% endfor %}
+
+
+                    
                     </table>
-                              
+                              <table>
                                 <div style="clear:both"></div>
                                 <tr>
-                                    <th>Number in inventory (leave this blank if the item is made to order):</th>
+                                    <th>Number in inventory:</th>
                                 </tr>
                                 <tr>
                                     <td>
@@ -437,6 +440,21 @@
                               
                                 </tr>
                     </table>
+  <table>
+                              
+                                <div style="clear:both"></div>
+                                <tr>
+                                    <th>Check if this item can be made to order:</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{ stockrecord_form.made_to_order }}
+                                        {{ stockrecord_form.made_to_order.errors }}
+                                    </td>
+                              
+                                </tr>
+                    </table>    
+
 
                  
                 </div>
