@@ -254,6 +254,12 @@ class ProductCategoryForm(forms.ModelForm):
 
 class BaseProductCategoryFormSet(BaseInlineFormSet):
 
+    # def __init__(self, *args, **kwargs):
+    #     self.extra = 2
+    #     self.max_num = 2 #4
+    #     super(BaseInlineFormSet, self).__init__(*args, **kwargs)
+
+
     def clean(self):
         # if self.instance.is_top_level and self.get_num_categories() == 0:
         #     raise forms.ValidationError(

@@ -368,9 +368,9 @@
                         {{ category_formset.non_form_errors }}
                         {% for category_form in category_formset %}
                         <tr>
-                            <td>{% if forloop.last %}Select Another{%endif%}
+                            <td>{% if forloop.last and not forloop.first %}Select Another{%endif%}
                                 {% include "partials/form_fields_inline.html" with form=category_form %}
-                            }
+                            
                             </td>
                         </tr>
                         {% endfor %}
