@@ -42,7 +42,7 @@
     {% block product_title %}
     {#<ul style="margin-left:0;list-style:none;display:block;"> #}
    {# <li style="float:right">    #}
-    <a style="float:left;font-weight:bold;font-size:1.1em;margin-bottom:0.6em" href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:6 }}</a>
+    <a style="float:left;font-weight:bold;font-size:1.1em;margin-bottom:0.6em" href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:8 }}</a>
     <!-- </li> -->
     <div style="clear:both"></div>
     {% if not is_booth %}

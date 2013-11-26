@@ -150,7 +150,7 @@
 {% comment %}
     {% block formactions %}
         <div class="form-actions clearfix" >
-            <a href="{% url 'checkout:index' %}" class="pull-right btn btn-large btn-primary btn-full">{% trans "Proceed to checkout" %}</a>
+            <a href="{% url 'checkout:index' %}" class="go-to-checkout pull-right btn btn-large btn-primary btn-full">{% trans "Proceed to checkout" %}</a>
         </div>
    
  {% endblock formactions %}
@@ -180,7 +180,7 @@
 
   <div style="clear:both" ></div>
 
-     <input style="" type="button" value="Go to Checkout" onclick=location.href="{% url 'checkout:preview'  %}?basket_id={{basket.id}}">
+     <input class="go-to-checkout" style="" type="button" value="Go to Checkout" onclick=location.href="{% url 'checkout:preview'  %}?basket_id={{basket.id}}">
 
 
 {% comment %}

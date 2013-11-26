@@ -85,6 +85,12 @@ def configure():
             'APPEND_SLASH': True,
             'MONGODB_DB' :'my_test_db',
             'MDB_SECRET_KEY':"f00dut0pia",
+            'EASYPOST_KEY':os.environ['EASYPOST_KEY_TEST'],
+            # Currency
+            'OSCAR_DEFAULT_CURRENCY':'USD',
+
+            'OSCAR_CURRENCY_LOCALE':'en_US',
+
 
 
         }

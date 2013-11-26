@@ -48,7 +48,7 @@
         {% csrf_token %}
         {% include "partials/form_fields.html" with form=form %}
         <div class="form-actions">
-            <button type="submit" value="Save" class="btn btn-primary btn-large">{% trans 'Save' %}</button>
+            <button id="save-address" type="submit" value="Save" class="btn btn-primary btn-large">{% trans 'Save' %}</button>
             {% trans 'or' %}
             <a href="{% url 'customer:address-list' %}">{% trans 'cancel' %}</a>
         </div>

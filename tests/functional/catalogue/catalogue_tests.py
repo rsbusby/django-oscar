@@ -1,7 +1,7 @@
 import httplib
 
 from django.core.urlresolvers import reverse
-from oscar.apps.catalogue.models import Category
+from oscar.apps.catalogue.models import Category, ProductAttribute
 from oscar.test.testcases import WebTestCase
 
 from oscar.test.factories import create_product
@@ -16,7 +16,7 @@ from django.test import LiveServerTestCase
 
 from oscar.test.testcases import ClientTestCase, WebTestCase
 from oscar.test.factories import create_order, create_product
-from oscar.apps.order.models import Order, OrderNote, ShippingAddress
+from oscar.apps.order.models import Order, OrderNote, ShippingAddress, SponsoredOrganization
 from oscar.core.compat import get_user_model
 from oscar.apps.address.models import Country
 
@@ -26,6 +26,9 @@ User = get_user_model()
 Basket = get_model('basket', 'Basket')
 Partner = get_model('partner', 'Partner')
 ShippingAddress = get_model('order', 'ShippingAddress')
+SponsoredOrganization = get_model('order', 'SponsoredOrganization')
+ProductAttribute = get_model('catalogue', 'ProductAttribute')
+
 
 from apps.homemade.urls import urlpatterns
 
@@ -322,7 +325,13 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         self.partner1 = G(Partner, users=[self.user1])
         self.partner2 = G(Partner, users=[self.user2])
         self.product1 = create_product(partner=self.partner1)
-        self.product2 = create_product(partner=self.partner2)
+        self.product2 = create_product(partner=self.partner2, attributes={'weight':1.0})
+
+        ## make a country, this will act as default
+        Country.objects.get_or_create(
+            iso_3166_1_a2='US',
+            is_shipping_country=True
+        )
 
         self.browser = None ## webdriver.Firefox()
 
@@ -368,14 +377,10 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
     
-        ## make a country
-        Country.objects.get_or_create(
-            iso_3166_1_a2='US',
-            is_shipping_country=True
-        )
+
 
         ## make a user, log in via Selenium
-        #import ipdb;ipdb.set_trace()
+
         elem = browser.find_element_by_class_name('icon-signin')
         elem.click()
 
@@ -508,8 +513,6 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         browser = webdriver.Firefox()
         self.browser = browser
 
-        pw = "ASDASda"
-
         user3 = User.objects.create_user(username="user3",
                                          email="rsbusby+234234@gmail.com", password=self.password)
 
@@ -550,6 +553,10 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         bb.send_keys("Kern")
         bb.send_keys(Keys.RETURN)
 
+        ## upload pic
+        #browser.find_element_by_id("IdOfInputTypeFile").send_keys(os.getcwd()+"/image.png")
+
+
 
         elem = browser.find_element_by_id('submit-booth').click()
 
@@ -575,6 +582,156 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
         browser.quit()
+
+
+    def test_checkout(self):
+        ''' test checkoiut and shipping options for an item'''
+
+        browser = webdriver.Firefox()
+        self.browser = browser
+
+
+
+        ## give user2 an address, needed for shipping
+
+        self.loginUser(self.user2, browser)
+
+
+        ## make a booth/partner
+        self.user2.partner = self.partner2
+        self.user2.save()
+        self.partner2.save()
+
+        ## go to the booth page
+        url = reverse('catalogue:index') + "?booth=" + self.partner2.name
+        surl = self.live_server_url + url
+        browser.get(surl)
+
+        ## go to ship address form
+        browser.find_element_by_class_name("orgButton").click()
+
+        b = browser
+
+        ff(b, 'id_first_name', 'Bob')
+        ff(b, 'id_last_name', 'number2')
+        ff(b, 'id_line1', '708 Hampton Dr')                
+        ff(b, 'id_line4', 'Venice') 
+        ##ff(b, 'id_country', 'US')                                               
+        ff(b, 'id_state', 'CA')  
+        ff(b, 'id_postcode', '90291')
+
+        browser.find_element_by_id("store-ship-new-submit").click()
+
+
+        ## set user2 to accept remote payments
+
+        from apps.homemade.homeMade import getSellerFromOscarID
+        seller = getSellerFromOscarID(self.user2.id)
+
+        seller.stripeSellerToken = "fkae_token"
+        seller.stripeSellerPubKey = "fake_key"
+        seller.save()
+
+
+        ## logout user2
+        self.go(reverse('customer:logout'))
+
+        ## login
+        user3 = User.objects.create_user(username="user3",
+                                         email="rsbusby+234234@gmail.com", password=self.password)
+
+        self.loginUser(user3, browser)
+
+
+        ## add address
+
+        ## go to address page 
+        url = "/accounts/addresses/add/"
+        self.go(url)
+
+        ## fill out form
+
+        b = browser
+
+        ff(b, 'id_first_name', 'Bob')
+        ff(b, 'id_last_name', 'Borders')
+        ff(b, 'id_line1', '716 Hampton Dr')                
+        ff(b, 'id_line4', 'Venice') 
+        ##ff(b, 'id_country', 'US')                                               
+        ff(b, 'id_state', 'CA')  
+        ff(b, 'id_postcode', '90291')
+
+
+
+        ## submit form
+        b.find_element_by_id("save-address").click()
+
+        ## add sponsored org
+        sorg = SponsoredOrganization(name="Food Backwards", is_current=True)
+        sorg.save()
+
+        ## make an attribute
+        #ProductAttribute(name="weight", code="weight", type="float", product_class=self.product2.product_class)
+
+        ## give product a weight
+        ## make sure product2 has a weight
+
+
+        #setattr(self.product2.attr, 'weight', 5)
+        #setattr(self.product2.attr, 'Weight', 7)        
+        
+        self.product2.save()
+
+        ## add item to basket
+        ## go to item page
+        kwargs = {'product_slug': self.product2.slug,
+                  'pk': self.product2.id}
+        url = reverse('catalogue:detail', kwargs=kwargs)
+
+        self.go(url)
+
+        ## click add to basket
+
+        b.find_element_by_class_name("addToBasket").click()
+
+        ## go to basket, OK
+        self.go(reverse('basket:summary'))
+
+        ## click checkout
+        b.find_element_by_class_name("go-to-checkout").click()
+
+        ## choose an address
+        b.find_element_by_class_name("ship-address").click()
+
+        ## are shipping options there
+
+        ## choose shipping option
+        b.find_element_by_class_name("select-shipping").click()
+
+
+
+        ## choose sponsored org
+        b.find_element_by_class_name("orgButton").click()
+
+
+
+
+        ## choose payment method
+        b.find_element_by_id("choose-stripe").click()
+
+        ## preview looks OK?
+
+        ## pay with card ?? (this probably won't work)
+
+        ## tear down
+
+        ## clean up Mongo seller?
+        user3.delete()
+
+        browser.quit()
+
+
+
 
     def tearDown(self):
 

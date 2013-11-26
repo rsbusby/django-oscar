@@ -492,7 +492,11 @@ class OrderDetailView(PostActionMixin, DetailView):
     model = Order
 
     def get_template_names(self):
-        return ["customer/order.html"]
+
+        if self.request.GET.has_key('sales'):
+            return ["customer/sale.html"]
+        else:
+            return ["customer/order.html"]
 
     def get_object(self, queryset=None):
 

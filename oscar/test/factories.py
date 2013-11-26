@@ -39,7 +39,7 @@ def create_product(price=None, title=u"Dummy title",
         for key, value in attributes.items():
             # Ensure product attribute exists
             ProductAttribute.objects.get_or_create(
-                name=key, code=key, product_class=ic)
+                name=key, code=key, product_class=ic, type="float")
             setattr(item.attr, key, value)
 
     item.save()
