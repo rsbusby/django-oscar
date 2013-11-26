@@ -397,7 +397,7 @@
                         <tr>
                             <th>
                                 {{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}
-                                    {% if field.label == "Weight in ounces." %}  
+                                    {% if field.label == "Weight" or field.label == 'weight' %}  
                                         .    &nbsp &nbsp This is required if items are to be shipped. Please give a conservative estimate. 
                                     {% endif %}
                             </th>

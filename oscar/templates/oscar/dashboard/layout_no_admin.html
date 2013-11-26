@@ -18,11 +18,29 @@
                 <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
         {% endif %}
     {#{% endcompress %}#}
+
+   {# <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />#}
+
+    <style type="text/css">
+
+      .container-fluid {padding:0px;}
+
+
+      input {
+        margin:0;
+      }
+
+
+      input:not([type=submit]):not([type=file]):not([type=button]), textarea, select, button.orgButton {
+        margin:0;
+      }
+
+    </style>
 {% endblock %}
 
 {% block extrastyles %}
     {{ block.super }}
-        <link rel="stylesheet" href="{% static "oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css" %}" />
+        {#<link rel="stylesheet" href="{% static "oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css" %}" />#}
         <link rel="stylesheet" href="{% static "oscar/js/select2/select2.css" %}" />
         <link rel="stylesheet" href="{% static "oscar/js/jquery/bootstrap-datepicker.css" %}" />
 {% endblock %}
@@ -31,7 +49,7 @@
     {% trans "Dashboard" %} | {{ block.super }}
 {% endblock %}
 
-    
+   
 
     {% block navbar %}
  {# Top-horizontal bar with account, notifictions, dashboard links #}
@@ -51,7 +69,7 @@
      
 
 {% block extrascripts %}
-    {{ block.super }}
+   {# {{ block.super }} #}
     {#{% compress js %}#}
 
     {# jQuery plugins #}
@@ -62,9 +80,10 @@
     <script src="{% static "oscar/js/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>
 
     {# WYSIHTML5 #}
+    {% comment %}
     <script src="{% static "oscar/js/bootstrap-wysihtml5/wysihtml5-0.3.0.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.js" %}" type="text/javascript" charset="utf-8"></script>
-
+{% endcomment %}
     <script src="{% static "oscar/js/oscar/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
     {#{% endcompress %}#}
 {% endblock %}

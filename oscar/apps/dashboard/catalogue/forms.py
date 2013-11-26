@@ -168,6 +168,8 @@ class ProductForm(forms.ModelForm):
             self.fields['title'].label = "Item name"
         if 'description' in self.fields:
             self.fields['description'].label = "Item description"
+            self.fields['description'].widget.attrs['rows'] = 2
+
         if 'related_products' in self.fields:
             self.fields['related_products'].label = "Related items"
         if 'parent' in self.fields and self.instance.pk is not None:
