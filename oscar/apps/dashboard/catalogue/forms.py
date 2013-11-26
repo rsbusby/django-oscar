@@ -85,6 +85,14 @@ class StockRecordForm(forms.ModelForm):
         exclude = ('product', 'num_allocated', 'price_currency', 'low_stock_threshold','price_retail', 'cost_price', 'partner')
 
 
+    def clean_weight(self):
+        data = self.cleaned_data
+        if data['is_shippable'] and not data['weight']:
+            raise forms.ValidationError(_("If item is shippable, please give an estimated weight for the item."))
+
+        return True
+
+
 def _attr_text_field(attribute):
     return forms.CharField(label=attribute.name,
                            required=attribute.required)
@@ -217,6 +225,7 @@ class ProductForm(forms.ModelForm):
     def save(self):
         object = super(ProductForm, self).save(False)
         object.product_class = self.product_class
+
         for attribute in self.product_class.attributes.all():
             value = self.cleaned_data['attr_%s' % attribute.code]
             setattr(object.attr, attribute.code, value)

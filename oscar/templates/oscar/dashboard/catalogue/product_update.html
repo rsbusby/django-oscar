@@ -303,6 +303,8 @@
                     <div class="well product-details">
                     {% endcomment %}
                         <span class="help-block">{{ form.non_field_errors }}</span>
+
+
                         {% for field in form %}
                         {% if field.is_hidden %}
                         {{ field }}
@@ -389,58 +391,7 @@
                                         {{ stockrecord_form.price_excl_tax.errors }}
                                     </td>
                                 </tr>
-
-          <table class="table table-striped table-bordered fform-inline">
-                       
-                        {% for field in form %}
-                        {% if 'attr' in field.id_for_label %}
-                        <tr>
-                            <th>
-                                {{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}
-                                    {% if field.label == "Weight" or field.label == 'weight' %}  
-                                        .    &nbsp &nbsp This is required if items are to be shipped. Please give a conservative estimate. 
-                                    {% endif %}
-                            </th>
-                            </tr>
-                            <tr>
-                            <td>
-                                {% if field.is_hidden %}
-                                {{ field }}
-                                {% else %}
-                                {{ field }}
-                                {% for error in field.errors %}
-                                <span class="help-block">
-                                    {{ error }}
-                                </span>
-                                {% endfor %}
-                                {% if field.help_text %}
-                                <span class='help-block'>
-                                    {{ field.help_text }}
-                                </span>
-                                {% endif %}
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endif %}
-                        {% endfor %}
-
-
-                    
-                    </table>
-                              <table>
-                                <div style="clear:both"></div>
-                                <tr>
-                                    <th>Number in inventory:</th>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        {{ stockrecord_form.num_in_stock }}
-                                        {{ stockrecord_form.num_in_stock.errors }}
-                                    </td>
-                              
-                                </tr>
-                    </table>
-  <table>
+   <table>
                               
                                 <div style="clear:both"></div>
                                 <tr>
@@ -454,7 +405,103 @@
                               
                                 </tr>
                     </table>    
+      <table class="table table-striped table-bordered fform-inline">
 
+                               <tr>
+                                <th>Number in inventory:</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{ stockrecord_form.num_in_stock }}
+                                        {{ stockrecord_form.num_in_stock.errors }}
+                                    </td>
+                                </tr>
+
+
+
+ <!--  <table>
+                                <div style="clear:both"></div>
+                                <tr>
+                                    <th>Number in inventory:</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{ stockrecord_form.num_in_stock }}
+                                        {{ stockrecord_form.num_in_stock.errors }}
+                                    </td>
+                              
+                                </tr>
+                    </table> -->
+                 
+
+        <table>
+                  
+                    <div style="clear:both"></div>
+                    <tr>
+                        <th>Check if this item can be shipped:</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ stockrecord_form.is_shippable }}
+                            {{ stockrecord_form.is_shippable.errors }}
+                        </td>
+                  
+                    </tr>
+        </table>    
+
+   <table>
+                  
+                    <div style="clear:both"></div>
+                    <tr>
+                        <th>Weight in ounces.  &nbsp &nbsp This is required if items are to be shipped. </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ stockrecord_form.weight }}
+                            {{ stockrecord_form.weight.errors }}
+                        </td>
+                  
+                    </tr>
+        </table>    
+
+
+<!-- 
+          <table class="table table-striped table-bordered fform-inline">
+           
+            {% for field in form %}
+            {% if 'attr' in field.id_for_label %}
+            <tr>
+                <th>
+                    {{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}
+                        {% if field.label == "Weight" or field.label == 'weight' %}  
+                            in ounces.    &nbsp &nbsp This is required if items are to be shipped. 
+                        {% endif %}
+                </th>
+                </tr>
+                <tr>
+                <td>
+                                        {{ field.errors }}
+
+                    {% if field.is_hidden %}
+                    {{ field }}
+                    {% else %}
+                    {{ field }}
+
+                    {% if field.help_text %}
+                    <span class='help-block'>
+                        {{ field.help_text }}
+                    </span>
+                    {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+
+
+        
+        </table> -->
+                            
 
                  
                 </div>

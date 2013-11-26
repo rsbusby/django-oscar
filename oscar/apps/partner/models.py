@@ -39,18 +39,22 @@ class StockRecord(AbstractStockRecord):
 
     made_to_order = models.BooleanField(_("Made To Order"), default=False, db_index=True)
 
+    is_shippable = models.BooleanField(_("Is Shippable"), default=False, db_index=True)
+
+    weight = models.FloatField(_("Weight"), blank=True, null=True)
+
     pass
 
+#from oscar.apps.partner.receivers import *
+#from django.db.models.signals import post_save
+#from django.dispatch import receiver
+#@receiver(post_save, sender=Product)
 
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-@receiver(post_save, sender=Product)
-
-def createLinkFromUserToPartner(sender, instance, created, **kwargs):
+##def createLinkFromUserToPartner(sender, instance, created, **kwargs):
     #print "OK receiver called for createStockRecord"
     #i = Item()
-    if created:
-        print "OK makin' a stockrecorddddddddd"	
+    #if created:
+    #    print "OK makin' a stockrecorddddddddd"	
     ## create stockrecord, maybe don't need to???
 
     ## create new Partner if necessary
@@ -70,4 +74,3 @@ class StockAlert(AbstractStockAlert):
     pass
 
 
-from oscar.apps.partner.receivers import *

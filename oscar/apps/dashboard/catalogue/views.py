@@ -226,6 +226,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         recommended_formset = self.recommendations_formset(
             self.request.POST, self.request.FILES, instance=self.object)
 
+
         is_valid = all([
             form.is_valid(),
             category_formset.is_valid(),
@@ -297,8 +298,8 @@ class ProductCreateUpdateView(generic.UpdateView):
                       image_formset, recommended_formset):
         
         messages.error(self.request,
-                       _("There is more information needed to create the item - please "
-                         "see below to add or correct the input. Did you add at least one photo?"))
+                       _("There is more information needed to create the item -- please "
+                         "see below to add to or correct the form. "))
         
         ctx = self.get_context_data(form=form,
                                     stockrecord_form=stockrecord_form,
@@ -324,7 +325,7 @@ class ProductCreateUpdateView(generic.UpdateView):
             url = "/catalogue/?booth=" + self.object.stockrecord.partner.name
         except:
             url = "/catalogue/"
-        if self.request.POST.get('action') == 'continue':
+        if self.request.POST.get('action') == 'continue' :
             url = reverse('dashboard:catalogue-product',
                           kwargs={"pk": self.object.id})
         return self.get_url_with_querystring(url)

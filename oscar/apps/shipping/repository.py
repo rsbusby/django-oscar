@@ -24,6 +24,10 @@ class ItemHasNoWeight(Exception):
     """ Easy to understand naming conventions work best! """
     pass
 
+class ItemNotShippable(Exception):
+    """ Easy to understand naming conventions work best! """
+    pass
+
 
 class Repository(object):
     """
@@ -48,8 +52,12 @@ class Repository(object):
 
         for line in basket.lines.all():
             p = line.product
+
+            if not p.stockrecord.is_shippable:
+                raise ItemNotShippable
+
             try:
-                weight = weight + p.attr.weight
+                weight = weight + p.stockrecord.weight
             except:
                 #messages.error(request, "Some items in your basket do not have listed weights so the shipping estimate will be low.")
                 print "Some items in your basket do not have listed weights so the shipping estimate will be low."
@@ -161,7 +169,7 @@ class Repository(object):
         self.services = ()
         try:
             self.services = self.getShippingInfo(basket, shipping_addr)
-        except (SellerCannotShip, ItemHasNoWeight) as e:
+        except (SellerCannotShip, ItemHasNoWeight, ItemNotShippable) as e:
             ## only do local pickup
             self.availableMethods = []
             self.availableMethods.append(LocalPickup())
