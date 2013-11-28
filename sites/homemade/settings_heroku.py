@@ -54,19 +54,14 @@ import mongoengine
 
 
 DB_NAME = 'fooddb'
-DB_USERNAME = 'heroku_app10788552'
+DB_USERNAME = os.environ['MONGO_USERNAME'] 
 DB_PASSWORD = os.environ['MONGO_PASS']
-DB_HOST_ADDRESS = 'ds047437.mongolab.com:47437/' + DB_USERNAME
+DB_HOST_ADDRESS = os.environ['MONGO_HOST_ADDRESS']  
 
-#print(DB_HOST_ADDRESS)
-
-#connect(DB_NAME, host='mongodb://' + DB_USERNAME + ':' + DB_PASSWORD + '@' + DB_HOST_ADDRESS)
-
-#MONGODB_DB = 'heroku_app10788552'#"my_food_db"
 
 mongoengine.connect(DB_NAME, host='mongodb://' + DB_USERNAME + ':' + DB_PASSWORD + '@' + DB_HOST_ADDRESS)
 
-MDB_SECRET_KEY="f00dut0pia"
+MDB_SECRET_KEY=os.environ['MDB_SECRET_KEY'] 
 
 USE_S3 = True
 
