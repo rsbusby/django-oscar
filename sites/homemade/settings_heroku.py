@@ -58,6 +58,7 @@ DB_USERNAME = os.environ['MONGO_USERNAME']
 DB_PASSWORD = os.environ['MONGO_PASS']
 DB_HOST_ADDRESS = os.environ['MONGO_HOST_ADDRESS']  
 
+print 'mongodb://' + DB_USERNAME + ':' + DB_PASSWORD + '@' + DB_HOST_ADDRESS
 
 mongoengine.connect(DB_NAME, host='mongodb://' + DB_USERNAME + ':' + DB_PASSWORD + '@' + DB_HOST_ADDRESS)
 
