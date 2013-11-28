@@ -151,7 +151,20 @@ class Repository(object):
 
             return serviceList
         return None
-     
+    
+    def localPickupEnabled(self, basket):
+        '''
+        Making the assumption that if one of the items is available for local pickup, then they all are.
+        For now.
+
+        '''
+        for line in basket.lines.all():
+            p = line.product
+
+            if p.stockrecord.local_pickup_enabled:
+                return True
+
+        return False
 
     def get_shipping_methods(self, user, basket, shipping_addr=None, **kwargs):
         """
@@ -164,15 +177,19 @@ class Repository(object):
         """
 
         if not self.userAcceptsRemotePayments(basket):
-            self.methods = (LocalPickup(),)
+            if self.localPickupEnabled(basket): 
+                self.methods = (LocalPickup(),)
+            else:
+                self.methods = ()
 
         self.services = ()
         try:
             self.services = self.getShippingInfo(basket, shipping_addr)
         except (SellerCannotShip, ItemHasNoWeight, ItemNotShippable) as e:
             ## only do local pickup
-            self.availableMethods = []
-            self.availableMethods.append(LocalPickup())
+            self.availableMethods = []           
+            if self.localPickupEnabled(basket): 
+                self.availableMethods.append(LocalPickup())
             return self.prime_methods(basket, self.availableMethods)
 
         print self.services
@@ -181,14 +198,14 @@ class Repository(object):
             m.basket_total_shipping = None
 
         self.availableMethods = []
-        
-        self.availableMethods.append(LocalPickup())
+
+        if self.localPickupEnabled(basket): 
+            self.availableMethods.append(LocalPickup())
+
         if self.services:
             for m in self.methods:
                 if m.service in self.services:
                     self.availableMethods.append(m)
-
-
 
         #return self.availableMethods
 
@@ -214,8 +231,10 @@ class Repository(object):
             return self.get_shipping_methods(user, basket, shipping_addr)
 
         self.availableMethods = []
-        
-        self.availableMethods.append(LocalPickup())
+
+        if self.localPickupEnabled(basket): 
+            self.availableMethods.append(LocalPickup())
+
         for m in self.methods:
             if m.service in self.services:
                 self.availableMethods.append(m)
@@ -229,7 +248,8 @@ class Repository(object):
 
         seller = getSellerFromOscarID(basket.seller.user.id)
 
-        if seller.stripeSellerToken and seller.stripeSellerPubKey:
+        #if seller.stripeSellerToken and seller.stripeSellerPubKey:
+        if basket.seller.stripeToken and basket.seller.stripePubKey:
             return True
 
         return False

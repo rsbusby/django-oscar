@@ -12,7 +12,22 @@ from haystack.utils.geo import Point, D
 
 
 class Partner(AbstractPartner):
-    pass
+
+
+    ## took this from reviews, should work nicely for moderating booths
+    FOR_MODERATION, APPROVED, REJECTED = range(0, 3)
+    STATUS_CHOICES = (
+        (FOR_MODERATION, _("Requires moderation")),
+        (APPROVED, _("Approved")),
+        (REJECTED, _("Rejected")),
+    )
+    default_status = FOR_MODERATION ##if settings.OSCAR_MODERATE_REVIEWS else APPROVED
+    status = models.SmallIntegerField(
+        _("Status"), choices=STATUS_CHOICES, default=default_status)
+
+    
+    stripePubKey = models.CharField(max_length=32, blank=True, null=True,  help_text="Stripe public key for connected user")
+    stripeToken  = models.CharField(max_length=32, blank=True, null=True,  help_text="Stripe access key returned from Stripe Connect authorization process")
 
 
 class PartnerAddress(AbstractPartnerAddress):
@@ -40,7 +55,7 @@ class StockRecord(AbstractStockRecord):
     made_to_order = models.BooleanField(_("Made To Order"), default=False, db_index=True)
 
     is_shippable = models.BooleanField(_("Is Shippable"), default=False, db_index=True)
-
+    local_pickup_enabled = models.BooleanField(_("Local Pickup Enabled"), default=False, db_index=True)
     weight = models.FloatField(_("Weight"), blank=True, null=True)
 
     pass

@@ -236,7 +236,7 @@
 <div style="clear:both;margin-top:1.3em"></div>
 <div style="pull-right">
 
- {% if not u.stripeSellerToken %} 
+ {% if not u.stripeSellerToken  and not partner.sellerToken %} 
    <div class="stripesignupstore">
  
 <br><br>

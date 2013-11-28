@@ -395,7 +395,7 @@
                               
                                 <div style="clear:both"></div>
                                 <tr>
-                                    <th>Check if this item can be made to order:</th>
+                                    <th>Check below if this item can be made to order:</th>
                                 </tr>
                                 <tr>
                                     <td>
@@ -416,7 +416,7 @@
                                         {{ stockrecord_form.num_in_stock.errors }}
                                     </td>
                                 </tr>
-
+</table>
 
 
  <!--  <table>
@@ -434,11 +434,32 @@
                     </table> -->
                  
 
+    <hr>
+
+    <h3 style="font-weight:bold;font-size:1.24em;margin:0px 0px 5px 0pxmargin-bottom:0px"> Delivery options </h3>  &nbsp &nbsp  &nbsp &nbsp  
+
+      <table>
+                  
+                    <tr>
+                        <th>Check below if this item is available for local pickup:  </th>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ stockrecord_form.local_pickup_enabled }}
+                            {{ stockrecord_form.local_pickup_enabled.errors }}
+                        </td>
+                  
+                    </tr>
+        </table>    
+
+    {% if payments_enabled %}
+
         <table>
                   
-                    <div style="clear:both"></div>
                     <tr>
-                        <th>Check if this item can be shipped:</th>
+                        <th>Check below if this item can be shipped:   &nbsp &nbsp  &nbsp &nbsp  <a style="color:#ff6666;font-size:1.0em;float:lef;margin-left:0.5em" href="#openModalShipping"> About shipping options</a></th>
+
                     </tr>
                     <tr>
                         <td>
@@ -448,6 +469,8 @@
                   
                     </tr>
         </table>    
+
+
 
    <table>
                   
@@ -463,6 +486,21 @@
                   
                     </tr>
         </table>    
+
+
+    {% else %}
+
+    <b style="font-size=1.1em">Please sign up to accept electronic payments in order to ship.</b>
+<br><br>
+<a href="{% url 'stripeLogin' %}" > <img src="{% static 'icons/blue.png' %}"></a>
+<br><br>
+    <a style="color:#ff6666;font-size:1.0em;float:lef;margin-left:0.5em" href="#openModalShipping"> About shipping options</a></th>
+<br><br><br><br>
+    {% endif %}
+
+
+
+
 
 
 <!-- 
@@ -546,4 +584,33 @@
         </div>
     </div>
 </form>
+
+
+
+    <div id="openModalShipping" class="modalGiveBackDialog">
+      <div> 
+        <a href="#close" title="Close" class="close">X</a>
+        <h2><b>Shipping Information</b></h2>
+        <p> Currently at HM1616 we calculate the shipping costs for the U.S. Postal Service and UPS based on the weight of an item, assuming moderately sized items. If your item is very large (more than 12"x12"x12") or otherwise requires special shipping, shipping costs will have to be calculated manually, and we plan on offering a fixed shipping price option in the near future. 
+</p>
+<p>
+        Of course, local pickup can be an option if you like, and we hope to offer local delivery options as they become available. 
+         If you know of a suitable delivery service in your area, let us know at support@homemade1616.com and we'll try to incorporate it as a future option. Thanks!
+        </p>
+
+        <form action="#close" method="" >
+          <article>
+          <label>
+            <span></span>
+          </label>
+          </article>
+          <input type="hidden" name="return" value="True" /> 
+          <div class=deleteButto><input type=submit value="Close window"></div>
+      
+        </form>      
+    </div> 
+  </div>
+
+
+
 {% endblock dashboard_content %}

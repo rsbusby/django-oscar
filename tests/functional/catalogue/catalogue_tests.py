@@ -234,7 +234,15 @@ class TestProductStuff(WebTestCase, ClientTestCase):
 
 
     def test_shows_weight_in_edit_item(self):
-        p = create_product()
+        #p = create_product()
+        #p.stockrecord.partner = self.partner2
+        #p.stockrecord.partner.user = self.user2
+        #p.save()
+        #p.stockrecord.save()
+        #self.partner2.save()
+
+        p = self.product2
+
         self.is_staff = True
         # print "start"
         self.login()
@@ -602,6 +610,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         self.user2.save()
         self.partner2.save()
 
+
         ## go to the booth page
         url = reverse('catalogue:index') + "?booth=" + self.partner2.name
         surl = self.live_server_url + url
@@ -679,8 +688,17 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         #setattr(self.product2.attr, 'weight', 5)
         #setattr(self.product2.attr, 'Weight', 7)        
-        
+       
+        ## make sure product can be shipped, for now local pickup?
+
+
+
+        self.product2.stockrecord.is_shippable = True 
+        self.product2.stockrecord.local_pickup_enabled = True 
+
+
         self.product2.save()
+        self.product2.stockrecord.save()
 
         ## add item to basket
         ## go to item page

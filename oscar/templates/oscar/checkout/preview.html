@@ -20,8 +20,10 @@
  {% if payment_method == "stripe" %}
  
 
-{% if mseller.stripeSellerToken and mseller.stripeSellerPubKey %}
-  
+{#{% if mseller.stripeSellerToken and mseller.stripeSellerPubKey %}#}
+ 
+{% if basket.seller.stripeToken and basket.seller.stripePubKey %} 
+
   {# This is where the user pays #}
   <div class="pull-right" style="margin:1em;">
 

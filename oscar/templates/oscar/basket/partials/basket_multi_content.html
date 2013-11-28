@@ -216,7 +216,9 @@ transaction. </p>
   </form>
   <div style="clear:both"></div>
 
-{% if mseller.stripeSellerToken and mseller.stripeSellerPubKey %}
+{#{% if mseller.stripeSellerToken and mseller.stripeSellerPubKey %}#}
+{% if basket.seller.stripeToken and basket.seller.stripePubKey %} 
+
   
   <div style="margin-top:10px;">
    {# <form action="/charge_shared" method="post" >#}

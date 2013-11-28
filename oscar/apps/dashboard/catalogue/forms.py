@@ -90,7 +90,15 @@ class StockRecordForm(forms.ModelForm):
         if data['is_shippable'] and not data['weight']:
             raise forms.ValidationError(_("If item is shippable, please give an estimated weight for the item."))
 
-        return True
+        return data['weight']
+
+    def clean_local_pickup_enabled(self):
+        data = self.cleaned_data
+        if not data['is_shippable'] and not data['local_pickup_enabled']:
+            raise forms.ValidationError(_("You have not selected any delivery method. Please select shipping and/or local pickup."))
+
+        return data['local_pickup_enabled']
+
 
 
 def _attr_text_field(attribute):

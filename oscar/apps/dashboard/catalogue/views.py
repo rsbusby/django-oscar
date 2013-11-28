@@ -141,6 +141,31 @@ class ProductCreateUpdateView(generic.UpdateView):
             self.product_class = obj.product_class
             return obj
 
+    def boothIsApproved(self):
+        p =  self.object ##ctx['product']
+        try:
+            partner = p.stockrecord.partner
+            if partner.status == 1:
+                return True
+            else:
+                return False
+        except:
+            return False
+
+    def paymentsEnabled(self):
+        p =  self.object ##ctx['product']
+        #u = p.stockrecord.partner.user
+        partner = p.stockrecord.partner
+        #from apps.homemade.homeMade import getSellerFromOscarID
+        #muser = getSellerFromOscarID(u.id)
+        acceptsPayments = False
+        #if muser.stripeSellerToken and muser.stripeSellerPubKey:
+        if partner.stripeToken and partner.stripePubKey:
+            acceptsPayments = True
+
+        return acceptsPayments
+
+
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
         if 'stockrecord_form' not in ctx:
@@ -155,6 +180,11 @@ class ProductCreateUpdateView(generic.UpdateView):
             ctx['title'] = _('New item') ## % self.product_class.name
         else:
             ctx['title'] = ctx['product'].get_title()
+
+        ## whether the seller/partner can take payments, and therefore ship
+
+        ctx['payments_enabled'] = self.paymentsEnabled()
+
         return ctx
 
     def get_form_kwargs(self):
@@ -288,6 +318,12 @@ class ProductCreateUpdateView(generic.UpdateView):
         category_formset.save()
         image_formset.save()
         recommended_formset.save()
+
+        ## check if store has payments enabled. If not, disable the item
+        if not self.paymentsEnabled() or not self.boothIsApproved:
+            self.object.status = "disabled_" + self.object.status
+            self.object.save()
+
         #if self.instance.is_top_level and self.get_num_categories() == 0:
         #    default_category = Category.objects.filter(name="Other")
         #    self.categories.add(default_category)
