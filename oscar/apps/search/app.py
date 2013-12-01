@@ -13,6 +13,7 @@ class SearchApplication(Application):
 
     def get_urls(self):
         # Build SQS
+
         sqs = SearchQuerySet()
         for facet in settings.OSCAR_SEARCH_FACETS['fields'].values():
             sqs = sqs.facet(facet['field'])

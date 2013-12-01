@@ -22,18 +22,47 @@ class ProductCategory(AbstractProductCategory):
 class Product(AbstractProduct):
 
 
+    def getLatLongFromZipcode(self, zipcode):
+
+        from apps.homemade.homeMade import HMGeoData
+
+        gd = HMGeoData.objects.filter(zipcode=str(zipcode))[0]
+
+        return [gd.lat, gd.long]
+
     def get_location(self):
         # Remember, longitude FIRST!
 
         if self.stockrecord.latitude:
-            return Point(self.stockrecord.longitude, self.stockrecord.latitude)
+            print "location from sotckrecord for " + self.title +" : " + str(self.stockrecord.longitude) +"  " + str(self.stockrecord.latitude)
+            self.stockrecord.longitude = None
+            self.stockrecord.latitude = None
+            self.stockrecord.save()
+            #return Point(self.stockrecord.longitude, self.stockrecord.latitude)
         else:
-            #if self.stockrecord.partner.latitude:
-            #    return Point(self.stockrecord.partner.longitude, self.stockrecord.partner.latitude)
-            #else:
-            return Point(0.0, 0.0)
+            # try:
 
-    pass
+            print "try"
+            if self.stockrecord.partner.primary_address:
+                address = self.stockrecord.partner.primary_address
+                print self.stockrecord.partner.name + " has address"
+               
+                try:
+
+                    zipcode = address.postcode
+                except:
+                    print "user " +  self.stockrecord.partner.name + " has no zipcode"
+                    return None ##Point(0.0, 0.0)
+
+                [lat, long] = self.getLatLongFromZipcode(zipcode)
+                print "OK"
+                print "got location from " + str(zipcode) + " for " + self.stockrecord.partner.name
+                return str(long) + ',' + str(lat) ##Point(long, lat)
+
+
+        return None ##Point(0.0, 0.0)
+
+    
 
 
 class ContributorRole(AbstractContributorRole):

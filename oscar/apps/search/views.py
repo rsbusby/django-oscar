@@ -57,6 +57,51 @@ class SuggestionsView(View):
         return json.dumps(context)
 
 
+class SuperSimpleSearchView(View):
+
+    def getLatLongFromZipcode(self, zipcode):
+
+        from apps.homemade.homeMade import *
+
+        gd = HMGeoData.objects.filter(zipcode=str(zipcode))[0]
+
+        return [gd.lat, gd.long]
+
+
+    def extra_context(self):
+
+        # Do the radius query.
+        sqs = SearchQuerySet()
+        #import ipdb;ipdb.set_trace()
+        if self.request.GET.has_key('zipcode'):
+
+            zipcode = self.request.GET['zipcode']
+            if zipcode != '':
+                [lat, long] = self.getLatLongFromZipcode(zipcode)
+                #base_point = Point(-118.2, 33.985)
+                base_point = Point(float(lat), float(long))        
+                # Within ?? miles.
+                max_dist = D(mi=10)
+                if self.request.GET.has_key('radius'):
+                    radius = self.request.GET['radius']
+                    if radius != '':
+                        max_dist = D(mi=radius)    
+
+                sqs = sqs.dwithin('location', base_point, max_dist)
+
+        if self.request.GET.has_key('q'):
+            if q != '':
+                qStr = self.request.GET['q']
+                sqs = sqs.filter(content=qStr)
+
+        extra['spatial_results'] = sqs        
+
+
+
+
+        return extra
+
+
 class FacetedSearchView(views.FacetedSearchView):
 
 
@@ -71,11 +116,17 @@ class FacetedSearchView(views.FacetedSearchView):
 
 
 
+    def getLatLongFromZipcode(self, zipcode):
 
+        from apps.homemade.homeMade import *
+
+        gd = HMGeoData.objects.filter(zipcode=str(zipcode))[0]
+
+        return [gd.lat, gd.long]
 
     def extra_context(self):
         extra = super(FacetedSearchView, self).extra_context()
-        ##import ipdb;ipdb.set_trace()
+
         if 'fields'  not in extra['facets']:
             # Looks like Solr is not responding correctly
             return extra
@@ -115,7 +166,7 @@ class FacetedSearchView(views.FacetedSearchView):
                 facet_data[field].append(datum)
 
         # Query facets
-        # import ipdb;ipdb.set_trace()
+
         for key, facet in settings.OSCAR_SEARCH_FACETS['queries'].items():
             facet_data[key] = []
             for name, query in facet['queries']:
@@ -165,14 +216,36 @@ class FacetedSearchView(views.FacetedSearchView):
         #extra['my_facets'] = sqs        
 
 
-        #base_point = Point(-118.2, 33.985)
-        # Within ?? miles.
-        #max_dist = D(mi=10)
+
 
         # Do the radius query.
-        #sqs = SearchQuerySet().dwithin('location', base_point, max_dist)
+        sqs = SearchQuerySet()
 
-        #extra['spatial_results'] = sqs        
+        if self.request.GET.has_key('zipcode'):
+
+            zipcode = self.request.GET['zipcode']
+            if zipcode != '':
+                [lat, long] = self.getLatLongFromZipcode(zipcode)
+                #base_point = Point(-118.2, 33.985)
+                base_point = Point(float(lat), float(long))        
+                # Within ?? miles.
+                max_dist = D(mi=10)
+                if self.request.GET.has_key('radius'):
+                    radius = self.request.GET['radius']
+                    if radius != '':
+                        max_dist = D(mi=radius)    
+
+                sqs = sqs.dwithin('location', base_point, max_dist)
+
+        if self.request.GET.has_key('q'):
+            q = self.request.GET['q']
+            if q != '':
+                qStr = self.request.GET['q']
+                sqs = sqs.filter(content=qStr)
+
+        extra['spatial_results'] = sqs        
+
+        #import ipdb;ipdb.set_trace()
 
 
         return extra
@@ -192,7 +265,7 @@ class MultiFacetedSearchView(FacetedSearchView):
         """
         # Look for UPC match
         query = request.GET.get('q', '').strip()
-        import ipdb;ipdb.set_trace()
+        #import ipdb;ipdb.set_trace()
         try:
             item = Product._default_manager.get(upc=query)
             return HttpResponseRedirect(item.get_absolute_url())

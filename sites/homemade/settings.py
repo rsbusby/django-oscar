@@ -412,6 +412,7 @@ SITE_ID=2
 ## testing 
 SOUTH_TESTS_MIGRATE = False
 
+## from hacky import from HOMEMADE code
 IMPORTING=False
 
 ## email/Mandrill setup

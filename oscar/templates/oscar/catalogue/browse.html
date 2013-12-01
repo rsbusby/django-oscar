@@ -59,9 +59,58 @@
 {% endcomment %}
 
 <form method="get" action="{% url 'search:search-default' %}" class="navbar-form pull-right">
-    {{ search_form.q }}
-</form>
+    {#{{ search_form.q }}#}
+ <input id="id_q" name="q" placeholder="Search" tabindex="1" type="search" />
+   <script>
+   //$("#filterButton").hide();
+   
+   //{# $("#advancedButton").hide(  );#}
+   $(window).load(function () {
+   // $("#filterButton").hide();
+      //  $("#advancedButton").hide(  );
+    
+       $("#advancedInput").hide();
+      $("#sub_button").hide();
 
+    
+     $("#advancedButton").click(function(){
+     $("#advancedInput").toggle(300);
+     $("#sub_button").toggle(300);
+
+      $("#advancedButton").hide(300);
+    });
+    
+     $(document).keydown(function(objEvent) {
+            if (objEvent.keyCode == 13) {
+                 $('#sub_button').click();
+            }
+        })
+
+
+    
+});
+   
+
+
+   </script>
+
+
+
+ {#<li style="margin-left:0.1em;">#}
+     <input id="advancedButton" style="display:none;float:right;color:#ffffff;background-color:#bbbbbb;" type=button value="Advanced Search" onclick=none;> 
+  {#</li>#}
+
+  <div id="advancedInput"  style="display:none">
+    
+        Search by zipcode:<input type=text size=5 name=zipcode value="" onfocus="if (this.value == '') {this.value = ''}">
+    
+    <div style="">Radius (miles):<input type=number size=2 name=radius min=5 step=1 value=""  onfocus="if (this.value == '') {this.value = 10}"> </div> 
+    </div>
+
+
+<input  style="display:none" id="sub_button" type=submit value="Search">
+
+</form>
                 {% endblock %}
 
 

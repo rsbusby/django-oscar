@@ -370,3 +370,23 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         else:
             logger.warning("Order #%s - no %s communication event type",
                            order.number, code)
+
+
+        ## send to seller
+        messages = CommunicationEventType.objects.get_and_render('ORDER_PLACED_SELLER', ctx)
+        event_type = None
+
+        basket = Basket.objects.filter(id=order.basket_id)[0]
+        seller = basket.seller
+        sellerUser = seller.user
+
+        if messages and messages['body']:
+            #logger.info("Order #%s - sending %s messages", order.number, code)
+            #dispatcher = Dispatcher(logger)
+            dispatcher.dispatch_user_messages(sellerUser, messages,
+                                               event_type, **kwargs)
+        #else:
+        #    logger.warning("Order #%s - no %s communication event type",
+        #                   order.number, code)
+
+
