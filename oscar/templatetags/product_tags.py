@@ -14,7 +14,8 @@ def render_product(context, product, is_booth=False):
     product class of the passed product.  This allows alternative templates to
     be used for different product classes.
     """
-    names = ['catalogue/partials/product/upc-%s.html' % product.upc,
+    names = [
+    #'catalogue/partials/product/upc-%s.html' % product.upc,
              'catalogue/partials/product/class-%s.html' % product.get_product_class().slug,
              'catalogue/partials/product.html']
     template_ = select_template(names)
