@@ -117,6 +117,19 @@ class ProductCreateUpdateView(generic.UpdateView):
     recommendations_formset = ProductRecommendationFormSet
     stockrecord_form = StockRecordForm
 
+    def get(self, request, *args, **kwargs):
+
+        ## don't let staff create new items right now
+        user = self.request.user
+        self.creating = not 'pk' in self.kwargs
+        if self.creating:
+            if self.request.user.is_staff:
+                messages.error(self.request,
+                           _("Currently admin users are not allowed to create items"))
+                return HttpResponseRedirect(reverse('catalogue:index'))
+        return super(ProductCreateUpdateView, self).get(request, *args, **kwargs)
+
+
     def get_object(self, queryset=None):
         """
         This parts allows generic.UpdateView to handle creating products as
@@ -128,6 +141,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         self.require_user_stockrecord = not user.is_staff
         self.creating = not 'pk' in self.kwargs
         if self.creating:
+
             try:
                 product_class_id = self.kwargs.get('product_class_id', None)
                 self.product_class = ProductClass.objects.get(
@@ -155,7 +169,8 @@ class ProductCreateUpdateView(generic.UpdateView):
     def paymentsEnabled(self):
         p =  self.object ##ctx['product']
         #u = p.stockrecord.partner.user
-        partner = p.stockrecord.partner
+
+        partner = self.request.user.partner
         #from apps.homemade.homeMade import getSellerFromOscarID
         #muser = getSellerFromOscarID(u.id)
         acceptsPayments = False
@@ -167,6 +182,7 @@ class ProductCreateUpdateView(generic.UpdateView):
 
 
     def get_context_data(self, **kwargs):
+
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
         if 'stockrecord_form' not in ctx:
             ctx['stockrecord_form'] = self.get_stockrecord_form()
