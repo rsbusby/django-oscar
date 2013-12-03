@@ -416,7 +416,7 @@ SOUTH_TESTS_MIGRATE = False
 IMPORTING=False
 
 ## email/Mandrill setup
-OSCAR_FROM_EMAIL = "support@homemade1616.com"
+OSCAR_FROM_EMAIL = "Homemade 1616 <support@homemade1616.com>"
 print OSCAR_FROM_EMAIL
 MANDRILL_API_KEY = os.environ['MANDRILL_API_KEY']
 

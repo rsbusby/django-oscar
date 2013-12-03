@@ -233,33 +233,41 @@ class TestProductStuff(WebTestCase, ClientTestCase):
 
 
 
-    def test_shows_weight_in_edit_item(self):
-        #p = create_product()
-        #p.stockrecord.partner = self.partner2
-        #p.stockrecord.partner.user = self.user2
-        #p.save()
-        #p.stockrecord.save()
-        #self.partner2.save()
+    # def test_shows_weight_in_edit_item(self):
+    #     #p = create_product()
+    #     #p.stockrecord.partner = self.partner2
+    #     #p.stockrecord.partner.user = self.user2
+    #     #p.save()
+    #     #p.stockrecord.save()
+    #     #self.partner2.save()
 
-        p = self.product2
+    #     p = self.product1
+    #     self.client.login(username=self.user1.username, password=self.password)
 
-        self.is_staff = True
-        # print "start"
-        self.login()
+    #     self.user1.partner = self.partner1
+    #     self.user1.is_staff = False
+    #     self.user1.save()
+    #     self.partner1.save()
 
-        kwargs = {'pk': p.id}
-        url = reverse('dashboard:catalogue-product', kwargs=kwargs)
-        #print url
-        page = self.get(url)
-        #print page
-        #print p.title
-        print url
-        #print self.product1.id
-        #self.assertContains(page, p.title)
 
-        ## logged in
-        self.assertContains(page, "Price")
-        #show_urls(urls.urlpatterns)
+    #     kwargs = {'pk': p.id}
+    #     url = reverse('dashboard:catalogue-product', kwargs=kwargs)
+    #     #print url
+    #     #page = self.get(url)  
+    #     page = self.app.get(url)
+
+    #     #print page
+    #     #print p.title
+    #     print url
+    #     #print self.product1.id
+    #     #self.assertContains(page, p.title)
+
+    #     ## logged in
+    #     self.assertContains(page, "Price")
+    #     #show_urls(urls.urlpatterns)
+
+    #     self.user1.is_staff = False
+    #     self.user1.save()
 
 
     def test_booth_ship_address_saved(self):
@@ -540,7 +548,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ## fill out form
         b = browser
 
-        ff(b, 'store_name', 'Test Store #2')
+        ff(b, 'store_name', 'Test Store2')
         ff(b, 'zipcode', "90291")
         #ff(b, 'filter', "Los Angeles")
 
@@ -552,9 +560,6 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         from selenium.webdriver.common.keys import Keys
 
-
-
-
         bcc = browser.find_element_by_class_name("select2-choice")
         bcc.click()
         bb = browser.find_element_by_class_name('select2-input')
@@ -563,8 +568,6 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## upload pic
         #browser.find_element_by_id("IdOfInputTypeFile").send_keys(os.getcwd()+"/image.png")
-
-
 
         elem = browser.find_element_by_id('submit-booth').click()
 
@@ -584,12 +587,38 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         elem = browser.find_element_by_id('submit-booth').click()
 
 
+
+        ## test the add item form
+        ## go to the booth page
+        url = reverse('catalogue:index')# + "?booth=" + user3.partner.name
+        print url
+        self.go(url)
+
+        url = reverse('catalogue:index') + "?booth=" + user3.partner.name
+        print url
+        self.go(url)
+
+        browser.find_element_by_id('addNewItemButton').click()
+
+        ## should be on new item page now
+        #self.failIf(browser.page_source.count("Weight") < 1)
+        self.failIf(browser.page_source.count("shipping options") < 1)        
+        self.failIf(browser.page_source.count("Price") < 1)
+
+
+
+        #surl = self.live_server_url + url
+        #print surl
+        #browser.get(surl)
+
         ## clean up Mongo seller?
         user3.delete()
 
 
 
         browser.quit()
+
+
 
 
     def test_checkout(self):

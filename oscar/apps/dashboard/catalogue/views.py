@@ -170,6 +170,8 @@ class ProductCreateUpdateView(generic.UpdateView):
         p =  self.object ##ctx['product']
         #u = p.stockrecord.partner.user
 
+        if self.request.user.is_staff:
+            return True
         partner = self.request.user.partner
         #from apps.homemade.homeMade import getSellerFromOscarID
         #muser = getSellerFromOscarID(u.id)

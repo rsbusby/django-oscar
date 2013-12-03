@@ -243,6 +243,12 @@
                     <td>
                         <a href="{% url 'customer:email-detail' email.id %}" class="btn btn-info">{% trans 'View' %}</a>
                     </td>
+                    {% if email.sender %}
+                    <td>
+                      <a href="{% url 'contactPeer' %}?user={{email.sender.username}}&subject={{email.subject}}" class="btn btn-info">{% trans 'Reply' %}</a>
+                    </td>
+                    {% endif %}
+
                 </tr>
                 {% endfor %}
             </table>
