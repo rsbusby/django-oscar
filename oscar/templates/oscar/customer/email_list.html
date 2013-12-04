@@ -53,7 +53,7 @@
                 </td>
                 {% if email.sender %}
                  <td>
-                    <a href="{% url 'contactPeer' %}?user={{email.sender.username}}&subject={{email.subject}}" class="btn btn-info">{% trans 'Reply' %}</a>
+                    <a id="replyButton" href="{% url 'contactPeer' %}?user={{email.sender.username}}&subject={{email.subject}}" class="btn btn-info">{% trans 'Reply' %}</a>
                 </td>
                 {% endif %}
             </tr>

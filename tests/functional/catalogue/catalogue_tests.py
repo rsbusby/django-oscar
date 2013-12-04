@@ -469,10 +469,17 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ## login as user1
         self.loginUser(user=self.user1, browser=browser)
 
+
+        ## user1 name
+
+
+
+
         ## make sure user2 has a boo        ## make a booth/partner
-        #self.user2.partner = self.partner2
-        #self.user2.save()
-        #self.partner2.save()
+        self.user2.partner = self.partner2
+        self.partner2.name = "Best Store"
+        self.user2.save()
+        self.partner2.save()
 
         ## go to the booth page
         #url = reverse('catalogue:index') + "?booth=" + self.partner1.name
@@ -483,14 +490,13 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         #browser.find_element_by_class_name("orgButton").click()th 
 
         ## go to contact user2 page
-        url = "/homemade/contact/" + "?store_name=" + self.partner2.name
-        surl = self.live_server_url + url
-        browser.get(surl)
+        self.go("/homemade/contact/" + "?store_name=" + self.partner2.name)
 
         ## ensure that the correct name is there
+        self.failIf(browser.page_source.count(self.partner2.name) < 1)
+
 
         ## fill out form with something
-
         ta = browser.find_element_by_tag_name("textarea")
         ta.send_keys("this is a test message ")
 
@@ -511,11 +517,37 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         self.go("/accounts/")
         self.failIf(browser.page_source.count("Message from a cust") < 1)
 
-        ## check that able to reply
+    
 
         ## log out and log in as user2
+        self.go(reverse('customer:logout'))
+
+        self.user1.first_name = "Jimbob"
+        self.user1.last_name = "Bobcat"
+        self.user1.save()
+
+
+        self.loginUser(user=self.user2, browser=browser)
+
+
 
         ## check that received msg is there
+        self.go("/accounts/")
+        self.failIf(browser.page_source.count("Message from a cust") < 1)
+
+
+        self.go("/accounts/emails/")
+
+        ## check that able to reply
+        self.failIf(browser.page_source.count("Reply") < 1)
+
+        ## click reply
+        browser.find_element_by_id("replyButton").click()
+
+        ## for now only first name appears
+        self.failIf(browser.page_source.count(self.user1.first_name) < 1)
+        #self.failIf(browser.page_source.count(self.user1.last_name) < 1)
+
 
         ## ok done
         browser.quit()
@@ -774,6 +806,62 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## clean up Mongo seller?
         user3.delete()
+
+        browser.quit()
+
+
+
+    def test_messaging_2_no_really_there_is_another(self):
+        ''' test messaging, user to user emails.
+
+        This is similar to test_sent_email_display, 
+        but what the hell it helped me find a couiple of potential bugs.
+
+        '''
+
+        browser = webdriver.Firefox()
+        self.browser = browser
+
+        ## make a booth/partner
+        self.user2.partner = self.partner2
+        self.partner2.name= "Super Store"
+        self.user2.save()
+        self.partner2.save()
+
+
+        ## login as user1
+        self.loginUser(self.user1, browser)
+
+
+        ## go to the booth page
+        url = reverse('catalogue:index') + "?booth=" + self.partner2.name
+        surl = self.live_server_url + url
+        browser.get(surl)
+
+
+        browser.find_element_by_id("contactSellerButton").click()
+
+
+        ## send a message to user2
+        ## check that looks right
+        self.failIf(browser.page_source.count(self.partner2.name) < 1)  
+
+        ## add some text to the textarea
+
+        ## check the subject topic?
+
+        ## submit the message
+
+
+        ## check that the message is there
+
+        ## logout user1
+
+
+        ## login user2
+
+        ## etc.
+
 
         browser.quit()
 
