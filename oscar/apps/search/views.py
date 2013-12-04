@@ -61,7 +61,7 @@ class SuperSimpleSearchView(View):
 
     def getLatLongFromZipcode(self, zipcode):
 
-        from apps.homemade.homeMade import *
+        from apps.homemade.homeMade import HMGeoData
 
         gd = HMGeoData.objects.filter(zipcode=str(zipcode))[0]
 
@@ -118,7 +118,7 @@ class FacetedSearchView(views.FacetedSearchView):
 
     def getLatLongFromZipcode(self, zipcode):
 
-        from apps.homemade.homeMade import *
+        from apps.homemade.homeMade import HMGeoData
 
         gd = HMGeoData.objects.filter(zipcode=str(zipcode))[0]
 

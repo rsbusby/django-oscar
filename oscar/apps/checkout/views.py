@@ -19,6 +19,7 @@ from oscar.core.loading import get_class, get_classes
 from oscar.apps.order.models import SponsoredOrganization
 from oscar.apps.payment.models import SourceType, Source
 
+from apps.homemade.homeMade import  *
 
 ShippingAddressForm, GatewayForm = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
 OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
@@ -551,7 +552,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         if self.request.basket:
             ctx['basket'] = self.request.basket
 
-        from apps.homemade.homeMade import  *
+
 
         if self.request.basket:
             ctx['mseller'] = getSellerFromOscarID(self.request.basket.seller.user.id)
