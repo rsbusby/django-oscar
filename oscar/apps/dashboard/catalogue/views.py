@@ -337,10 +337,14 @@ class ProductCreateUpdateView(generic.UpdateView):
         image_formset.save()
         recommended_formset.save()
 
+
         ## check if store has payments enabled. If not, disable the item
-        if not self.paymentsEnabled() or not self.boothIsApproved:
-            self.object.status = "disabled_" + self.object.status
-            self.object.save()
+        try:
+        #if not self.paymentsEnabled() or not self.boothIsApproved:
+        #    self.object.status = "disabled_" + str(self.object.status)
+        #    self.object.save()
+        #except:
+        #    pass
 
         #if self.instance.is_top_level and self.get_num_categories() == 0:
         #    default_category = Category.objects.filter(name="Other")

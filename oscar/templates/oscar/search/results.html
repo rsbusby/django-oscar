@@ -25,7 +25,9 @@
     </ul>
 {% endblock %}
 
+
 {% block column_left %}
+{% comment %}
     {#{{spatial_results}}#}
 
     {# TODO - generate this block automatically using the facets setting #}
@@ -41,7 +43,7 @@
     </dl>
 
 {% endblock %}
-
+{% endcomment %}
 {% block headertext %}
     {% blocktrans with q=query %}
         <div style="font-size:0.8em">Products matching "{{ q }}" </div>
