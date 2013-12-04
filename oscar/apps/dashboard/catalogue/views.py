@@ -339,7 +339,7 @@ class ProductCreateUpdateView(generic.UpdateView):
 
 
         ## check if store has payments enabled. If not, disable the item
-        try:
+        #try:
         #if not self.paymentsEnabled() or not self.boothIsApproved:
         #    self.object.status = "disabled_" + str(self.object.status)
         #    self.object.save()
