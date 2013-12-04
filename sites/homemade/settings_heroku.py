@@ -23,7 +23,7 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-DEBUG=True
+DEBUG=os.environ['DEBUG'],
 
 SITE_ID=2  ## set to 2 for www.homemade1616.com, 3 is heroku direct
 
@@ -58,7 +58,6 @@ DB_HOST_ADDRESS = os.environ['MONGO_HOST_ADDRESS'] + DB_USERNAME
 
 mongoengine.connect(DB_NAME, host='mongodb://' + DB_USERNAME + ':' + DB_PASSWORD + '@' + DB_HOST_ADDRESS)
 
-MDB_SECRET_KEY="f00dut0pia"
 
 USE_S3 = True
 
