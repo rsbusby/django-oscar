@@ -46,7 +46,7 @@
     {% block product_seller %}
       <!-- <li> -->
         Maker:
-        <a href="{% url 'catalogue:index' %}?booth={{product.stockrecord.partner.name}}"> {{ product.stockrecord.partner.name|truncatewords:4 }}</a>
+        <a href="{% url 'catalogue:index' %}?booth={{product.stockrecord.partner.id}}"> {{ product.stockrecord.partner.name|truncatewords:4 }}</a>
       <!-- </li> -->
     {% endblock %}
     {% endif %}

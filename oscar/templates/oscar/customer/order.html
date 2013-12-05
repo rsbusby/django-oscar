@@ -43,9 +43,9 @@
 <div class="pull-right">
 {% if user == order.user %}
 
-  <div style="font-weight:bold;margin-right:2em;float:left;font-size:1.2em" >ordered from <a href="/catalogue/?booth={{order.lines.all.0.partner.name}}" >{{order.lines.all.0.partner.name}} </a> </div>
+  <div style="font-weight:bold;margin-right:2em;float:left;font-size:1.2em" >ordered from <a href="/catalogue/?booth={{order.lines.all.0.partner.id}}" >{{order.lines.all.0.partner.name}} </a> </div>
 
-  <input style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{order.lines.all.0.partner.name}}&subject=message about order {{order.number}}"'>
+  <input style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?booth={{order.lines.all.0.partner.id}}&subject=message about order {{order.number}}"'>
 {% else %}
   <input style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Buyer" onclick='location.href="/homemade/contact?user={{order.user.username}}&subject=message about order {{order.number}}"'>
 

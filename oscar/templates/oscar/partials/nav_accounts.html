@@ -114,7 +114,7 @@
                         </li>
                         {% endcomment %}
                         {% if user.partner  %}
-                            <li><a id="my-booth" href="{% url 'catalogue:index' %}?booth={{request.user.partner.name}}">MY BOOTH</a></li>
+                            <li><a id="my-booth" href="{% url 'catalogue:index' %}?booth={{request.user.partner.id}}">MY BOOTH</a></li>
                         {% else %}
 
                          <li><a id="open-booth" href="{% url 'register_store' %}"> {% trans "SELL" %}</a></li>

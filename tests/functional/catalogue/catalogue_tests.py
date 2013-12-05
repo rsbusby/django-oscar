@@ -119,7 +119,7 @@ class TestProductStuff(WebTestCase, ClientTestCase):
         self.assertContains(r,p.title)
 
         ## in the booth ?
-        url = reverse('catalogue:index') + "?booth=" + p.stockrecord.partner.name
+        url = reverse('catalogue:index') + "?booth=" + str(p.stockrecord.partner.id)
         r = self.app.get(url)
         self.assertContains(r,p.title)
 
@@ -140,7 +140,7 @@ class TestProductStuff(WebTestCase, ClientTestCase):
         self.assertNotContains(r,p.title)
 
         ## in the booth ?
-        url = reverse('catalogue:index') + "?booth=" + p.stockrecord.partner.name
+        url = reverse('catalogue:index') + "?booth=" + str(p.stockrecord.partner.id)
         r = self.app.get(url)
         self.assertNotContains(r,p.title)
 
@@ -201,8 +201,8 @@ class TestProductStuff(WebTestCase, ClientTestCase):
         print "start"
         #print self.login()
 
-        url = reverse('catalogue:index') + "?booth=" + p.stockrecord.partner.name
-        url = "/catalogue/?booth=Dummy partner"
+        url = reverse('catalogue:index') + "?booth=" + str(p.stockrecord.partner.id)
+        #url = "/catalogue/?booth=Dummy partner"
         page = self.app.get(url)
         #print page
         #print p.title
@@ -220,7 +220,7 @@ class TestProductStuff(WebTestCase, ClientTestCase):
         print "start"
         self.login()
 
-        url = reverse('catalogue:index') + "?booth=" + p.stockrecord.partner.name
+        url = reverse('catalogue:index') + "?booth=" + str(p.stockrecord.partner.id)
         page = self.get(url)
         #print page
         #print p.title
@@ -417,7 +417,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         self.partner1.save()
 
         ## go to the booth page
-        url = reverse('catalogue:index') + "?booth=" + self.partner1.name
+        url = reverse('catalogue:index') + "?booth=" + str(self.partner1.id)
         surl = self.live_server_url + url
         browser.get(surl)
 
@@ -482,7 +482,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         self.partner2.save()
 
         ## go to the booth page
-        #url = reverse('catalogue:index') + "?booth=" + self.partner1.name
+        #url = reverse('catalogue:index') + "?booth=" + str(self.partner1.id)
         #surl = self.live_server_url + url
         #browser.get(surl)
 
@@ -639,6 +639,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## go to booth
         browser.find_element_by_id('my-booth').click()
+        import ipdb;ipdb.set_trace()
 
         ## add new item
         browser.find_element_by_id('addNewItemButton').click()
@@ -768,11 +769,11 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## test the add item form
         ## go to the booth page
-        url = reverse('catalogue:index')# + "?booth=" + user3.partner.name
+        url = reverse('catalogue:index')# + "?booth=" + user3.partner.id
         print url
         self.go(url)
 
-        url = reverse('catalogue:index') + "?booth=" + user3.partner.name
+        url = reverse('catalogue:index') + "?booth=" + str(user3.partner.id)
         print url
         self.go(url)
 
@@ -827,7 +828,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
         ## go to the booth page
-        url = reverse('catalogue:index') + "?booth=" + self.partner2.name
+        url = reverse('catalogue:index') + "?booth=" + str(self.partner2.id)
         surl = self.live_server_url + url
         browser.get(surl)
 
@@ -988,10 +989,9 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
         ## go to the booth page
-        url = reverse('catalogue:index') + "?booth=" + self.partner2.name
+        url = reverse('catalogue:index') + "?booth=" + str(self.partner2.id)
         surl = self.live_server_url + url
         browser.get(surl)
-
 
         browser.find_element_by_id("contactSellerButton").click()
 

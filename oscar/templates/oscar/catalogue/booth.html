@@ -223,7 +223,7 @@
 
   {% if request.user != partner.user %}
    
-   <p>  <input id="contactSellerButton" style="position:relative;top:0;margin-bottom:0em;margin:0;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{partner.name}}"'>
+   <p>  <input id="contactSellerButton" style="position:relative;top:0;margin-bottom:0em;margin:0;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?booth={{partner.id}}"'>
   </p>  
   <br>
   {%endif %}

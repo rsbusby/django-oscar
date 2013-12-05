@@ -59,7 +59,7 @@
             {% for order in orders %}
                 <tr>
                     <td>{{ order.number }}</td>
-                    <td><a href="/catalogue/?booth={{order.lines.all.0.partner.name}}" >{{order.lines.all.0.partner.name}} </a></td>
+                    <td><a href="/catalogue/?booth={{order.lines.all.0.partner.id}}" >{{order.lines.all.0.partner.name}} </a></td>
                     <td>{{ order.total_incl_tax|currency }}</td>
                     <td>{{ order.date_placed }}</td>
                     <td>

@@ -365,7 +365,7 @@ class ProductListView(ListView):
                 try:
                 ##if True:
                     #partner = self.request.user.partner
-                    partner = Partner.objects.filter(name=pq)[0]
+                    partner = Partner.objects.filter(id=pq)[0]
                     context['partner'] = partner
                     context['summary'] = partner.name
                     ## current user in MongoDB
