@@ -351,7 +351,11 @@
           {#      </div> #}
 
                     <div class="table-header">
-                        <h4>{% trans "Upload, change or remove images. Please have at least one image" %}</h4>
+                        <h4>{% trans "Upload, change or remove images. Please have at least one image." %}</h4>
+                        <p style="font-size=1.1;color:fcfcfc">
+                        Note that if you are using some older versions of Safari, the upload image block will not update after you choose your file, but the file will still be uploaded.
+                        </p>
+
                     </div>
                     <div class="well">
                         {{ image_formset.management_form }}
@@ -506,42 +510,7 @@
 
 
 
-<!-- 
-          <table class="table table-striped table-bordered fform-inline">
-           
-            {% for field in form %}
-            {% if 'attr' in field.id_for_label %}
-            <tr>
-                <th>
-                    {{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}
-                        {% if field.label == "Weight" or field.label == 'weight' %}  
-                            in ounces.    &nbsp &nbsp This is required if items are to be shipped. 
-                        {% endif %}
-                </th>
-                </tr>
-                <tr>
-                <td>
-                                        {{ field.errors }}
 
-                    {% if field.is_hidden %}
-                    {{ field }}
-                    {% else %}
-                    {{ field }}
-
-                    {% if field.help_text %}
-                    <span class='help-block'>
-                        {{ field.help_text }}
-                    </span>
-                    {% endif %}
-                    {% endif %}
-                </td>
-            </tr>
-            {% endif %}
-            {% endfor %}
-
-
-        
-        </table> -->
                             
 
                  
@@ -554,9 +523,11 @@
                 <div class="tab-pane" id="product_recommended">
                     <table class="table table-striped table-bordered fform-inline">
                         <caption>{% trans "Recommended products" %}</caption>
+
                         {{ recommended_formset.management_form }}
                         {{ recommended_formset.non_form_errors }}
                         {% for recommended_form in recommended_formset %}
+
                         <tr>
                             <td>
                                 {% include "partials/form_fields_inline.html" with form=recommended_form %}
