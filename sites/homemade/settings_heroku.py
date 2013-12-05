@@ -23,7 +23,7 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-debugVal = os.environ['DEBUG']:
+debugVal = os.environ['DEBUG']
 if debugVal == 'True' or debugVal == '1':
     DEBUG=True
 else:
