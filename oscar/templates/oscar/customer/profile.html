@@ -167,6 +167,13 @@
                     <td>{{ order.date_placed }}</td>
                     <td>
                         <a class="btn btn-info" href="{% url 'customer:order' order.number %}?user_id={{order.user.id}}">{% trans 'View' %}</a>
+
+                           {% for source in order.sources.all %}
+                              {% if source.source_type.name = "Stripe" %}
+                                 <a class="btn btn-info" href="https://manage.stripe.com/payments/{{source.reference}}" target="_blank">{% trans 'View payment on Stripe' %}</a>
+                              {% endif%}
+                           {% endfor %}
+                           
                         {% comment %}
                         <form action="{% url 'customer:order' order.number %}" method="post">
                             {% csrf_token %}
