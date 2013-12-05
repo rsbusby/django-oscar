@@ -112,6 +112,7 @@
             <table class="table table-striped table-bordered">
                 <tr>
                     <th>{% trans 'Order number' %}</th>
+                    <th>{% trans 'Seller' %}</th>                    
                     <th>{% trans 'Total inc tax' %}</th>
                     <th>{% trans 'Date submitted' %}</th>
                     <th></th>
@@ -119,6 +120,7 @@
                 {% for order in orders %}
                 <tr>
                     <td>{{ order.number }}</td>
+                    <td><a href="/catalogue/?booth={{order.lines.all.0.partner.name}}" >{{order.lines.all.0.partner.name}} </a></td>                    
                     <td>{{ order.total_incl_tax|currency }}</td>
                     <td>{{ order.date_placed }}</td>
                     <td>
@@ -173,7 +175,7 @@
                                  <a class="btn btn-info" href="https://manage.stripe.com/payments/{{source.reference}}" target="_blank">{% trans 'View payment on Stripe' %}</a>
                               {% endif%}
                            {% endfor %}
-                           
+
                         {% comment %}
                         <form action="{% url 'customer:order' order.number %}" method="post">
                             {% csrf_token %}
