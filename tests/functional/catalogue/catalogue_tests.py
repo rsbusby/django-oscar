@@ -554,12 +554,141 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
 
+    def test_register_user_and_add_item(self):
+        browser = webdriver.Firefox()
+        self.browser = browser
+
+
+        ### go to register page
+        self.go("/accounts/register/")
+
+        ## sign up
+        from selenium.webdriver.common.keys import Keys
+
+        from apps.homemade.homeMade import *
+
+
+        email = "rsbusby+4535495879@gmail.com"
+        pw = "asjliuay8dfa"
+        storeName = 'Test Storezzzz'
+
+
+        try:
+            User.objects.filter(email=email)[0].delete()
+        except:
+            pass
+
+        try:
+            Partner.objects.filter(name__icontains=storeName)[0].delete()
+        except:
+            pass
+
+        try:
+            Seller.objects.all().delete()
+
+            ##            Seller.objects.filter(storeName__icontains=storeName)[0].delete()
+        except:
+            pass
+
+        bb = browser.find_element_by_id('id_email')
+        bb.send_keys(email)
+        bb = browser.find_element_by_id('id_password1')
+
+        bb.send_keys(pw)
+        bb = browser.find_element_by_id('id_password2')
+        bb.send_keys(pw)
+
+        browser.find_element_by_id('id_submitButton').click()
+
+        ## open booth 
+        ## go to open booth page
+
+        elem = browser.find_element_by_id('open-booth')
+        elem.click()
+
+        ## fill out form
+        b = browser
+
+        ff(b, 'store_name', storeName)
+        ff(b, 'zipcode', "90291")
+        #ff(b, 'filter', "Los Angeles")
+
+
+        county = Counties(county = "Kern", state="CA")
+        county.save()
+
+
+     
+        bcc = browser.find_element_by_class_name("select2-choice")
+        bcc.click()
+        bb = browser.find_element_by_class_name('select2-input')
+        bb.send_keys("Kern")
+        bb.send_keys(Keys.RETURN)
+
+        ## upload pic
+        #browser.find_element_by_id("IdOfInputTypeFile").send_keys(os.getcwd()+"/image.png")
+
+        elem = browser.find_element_by_id('submit-booth').click()
+
+        ##
+
+        browser.find_element_by_id('skip-stripe').click()        
+
+
+        ## now can deal with the address form!
+
+
+
+        ## ok done
+
+        ## go to booth
+
+        ## add new item
+
+
+
+        ## test pic upload
+
+        ## clean up
+        self.go(reverse('customer:logout'))
+
+        User.objects.filter(email=email)[0].delete()
+        try:
+            Partner.objects.filter(name__icontains=storeName)[0].delete()
+        except:
+            pass
+        try:
+            Seller.objects.filter(storeName__icontains=storeName)[0].delete()
+        except:
+            pass
+
+        browser.quit()
+
+
+
     def test_open_booth(self):
 
         ''' send msg from one user to another and check that the sent msges display'''
 
         browser = webdriver.Firefox()
         self.browser = browser
+
+        from apps.homemade.homeMade import *
+
+
+
+        try:
+            #Seller.objects.filter(storeName__icontains=storeName)[0].delete()
+            Seller.objects.all().delete()
+        except:
+            pass
+
+        try:
+            #Seller.objects.filter(storeName__icontains=storeName)[0].delete()
+            Partner.objects.all().delete()
+        except:
+            pass
+
 
         user3 = User.objects.create_user(username="user3",
                                          email="rsbusby+234234@gmail.com", password=self.password)
@@ -571,7 +700,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         self.loginUser(user3, browser)
 
-
+        ##import ipdb;ipdb.set_trace()
         ## go to open booth page
         browser.find_element_by_id
         elem = browser.find_element_by_id('open-booth')
@@ -580,7 +709,9 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ## fill out form
         b = browser
 
-        ff(b, 'store_name', 'Test Store2')
+        storeName = 'Test Store2'
+
+        ff(b, 'store_name', storeName)
         ff(b, 'zipcode', "90291")
         #ff(b, 'filter', "Los Angeles")
 
@@ -643,9 +774,17 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         #print surl
         #browser.get(surl)
 
+        self.go(reverse('customer:logout'))
+
+
         ## clean up Mongo seller?
         user3.delete()
 
+        ##Partner.objects.filter(name__icontains=storeName)[0].delete()
+        try:
+            Seller.objects.filter(storeName__icontains=storeName)[0].delete()
+        except:
+            pass
 
 
         browser.quit()
