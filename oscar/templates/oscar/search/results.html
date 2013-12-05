@@ -41,9 +41,9 @@
             {% include 'search/partials/facet.html' with name='Price range' items=facet_data.price_range %}
         {% endif %}
     </dl>
-
-{% endblock %}
 {% endcomment %}
+{% endblock %}
+
 {% block headertext %}
     {% blocktrans with q=query %}
         <div style="font-size:0.8em">Products matching "{{ q }}" </div>
