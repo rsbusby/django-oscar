@@ -23,7 +23,11 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-DEBUG=os.environ['DEBUG'],
+debugVal = os.environ['DEBUG']:
+if debugVal == 'True' or debugVal == '1':
+    DEBUG=True
+else:
+    DEBUG=False
 
 SITE_ID=2  ## set to 2 for www.homemade1616.com, 3 is heroku direct
 
