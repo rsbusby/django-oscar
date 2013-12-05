@@ -602,9 +602,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## open booth 
         ## go to open booth page
-
-        elem = browser.find_element_by_id('open-booth')
-        elem.click()
+        browser.find_element_by_id('open-booth').click()
 
         ## fill out form
         b = browser
@@ -635,19 +633,36 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         browser.find_element_by_id('skip-stripe').click()        
 
 
-        ## now can deal with the address form!
+        # skip the address form
+        browser.find_element_by_id('id_skipSellerAddress').click()
 
-
-
-        ## ok done
 
         ## go to booth
+        browser.find_element_by_id('my-booth').click()
 
         ## add new item
+        browser.find_element_by_id('addNewItemButton').click()
+
+        title = "Test Itemzzzz"
+        bb = browser.find_element_by_id('id_title')
+
+        bb.send_keys(title)
+
+        ## click checkbox for local pickup
+        browser.find_element_by_id('id_local_pickup_enabled').click()
+
 
 
 
         ## test pic upload
+        browser.find_element_by_id('id_images-0-original').send_keys("/Users/busby/Documents/DEM/4th floor.JPG")
+
+        ## submit
+        browser.find_element_by_id('submitTheWholeDarnForm').click()
+
+        ## success?
+        self.failIf(browser.page_source.count("Created product") < 1)
+
 
         ## clean up
         self.go(reverse('customer:logout'))
