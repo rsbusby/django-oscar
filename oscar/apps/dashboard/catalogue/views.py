@@ -380,7 +380,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         messages.success(self.request, msg)
         #url = reverse('dashboard:catalogue-product-list')
         try:
-            url = "/catalogue/?booth=" + self.object.stockrecord.partner.name
+            url = "/catalogue/?booth=" + str(self.object.stockrecord.partner.id)
         except:
             url = "/catalogue/"
         if self.request.POST.get('action') == 'continue' :

@@ -441,6 +441,10 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         if error_response:
             return error_response
 
+
+
+
+
         return super(PaymentDetailsView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -561,6 +565,13 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         ctx['current_sponsored_orgs']= SponsoredOrganization.objects.filter(is_current=True)
         ctx['stripeAppPubKey'] = stripe_keys['publishable_key']
         ctx.update(kwargs)
+
+
+        if self.request.GET.has_key('pip'):
+            pip = self.request.GET['pip']
+            if pip == "hh6ywei22nzl":
+                ctx['pay_in_person_allowed'] = True
+
         return ctx
 
     def get_template_names(self):
@@ -750,6 +761,18 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         payment_method = self.checkout_session.payment_method()
 
         if payment_method == "in_person":
+
+            source_type, _ = SourceType.objects.get_or_create(name='in_person')
+            source = Source(source_type=source_type,
+                            currency=settings.OSCAR_DEFAULT_CURRENCY,
+                            amount_allocated=total,
+                            reference=order_number)
+            self.add_payment_source(source)
+
+            # Also record payment event
+            self.add_payment_event(
+                'paid', total, reference=order_number)
+
             pass
 
         if payment_method == "stripe":

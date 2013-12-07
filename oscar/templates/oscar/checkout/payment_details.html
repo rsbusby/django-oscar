@@ -69,9 +69,9 @@ transaction. </p>
 {% endif %}
 
 <div style="clear:both"></div>
-{% comment %}
+{% if pay_in_person_allowed %}
 {% if shipping_method.code == 'local-pickup' %}
- <form style="float:left;margin:1.2em 0 0 0" method="POST" action="{% url 'checkout:payment-details' %}">
+ <form style="float:left;margin:1.2em 0 0 0" method="POST" action="{% url 'checkout:preview' %}">
    
     {% csrf_token %}
     <input type="hidden" name="basket_id" value={{basket.id}} /> 
@@ -79,11 +79,11 @@ transaction. </p>
 
     {#<input type="hidden" name="place-order" value="True" /> #}
 
-    <button style="width:100%;background-color:#D9E9FF;" class="orgButton" type="submit" name="sponsoredOrg" value="">Pay in person at time of pickup</button>
+    <button id="payInPersonButton" style="width:100%;background-color:#D9E9FF;" class="orgButton" type="submit" name="sponsoredOrg" value="">Pay in person at time of pickup</button>
 
   </form>
 {% endif %}
-{% endcomment %}
+{% endif %} {# local payment allowed #}
 
 {% if shipping_method.code == 'local-pickup' or shipping_method != None %}
 

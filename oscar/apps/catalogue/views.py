@@ -305,13 +305,13 @@ class ProductListView(ListView):
             #qs = qs.exclude(status__contains='disabled')
             return qs ##.order_by('?')
         elif pq:
-            try:
-                partner = Partner.objects.filter(name=pq)[0]
-            except:
-                return qs
+            #try:
+            partner = Partner.objects.filter(id=int(pq))[0]
+            #except:
+            #    return qs
 
             qs = Product.objects.all()
-            qs = qs.filter(stockrecord__partner__name=pq)
+            qs = qs.filter(stockrecord__partner__id=int(pq))
             owner = partner.user
             #if not (self.request.user.is_staff or self.request.user == owner):
             #    qs = qs.exclude(status__icontains='disabled')

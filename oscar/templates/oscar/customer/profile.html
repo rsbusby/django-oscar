@@ -45,9 +45,9 @@
                 <div class="nav-collapse profile-collapse">
                     <ul class="nav nav-tabs">
                         <li {% if active_tab == 'profile' %}class="active"{% endif %}><a href="#profile" data-toggle="tab">{% trans 'Profile' %}</a></li>
-                        <li {% if active_tab == 'orders' %}class="active"{% endif %}><a href="#orders" data-toggle="tab">{% trans 'Order History' %}</a></li>
+                        <li {% if active_tab == 'orders' %}class="active"{% endif %}><a id="my-orders" href="#orders" data-toggle="tab">{% trans 'Order History' %}</a></li>
                         {% if user.partner %}
-                             <li {% if active_tab == 'sales' %}class="active"{% endif %}><a href="#sales" data-toggle="tab">{% trans 'Sales History' %}</a></li>
+                             <li {% if active_tab == 'sales' %}class="active"{% endif %}><a id="my-sales" href="#sales" data-toggle="tab">{% trans 'Sales History' %}</a></li>
                         {% endif %}
                         <li {% if active_tab == 'addresses' %}class="active"{% endif %}><a href="#addresses" data-toggle="tab">{% trans 'Address Book' %}</a></li>
                         <li {% if active_tab == 'emails' %}class="active"{% endif %}><a href="#emails" data-toggle="tab">{% trans 'Email History' %}</a></li>
@@ -124,7 +124,7 @@
                     <td>{{ order.total_incl_tax|currency }}</td>
                     <td>{{ order.date_placed }}</td>
                     <td>
-                        <a class="btn btn-info" href="{% url 'customer:order' order.number %}">{% trans 'View' %}</a>
+                        <a class="btn btn-info orderView" href="{% url 'customer:order' order.number %}">{% trans 'View' %}</a>
                         {% comment %}
                         <form action="{% url 'customer:order' order.number %}" method="post">
                             {% csrf_token %}
@@ -168,7 +168,7 @@
                     <td>{{ order.total_incl_tax|currency }}</td>
                     <td>{{ order.date_placed }}</td>
                     <td>
-                        <a class="btn btn-info" href="{% url 'customer:order' order.number %}?user_id={{order.user.id}}">{% trans 'View' %}</a>
+                        <a class="btn btn-info saleView" href="{% url 'customer:order' order.number %}?user_id={{order.user.id}}">{% trans 'View' %}</a>
 
                            {% for source in order.sources.all %}
                               {% if source.source_type.name = "Stripe" %}

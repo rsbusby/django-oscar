@@ -854,7 +854,7 @@ class StoreShippingAddressView(CreateView):
     def get_success_url(self):
 
         messages.success(self.request, _("Outgoing Shipping Address saved"))
-        return "../../catalogue?booth=" + self.request.user.partner.name
+        return "../../catalogue?booth=" + str(self.request.user.partner.id)
 
 
 

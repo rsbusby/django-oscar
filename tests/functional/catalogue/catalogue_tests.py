@@ -583,12 +583,12 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         except:
             pass
 
-        try:
-            Seller.objects.all().delete()
+        #try:
+        #    Seller.objects.all().delete()
 
             ##            Seller.objects.filter(storeName__icontains=storeName)[0].delete()
-        except:
-            pass
+        #except:
+        #    pass
 
         bb = browser.find_element_by_id('id_email')
         bb.send_keys(email)
@@ -639,7 +639,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## go to booth
         browser.find_element_by_id('my-booth').click()
-        import ipdb;ipdb.set_trace()
+   
 
         ## add new item
         browser.find_element_by_id('addNewItemButton').click()
@@ -669,10 +669,10 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         self.go(reverse('customer:logout'))
 
         User.objects.filter(email=email)[0].delete()
-        try:
-            Partner.objects.filter(name__icontains=storeName)[0].delete()
-        except:
-            pass
+        #try:
+        #    Partner.objects.filter(name__icontains=storeName)[0].delete()
+        #except:
+        #    pass
         try:
             Seller.objects.filter(storeName__icontains=storeName)[0].delete()
         except:
@@ -809,7 +809,12 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
     def test_checkout(self):
-        ''' test checkoiut and shipping options for an item'''
+        ''' test checkoiut and shipping options for an item.
+
+        Also test the contact seller and buyer buttons?
+
+
+        '''
 
         browser = webdriver.Firefox()
         self.browser = browser
@@ -918,6 +923,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## add item to basket
         ## go to item page
+
         kwargs = {'product_slug': self.product2.slug,
                   'pk': self.product2.id}
         url = reverse('catalogue:detail', kwargs=kwargs)
@@ -951,16 +957,73 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
         ## choose payment method
-        b.find_element_by_id("choose-stripe").click()
+        #b.find_element_by_id("choose-stripe").click()
 
         ## preview looks OK?
 
         ## pay with card ?? (this probably won't work)
 
+        ## or set to pay later, skip stripe
+        ## post payment_method" value="in_person" to checkout/payment_details
+        self.go("/checkout/payment-details/?pip=hh6ywei22nzl")
+
+        b.find_element_by_id("payInPersonButton").click()
+        b.find_element_by_id("place-order").click()
+
+
+        #import commands
+        #res = commands.getoutput('curl --data "payment_method=in_person&param2=value2" http://127.0.0.1:8081/chackout/payment_details/')
+
+
+        ## check that order page is there
+        b.find_element_by_id("my-account").click()
+        b.find_element_by_id("my-orders").click()        
+
+        b.find_element_by_class_name("orderView").click()        
+
+
+
+        ## check that can reply to seller
+        b.find_element_by_id("contactSellerButton").click()        
+
+        self.failIf(browser.page_source.count(self.partner2.name) < 1)
+
+        self.failIf(browser.page_source.count("Message") < 1)        
+
+
+
+        ## 
+
+
+        ## logout, login as seller
+        ## check that can reply to buyer
+        self.go(reverse('customer:logout'))
+
+        self.loginUser(self.user2, browser)
+
+        b.find_element_by_id("my-account").click()
+
+        b.find_element_by_id("my-sales").click()        
+
+        b.find_element_by_class_name("saleView").click()     
+        b.find_element_by_id("contactBuyerButton").click()        
+
+        #self.failIf(browser.page_source.count(self.partner2.name) < 1)
+        self.failIf(browser.page_source.count("Message") < 1)        
+
+
+        self.go(reverse('customer:logout'))
+
         ## tear down
 
         ## clean up Mongo seller?
         user3.delete()
+
+        #try:
+        #    Seller.objects.filter(storeName__icontains=self.partner2.name)[0].delete()
+        #except:
+        #    pass
+
 
         browser.quit()
 

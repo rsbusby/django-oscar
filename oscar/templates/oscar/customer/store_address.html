@@ -18,9 +18,9 @@
 
 
            <div class="span4 pull-right">
-              <a id="id_skipSellerAddress" style="font-size:1.2em" href="{% url 'catalogue:index' %}?booth={{request.user.partner.name}}">{% trans "Click here to skip this step and continue to your booth" %}</a>
+              <a id="id_skipSellerAddress" style="font-size:1.2em" href="{% url 'catalogue:index' %}?booth={{request.user.partner.id}}">{% trans "Click here to skip this step and continue to your booth" %}</a>
               {% comment %}
-              <input style="margin:0 0 1em 0" class="boothButton" type="button" value="Skip, continue to booth" onclick=location.href="/catalogue/?booth={{request.user.partner.name}}">
+              <input style="margin:0 0 1em 0" class="boothButton" type="button" value="Skip, continue to booth" onclick=location.href="/catalogue/?booth={{request.user.partner.id}}">
             <div style="clear:both;"></div>
 {% endcomment %}
             <div style="clear:both;margin-top:8px"></div>

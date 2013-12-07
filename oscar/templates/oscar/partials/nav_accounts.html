@@ -100,7 +100,7 @@
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
                         <li>
-                            <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "ACCOUNT" %}</a>
+                            <a id="my-account" href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "ACCOUNT" %}</a>
                         </li>
                                            <li class="divider-vertical"></li>                   
 

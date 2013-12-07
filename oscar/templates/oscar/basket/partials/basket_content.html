@@ -57,7 +57,7 @@
                             <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
                             <p class="availability {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
 
-                            Seller: <a href="{%  url 'catalogue:index' %}?booth={{form.instance.product.stockrecord.partner.name}}">{{form.instance.product.stockrecord.partner  }}</a>
+                            Seller: <a href="{%  url 'catalogue:index' %}?booth={{form.instance.product.stockrecord.partner.id}}">{{form.instance.product.stockrecord.partner.name  }}</a>
 
                         </div>
                         <div class="span4">
