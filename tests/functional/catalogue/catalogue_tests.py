@@ -663,6 +663,14 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## success?
         self.failIf(browser.page_source.count("Created product") < 1)
+        self.failIf(browser.page_source.count(title) < 1)
+
+
+        ## make sure no other items are there
+        self.failIf(browser.page_source.count(self.product2.title) > 0)
+        self.failIf(browser.page_source.count(self.product1.title) > 0)
+
+
 
 
         ## clean up
@@ -776,6 +784,8 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         url = reverse('catalogue:index') + "?booth=" + str(user3.partner.id)
         print url
         self.go(url)
+
+
 
         browser.find_element_by_id('addNewItemButton').click()
 

@@ -458,7 +458,7 @@
                     </tr>
         </table>    
 
-    {% if payments_enabled %}
+    {#{% if payments_enabled %}#}
 
         <table>
                   
@@ -494,7 +494,7 @@
                     </tr>
         </table>    
 
-
+{% comment %}
     {% else %}
 
     <b style="font-size=1.1em">Please sign up to accept electronic payments in order to ship.</b>
@@ -504,7 +504,7 @@
     <a style="color:#ff6666;font-size:1.0em;float:lef;margin-left:0.5em" href="#openModalShipping"> About shipping options</a></th>
 <br><br><br><br>
     {% endif %}
-
+{% endcomment %}
 
 
 
