@@ -84,6 +84,17 @@
                 </form>
                
 
+
+     		 {% if not partner.stripeToken %} 
+  				 <div class="stripesignupstore">
+<div style="margin-bottom:12px;">Click below to set up a Stripe account for payment processing.</div>
+
+
+<a id="stripeConnect" style="margin-top:12px;" href="{% url 'stripeLogin' %}" > <img src="{% static 'icons/blue.png' %}"></a>
+     
+   			</div>
+
+   {% endif %}
     {% endif %}
 
        </div>
@@ -236,7 +247,8 @@
 <div style="clear:both;margin-top:1.3em"></div>
 <div style="pull-right">
 
- {% if not u.stripeSellerToken  and not partner.sellerToken %} 
+ {% if not partner.stripeToken %} 
+{% comment %}
    <div class="stripesignupstore">
  
 <br><br>
@@ -249,7 +261,7 @@
 <a href="{% url 'stripeLogin' %}" > <img src="{% static 'icons/blue.png' %}"></a>
      
    </div>
-  
+  {% endcomment %}
   {% else %} 
    
    <br><br>
