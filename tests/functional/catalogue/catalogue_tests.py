@@ -22,6 +22,11 @@ from oscar.apps.address.models import Country
 
 from selenium import webdriver
 
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
+from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
+
+
 User = get_user_model()
 Basket = get_model('basket', 'Basket')
 Partner = get_model('partner', 'Partner')
@@ -617,11 +622,11 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
      
-        bcc = browser.find_element_by_class_name("select2-choice")
-        bcc.click()
-        bb = browser.find_element_by_class_name('select2-input')
-        bb.send_keys("Kern")
-        bb.send_keys(Keys.RETURN)
+        #bcc = browser.find_element_by_class_name("select2-choice")
+        #bcc.click()
+        #bb = browser.find_element_by_class_name('select2-input')
+        #bb.send_keys("Kern")
+        #bb.send_keys(Keys.RETURN)
 
         ## upload pic
         #browser.find_element_by_id("IdOfInputTypeFile").send_keys(os.getcwd()+"/image.png")
@@ -747,11 +752,11 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         from selenium.webdriver.common.keys import Keys
 
-        bcc = browser.find_element_by_class_name("select2-choice")
-        bcc.click()
-        bb = browser.find_element_by_class_name('select2-input')
-        bb.send_keys("Kern")
-        bb.send_keys(Keys.RETURN)
+        #bcc = browser.find_element_by_class_name("select2-choice")
+        #bcc.click()
+        #bb = browser.find_element_by_class_name('select2-input')
+        #bb.send_keys("Kern")
+        #bb.send_keys(Keys.RETURN)
 
         ## upload pic
         #browser.find_element_by_id("IdOfInputTypeFile").send_keys(os.getcwd()+"/image.png")
@@ -1012,11 +1017,22 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         self.loginUser(self.user2, browser)
 
         b.find_element_by_id("my-account").click()
+        try:
+            element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "my-sales")))
+            element.click()        
+        except:
+            pass
 
-        b.find_element_by_id("my-sales").click()        
+        ##b.find_element_by_id("my-sales").click()        
 
         b.find_element_by_class_name("saleView").click()     
-        b.find_element_by_id("contactBuyerButton").click()        
+        try:
+            element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "contactBuyerButton")))
+            element.click()        
+        except:
+            pass
+
+
 
         #self.failIf(browser.page_source.count(self.partner2.name) < 1)
         self.failIf(browser.page_source.count("Message") < 1)        

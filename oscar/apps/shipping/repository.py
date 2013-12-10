@@ -155,7 +155,7 @@ class Repository(object):
     def localPickupEnabled(self, basket):
         '''
         Making the assumption that if one of the items is available for local pickup, then they all are.
-        For now.
+        For now....
 
         '''
         for line in basket.lines.all():
@@ -165,6 +165,9 @@ class Repository(object):
                 return True
 
         return False
+
+
+    
 
     def get_shipping_methods(self, user, basket, shipping_addr=None, **kwargs):
         """

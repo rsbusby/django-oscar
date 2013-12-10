@@ -29,6 +29,11 @@ class Partner(AbstractPartner):
     stripePubKey = models.CharField(max_length=32, blank=True, null=True,  help_text="Stripe public key for connected user")
     stripeToken  = models.CharField(max_length=32, blank=True, null=True,  help_text="Stripe access key returned from Stripe Connect authorization process")
 
+    bio = models.TextField(("Bio"), null=True, blank=True)
+
+    zipcode = models.CharField(
+        _("Zipcode"), max_length=5, blank=True, null=True)
+
 
 class PartnerAddress(AbstractPartnerAddress):
 
