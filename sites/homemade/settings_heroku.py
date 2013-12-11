@@ -56,9 +56,9 @@ AWS_QUERYSTRING_EXPIRE = 7200
 import mongoengine 
 
 DB_NAME = 'fooddb'
-DB_USERNAME = os.environ['MONGO_USERNAME'] 
-DB_PASSWORD = os.environ['MONGO_PASS']
-DB_HOST_ADDRESS = os.environ['MONGO_HOST_ADDRESS'] + DB_USERNAME
+DB_USERNAME = os.environ['NEW_MONGO_USERNAME'] 
+DB_PASSWORD = os.environ['NEW_MONGO_PASS']
+DB_HOST_ADDRESS = os.environ['NEW_MONGO_HOST_ADDRESS'] + DB_USERNAME
 
 mongoengine.connect(DB_NAME, host='mongodb://' + DB_USERNAME + ':' + DB_PASSWORD + '@' + DB_HOST_ADDRESS)
 
