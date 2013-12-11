@@ -59,9 +59,10 @@
             <div class="mod">
                 {% include "search/partials/pagination.html" %}
                 <ol class="products three">
- {% for res in spatial_results %}
-
-        <li>{% render_product res.object %}</li>
+    {% for res in spatial_results %}
+            {% if not "disabled" in product.status or request.user.is_admin or request.user == partner.user %}
+                <li>{% render_product res.object %}</li>
+            {% endif %}
 
     {% endfor %}
 
