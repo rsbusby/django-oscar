@@ -62,7 +62,7 @@ def send_product_alerts(product):
         product=product,
         status=ProductAlert.ACTIVE,
     )
-    hurry_mode = alerts.count() < product.stockrecord.num_in_stock
+    hurry_mode = alerts.count() > product.stockrecord.num_in_stock
 
     # Load templates
     message_tpl = loader.get_template('customer/alerts/message.html')

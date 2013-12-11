@@ -433,7 +433,7 @@ EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
 ## MINE
 ##AUTH_USER_MODEL = 'user.ExtenderUserModel'
 #AUTH_USER_MODEL = 'customer.AbstractUser'
-OSCAR_EAGER_ALERTS=False
+OSCAR_EAGER_ALERTS=True
 OSCAR_DEFAULT_CURRENCY='USD'
 OSCAR_CURRENCY_LOCALE = 'en_US'
 # Address settings

@@ -52,7 +52,7 @@
                         <li {% if active_tab == 'addresses' %}class="active"{% endif %}><a href="#addresses" data-toggle="tab">{% trans 'Address Book' %}</a></li>
                         <li {% if active_tab == 'emails' %}class="active"{% endif %}><a href="#emails" data-toggle="tab">{% trans 'Email History' %}</a></li>
                         <li {% if active_tab == 'sent_emails' %}class="active"{% endif %}><a href="#sent_emails" data-toggle="tab">{% trans 'Sent Email History' %}</a></li>
-                        {% comment %}<li {% if active_tab == 'alerts' %}class="active"{% endif %}><a href="#alerts" data-toggle="tab">{% trans "Alerts" %}</a></li>{% endcomment %}
+                        <li {% if active_tab == 'alerts' %}class="active"{% endif %}><a href="#alerts" data-toggle="tab">{% trans "Alerts" %}</a></li>
                         {% block extra_tabs_nav %}
                         {% endblock %}
                     </ul>
