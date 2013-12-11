@@ -206,6 +206,7 @@ ROOT_URLCONF = 'urls'
 
 # Add another path to Oscar's templates.  This allows templates to be
 # customised easily.
+
 from oscar import OSCAR_MAIN_TEMPLATE_DIR
 TEMPLATE_DIRS = (
     location('templates'),
