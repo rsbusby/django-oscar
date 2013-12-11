@@ -55,7 +55,7 @@ AWS_QUERYSTRING_EXPIRE = 7200
 
 import mongoengine 
 
-DB_NAME = 'fooddb'
+DB_NAME = os.environ['NEW_MONGO_DB']
 DB_USERNAME = os.environ['NEW_MONGO_USERNAME'] 
 DB_PASSWORD = os.environ['NEW_MONGO_PASS']
 DB_HOST_ADDRESS = os.environ['NEW_MONGO_HOST_ADDRESS'] + DB_USERNAME
