@@ -60,7 +60,8 @@
                 {% include "search/partials/pagination.html" %}
                 <ol class="products three">
     {% for res in spatial_results %}
-            {% if not "disabled" in product.status or request.user.is_admin or request.user == partner.user %}
+
+            {% if not "disabled" in res.object.status or request.user.is_admin or request.user == partner.user %}
                 <li>{% render_product res.object %}</li>
             {% endif %}
 
