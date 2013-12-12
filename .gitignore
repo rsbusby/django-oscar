@@ -7,6 +7,14 @@ sites/homemade/apps/gateway/*
 sites/homemade/apps/user/*
 sites/homemade/apps/home/*
 sites/homemade/apps/homemade/public/*
+sites/homemade/apps/homemade/mongostuff/*
+sites/homemade/apps/homemade/static/uploads/*
+sites/homemade/apps/homemade/static/icons/*
+sites/homemade/apps/homemade/static/fonts/*
+sites/homemade/apps/homemade/static/js/jquery*
+sites/homemade/apps/homemade/static/fnd/*
+
+
 sites/homemade/public/*
 sites/homemade/old_public/*
 sites/homemade/old_settings.py
