@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+{% block title %}Connect with Stripe payments{% endblock %}
+{% block body %}
+
+<div style="font-size:1.6em;margin-bottom:0.4em;" >Set up a <a href="http://www.stripe.com" target="_blank">Stripe</a> account for payment processing.</div>
+
+What is Stripe? See more details about payments<a href="http://www.stripe.com" target="_blank" >  here. </a>
+<br><br><br>
+{% comment %}<a href="{% url 'stripeInfo' %}" > See more details about payments here. </a>{% endcomment %}
+{#<a href="{% url 'stripeLogin' %}" > <img src="{% static 'icons/blue.png' %}"></a> #}
+
+<div class="row-fluid">
+  <div class="span3" style="margin:0.6em;">
+    <a class="pull-left" href="{% url 'stripeLogin' %}" > <img src="{% static 'icons/blue.png' %}"></a> 
+  </div>
+  <div class="span5">
+  {% comment %}
+    <input id="skip-stripe" class="pull-rig" style="margin:0.6em;font-size:0.9em;width:190px;height:2" type="button" value="Not at this time, thanks" onclick='location.href="../../catalogue?booth={{partner.id}}"'>
+{% endcomment %}
+
+{# pick an outgoing shipping address #}
+  <a id="skip-stripe" class="btn btn-info" href="{% url 'customer:store-shipping-address' %}">{% trans 'Not at this time, thanks' %}</a>
+
+
+    <div style="clear:both;">  </div>
+    <br>
+    <div style="padding:9px;margin:0.4em;margin-left:0.3em;background-color:#D6EBFF;border-radius:12px;">
+    Don't worry, you'll be able to sign up for taking payments later, look for a link from your booth page.
+    </div>
+  </div>
+	{% comment %} <a href="{% url 'store' booth=partner.id %}">  Not at this time, thanks. </a> {% endcomment %}
+
+</div> 
+
+{% endblock %}

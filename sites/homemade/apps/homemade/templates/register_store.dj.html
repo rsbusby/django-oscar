@@ -1,0 +1,201 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+
+{% block extrastyles %}
+{{block.super}}
+<link rel='stylesheet' type='text/css' href="{% static 'style_colors.css' %}"/>
+
+
+<script type="text/javascript" src="{% static 'js/jquery-1.8.2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.autocomplete.min.js' %}"></script>
+
+<script  src="{% static 'js/select2.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'js/select2.css' %}" />
+
+<!-- add image crop styles -->
+<link href="{% static 'js/main_crop.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'js/jquery.Jcrop.min.css' %}" rel="stylesheet" type="text/css" />
+
+<!-- add image crop scripts -->
+<script src="{% static 'js/jquery.Jcrop.min.js' %}"></script>
+<script src="{% static 'js/script_crop.js' %}"></script>
+<script src="{% static 'js/modernizr.custom.60846.js' %}"></script>
+
+
+
+{% endblock %}
+
+{% block title %}Open a booth{% endblock %}
+{% block bannerFile %}{{STATIC_URL}}icons/BannerImage-3.jpg{% endblock %}
+
+{% block content %}
+
+
+<div style="clear:both"> </div>
+
+
+
+  <h2>Open a booth</h2>
+   {% if error %}<p><div class=error><strong> {{ error }}</strong></div></p>{% endif %}
+
+
+
+  {% comment %}<form class="store_register" action="" method=post  enctype="multipart/form-data">{% endcomment %} 
+
+    <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="">
+
+
+     {% csrf_token %}
+ 
+    	
+
+  {% comment %} <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()"> {% endcomment %}
+  
+  
+    <dl>
+      <dt>Store name (optional):
+      <dd><input id="store_name" autofocus="autofocus" type=text name=store_name size=30 value="{{ request.form.store_name }}" style="width:300px">
+ 
+ 
+{% comment %} 
+ <dt>County 
+ 
+   <dd> <div>
+       
+      
+    <input name="county" id="filter" type='hidden' style='width:300px;padding:0.5em;margin:0.5em'/>
+    
+    <script type="text/javascript">
+    $('#filter').select2({
+    minimumInputLength: 1,
+    	placeholder: 'Type your county name',
+    	allowClear: true, 	
+    	formatInputTooShort: function() { return ''; }, 
+    	
+    	matcher: function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase())==0; },
+    
+    
+    data:[
+    {% for c in counties %}
+    	{"id":"{{c.county}}","text":"{{c.county}}"},
+    	
+    {% endfor %}
+    ]
+    {% endcomment %}
+    {% comment %}data:[{"id":"Los Angeles","text":"Los Angeles"}, {"id":"Riverside","text":"Riverside"}, {"id":"Ventura","text":"Ventura"} ],{% endcomment %}
+    {% comment %}createSearchChoice: function(term) { return {id:term,text:term}; } {% endcomment %}
+});
+{% comment %}
+    </script>
+    
+    
+    </div>
+    {% endcomment %}
+     
+     {% comment %} <dd><input type=text name=county size=32> {% endcomment %}
+      
+      <dt> Zipcode (optional) 
+      <dd><input id="zipcode" type=text name=zipcode size=5>
+    
+      <dt>Bio:  
+    {% if u.bio %} 
+      <dd><textarea id="bio" class="wide" rows=4 cols=80 name=bio>{{u.bio}}</textarea>
+    {% else %}
+      <dd><textarea id="bio" rows=4 cols=80 name=bio></textarea>
+    {% endif %}
+
+
+    {% comment %}
+      <dt> Permit-type (required) <a href="{% url "permitInfo" %}"> What's this? </a>
+	<dd><select name="permitType">
+	  <option></option>
+	  <option value ="N">No Permit</option>
+	  <option value ="A">Permit category A</option>
+	  <option value ="B">Permit category B</option>
+	  <option value ="C">Commercial Permit</option>
+	</select>
+{% endcomment %}
+
+
+             <div style="clear:both"> </div>
+
+{% comment %}
+  <div class="helpGiveText"> 
+  <a style="color:#ff6666;font-size:1.0em;float:left;" href="#openModalTerms">Click Here to View Terms of Use</a>
+ </div>
+ 
+<input style="" type="button" value="Click to view Terms of Use" onclick=location.href="#openModalTerms">
+{% endcomment %}
+
+         <div style="clear:both"> </div>
+<br>
+   
+  
+      <dt>Upload an image to represent your booth:
+      <br>
+      
+      
+    <dd><input type="file" name="store_pic" accept="image/*" /> 
+
+
+    {% comment %} <dd><input type="file" name="store_pic_ancient" accept="image/*" /> {% endcomment %}
+   
+   {% comment %}
+     <!-- upload form -->
+   
+   
+        <!-- hidden crop params -->
+        <input type="hidden" id="x1" name="x1" />
+        <input type="hidden" id="y1" name="y1" />
+        <input type="hidden" id="x2" name="x2" />
+        <input type="hidden" id="y2" name="y2" />
+
+       <h2>Step1: Please select image file</h2>
+        <button style="width:120px" class="orgButton" id="fileSelect">Select an image file</button> 
+        <div style="opacity:100"> <input  type="file" name="store_pic" id="image_file" onchange="fileSelectHandler()" /></div>
+
+
+        <div class="step2">
+            <h2> Please select a portion of the image to be the banner for your booth (the aspect ratio is fixed)</h2>
+            <br><br>
+            <img id="preview" sstyle="width:50%"/>
+
+            <div class="info" >
+                <label>File size</label> <input type="text" id="filesize" name="filesize" />
+                <label>Type</label> <input type="text" id="filetype" name="filetype" />
+                <label>Image dimension</label> <input type="text" id="filedim" name="filedim" />
+                <label>W</label> <input type="text" id="w" name="w" />
+                <label>H</label> <input type="text" id="h" name="h" />
+            </div>
+
+            <input type="submit" value="Upload" /> 
+        </div>
+        {% endcomment %}
+        
+        
+ {% comment %} </form> {% endcomment %}
+        
+           <div class="error"></div>
+   
+
+  
+   
+ 
+ <div style="clear:both"> </div>
+ <br>
+
+<div style="font-size:1.1em;"> 
+By clicking "Open a booth" you agree to abide by our   <a style="color:#ff6666;font-size:1.0em;" href="{% url 'termsOfUse' %}" target="_blank">Terms of Use</a>
+
+</div>
+ 
+ <div class=actions > <input id="submit-booth"  class="" type="submit" value="Open a booth" style="margin:2.5em"></div>
+  </form>
+  
+ 
+ 
+
+  
+  
+{% endblock %}
+

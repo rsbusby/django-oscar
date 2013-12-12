@@ -1,0 +1,180 @@
+{% extends "layout.html" %}
+
+{% load staticfiles %}
+
+{% block extrastyles%}
+{{block.super}}
+<link rel='stylesheet' type=text/css href="{% static 'style_modal.css' %}">
+<link rel='stylesheet' type='text/css' href="{% static 'style_colors.css' %}"/>
+
+
+<script type="text/javascript" src="{% static 'js/jquery-1.8.2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.autocomplete.min.js' %}"></script>
+
+<script  src="{% static 'js/select2.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'js/select2.css' %}" />
+
+<!-- add image crop styles -->
+<link href="{% static 'js/main_crop.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'js/jquery.Jcrop.min.css' %}" rel="stylesheet" type="text/css" />
+
+<!-- add image crop scripts -->
+<script src="{% static 'js/jquery.Jcrop.min.js' %}"></script>
+<script src="{% static 'js/script_crop.js' %}"></script>
+<script src="{% static 'js/modernizr.custom.60846.js' %}"></script>
+
+
+
+{% endblock %}
+
+{% block bannerFile %}{{STATIC_URL}}icons/BannerImage-3.jpg{% endblock %}
+
+{% block content %}
+
+
+<div style="clear:both"> </div>
+
+
+
+  <h2>{% block title %}Edit your booth{% endblock %}</h2>
+   {% if error %}<p><div class=error><strong> {{ error }}</strong></div></p>{% endif %}
+
+
+
+  {% comment %}<form class="store_register" action="" method=post  enctype="multipart/form-data">{% endcomment %} 
+    <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="">
+      {% csrf_token %}
+
+  {% comment %} <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()"> {% endcomment %}
+  
+
+  
+    <dl>
+      <dt>Store name (optional):
+      <dd><input id="store_name" autofocus="autofocus" type=text name=store_name size=30 value="{{ u.storeName }}" style="width:300px">
+ 
+ 
+{% comment %} 
+ <dt>County 
+ 
+   <dd> <div>
+       
+      
+    <input name="county" id="filter" type='hidden' value="Kern" style="" ='width:300px;padding:0.5em;margin:0.5em'/>
+    
+    <script type="text/javascript">
+    $('#filter').select2({
+    minimumInputLength: 1,
+    	placeholder: 'Type your county name',
+    	allowClear: true, 	
+    	formatInputTooShort: function() { return ''; }, 
+    	
+    	matcher: function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase())==0; },
+    
+    
+    data:[
+    {% for c in counties %}
+    	{"id":"{{c.county}}","text":"{{c.county}}"},
+    	
+    {% endfor %}
+    ]
+    
+}){% if u.county %}.select2('val', ['{{u.county}}']) {% endif %};
+
+    // $("#id").select2().select2("val", null);
+    // $("#id").select2().select2("val", "Kern");
+    </script>
+    
+    
+    </div>
+    
+    {% endcomment %} 
+     {% comment %} <dd><input type=text name=county size=32> {% endcomment %}
+      
+      <dt> Zipcode (optional)
+      <dd><input id="zipcode" type=text name=zipcode size=5 {% if u.zipcode %} value="{{ u.zipcode }}" {%endif%}>
+    
+
+ 
+      <dt>Bio:  
+    {% if u.bio %} 
+      <dd><textarea id="bio" class="wide" rows=4 cols=80 name=bio>{{u.bio}}</textarea>
+    {% else %}
+      <dd><textarea id="bio" rows=4 cols=80 name=bio></textarea>
+    {% endif %}
+
+
+    {% comment %}
+      <dt> Permit-type (required) <a href="{% url "permitInfo" %}"> What's this? </a>
+	<dd><select name="permitType">
+	  <option></option>
+	  <option value ="N">No Permit</option>
+	  <option value ="A">Permit category A</option>
+	  <option value ="B">Permit category B</option>
+	  <option value ="C">Commercial Permit</option>
+	</select>
+{% endcomment %}
+
+
+             <div style="clear:both"> </div>
+
+
+
+         <div style="clear:both"> </div>
+<br>
+   
+  
+      <dt>Upload an image to represent your booth:
+      <br>
+      
+      
+    <dd><input type="file" name="store_pic" accept="image/*" /> 
+   
+   
+   {% comment %}
+     <!-- crop upload form -->
+   
+   
+        <!-- hidden crop params -->
+        <input type="hidden" id="x1" name="x1" />
+        <input type="hidden" id="y1" name="y1" />
+        <input type="hidden" id="x2" name="x2" />
+        <input type="hidden" id="y2" name="y2" />
+
+        <div style="opacity:100"> <input  type="file" name="store_pic" id="image_file" onchange="fileSelectHandler()" /></div>
+
+        <div class="step2">
+            <h2> Please select a portion of the image to be the banner for your booth (the aspect ratio is fixed)</h2>
+            <br><br>
+            <img id="preview" sstyle="width:50%"/>
+
+            <div class="info" >
+                <label>File size</label> <input type="text" id="filesize" name="filesize" />
+                <label>Type</label> <input type="text" id="filetype" name="filetype" />
+                <label>Image dimension</label> <input type="text" id="filedim" name="filedim" />
+                <label>W</label> <input type="text" id="w" name="w" />
+                <label>H</label> <input type="text" id="h" name="h" />
+            </div>
+
+        </div>
+        
+        {% endcomment %}
+        
+           <div class="error"></div>
+   
+
+  
+   
+ 
+ <div style="clear:both"> </div>
+ <br>
+
+
+ 
+ <div class=actions > <input id="submit-booth" class="noNeedsTerms" type=submit value="Save changes" style="margin:2.5em"></div>
+  </form>
+  
+ 
+  
+{% endblock %}
+

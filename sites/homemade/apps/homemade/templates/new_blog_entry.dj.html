@@ -1,0 +1,93 @@
+{% extends "layout_2_col_b.html" %}
+{% load staticfiles %}
+
+{% block extrastyles %}
+{{block.super}}
+
+<script  src="{% static 'js/select2.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'js/select2.css' %}" />
+
+
+{% endblock %}
+
+{% block title %}Add blog or event {% endblock %}
+{% block content %}
+  <h2>Add blog or event </h2>
+
+
+
+  {% if error %}<div class=error><strong>Error:</strong> {{ error }}</div>{% endif %}
+  
+  
+  <form action="" method="post" enctype="multipart/form-data">
+  
+
+
+    <dl>
+      <dt>Title:
+      <dd><input  autofocus="autofocus" type=text class="wide" style="width:40%" name=title size=80 value="">
+      <dt>Text:
+      <dd><textarea rows=10 cols=80 name=text></textarea>
+
+
+ 
+
+
+
+
+      <dt>Tags: Type return after each tag. If this is a blog entry, put blog as a tag. (No quote marks needed).  Similarly for event, workshop, swap. <br>Thanks! By the way you're awesome.  
+  
+  <dd><div>
+       
+      
+    <input name="tagStr" id="filter" type='hidden' style="width:400px" />
+    
+    <script type="text/javascript">
+    $('#filter').select2({
+    minimumInputLength: 1,
+    	placeholder: 'Type one or more tag names',
+    	allowClear: true, 	
+    	multiple: true,
+    	
+    	{% comment %}matcher: function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase())==0; },{% endcomment %}
+ 
+    tags:[
+	
+    {% for t in tags %}
+    "{{t}}"{%if not loop.last%},{%endif%}
+    {%endfor%}
+   
+    ],
+    
+   {% comment %} data:[
+    {% for t in tags %}
+    	{"id":"{{t}}","text":"{{t}}"},
+    	
+    {% endfor %}
+    ]
+    {% endcomment %}
+    
+
+});
+    </script>
+    
+    
+    </div>
+    {% comment %}  
+ <dt>Tags: put a comma between each tag. If a blog entry, put blog as a tag. Similarly for event, workshop, swap. Thanks! By the way you're awesome.  
+      <dd><input type=text name=tagStr size=80 value="">	
+   {% endcomment %}
+      <dt>Upload image:
+      <dd><input type="file" name="pic" accept="image/*" />
+    </dl>
+    <div class=actions><input type=submit value="Add blog entry"></div>
+  </form>
+
+<script>
+  $('.textarea').wysihtml5();
+</script>
+
+
+{% endblock %}
+        {% block init_oscar %}{%endblock%}
+

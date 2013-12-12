@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+
+{% block extrastyles %}
+{{block.super}}
+<script type="text/javascript" src="{% static 'js/jquery-1.8.2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.autocomplete.min.js' %}"></script>
+
+<script  src="{% static 'js/select2.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'js/select2.css' %}" />
+
+{% endblock %}
+
+{% block title %}Edit blog entry{% endblock %}
+{% block content %}
+  <h2>Edit blog entry</h2>
+  {% if error %}<div class=error><strong>Error:</strong> {{ error }}</div>{% endif %}
+  <form action="" method="post" enctype="multipart/form-data">
+    <dl>
+      <dt>Title:
+      <dd><input  class="wide" style="width:40%" autofocus="autofocus" type=text name=title size=80 value="{{bp.title}}">
+      <dt>Text:
+      <dd><textarea rows=10 cols=80 name=text>{{bp.content}}</textarea>
+  
+       <dt>Tags: 
+  
+  <dd><div>
+       
+      
+    <input name="tagStr" id="filter" type='hidden' style="width:400px" value="{% for t in bp.tags %}{{t}}{%if not loop.last%},{%endif%} {%endfor%}"/>
+    
+    <script type="text/javascript">
+    $('#filter').select2({
+    minimumInputLength: 1,
+    	placeholder: 'Type one or more tag names',
+    	allowClear: true, 	
+    	multiple: true,
+    	
+    	{% comment %}matcher: function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase())==0; },{% endcomment %}
+ 
+    tags:[
+	
+    {% for t in tags %}
+    "{{t}}"{%if not loop.last%},{%endif%}
+    {%endfor%}
+   
+    ],
+    
+   {% comment %} data:[
+    {% for t in tags %}
+    	{"id":"{{t}}","text":"{{t}}"},
+    	
+    {% endfor %}
+    ]
+    {% endcomment %}
+    
+
+});
+    </script>
+    
+    
+    </div>
+  
+  
+        <dt>Upload image:
+      <dd><input type="file" name="pic" accept="image/*" />
+    </dl>
+    <div class=actions><input type=submit value="Confirm edits"></div>
+  </form>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+{% load thumbnail %}
+{% load staticfiles %}
+
+{% block top-nav %} {%endblock%}
+{% block header-stuff %} {%endblock%}
+
+{% block title %} Homemade 1616 {% endblock %}
+
+{% block content %}
+<nav>
+  {% comment %} <a class="menuRight" style="margin:2em;" href="{% url 'customer:login' %}">Sign in</a>{% endcomment %}  
+   <input style="float:right;margin-right:2%" type="button" value="Sign In" onclick=location.href="{% url 'customer:login' %}">
+
+  
+{% comment %}
+<div style="clear:both"></div>
+
+  <div style="width:52px;overflow:hidden;float:right;margin:0px 20px 0 0;">
+     <div class="fb-like" style="padding-bottom:10px;border-radius:12px" data-href="{{request.base_url}}" data-send="false" data-layout="none" data-width="" data-show-faces="false"></div>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+     
+</div> 
+{% endcomment %}
+
+</nav>
+
+
+  
+<div class="logoInvite" style="">  
+ <img style="" src="{% static 'icons/Icons-FINALpmsWarmGrey.png' %}"  >
+
+</div> 
+
+<div class="inviteBlurb" >
+{% comment %}
+<p>
+The cottage and artisanal food movement is building fast! Several states have passed cottage food laws that allow people to sell homemade foods with certain restrictions made right in their own home kitchens.  In California, this law is called the Homemade Food Act (AB 1616).
+</p>
+{% endcomment %}
+<p>
+At Homemade1616 we connect cottage and artisanal food makers with people who want to buy their delectable delights.  But we do much more than that!  We also give money to food-related nonprofit organizations and, soon, we hope to start micro-lending to people who want to get started in the food business but need a little assistance.
+</p>
+{% comment %}
+<p>
+Get ready, we're coming soon... Type in your email address and we'll let you know when we're open!
+</p>
+{% endcomment %}
+{% comment %}
+Recently, California State Law was changed to allow for the
+selling of home-made foods, with certain restrictions (AB 1616).</p>
+  <p>We're here to
+help you find folks in your area who are creating small-scale delectable delights in
+their own kitchens. </p>
+{% endcomment %}
+</div>
+<div id="inviteHeader" > Coming Soon! </div> 
+
+
+<div id="inviteForm">
+	 <div style="margin-bottom:0.5em;">Type in your email address and we'll let you know when we're open</div>
+  <form action="" method=post >
+  <label>
+      <input class="inviteEmail" style="display:inline-block" autofocus="autofocus" type=text name=email value="" placeholder="email address"></label>
+
+ <label>   <div class=actions><input class="inviteButton" style="display:inline-block" type=submit value="Keep me posted"></div></label>
+ 
+
+   
+  </form>
+
+</div>
+
+
+
+
+<div style="clear:both"></div>
+
+<div class='row-fluid' style="height:20em;overflow:hidden">
+   <div class='span7'>
+  
+  {% thumbnail picDict.left "x300" as im %}
+     <img class="invitePicIm" style="ooverflow:hidden;width:100%;ffloat:left;mmargin:0 1% 0% 1%;border:3px #888888;" src="{{ im.url }}" >
+  {% endthumbnail %}
+  </div>
+
+
+  
+  <div class='span5'>
+
+  {% thumbnail picDict.right "x300" as im %}
+      <img class="invitePicIm" style="width:100%;ooverflow:hidden;ffloat:left;mmargin:0 2% 0% 0;" src="{{im.url}}" > 
+  {% endthumbnail %}
+
+   </div>
+
+</div>
+
+
+
+{% endblock %}

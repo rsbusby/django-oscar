@@ -1,0 +1,36 @@
+
+/* adds shadows */
+div.post {
+
+    w-webkit-box-shadow: #272229 10px 10px 20px;
+    /*box shadow effect in Firefox*/
+    w-moz-box-shadow: #272229 10px 10px 20px;
+    /*box shadow effect in IE*/
+    wfilter: progid:DXImageTransform.Microsoft.Shadow(color='#272229', Direction=135, Strength=10);     
+    /*box shadow effect in Browsers that support it, Opera 10.5 pre-alpha release*/
+     wbox-shadow: #272229 10px 10px 20px;
+
+}
+
+div.post {
+    ffont-family: 'Helvetica', sans-serif;
+
+    font-size: 1.1em;
+    line-height: 1.5em;
+    wbackground:  #FFFeeC;
+    //bborder: 5px solid #BAAFFF;
+    wborder-radius: 6px;
+
+    wmax-width: 800px;
+    margin-top:0;
+    
+    ooverflow:hidden;
+    
+    padding: 15px;
+}
+
+p {
+
+    margin-bottom:1.7em;
+}
+

@@ -1,0 +1,2142 @@
+{% extends "layout.html" %}
+{% extends "layout.html" %}
+{% extends "layout.html" %}
+{% extends "layout.html" %}
+{% extends "layout.html" %}
+{% extends "layout.html" %}
+{% extends "layout.html" %}
+{% extends "layout.html" %}
+{% extends "layout.html" %}
+
+
+
+
+
+
+
+
+
+{% block includes %}
+{% block includes %}
+{% block includes %}
+{% block includes %}
+{% block includes %}
+{% block includes %}
+{% block includes %}
+{% block includes %}
+{% block includes %}
+{{super()}}
+{{super( %}
+{{super()}}
+{{super()}}
+{{super()}}
+{{super()}}
+{{super()}}
+{{super()}}
+{{super()}}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style_modal.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style_modal.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style_modal.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style_modal.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style_modal.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style_modal.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style_modal.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style_modal.css' %}">
+<link rel=stylesheet type=text/css href="{% url 'style_modal.css') }}">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery-1.8.2.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery-1.8.2.min.js' %}"></script>
+<script type="text/javascript" src="{% url 'static', filename='js/jquery-1.8.2.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery-1.8.2.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery-1.8.2.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery-1.8.2.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery-1.8.2.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery-1.8.2.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery-1.8.2.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery.autocomplete.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery.autocomplete.min.js' %}"></script>
+<script type="text/javascript" src="{% url 'static', filename='js/jquery.autocomplete.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery.autocomplete.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery.autocomplete.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery.autocomplete.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery.autocomplete.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery.autocomplete.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery.autocomplete.min.js')}}"></script>
+
+
+
+
+
+
+
+
+
+<script  src="{{url_for('static', filename='js/select2.js')}}"></script>
+<script  src="{{url_for('static', filename='js/select2.js' %}"></script>
+<script  src="{% url 'static', filename='js/select2.js')}}"></script>
+<script  src="{{url_for('static', filename='js/select2.js')}}"></script>
+<script  src="{{url_for('static', filename='js/select2.js')}}"></script>
+<script  src="{{url_for('static', filename='js/select2.js')}}"></script>
+<script  src="{{url_for('static', filename='js/select2.js')}}"></script>
+<script  src="{{url_for('static', filename='js/select2.js')}}"></script>
+<script  src="{{url_for('static', filename='js/select2.js')}}"></script>
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='js/select2.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='js/select2.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% url 'static', filename='js/select2.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='js/select2.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='js/select2.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='js/select2.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='js/select2.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='js/select2.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='js/select2.css')}}" />
+
+
+
+
+
+
+
+
+
+<!-- add image crop styles -->
+<!-- add image crop styles -->
+<!-- add image crop styles -->
+<!-- add image crop styles -->
+<!-- add image crop styles -->
+<!-- add image crop styles -->
+<!-- add image crop styles -->
+<!-- add image crop styles -->
+<!-- add image crop styles -->
+<link href="{{ url_for('static', filename='js/main_crop.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/main_crop.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/main_crop.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/main_crop.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/main_crop.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/main_crop.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/main_crop.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/main_crop.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% url 'js/main_crop.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/jquery.Jcrop.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/jquery.Jcrop.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/jquery.Jcrop.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/jquery.Jcrop.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/jquery.Jcrop.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/jquery.Jcrop.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/jquery.Jcrop.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='js/jquery.Jcrop.min.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% url 'js/jquery.Jcrop.min.css') }}" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+
+
+<!-- add image crop scripts -->
+<!-- add image crop scripts -->
+<!-- add image crop scripts -->
+<!-- add image crop scripts -->
+<!-- add image crop scripts -->
+<!-- add image crop scripts -->
+<!-- add image crop scripts -->
+<!-- add image crop scripts -->
+<!-- add image crop scripts -->
+<script src="{{ url_for('static', filename='js/jquery.Jcrop.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.Jcrop.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.Jcrop.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.Jcrop.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.Jcrop.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.Jcrop.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.Jcrop.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.Jcrop.min.js' %}"></script>
+<script src="{% url 'js/jquery.Jcrop.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script_crop.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script_crop.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script_crop.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script_crop.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script_crop.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script_crop.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script_crop.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script_crop.js' %}"></script>
+<script src="{% url 'js/script_crop.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modernizr.custom.60846.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modernizr.custom.60846.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modernizr.custom.60846.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modernizr.custom.60846.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modernizr.custom.60846.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modernizr.custom.60846.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modernizr.custom.60846.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modernizr.custom.60846.js' %}"></script>
+<script src="{% url 'js/modernizr.custom.60846.js') }}"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock includes %}
+{% endblock includes %}
+{% endblock includes %}
+{% endblock includes %}
+{% endblock includes %}
+{% endblock includes %}
+{% endblock includes %}
+{% endblock includes %}
+{% endblock includes %}
+
+
+
+
+
+
+
+
+
+{% block title %}Open a booth{% endblock %}
+{% block title %}Open a booth{% endblock %}
+{% block title %}Open a booth{% endblock %}
+{% block title %}Open a booth{% endblock %}
+{% block title %}Open a booth{% endblock %}
+{% block title %}Open a booth{% endblock %}
+{% block title %}Open a booth{% endblock %}
+{% block title %}Open a booth{% endblock %}
+{% block title %}Open a booth{% endblock %}
+{% block body %}
+{% block body %}
+{% block body %}
+{% block body %}
+{% block body %}
+{% block body %}
+{% block body %}
+{% block body %}
+{% block body %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="clear:both"> </div>
+<div style="clear:both"> </div>
+<div style="clear:both"> </div>
+<div style="clear:both"> </div>
+<div style="clear:both"> </div>
+<div style="clear:both"> </div>
+<div style="clear:both"> </div>
+<div style="clear:both"> </div>
+<div style="clear:both"> </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>Open a booth</h2>
+  <h2>Open a booth</h2>
+  <h2>Open a booth</h2>
+  <h2>Open a booth</h2>
+  <h2>Open a booth</h2>
+  <h2>Open a booth</h2>
+  <h2>Open a booth</h2>
+  <h2>Open a booth</h2>
+  <h2>Open a booth</h2>
+   {% if error %}<p><div class=error><strong> {{ error }}</strong></div></p>{% endif %}
+   {% if error %}<p><div class=error><strong> {{ error }}</strong></div></p>{% endif %}
+   {% if error %}<p><div class=error><strong> {{ error }}</strong></div></p>{% endif %}
+   {% if error %}<p><div class=error><strong> {{ error }}</strong></div></p>{% endif %}
+   {% if error %}<p><div class=error><strong> {{ error }}</strong></div></p>{% endif %}
+   {% if error %}<p><div class=error><strong> {{ error }}</strong></div></p>{% endif %}
+   {% if error %}<p><div class=error><strong> {{ error }}</strong></div></p>{% endif %}
+   {% if error %}<p><div class=error><strong> {{ error }}</strong></div></p>{% endif %}
+   {% if error %}<p><div class=error><strong> {{ error }}</strong></div></p>{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  {#<form class="store_register" action="" method=post  enctype="multipart/form-data">#} 
+  {#<form class="store_register" action="" method=post  enctype="multipart/form-data">#} 
+  {#<form class="store_register" action="" method=post  enctype="multipart/form-data">#} 
+  {% comment %}<form class="store_register" action="" method=post  enctype="multipart/form-data">#} 
+  {#<form class="store_register" action="" method=post  enctype="multipart/form-data">{% endcomment %} 
+  {#<form class="store_register" action="" method=post  enctype="multipart/form-data">#} 
+  {#<form class="store_register" action="" method=post  enctype="multipart/form-data">#} 
+  {#<form class="store_register" action="" method=post  enctype="multipart/form-data">#} 
+  {#<form class="store_register" action="" method=post  enctype="multipart/form-data">#} 
+    <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()">
+    <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()">
+    <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()">
+    <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()">
+    <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()">
+    <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()">
+    <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()">
+    <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()">
+    <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  {# <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()"> #}
+  {# <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()"> #}
+  {# <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()"> #}
+  {% comment %} <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()"> #}
+  {# <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()"> {% endcomment %}
+  {# <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()"> #}
+  {# <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()"> #}
+  {# <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()"> #}
+  {# <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()"> #}
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <dl>
+    <dl>
+    <dl>
+    <dl>
+    <dl>
+    <dl>
+    <dl>
+    <dl>
+    <dl>
+      <dt>Store name (optional):
+      <dt>Store name (optional):
+      <dt>Store name (optional):
+      <dt>Store name (optional):
+      <dt>Store name (optional):
+      <dt>Store name (optional):
+      <dt>Store name (optional):
+      <dt>Store name (optional):
+      <dt>Store name (optional):
+      <dd><input autofocus="autofocus" type=text name=store_name size=30 value="{{ request.form.store_name }}" style="width:300px">
+      <dd><input autofocus="autofocus" type=text name=store_name size=30 value="{{ request.form.store_name }}" style="width:300px">
+      <dd><input autofocus="autofocus" type=text name=store_name size=30 value="{{ request.form.store_name }}" style="width:300px">
+      <dd><input autofocus="autofocus" type=text name=store_name size=30 value="{{ request.form.store_name }}" style="width:300px">
+      <dd><input autofocus="autofocus" type=text name=store_name size=30 value="{{ request.form.store_name }}" style="width:300px">
+      <dd><input autofocus="autofocus" type=text name=store_name size=30 value="{{ request.form.store_name }}" style="width:300px">
+      <dd><input autofocus="autofocus" type=text name=store_name size=30 value="{{ request.form.store_name }}" style="width:300px">
+      <dd><input autofocus="autofocus" type=text name=store_name size=30 value="{{ request.form.store_name }}" style="width:300px">
+      <dd><input autofocus="autofocus" type=text name=store_name size=30 value="{{ request.form.store_name }}" style="width:300px">
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <dt>County 
+ <dt>County 
+ <dt>County 
+ <dt>County 
+ <dt>County 
+ <dt>County 
+ <dt>County 
+ <dt>County 
+ <dt>County 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   <dd> <div>
+   <dd> <div>
+   <dd> <div>
+   <dd> <div>
+   <dd> <div>
+   <dd> <div>
+   <dd> <div>
+   <dd> <div>
+   <dd> <div>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    <input name="county" id="filter" type='hidden' style='width:300px;padding:0.5em;margin:0.5em'/>
+    <input name="county" id="filter" type='hidden' style='width:300px;padding:0.5em;margin:0.5em'/>
+    <input name="county" id="filter" type='hidden' style='width:300px;padding:0.5em;margin:0.5em'/>
+    <input name="county" id="filter" type='hidden' style='width:300px;padding:0.5em;margin:0.5em'/>
+    <input name="county" id="filter" type='hidden' style='width:300px;padding:0.5em;margin:0.5em'/>
+    <input name="county" id="filter" type='hidden' style='width:300px;padding:0.5em;margin:0.5em'/>
+    <input name="county" id="filter" type='hidden' style='width:300px;padding:0.5em;margin:0.5em'/>
+    <input name="county" id="filter" type='hidden' style='width:300px;padding:0.5em;margin:0.5em'/>
+    <input name="county" id="filter" type='hidden' style='width:300px;padding:0.5em;margin:0.5em'/>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script type="text/javascript">
+    <script type="text/javascript">
+    <script type="text/javascript">
+    <script type="text/javascript">
+    <script type="text/javascript">
+    <script type="text/javascript">
+    <script type="text/javascript">
+    <script type="text/javascript">
+    <script type="text/javascript">
+    $('#filter').select2({
+    $('#filter').select2({
+    $('#filter').select2({
+    $('#filter').select2({
+    $('#filter').select2({
+    $('#filter').select2({
+    $('#filter').select2({
+    $('#filter').select2({
+    $('#filter').select2({
+    minimumInputLength: 1,
+    minimumInputLength: 1,
+    minimumInputLength: 1,
+    minimumInputLength: 1,
+    minimumInputLength: 1,
+    minimumInputLength: 1,
+    minimumInputLength: 1,
+    minimumInputLength: 1,
+    minimumInputLength: 1,
+    	placeholder: 'Type your county name',
+    	placeholder: 'Type your county name',
+    	placeholder: 'Type your county name',
+    	placeholder: 'Type your county name',
+    	placeholder: 'Type your county name',
+    	placeholder: 'Type your county name',
+    	placeholder: 'Type your county name',
+    	placeholder: 'Type your county name',
+    	placeholder: 'Type your county name',
+    	allowClear: true, 	
+    	allowClear: true, 	
+    	allowClear: true, 	
+    	allowClear: true, 	
+    	allowClear: true, 	
+    	allowClear: true, 	
+    	allowClear: true, 	
+    	allowClear: true, 	
+    	allowClear: true, 	
+    	formatInputTooShort: function() { return ''; }, 
+    	formatInputTooShort: function() { return ''; }, 
+    	formatInputTooShort: function() { return ''; }, 
+    	formatInputTooShort: function() { return ''; }, 
+    	formatInputTooShort: function() { return ''; }, 
+    	formatInputTooShort: function() { return ''; }, 
+    	formatInputTooShort: function() { return ''; }, 
+    	formatInputTooShort: function() { return ''; }, 
+    	formatInputTooShort: function() { return ''; }, 
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	matcher: function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase())==0; },
+    	matcher: function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase())==0; },
+    	matcher: function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase())==0; },
+    	matcher: function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase())==0; },
+    	matcher: function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase())==0; },
+    	matcher: function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase())==0; },
+    	matcher: function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase())==0; },
+    	matcher: function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase())==0; },
+    	matcher: function(term, text) { return text.toUpperCase().indexOf(term.toUpperCase())==0; },
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    data:[
+    data:[
+    data:[
+    data:[
+    data:[
+    data:[
+    data:[
+    data:[
+    data:[
+    {% for c in counties %}
+    {% for c in counties %}
+    {% for c in counties %}
+    {% for c in counties %}
+    {% for c in counties %}
+    {% for c in counties %}
+    {% for c in counties %}
+    {% for c in counties %}
+    {% for c in counties %}
+    	{"id":"{{c.county}}","text":"{{c.county}}"},
+    	{"id":"{{c.county}}","text":"{{c.county}}"},
+    	{"id":"{{c.county}}","text":"{{c.county}}"},
+    	{"id":"{{c.county}}","text":"{{c.county}}"},
+    	{"id":"{{c.county}}","text":"{{c.county}}"},
+    	{"id":"{{c.county}}","text":"{{c.county}}"},
+    	{"id":"{{c.county}}","text":"{{c.county}}"},
+    	{"id":"{{c.county}}","text":"{{c.county}}"},
+    	{"id":"{{c.county}}","text":"{{c.county}}"},
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+    ]
+    ]
+    ]
+    ]
+    ]
+    ]
+    ]
+    ]
+    ]
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    {#data:[{"id":"Los Angeles","text":"Los Angeles"}, {"id":"Riverside","text":"Riverside"}, {"id":"Ventura","text":"Ventura"} ],#}
+    {#data:[{"id":"Los Angeles","text":"Los Angeles"}, {"id":"Riverside","text":"Riverside"}, {"id":"Ventura","text":"Ventura"} ],#}
+    {#data:[{"id":"Los Angeles","text":"Los Angeles"}, {"id":"Riverside","text":"Riverside"}, {"id":"Ventura","text":"Ventura"} ],#}
+    {% comment %}data:[{"id":"Los Angeles","text":"Los Angeles"}, {"id":"Riverside","text":"Riverside"}, {"id":"Ventura","text":"Ventura"} ],#}
+    {#data:[{"id":"Los Angeles","text":"Los Angeles"}, {"id":"Riverside","text":"Riverside"}, {"id":"Ventura","text":"Ventura"} ],{% endcomment %}
+    {#data:[{"id":"Los Angeles","text":"Los Angeles"}, {"id":"Riverside","text":"Riverside"}, {"id":"Ventura","text":"Ventura"} ],#}
+    {#data:[{"id":"Los Angeles","text":"Los Angeles"}, {"id":"Riverside","text":"Riverside"}, {"id":"Ventura","text":"Ventura"} ],#}
+    {#data:[{"id":"Los Angeles","text":"Los Angeles"}, {"id":"Riverside","text":"Riverside"}, {"id":"Ventura","text":"Ventura"} ],#}
+    {#data:[{"id":"Los Angeles","text":"Los Angeles"}, {"id":"Riverside","text":"Riverside"}, {"id":"Ventura","text":"Ventura"} ],#}
+    {#createSearchChoice: function(term) { return {id:term,text:term}; } #}
+    {#createSearchChoice: function(term) { return {id:term,text:term}; } #}
+    {#createSearchChoice: function(term) { return {id:term,text:term}; } #}
+    {% comment %}createSearchChoice: function(term) { return {id:term,text:term}; } #}
+    {#createSearchChoice: function(term) { return {id:term,text:term}; } {% endcomment %}
+    {#createSearchChoice: function(term) { return {id:term,text:term}; } #}
+    {#createSearchChoice: function(term) { return {id:term,text:term}; } #}
+    {#createSearchChoice: function(term) { return {id:term,text:term}; } #}
+    {#createSearchChoice: function(term) { return {id:term,text:term}; } #}
+});
+});
+});
+});
+});
+});
+});
+});
+});
+    </script>
+    </script>
+    </script>
+    </script>
+    </script>
+    </script>
+    </script>
+    </script>
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     {# <dd><input type=text name=county size=32> #}
+     {# <dd><input type=text name=county size=32> #}
+     {# <dd><input type=text name=county size=32> #}
+     {% comment %} <dd><input type=text name=county size=32> #}
+     {# <dd><input type=text name=county size=32> {% endcomment %}
+     {# <dd><input type=text name=county size=32> #}
+     {# <dd><input type=text name=county size=32> #}
+     {# <dd><input type=text name=county size=32> #}
+     {# <dd><input type=text name=county size=32> #}
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <dt> Zipcode (optional)
+      <dt> Zipcode (optional)
+      <dt> Zipcode (optional)
+      <dt> Zipcode (optional)
+      <dt> Zipcode (optional)
+      <dt> Zipcode (optional)
+      <dt> Zipcode (optional)
+      <dt> Zipcode (optional)
+      <dt> Zipcode (optional)
+      <dd><input type=text name=zipcode size=5>
+      <dd><input type=text name=zipcode size=5>
+      <dd><input type=text name=zipcode size=5>
+      <dd><input type=text name=zipcode size=5>
+      <dd><input type=text name=zipcode size=5>
+      <dd><input type=text name=zipcode size=5>
+      <dd><input type=text name=zipcode size=5>
+      <dd><input type=text name=zipcode size=5>
+      <dd><input type=text name=zipcode size=5>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    {#
+    {#
+    {#
+    {% comment %}
+    {#
+    {#
+    {#
+    {#
+    {#
+      <dt> Permit-type (required) <a href="{{url_for("permitInfo")}}"> What's this? </a>
+      <dt> Permit-type (required) <a href="{{url_for("permitInfo" %}"> What's this? </a>
+      <dt> Permit-type (required) <a href="{% url "permitInfo")}}"> What's this? </a>
+      <dt> Permit-type (required) <a href="{{url_for("permitInfo")}}"> What's this? </a>
+      <dt> Permit-type (required) <a href="{{url_for("permitInfo")}}"> What's this? </a>
+      <dt> Permit-type (required) <a href="{{url_for("permitInfo")}}"> What's this? </a>
+      <dt> Permit-type (required) <a href="{{url_for("permitInfo")}}"> What's this? </a>
+      <dt> Permit-type (required) <a href="{{url_for("permitInfo")}}"> What's this? </a>
+      <dt> Permit-type (required) <a href="{{url_for("permitInfo")}}"> What's this? </a>
+	<dd><select name="permitType">
+	<dd><select name="permitType">
+	<dd><select name="permitType">
+	<dd><select name="permitType">
+	<dd><select name="permitType">
+	<dd><select name="permitType">
+	<dd><select name="permitType">
+	<dd><select name="permitType">
+	<dd><select name="permitType">
+	  <option></option>
+	  <option></option>
+	  <option></option>
+	  <option></option>
+	  <option></option>
+	  <option></option>
+	  <option></option>
+	  <option></option>
+	  <option></option>
+	  <option value ="N">No Permit</option>
+	  <option value ="N">No Permit</option>
+	  <option value ="N">No Permit</option>
+	  <option value ="N">No Permit</option>
+	  <option value ="N">No Permit</option>
+	  <option value ="N">No Permit</option>
+	  <option value ="N">No Permit</option>
+	  <option value ="N">No Permit</option>
+	  <option value ="N">No Permit</option>
+	  <option value ="A">Permit category A</option>
+	  <option value ="A">Permit category A</option>
+	  <option value ="A">Permit category A</option>
+	  <option value ="A">Permit category A</option>
+	  <option value ="A">Permit category A</option>
+	  <option value ="A">Permit category A</option>
+	  <option value ="A">Permit category A</option>
+	  <option value ="A">Permit category A</option>
+	  <option value ="A">Permit category A</option>
+	  <option value ="B">Permit category B</option>
+	  <option value ="B">Permit category B</option>
+	  <option value ="B">Permit category B</option>
+	  <option value ="B">Permit category B</option>
+	  <option value ="B">Permit category B</option>
+	  <option value ="B">Permit category B</option>
+	  <option value ="B">Permit category B</option>
+	  <option value ="B">Permit category B</option>
+	  <option value ="B">Permit category B</option>
+	  <option value ="C">Commercial Permit</option>
+	  <option value ="C">Commercial Permit</option>
+	  <option value ="C">Commercial Permit</option>
+	  <option value ="C">Commercial Permit</option>
+	  <option value ="C">Commercial Permit</option>
+	  <option value ="C">Commercial Permit</option>
+	  <option value ="C">Commercial Permit</option>
+	  <option value ="C">Commercial Permit</option>
+	  <option value ="C">Commercial Permit</option>
+	</select>
+	</select>
+	</select>
+	</select>
+	</select>
+	</select>
+	</select>
+	</select>
+	</select>
+#}
+#}
+#}
+#}
+{% endcomment %}
+#}
+#}
+#}
+#}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+             <div style="clear:both"> </div>
+             <div style="clear:both"> </div>
+             <div style="clear:both"> </div>
+             <div style="clear:both"> </div>
+             <div style="clear:both"> </div>
+             <div style="clear:both"> </div>
+             <div style="clear:both"> </div>
+             <div style="clear:both"> </div>
+             <div style="clear:both"> </div>
+
+
+
+
+
+
+
+
+
+{#
+{#
+{#
+{% comment %}
+{#
+{#
+{#
+{#
+{#
+  <div class="helpGiveText"> 
+  <div class="helpGiveText"> 
+  <div class="helpGiveText"> 
+  <div class="helpGiveText"> 
+  <div class="helpGiveText"> 
+  <div class="helpGiveText"> 
+  <div class="helpGiveText"> 
+  <div class="helpGiveText"> 
+  <div class="helpGiveText"> 
+  <a style="color:#ff6666;font-size:1.0em;float:left;" href="#openModalTerms">Click Here to View Terms of Use</a>
+  <a style="color:#ff6666;font-size:1.0em;float:left;" href="#openModalTerms">Click Here to View Terms of Use</a>
+  <a style="color:#ff6666;font-size:1.0em;float:left;" href="#openModalTerms">Click Here to View Terms of Use</a>
+  <a style="color:#ff6666;font-size:1.0em;float:left;" href="#openModalTerms">Click Here to View Terms of Use</a>
+  <a style="color:#ff6666;font-size:1.0em;float:left;" href="#openModalTerms">Click Here to View Terms of Use</a>
+  <a style="color:#ff6666;font-size:1.0em;float:left;" href="#openModalTerms">Click Here to View Terms of Use</a>
+  <a style="color:#ff6666;font-size:1.0em;float:left;" href="#openModalTerms">Click Here to View Terms of Use</a>
+  <a style="color:#ff6666;font-size:1.0em;float:left;" href="#openModalTerms">Click Here to View Terms of Use</a>
+  <a style="color:#ff6666;font-size:1.0em;float:left;" href="#openModalTerms">Click Here to View Terms of Use</a>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<input style="" type="button" value="Click to view Terms of Use" onclick=location.href="#openModalTerms">
+<input style="" type="button" value="Click to view Terms of Use" onclick=location.href="#openModalTerms">
+<input style="" type="button" value="Click to view Terms of Use" onclick=location.href="#openModalTerms">
+<input style="" type="button" value="Click to view Terms of Use" onclick=location.href="#openModalTerms">
+<input style="" type="button" value="Click to view Terms of Use" onclick=location.href="#openModalTerms">
+<input style="" type="button" value="Click to view Terms of Use" onclick=location.href="#openModalTerms">
+<input style="" type="button" value="Click to view Terms of Use" onclick=location.href="#openModalTerms">
+<input style="" type="button" value="Click to view Terms of Use" onclick=location.href="#openModalTerms">
+<input style="" type="button" value="Click to view Terms of Use" onclick=location.href="#openModalTerms">
+#}
+#}
+#}
+#}
+{% endcomment %}
+#}
+#}
+#}
+#}
+
+
+
+
+
+
+
+
+
+         <div style="clear:both"> </div>
+         <div style="clear:both"> </div>
+         <div style="clear:both"> </div>
+         <div style="clear:both"> </div>
+         <div style="clear:both"> </div>
+         <div style="clear:both"> </div>
+         <div style="clear:both"> </div>
+         <div style="clear:both"> </div>
+         <div style="clear:both"> </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+   
+   
+   
+   
+   
+   
+   
+   
+   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      <dt>Upload an image to represent your booth:
+      <dt>Upload an image to represent your booth:
+      <dt>Upload an image to represent your booth:
+      <dt>Upload an image to represent your booth:
+      <dt>Upload an image to represent your booth:
+      <dt>Upload an image to represent your booth:
+      <dt>Upload an image to represent your booth:
+      <dt>Upload an image to represent your booth:
+      <dt>Upload an image to represent your booth:
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    {# <dd><input type="file" name="store_pic_ancient" accept="image/*" /> #}
+    {# <dd><input type="file" name="store_pic_ancient" accept="image/*" /> #}
+    {# <dd><input type="file" name="store_pic_ancient" accept="image/*" /> #}
+    {% comment %} <dd><input type="file" name="store_pic_ancient" accept="image/*" /> #}
+    {# <dd><input type="file" name="store_pic_ancient" accept="image/*" /> {% endcomment %}
+    {# <dd><input type="file" name="store_pic_ancient" accept="image/*" /> #}
+    {# <dd><input type="file" name="store_pic_ancient" accept="image/*" /> #}
+    {# <dd><input type="file" name="store_pic_ancient" accept="image/*" /> #}
+    {# <dd><input type="file" name="store_pic_ancient" accept="image/*" /> #}
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+     <!-- upload form -->
+     <!-- upload form -->
+     <!-- upload form -->
+     <!-- upload form -->
+     <!-- upload form -->
+     <!-- upload form -->
+     <!-- upload form -->
+     <!-- upload form -->
+     <!-- upload form -->
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+        <!-- hidden crop params -->
+        <!-- hidden crop params -->
+        <!-- hidden crop params -->
+        <!-- hidden crop params -->
+        <!-- hidden crop params -->
+        <!-- hidden crop params -->
+        <!-- hidden crop params -->
+        <!-- hidden crop params -->
+        <!-- hidden crop params -->
+        <input type="hidden" id="x1" name="x1" />
+        <input type="hidden" id="x1" name="x1" />
+        <input type="hidden" id="x1" name="x1" />
+        <input type="hidden" id="x1" name="x1" />
+        <input type="hidden" id="x1" name="x1" />
+        <input type="hidden" id="x1" name="x1" />
+        <input type="hidden" id="x1" name="x1" />
+        <input type="hidden" id="x1" name="x1" />
+        <input type="hidden" id="x1" name="x1" />
+        <input type="hidden" id="y1" name="y1" />
+        <input type="hidden" id="y1" name="y1" />
+        <input type="hidden" id="y1" name="y1" />
+        <input type="hidden" id="y1" name="y1" />
+        <input type="hidden" id="y1" name="y1" />
+        <input type="hidden" id="y1" name="y1" />
+        <input type="hidden" id="y1" name="y1" />
+        <input type="hidden" id="y1" name="y1" />
+        <input type="hidden" id="y1" name="y1" />
+        <input type="hidden" id="x2" name="x2" />
+        <input type="hidden" id="x2" name="x2" />
+        <input type="hidden" id="x2" name="x2" />
+        <input type="hidden" id="x2" name="x2" />
+        <input type="hidden" id="x2" name="x2" />
+        <input type="hidden" id="x2" name="x2" />
+        <input type="hidden" id="x2" name="x2" />
+        <input type="hidden" id="x2" name="x2" />
+        <input type="hidden" id="x2" name="x2" />
+        <input type="hidden" id="y2" name="y2" />
+        <input type="hidden" id="y2" name="y2" />
+        <input type="hidden" id="y2" name="y2" />
+        <input type="hidden" id="y2" name="y2" />
+        <input type="hidden" id="y2" name="y2" />
+        <input type="hidden" id="y2" name="y2" />
+        <input type="hidden" id="y2" name="y2" />
+        <input type="hidden" id="y2" name="y2" />
+        <input type="hidden" id="y2" name="y2" />
+
+
+
+
+
+
+
+
+
+        {# <h2>Step1: Please select image file</h2> #}
+        {# <h2>Step1: Please select image file</h2> #}
+        {# <h2>Step1: Please select image file</h2> #}
+        {% comment %} <h2>Step1: Please select image file</h2> #}
+        {# <h2>Step1: Please select image file</h2> {% endcomment %}
+        {# <h2>Step1: Please select image file</h2> #}
+        {# <h2>Step1: Please select image file</h2> #}
+        {# <h2>Step1: Please select image file</h2> #}
+        {# <h2>Step1: Please select image file</h2> #}
+      {#  <button style="width:120px" class="orgButton" id="fileSelect">Select an image file</button> #}
+      {#  <button style="width:120px" class="orgButton" id="fileSelect">Select an image file</button> #}
+      {#  <button style="width:120px" class="orgButton" id="fileSelect">Select an image file</button> #}
+      {% comment %}  <button style="width:120px" class="orgButton" id="fileSelect">Select an image file</button> #}
+      {#  <button style="width:120px" class="orgButton" id="fileSelect">Select an image file</button> {% endcomment %}
+      {#  <button style="width:120px" class="orgButton" id="fileSelect">Select an image file</button> #}
+      {#  <button style="width:120px" class="orgButton" id="fileSelect">Select an image file</button> #}
+      {#  <button style="width:120px" class="orgButton" id="fileSelect">Select an image file</button> #}
+      {#  <button style="width:120px" class="orgButton" id="fileSelect">Select an image file</button> #}
+        <div style="opacity:100"> <input  type="file" name="store_pic" id="image_file" onchange="fileSelectHandler()" /></div>
+        <div style="opacity:100"> <input  type="file" name="store_pic" id="image_file" onchange="fileSelectHandler()" /></div>
+        <div style="opacity:100"> <input  type="file" name="store_pic" id="image_file" onchange="fileSelectHandler()" /></div>
+        <div style="opacity:100"> <input  type="file" name="store_pic" id="image_file" onchange="fileSelectHandler()" /></div>
+        <div style="opacity:100"> <input  type="file" name="store_pic" id="image_file" onchange="fileSelectHandler()" /></div>
+        <div style="opacity:100"> <input  type="file" name="store_pic" id="image_file" onchange="fileSelectHandler()" /></div>
+        <div style="opacity:100"> <input  type="file" name="store_pic" id="image_file" onchange="fileSelectHandler()" /></div>
+        <div style="opacity:100"> <input  type="file" name="store_pic" id="image_file" onchange="fileSelectHandler()" /></div>
+        <div style="opacity:100"> <input  type="file" name="store_pic" id="image_file" onchange="fileSelectHandler()" /></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="step2">
+        <div class="step2">
+        <div class="step2">
+        <div class="step2">
+        <div class="step2">
+        <div class="step2">
+        <div class="step2">
+        <div class="step2">
+        <div class="step2">
+            <h2> Please select a portion of the image to be the banner for your booth (the aspect ratio is fixed)</h2>
+            <h2> Please select a portion of the image to be the banner for your booth (the aspect ratio is fixed)</h2>
+            <h2> Please select a portion of the image to be the banner for your booth (the aspect ratio is fixed)</h2>
+            <h2> Please select a portion of the image to be the banner for your booth (the aspect ratio is fixed)</h2>
+            <h2> Please select a portion of the image to be the banner for your booth (the aspect ratio is fixed)</h2>
+            <h2> Please select a portion of the image to be the banner for your booth (the aspect ratio is fixed)</h2>
+            <h2> Please select a portion of the image to be the banner for your booth (the aspect ratio is fixed)</h2>
+            <h2> Please select a portion of the image to be the banner for your booth (the aspect ratio is fixed)</h2>
+            <h2> Please select a portion of the image to be the banner for your booth (the aspect ratio is fixed)</h2>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+            <img id="preview" sstyle="width:50%"/>
+            <img id="preview" sstyle="width:50%"/>
+            <img id="preview" sstyle="width:50%"/>
+            <img id="preview" sstyle="width:50%"/>
+            <img id="preview" sstyle="width:50%"/>
+            <img id="preview" sstyle="width:50%"/>
+            <img id="preview" sstyle="width:50%"/>
+            <img id="preview" sstyle="width:50%"/>
+            <img id="preview" sstyle="width:50%"/>
+
+
+
+
+
+
+
+
+
+            <div class="info" >
+            <div class="info" >
+            <div class="info" >
+            <div class="info" >
+            <div class="info" >
+            <div class="info" >
+            <div class="info" >
+            <div class="info" >
+            <div class="info" >
+                <label>File size</label> <input type="text" id="filesize" name="filesize" />
+                <label>File size</label> <input type="text" id="filesize" name="filesize" />
+                <label>File size</label> <input type="text" id="filesize" name="filesize" />
+                <label>File size</label> <input type="text" id="filesize" name="filesize" />
+                <label>File size</label> <input type="text" id="filesize" name="filesize" />
+                <label>File size</label> <input type="text" id="filesize" name="filesize" />
+                <label>File size</label> <input type="text" id="filesize" name="filesize" />
+                <label>File size</label> <input type="text" id="filesize" name="filesize" />
+                <label>File size</label> <input type="text" id="filesize" name="filesize" />
+                <label>Type</label> <input type="text" id="filetype" name="filetype" />
+                <label>Type</label> <input type="text" id="filetype" name="filetype" />
+                <label>Type</label> <input type="text" id="filetype" name="filetype" />
+                <label>Type</label> <input type="text" id="filetype" name="filetype" />
+                <label>Type</label> <input type="text" id="filetype" name="filetype" />
+                <label>Type</label> <input type="text" id="filetype" name="filetype" />
+                <label>Type</label> <input type="text" id="filetype" name="filetype" />
+                <label>Type</label> <input type="text" id="filetype" name="filetype" />
+                <label>Type</label> <input type="text" id="filetype" name="filetype" />
+                <label>Image dimension</label> <input type="text" id="filedim" name="filedim" />
+                <label>Image dimension</label> <input type="text" id="filedim" name="filedim" />
+                <label>Image dimension</label> <input type="text" id="filedim" name="filedim" />
+                <label>Image dimension</label> <input type="text" id="filedim" name="filedim" />
+                <label>Image dimension</label> <input type="text" id="filedim" name="filedim" />
+                <label>Image dimension</label> <input type="text" id="filedim" name="filedim" />
+                <label>Image dimension</label> <input type="text" id="filedim" name="filedim" />
+                <label>Image dimension</label> <input type="text" id="filedim" name="filedim" />
+                <label>Image dimension</label> <input type="text" id="filedim" name="filedim" />
+                <label>W</label> <input type="text" id="w" name="w" />
+                <label>W</label> <input type="text" id="w" name="w" />
+                <label>W</label> <input type="text" id="w" name="w" />
+                <label>W</label> <input type="text" id="w" name="w" />
+                <label>W</label> <input type="text" id="w" name="w" />
+                <label>W</label> <input type="text" id="w" name="w" />
+                <label>W</label> <input type="text" id="w" name="w" />
+                <label>W</label> <input type="text" id="w" name="w" />
+                <label>W</label> <input type="text" id="w" name="w" />
+                <label>H</label> <input type="text" id="h" name="h" />
+                <label>H</label> <input type="text" id="h" name="h" />
+                <label>H</label> <input type="text" id="h" name="h" />
+                <label>H</label> <input type="text" id="h" name="h" />
+                <label>H</label> <input type="text" id="h" name="h" />
+                <label>H</label> <input type="text" id="h" name="h" />
+                <label>H</label> <input type="text" id="h" name="h" />
+                <label>H</label> <input type="text" id="h" name="h" />
+                <label>H</label> <input type="text" id="h" name="h" />
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+
+
+
+
+
+
+
+
+
+{#            <input type="submit" value="Upload" /> #} 
+{#            <input type="submit" value="Upload" /> #} 
+{#            <input type="submit" value="Upload" /> #} 
+{% comment %}            <input type="submit" value="Upload" /> #} 
+{#            <input type="submit" value="Upload" /> {% endcomment %} 
+{#            <input type="submit" value="Upload" /> #} 
+{#            <input type="submit" value="Upload" /> #} 
+{#            <input type="submit" value="Upload" /> #} 
+{#            <input type="submit" value="Upload" /> #} 
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+ {# </form> #}
+ {# </form> #}
+ {# </form> #}
+ {% comment %} </form> #}
+ {# </form> {% endcomment %}
+ {# </form> #}
+ {# </form> #}
+ {# </form> #}
+ {# </form> #}
+        
+        
+        
+        
+        
+        
+        
+        
+        
+           <div class="error"></div>
+           <div class="error"></div>
+           <div class="error"></div>
+           <div class="error"></div>
+           <div class="error"></div>
+           <div class="error"></div>
+           <div class="error"></div>
+           <div class="error"></div>
+           <div class="error"></div>
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+   
+   
+   
+   
+   
+   
+   
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <div style="clear:both"> </div>
+ <div style="clear:both"> </div>
+ <div style="clear:both"> </div>
+ <div style="clear:both"> </div>
+ <div style="clear:both"> </div>
+ <div style="clear:both"> </div>
+ <div style="clear:both"> </div>
+ <div style="clear:both"> </div>
+ <div style="clear:both"> </div>
+ <br>
+ <br>
+ <br>
+ <br>
+ <br>
+ <br>
+ <br>
+ <br>
+ <br>
+
+
+
+
+
+
+
+
+
+<div style="font-size:1.1em;"> 
+<div style="font-size:1.1em;"> 
+<div style="font-size:1.1em;"> 
+<div style="font-size:1.1em;"> 
+<div style="font-size:1.1em;"> 
+<div style="font-size:1.1em;"> 
+<div style="font-size:1.1em;"> 
+<div style="font-size:1.1em;"> 
+<div style="font-size:1.1em;"> 
+By clicking "Open a booth" you agree to abide by our   <a style="color:#ff6666;font-size:1.0em;" href="{{url_for('termsOfUse')}}" target="_blank">Terms of Use</a>
+By clicking "Open a booth" you agree to abide by our   <a style="color:#ff6666;font-size:1.0em;" href="{{url_for('termsOfUse' %}" target="_blank">Terms of Use</a>
+By clicking "Open a booth" you agree to abide by our   <a style="color:#ff6666;font-size:1.0em;" href="{% url 'termsOfUse')}}" target="_blank">Terms of Use</a>
+By clicking "Open a booth" you agree to abide by our   <a style="color:#ff6666;font-size:1.0em;" href="{{url_for('termsOfUse')}}" target="_blank">Terms of Use</a>
+By clicking "Open a booth" you agree to abide by our   <a style="color:#ff6666;font-size:1.0em;" href="{{url_for('termsOfUse')}}" target="_blank">Terms of Use</a>
+By clicking "Open a booth" you agree to abide by our   <a style="color:#ff6666;font-size:1.0em;" href="{{url_for('termsOfUse')}}" target="_blank">Terms of Use</a>
+By clicking "Open a booth" you agree to abide by our   <a style="color:#ff6666;font-size:1.0em;" href="{{url_for('termsOfUse')}}" target="_blank">Terms of Use</a>
+By clicking "Open a booth" you agree to abide by our   <a style="color:#ff6666;font-size:1.0em;" href="{{url_for('termsOfUse')}}" target="_blank">Terms of Use</a>
+By clicking "Open a booth" you agree to abide by our   <a style="color:#ff6666;font-size:1.0em;" href="{{url_for('termsOfUse')}}" target="_blank">Terms of Use</a>
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <div class=actions > <input class="noNeedsTerms" type=submit value="Open a booth" style="margin:2.5em"></div>
+ <div class=actions > <input class="noNeedsTerms" type=submit value="Open a booth" style="margin:2.5em"></div>
+ <div class=actions > <input class="noNeedsTerms" type=submit value="Open a booth" style="margin:2.5em"></div>
+ <div class=actions > <input class="noNeedsTerms" type=submit value="Open a booth" style="margin:2.5em"></div>
+ <div class=actions > <input class="noNeedsTerms" type=submit value="Open a booth" style="margin:2.5em"></div>
+ <div class=actions > <input class="noNeedsTerms" type=submit value="Open a booth" style="margin:2.5em"></div>
+ <div class=actions > <input class="noNeedsTerms" type=submit value="Open a booth" style="margin:2.5em"></div>
+ <div class=actions > <input class="noNeedsTerms" type=submit value="Open a booth" style="margin:2.5em"></div>
+ <div class=actions > <input class="noNeedsTerms" type=submit value="Open a booth" style="margin:2.5em"></div>
+  </form>
+  </form>
+  </form>
+  </form>
+  </form>
+  </form>
+  </form>
+  </form>
+  </form>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+     <div id="openModalTerms" class="modalGiveBackDialog" style="background-color: rgba(255,255,255, 0.93);position:fixed;
+     <div id="openModalTerms" class="modalGiveBackDialog" style="background-color: rgba(255,255,255, 0.93);position:fixed;
+     <div id="openModalTerms" class="modalGiveBackDialog" style="background-color: rgba(255,255,255, 0.93);position:fixed;
+     <div id="openModalTerms" class="modalGiveBackDialog" style="background-color: rgba(255,255,255, 0.93);position:fixed;
+     <div id="openModalTerms" class="modalGiveBackDialog" style="background-color: rgba(255,255,255, 0.93);position:fixed;
+     <div id="openModalTerms" class="modalGiveBackDialog" style="background-color: rgba(255,255,255, 0.93);position:fixed;
+     <div id="openModalTerms" class="modalGiveBackDialog" style="background-color: rgba(255,255,255, 0.93);position:fixed;
+     <div id="openModalTerms" class="modalGiveBackDialog" style="background-color: rgba(255,255,255, 0.93);position:fixed;
+     <div id="openModalTerms" class="modalGiveBackDialog" style="background-color: rgba(255,255,255, 0.93);position:fixed;
+overflow-x:auto;overflow-y:scroll;bottom:0;left:0;right:0;top:0;
+overflow-x:auto;overflow-y:scroll;bottom:0;left:0;right:0;top:0;
+overflow-x:auto;overflow-y:scroll;bottom:0;left:0;right:0;top:0;
+overflow-x:auto;overflow-y:scroll;bottom:0;left:0;right:0;top:0;
+overflow-x:auto;overflow-y:scroll;bottom:0;left:0;right:0;top:0;
+overflow-x:auto;overflow-y:scroll;bottom:0;left:0;right:0;top:0;
+overflow-x:auto;overflow-y:scroll;bottom:0;left:0;right:0;top:0;
+overflow-x:auto;overflow-y:scroll;bottom:0;left:0;right:0;top:0;
+overflow-x:auto;overflow-y:scroll;bottom:0;left:0;right:0;top:0;
+z-index:9999;">
+z-index:9999;">
+z-index:9999;">
+z-index:9999;">
+z-index:9999;">
+z-index:9999;">
+z-index:9999;">
+z-index:9999;">
+z-index:9999;">
+     	<div> {#sub-modal#}
+     	<div> {#sub-modal#}
+     	<div> {#sub-modal#}
+     	<div> {% comment %}sub-modal#}
+     	<div> {#sub-modal{% endcomment %}
+     	<div> {#sub-modal#}
+     	<div> {#sub-modal#}
+     	<div> {#sub-modal#}
+     	<div> {#sub-modal#}
+		<a href="#close" title="Close" class="close">X</a>
+		<a href="#close" title="Close" class="close">X</a>
+		<a href="#close" title="Close" class="close">X</a>
+		<a href="#close" title="Close" class="close">X</a>
+		<a href="#close" title="Close" class="close">X</a>
+		<a href="#close" title="Close" class="close">X</a>
+		<a href="#close" title="Close" class="close">X</a>
+		<a href="#close" title="Close" class="close">X</a>
+		<a href="#close" title="Close" class="close">X</a>
+		<h2>Homemade1616 Terms of Use</h2>
+		<h2>Homemade1616 Terms of Use</h2>
+		<h2>Homemade1616 Terms of Use</h2>
+		<h2>Homemade1616 Terms of Use</h2>
+		<h2>Homemade1616 Terms of Use</h2>
+		<h2>Homemade1616 Terms of Use</h2>
+		<h2>Homemade1616 Terms of Use</h2>
+		<h2>Homemade1616 Terms of Use</h2>
+		<h2>Homemade1616 Terms of Use</h2>
+	   <pre>{% include 'terms_of_use.html' %} </pre>
+	   <pre>{% include 'terms_of_use.html' %} </pre>
+	   <pre>{% include 'terms_of_use.html' %} </pre>
+	   <pre>{% include 'terms_of_use.html' %} </pre>
+	   <pre>{% include 'terms_of_use.html' %} </pre>
+	   <pre>{% include 'terms_of_use.html' %} </pre>
+	   <pre>{% include 'terms_of_use.html' %} </pre>
+	   <pre>{% include 'terms_of_use.html' %} </pre>
+	   <pre>{% include 'terms_of_use.html' %} </pre>
+    <form action="#close" method="" >
+    <form action="#close" method="" >
+    <form action="#close" method="" >
+    <form action="#close" method="" >
+    <form action="#close" method="" >
+    <form action="#close" method="" >
+    <form action="#close" method="" >
+    <form action="#close" method="" >
+    <form action="#close" method="" >
+	  <article>
+	  <article>
+	  <article>
+	  <article>
+	  <article>
+	  <article>
+	  <article>
+	  <article>
+	  <article>
+	  <label>
+	  <label>
+	  <label>
+	  <label>
+	  <label>
+	  <label>
+	  <label>
+	  <label>
+	  <label>
+	  <span></span>
+	  <span></span>
+	  <span></span>
+	  <span></span>
+	  <span></span>
+	  <span></span>
+	  <span></span>
+	  <span></span>
+	  <span></span>
+	  </label>
+	  </label>
+	  </label>
+	  </label>
+	  </label>
+	  </label>
+	  </label>
+	  </label>
+	  </label>
+	  </article>
+	  </article>
+	  </article>
+	  </article>
+	  </article>
+	  </article>
+	  </article>
+	  </article>
+	  </article>
+	  {#<input type="hidden" name="return" value="True" /> #}
+	  {#<input type="hidden" name="return" value="True" /> #}
+	  {#<input type="hidden" name="return" value="True" /> #}
+	  {% comment %}<input type="hidden" name="return" value="True" /> #}
+	  {#<input type="hidden" name="return" value="True" /> {% endcomment %}
+	  {#<input type="hidden" name="return" value="True" /> #}
+	  {#<input type="hidden" name="return" value="True" /> #}
+	  {#<input type="hidden" name="return" value="True" /> #}
+	  {#<input type="hidden" name="return" value="True" /> #}
+	  <div style="inline-block" class=deleteButto><input type=submit value="Close window"></div>
+	  <div style="inline-block" class=deleteButto><input type=submit value="Close window"></div>
+	  <div style="inline-block" class=deleteButto><input type=submit value="Close window"></div>
+	  <div style="inline-block" class=deleteButto><input type=submit value="Close window"></div>
+	  <div style="inline-block" class=deleteButto><input type=submit value="Close window"></div>
+	  <div style="inline-block" class=deleteButto><input type=submit value="Close window"></div>
+	  <div style="inline-block" class=deleteButto><input type=submit value="Close window"></div>
+	  <div style="inline-block" class=deleteButto><input type=submit value="Close window"></div>
+	  <div style="inline-block" class=deleteButto><input type=submit value="Close window"></div>
+{#
+{#
+{#
+{% comment %}
+{#
+{#
+{#
+{#
+{#
+	  I have read and agree to the above terms and conditions. <input type="checkbox" name="termsCheck" onclick="enable_text(this.checked)" 
+	  I have read and agree to the above terms and conditions. <input type="checkbox" name="termsCheck" onclick="enable_text(this.checked)" 
+	  I have read and agree to the above terms and conditions. <input type="checkbox" name="termsCheck" onclick="enable_text(this.checked)" 
+	  I have read and agree to the above terms and conditions. <input type="checkbox" name="termsCheck" onclick="enable_text(this.checked)" 
+	  I have read and agree to the above terms and conditions. <input type="checkbox" name="termsCheck" onclick="enable_text(this.checked)" 
+	  I have read and agree to the above terms and conditions. <input type="checkbox" name="termsCheck" onclick="enable_text(this.checked)" 
+	  I have read and agree to the above terms and conditions. <input type="checkbox" name="termsCheck" onclick="enable_text(this.checked)" 
+	  I have read and agree to the above terms and conditions. <input type="checkbox" name="termsCheck" onclick="enable_text(this.checked)" 
+	  I have read and agree to the above terms and conditions. <input type="checkbox" name="termsCheck" onclick="enable_text(this.checked)" 
+    {% if u.agreedToTerms %}
+    {% if u.agreedToTerms %}
+    {% if u.agreedToTerms %}
+    {% if u.agreedToTerms %}
+    {% if u.agreedToTerms %}
+    {% if u.agreedToTerms %}
+    {% if u.agreedToTerms %}
+    {% if u.agreedToTerms %}
+    {% if u.agreedToTerms %}
+       checked="checked"
+       checked="checked"
+       checked="checked"
+       checked="checked"
+       checked="checked"
+       checked="checked"
+       checked="checked"
+       checked="checked"
+       checked="checked"
+    {% endif %}
+    {% endif %}
+    {% endif %}
+    {% endif %}
+    {% endif %}
+    {% endif %}
+    {% endif %}
+    {% endif %}
+    {% endif %}
+    class="medium" />
+    class="medium" />
+    class="medium" />
+    class="medium" />
+    class="medium" />
+    class="medium" />
+    class="medium" />
+    class="medium" />
+    class="medium" />
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  <div style="inline-block;" class=deleteButto><input style="background-color:#eeeeee;color:#cccccc" type=submit value="Accept Terms" disabled="disabled"></div>
+	  <div style="inline-block;" class=deleteButto><input style="background-color:#eeeeee;color:#cccccc" type=submit value="Accept Terms" disabled="disabled"></div>
+	  <div style="inline-block;" class=deleteButto><input style="background-color:#eeeeee;color:#cccccc" type=submit value="Accept Terms" disabled="disabled"></div>
+	  <div style="inline-block;" class=deleteButto><input style="background-color:#eeeeee;color:#cccccc" type=submit value="Accept Terms" disabled="disabled"></div>
+	  <div style="inline-block;" class=deleteButto><input style="background-color:#eeeeee;color:#cccccc" type=submit value="Accept Terms" disabled="disabled"></div>
+	  <div style="inline-block;" class=deleteButto><input style="background-color:#eeeeee;color:#cccccc" type=submit value="Accept Terms" disabled="disabled"></div>
+	  <div style="inline-block;" class=deleteButto><input style="background-color:#eeeeee;color:#cccccc" type=submit value="Accept Terms" disabled="disabled"></div>
+	  <div style="inline-block;" class=deleteButto><input style="background-color:#eeeeee;color:#cccccc" type=submit value="Accept Terms" disabled="disabled"></div>
+	  <div style="inline-block;" class=deleteButto><input style="background-color:#eeeeee;color:#cccccc" type=submit value="Accept Terms" disabled="disabled"></div>
+	  #}
+	  #}
+	  #}
+	  #}
+	  {% endcomment %}
+	  #}
+	  #}
+	  #}
+	  #}
+
+
+
+
+
+
+
+
+
+   </form>
+   </form>
+   </form>
+   </form>
+   </form>
+   </form>
+   </form>
+   </form>
+   </form>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+
+
+
+
+
+
+
+
+	</div>  {#sub-modal#}
+	</div>  {#sub-modal#}
+	</div>  {#sub-modal#}
+	</div>  {% comment %}sub-modal#}
+	</div>  {#sub-modal{% endcomment %}
+	</div>  {#sub-modal#}
+	</div>  {#sub-modal#}
+	</div>  {#sub-modal#}
+	</div>  {#sub-modal#}
+       </div> {#modalDialog#}
+       </div> {#modalDialog#}
+       </div> {#modalDialog#}
+       </div> {% comment %}modalDialog#}
+       </div> {#modalDialog{% endcomment %}
+       </div> {#modalDialog#}
+       </div> {#modalDialog#}
+       </div> {#modalDialog#}
+       </div> {#modalDialog#}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% if g.user.email[0:4] == "rsbu" %}     
+{% if g.user.email[0:4] == "rsbu" %}     
+{% if g.user.email[0:4] == "rsbu" %}     
+{% if g.user.email[0:4] == "rsbu" %}     
+{% if g.user.email[0:4] == "rsbu" %}     
+{% if g.user.email[0:4] == "rsbu" %}     
+{% if g.user.email[0:4] == "rsbu" %}     
+{% if g.user.email[0:4] == "rsbu" %}     
+{% if g.user.email[0:4] == "rsbu" %}     
+ Agreed to terms: {{g.user.agreedToTerms}}
+ Agreed to terms: {{g.user.agreedToTerms}}
+ Agreed to terms: {{g.user.agreedToTerms}}
+ Agreed to terms: {{g.user.agreedToTerms}}
+ Agreed to terms: {{g.user.agreedToTerms}}
+ Agreed to terms: {{g.user.agreedToTerms}}
+ Agreed to terms: {{g.user.agreedToTerms}}
+ Agreed to terms: {{g.user.agreedToTerms}}
+ Agreed to terms: {{g.user.agreedToTerms}}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+
+
+
+
+
+
+
+
+
+ <script>
+ <script>
+ <script>
+ <script>
+ <script>
+ <script>
+ <script>
+ <script>
+ <script>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+$("input:file")
+$("input:file")
+$("input:file")
+$("input:file")
+$("input:file")
+$("input:file")
+$("input:file")
+$("input:file")
+$("input:file")
+
+
+
+
+
+
+
+
+
+ {% if g.user.agreedToTerms %} 
+ {% if g.user.agreedToTerms %} 
+ {% if g.user.agreedToTerms %} 
+ {% if g.user.agreedToTerms %} 
+ {% if g.user.agreedToTerms %} 
+ {% if g.user.agreedToTerms %} 
+ {% if g.user.agreedToTerms %} 
+ {% if g.user.agreedToTerms %} 
+ {% if g.user.agreedToTerms %} 
+  $("input:submit").attr("disabled", false);
+  $("input:submit").attr("disabled", false);
+  $("input:submit").attr("disabled", false);
+  $("input:submit").attr("disabled", false);
+  $("input:submit").attr("disabled", false);
+  $("input:submit").attr("disabled", false);
+  $("input:submit").attr("disabled", false);
+  $("input:submit").attr("disabled", false);
+  $("input:submit").attr("disabled", false);
+  $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+  $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+  $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+  $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+  $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+  $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+  $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+  $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+  $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+ {% endif %}
+ {% endif %}
+ {% endif %}
+ {% endif %}
+ {% endif %}
+ {% endif %}
+ {% endif %}
+ {% endif %}
+ {% endif %}
+
+
+
+
+
+
+
+
+
+  $("input:checkbox").click(function() {
+  $("input:checkbox").click(function() {
+  $("input:checkbox").click(function() {
+  $("input:checkbox").click(function() {
+  $("input:checkbox").click(function() {
+  $("input:checkbox").click(function() {
+  $("input:checkbox").click(function() {
+  $("input:checkbox").click(function() {
+  $("input:checkbox").click(function() {
+
+
+
+
+
+
+
+
+
+    $("input:submit").attr("disabled", !this.checked); 
+    $("input:submit").attr("disabled", !this.checked); 
+    $("input:submit").attr("disabled", !this.checked); 
+    $("input:submit").attr("disabled", !this.checked); 
+    $("input:submit").attr("disabled", !this.checked); 
+    $("input:submit").attr("disabled", !this.checked); 
+    $("input:submit").attr("disabled", !this.checked); 
+    $("input:submit").attr("disabled", !this.checked); 
+    $("input:submit").attr("disabled", !this.checked); 
+
+
+
+
+
+
+
+
+
+    if (this.checked){
+    if (this.checked){
+    if (this.checked){
+    if (this.checked){
+    if (this.checked){
+    if (this.checked){
+    if (this.checked){
+    if (this.checked){
+    if (this.checked){
+    $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+    $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+    $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+    $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+    $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+    $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+    $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+    $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+    $("input:submit").attr("style", "background-color:#cccccc;color:#333333;"); 
+  } 
+  } 
+  } 
+  } 
+  } 
+  } 
+  } 
+  } 
+  } 
+  else{
+  else{
+  else{
+  else{
+  else{
+  else{
+  else{
+  else{
+  else{
+     $("input:submit").attr("style", "background-color:#eeeeee;color:#cccccc;"); 
+     $("input:submit").attr("style", "background-color:#eeeeee;color:#cccccc;"); 
+     $("input:submit").attr("style", "background-color:#eeeeee;color:#cccccc;"); 
+     $("input:submit").attr("style", "background-color:#eeeeee;color:#cccccc;"); 
+     $("input:submit").attr("style", "background-color:#eeeeee;color:#cccccc;"); 
+     $("input:submit").attr("style", "background-color:#eeeeee;color:#cccccc;"); 
+     $("input:submit").attr("style", "background-color:#eeeeee;color:#cccccc;"); 
+     $("input:submit").attr("style", "background-color:#eeeeee;color:#cccccc;"); 
+     $("input:submit").attr("style", "background-color:#eeeeee;color:#cccccc;"); 
+
+
+
+
+
+
+
+
+
+  } 
+  } 
+  } 
+  } 
+  } 
+  } 
+  } 
+  } 
+  } 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+});
+});
+});
+});
+});
+});
+});
+});
+});
+  </script>
+  </script>
+  </script>
+  </script>
+  </script>
+  </script>
+  </script>
+  </script>
+  </script>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+{% endblock %}
+{% endblock %}
+{% endblock %}
+{% endblock %}
+{% endblock %}
+{% endblock %}
+{% endblock %}
+{% endblock %}
+{% endblock %}
+
+
+
+
+
+
+
+
+

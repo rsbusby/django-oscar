@@ -1,0 +1,215 @@
+{% extends "layout.dj.html" %}
+{% load staticfiles %}
+
+<body>
+{%block logoBanner %} {% endblock logoBanner %}
+
+{% block body %}
+
+{% if error %}<div class=error style="margin-top:20px;color=#BBBBBB;"> {{ error }}</div>{% endif %}
+
+
+<div id="storeBannerNarrow" style="width: 100%;height:8em;overflow:hidden;">
+  {% if u.storePicPath %}
+     <img src="{% static u.storePicPath %}" class="store_banner" style="width:100%;">
+  {% else %}
+    {% comment %} <img src="{% static "uploads/ivyFence01.jpg" %}" class="store_banner" style="width:100%;"> {% endcomment %}
+  {% endif %}
+  
+  </div>
+
+{% comment %}<div style="">{% endcomment %}
+<h1 style="width:30%;display:inline-block;margin-left:1em;margin-top:0.3em"> {% if u.storeName %}{% endif %} {%block title%}{{u.getStoreName( %} {%endblock%}</h1>
+
+        {% if u.name != g.user.name and g.user %}
+        
+        {% if u.name not in g.user.favSellerList %}
+          {% comment %}<a href="{% url 'add_seller_to_favs' seller_name=u.name %}"><img src="{% static "icons/GreyHeart.png" %}" class="" style="height:1.3em;"></a>{% endcomment %} 
+          
+        {% else %}
+          {% comment %}<a href="{% url 'remove_seller_from_favs' seller_name=u.name %}"> <img src="{% static 'icons/Icon-Heart.png' %}" class="" style="height:1.3em;" >
+</a> {% endcomment %}
+
+         {% endif %}
+         {% endif %}
+
+
+{% if u.name == g.user.name %}
+{% comment %}<a href="{% url 'new_item' %}"><b>Add item</b></a>{% endcomment %} 
+<input style="" type="button" value="Add Item" onclick=location.href="{% url 'new_item' %}">
+
+{% endif %}
+{% comment %}</div>{% endcomment %}
+    <div id="wideClear" style="clear:both;"> </div>
+
+<div class="sellerinfo">
+<div class="sellerinfobox">
+
+  <h2 style="margin-right:0.2em;display:inline-block;vertical-align:top;float:left;width:45%">{{u.getPersonalNameIfExists( %}</h2>
+
+  <div class="sellerPic">
+  {% if u.personalPicPath %}
+   <img src="{% static u.personalPicPath %}" class="" style="mmargin-left:0.5em;height:auto;mmax-height:7em;border:2px #777777 solid;" > 
+  {% endif %}  
+    </div>
+
+   <div id:"wideClear" style="clear:both;"> </div> 
+    
+   <div class="sellerBio">
+     {%if u.bio %}
+     <pre>{{u.bio}} </pre>
+     {%endif%}
+   </div>
+   <div class="sellerLinks"> 
+    {% comment %}
+     <p><a href="{% url 'favSellers' user_name=u.name %}">Favorite Booths</a> </p>
+     <p><a href="{% url 'favItems' user_name=u.name %}">Favorite Items</a> </p>
+     {% endcomment %}
+     
+{%comment%}
+     <p>
+     
+     <input style="" type="button" value="Favorite Booths" onclick=location.href="{% url 'favSellers' user_name=u.name %}">
+   	</p><p>
+     <input style="" type="button" value="Favorite Items" onclick=location.href="{% url 'favItems' user_name=u.name %}">
+     </p>
+     {% endcomment %}
+   </div>
+   {% if u.facebook %}
+   <a href="http://facebook.com/{{u.facebook}}"> <img src="{% static "icons/facebook_small.png" %}" class="socialIcon" > </a>
+   {% endif %}
+   
+
+   {% comment %}
+  {% if g.user.name != u.name %}
+   
+   <p>  <input style="float:left;position:relative;top:-2em;" type="button" value="Contact Seller" onclick=location.href="{% url 'contactPeer' user_name=u.name %}">
+  </p>
+  <br>
+  {%endif %}
+  {% endcomment %}
+
+   
+</div>
+
+{% if u.name == g.user.name %} 
+
+ {% if not u.stripeSellerToken %} 
+   <div class="stripesignupstore">
+ 
+<br><br>
+
+{% if u.personalName %}
+{{u.getFirstName( %}, c{%else%}C{%endif%}lick below to set up a Stripe account for payment processing.
+
+
+<br><br>
+<a href="{% url 'stripeLogin' %}" > <img src="{% static 'icons/blue.png' %}"></a>
+     
+   </div>
+  
+  {% else %} 
+   
+   <br><br>
+   You are signed up to accept payments using <a href="https://manage.stripe.com/dashboard" target="_blank">Stripe</a>.
+   
+   {% comment %}<a href="{% url 'stripeInfo' %}" > See more details about payments here. </a>{% endcomment %}
+   
+{% endif  %}  {% comment %} if not stripeAccountToken {% endcomment %}
+{% endif  %}
+
+</div>
+ 
+<div class="itemgrid">
+
+
+{{u}}
+{{u.storePicPath}}
+  {% if u.storePicPath %}
+  <div id="storeBannerWide" style="width: 100%;height:200px;overflow:hidden;">
+  
+     <img src="{% static u.storePicPath %}" class="store_banner" style="width:100%;">
+     
+     </div>
+     
+  {% else %}
+   {% comment %}  <img src="{% static "uploads/ivyFence01.jpg" %}" class="store_banner" style="width:100%;"> {% endcomment %}
+   
+   {% if u.name == g.user.name %} 
+      <input style="float:left"type="button" value="Add a banner image for your booth" onclick=location.href="{% url 'edit_profile'  user_name=u.name %}">
+   {% endif %}
+   
+  {% endif %}
+   
+{% for i in iList %}
+    {% comment %} loop though items {% endcomment %}
+
+  <div class="cartitem">  
+  
+    <div class="cartpic" style="width:280px;height:180px;float:left;padding-right:1em;margin-bottom:2em;">
+    {% if i.picPath %}   
+        {% comment %} make each pic into a link, if it exists {% endcomment %}
+   {% comment %}
+        <a href="{% url 'item' item_id=i.id %}">  <img src="{% static i.picPath %}" class="item_pics"></a>   
+{% endcomment %}
+    {% else %}
+      {% comment %}  <a href="{% url 'item' item_id=i.id %}"> {{i.name}}</a> {% endcomment %} 
+
+    {% endif %}
+
+	</div>
+	<div class="cartitemtext" >
+
+{% comment %}
+	 <a style="font-size:1.2em;" href="{% url 'item' item_id=i.id %}"> {{i.name}}</a> 
+{% endcomment %}
+    {% if i.description %}
+    <pre>{{i.description}}</pre>
+    {% endif %}
+    <div>   {% comment %} item  attributes container {% endcomment %}
+     
+      <div style="float:right;margin:-0.3em 0.5em 0.5em 0.5em;">${{i.getPrice( %} </div>
+      <div style="float:right;margin:-0.3em 0.5em 0.5em 0.5em;" >{{i.getInventoryString( %} </div>
+
+{% if u.name != g.user.name %} 
+      
+      <form style="margin:6;clear:both;float:right;width:200px" name="quantity" action="{% url 'add_to_cart' item_id=i.id %}" method="GET" >
+
+     {% if not numInCart %}  
+     <div style="float:right;">
+     Quantity:<input style="width:40px;float:right;margin-top:-3px;" {% comment %}autofocus="autofocus"{% endcomment %} type=number size=2 name=quantity min=0 step=1 {% if i.inventory >= 0 %} max={{i.inventory}} {% endif %} value=1>
+     </div>
+       <input style="float:right;clear:both;" type=submit value="Add to Cart" onclick=loopSelected();>
+     {% else %}
+     
+     Quantity:<input style="width:40px;" {% comment %}autofocus="autofocus"{% endcomment %} type=number size=2 name=quantity min=0 step=1 {% if i.inventory >= 0 %} max={{i.inventory}} {% endif %} value={{numInCart}}>
+
+     <input type=submit value="Update Cart" onclick=loopSelected();>
+     <input type=hidden value="True" name=update>
+
+              {% endif %}
+
+</form>
+
+{% else %}
+   <div  style="clear:both;"> </div> 
+
+        <input style="float:right"type="button" value="Edit this Item" onclick=location.href="{% url 'edit_item_form' item_id=i.id %}">
+
+{% endif %} {% comment %} is my booth {% endcomment %}
+
+  </div>
+</div> {% comment %} cartitemtext{% endcomment %}
+
+  
+     
+  </div>  {% comment %} item {% endcomment %}
+
+  <hr class="hrCart" > 
+
+  
+  {% comment %} end item loop {% endcomment %}
+{% endfor %}
+  </div> {% comment %} itemcontainer {% endcomment %}
+{% endblock %}
+</body>

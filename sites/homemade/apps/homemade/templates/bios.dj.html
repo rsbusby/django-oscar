@@ -1,0 +1,132 @@
+{% extends "layout.html" %}
+
+{% load staticfiles %}
+{% load thumbnail %}
+
+
+{% block content %}
+
+
+<div class="row-fluid" style="font-size:1.3em;font-weight:bold;margin:0 0 2em 0;" >
+<div class="span4 pull-left offset4" >
+
+<div class="bioTitle"> The Homemade 1616 Team</div>
+</div>
+</div>
+
+<div class="row-fluid bioRow">
+
+
+
+
+<div class="span4 pull-left offset1">
+
+
+<div class="bioPic">
+{% thumbnail "uploads/HM1616me_30pc.jpg" "x300" as im %}
+    <img class="bioPic" src="{{ im.url }}">
+{% endthumbnail %}
+    </div>
+
+
+{#<img class="bioPic"  src="{{stat_url}}uploads/HM1616me_30pc.jpg" >#}
+</div>
+
+{% comment %}
+<div class="image_container booth_image">
+        {% with image=product.primary_image %}
+            {% thumbnail image.original "400x400" upscale=False as thumb %}
+                
+                <img src="{{stat_url}}uploads/HM1616me_30pc.jpg" 
+                alt="" 
+                class="thumbnail pagination-centered item_pics_booth" {% if not is_booth %}style="margin:0 auto;" {% else %} style="max-height:220px;" {% endif %}>
+            {% endthumbnail %}
+        {% endwith %}
+    </div>
+{% endcomment %}
+<p class ="span5 bioBio" >
+Erica Wohldmann is a food activist and the Founder and Orchestrator of HM1616.  She has a strong commitment to the natural world and spends most of her free time playing and foraging for food and herbs in the wild.  When she’s not outside, you can usually find her in a classroom or her laboratory at California State University, Northridge, where she is an Associate Professor.
+
+</p>
+</div>
+<div class="row-fluid bioRow">
+<div class="span4 pull-left offset1" >
+<div class="bioPic">
+    {% thumbnail "uploads/craterDownhill01.jpg" "x220" as im %}
+      <img class="bioPic" src="{{ im.url }}">
+    {% endthumbnail %}
+</div></div>
+
+<p class="span5 bioBio">
+ Richard Busby is a software engineer with roots in physics, mathematics, and computational psychology. Richard loves food, and has more or less monotonically attempted to improve the healthiness and sustainability of his food sources. Like most of us, he thinks it tastes better when it’s local, fresh, and chemical free!  When he’s not in front of a computer debugging code, he’s probably out biking or helping someone fix their bike, working on an art installation of some sort, or enjoying the great outdoors.
+ 
+</p>
+
+</div>
+
+<div style="clear:both">
+<div class="row-fluid bioRow">
+<div class="span4 offset1">
+  <div class="bioPic">
+    {% thumbnail "uploads/mirBike_40pc.jpg" "x220" as im %}
+      <img class="bioPic" src="{{ im.url }}">
+    {% endthumbnail %}
+  </div>
+</div>
+<p class="span5 bioBio" >
+Miranda Summers is a graphic designer and artist.  If you like the way our website looks, you can thank her; otherwise, send us feedback.  Miranda is the co-founder of Anda Creative, a full-service visual communication studio.  She lives in New York City and holds down the east coast fort for HM1616. In her free time, Miranda enjoys biking around the city, exploring museums, and drinking fancy coffee brewed in one of several fancy coffee makers that she and her boyfriend Alex share.
+</p>
+
+</div>
+
+<div style="clear:both"></div>
+
+<div class="row-fluid">
+<div class="span10 offset1 ">
+<hr style="margin:0;color:#eeeeee;border-color:#Fafafa">
+</div>
+
+
+<div class="row-fluid">
+<div class="span10 offset1 " style="padding-left:0em;padding-bottom:2em">
+<p >
+Our other team members Melanie and Kelsey assist with general operations, communications, and vendor recruitment.  Together, Melanie, Kelsey and Erica also co-founded the Heavy Nettle Collective, a group that aims to build community around western herbalism and traditional food methods in LA.  We give urban dwellers an opportunity to connect with nature and nourishing traditions. 
+ 
+</p>
+</div>
+</div>
+
+
+<div class="row-fluid bioRow">
+<div class="span4 offset1">
+
+<div class="bioPic">
+{% thumbnail "uploads/m6.jpg" "x220" as im %}
+    <img class="bioPic" src="{{ im.url }}">
+{% endthumbnail %}
+    </div>
+
+</div>
+<p class="span5 bioBio">
+Melanie has studied western herbalism and nutrition for the past 8 years. On work breaks, she can usually be found in her kitchen cooking, crafting body care products and herbal medicine, fermenting foods, and exploring aromatherapy, or outdoors playing in the forest. 
+ </p>
+</div>
+
+
+<div class="row-fluid bioRow">
+<div class="span4 offset1">
+
+<div class="bioPic">
+{% thumbnail "uploads/k14.jpg" "x220" as im %}
+    <img class="bioPic" src="{{ im.url }}">
+{% endthumbnail %}
+    </div>
+
+</div>
+ <p class="span5 bioBio">
+Kelsey is a practicing Clinical Western Herbalist and is currently living in northern California studying herbal medicine. She is interested in crafting conscious culture around reconnecting her community to the land, plant based medicine healing and the simplicity of enjoying nature.  
+ </p>
+</div>
+
+</div> {# row #}
+{% endblock %}

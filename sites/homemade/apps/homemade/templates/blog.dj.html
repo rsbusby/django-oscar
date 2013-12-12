@@ -1,0 +1,157 @@
+{#{% extends "layout.dj.html" %}#}
+{% extends "layout.html" %}
+
+{% load staticfiles %}
+{% load thumbnail %}
+
+{% block extrastyles %}
+
+{{ block.super }}
+<link rel=stylesheet type=text/css href="{% static 'blog_style.css' %}">
+
+{% endblock %}
+{% block title %}
+{% if postNum != 1 %}
+{{blogType}}
+{%else %}
+{{blogObjects.0.title}}
+{%endif%}
+
+{% endblock %}
+
+{% block content %}
+            
+<div class="row-fluid">
+
+              <h2>{{blogType}}</h2>
+
+
+
+{%if not postNum %}
+No articles matching your criteria.
+{%endif%}
+
+              {% if request.user.is_staff %}
+            	{% comment %}<p><a href="../new_blog_post" class="addPost" style="margin:20px">Add new post</a>  </p>{% endcomment %}
+			<input style="" type="button" value="Add new post" onclick=location.href="{% url 'new_blog_post' %}">
+              {% endif %}
+
+
+              {% comment %}{% if u.isAdmin %}
+            		<p><a href="{% url 'setBlogAdmin' %}" class="addPost" style="margin:20px">Set permissions remotely</a>  </p>
+			<input style="" type="button" value="Set permissions remotely" onclick=location.href="{% url 'setBlogAdmin' %}">
+              {% endif %}  {% endcomment %}
+
+<div style="clear:both;margin-top:1%"> </div>
+
+{%if not postNum %}
+No articles matching your criteria.
+{%endif%}
+
+<div class="span2"></div> 
+<div class="span9 pull-righ" id="blogWrappe">
+
+{% for i in blogObjects %}
+
+
+
+ <div class="post">
+  
+              {% if request.user.is_staff %}
+		{% comment %}<a href="{% url 'delete_blog_post' blog_post_id=i.seqId %}" title="DeletePost" class="deletePost">Delete this post</a>{% endcomment %}
+   {#<input style="float:right" type="button" value="Delete this post" onclick=location.href="{% url 'blog_post' blog_post_id=i.seqId %}">#}
+                
+                    <form action="{% url 'blog_post' blog_post_id=i.seqId %}" method="post" class="">
+                       <input type="hidden" name="delete" value="True">
+                       <input type="hidden" name="blog_post_id" value="{{i.seqId}}">
+                       <input style="" type=submit value="Delete this post">
+                     </form>
+
+
+
+   		{% comment %}<a href="{% url 'edit_blog_post' blog_post_id=i.seqId %}" title="EditPost" class="deletePost" style="clear:both;margin-top:5px;">Edit this post</a>{% endcomment %}
+             <input style="float:right" type="button" value="Edit this post" onclick=location.href="{% url 'edit_blog_post' blog_post_id=i.seqId %}">
+              {% endif %}
+   
+ <div class="blogTitle"><a href="{% url 'blog_post' blog_post_id=i.seqId %}">{{i.title}}</a> </div>
+
+{% comment %}
+ <p> {{i.date|date:"M d, Y"}}</p> 
+{% endcomment %}
+<br>
+  {% comment %}
+  <br>
+  {{i.tags}}
+  {{i.picPath}}
+  <br>
+
+  {% endcomment %}
+  {% if i.picPath %}
+
+      {% if postNum > 1 %}
+
+    <p><a href="{% url 'blog_post' blog_post_id=i.seqId %}"> 
+
+{% thumbnail i.picPath "x200" as im %}
+    <img class="blogPicSmall" src="{{ im.url }}">
+{% endthumbnail %}
+
+   {#   <img src="{{stat_url}}{{i.picPath}}" class="detailPic"></p>  #}
+   
+   </a>
+
+   {% else %}
+   
+   
+{% thumbnail i.picPath "x410" as im %}
+ 
+
+<p>
+   <a href="{{im.url}}">  
+
+      <img class="detailPic" src="{{ im.url }}">
+
+   </a> 
+   </p>  
+
+{% endthumbnail %}
+
+  {# <img src="{{stat_url}}{{i.getLargePicPath}}" class="itemSolo_pics_blog" #}
+
+
+
+  {% endif %}
+
+   
+  {% endif %}
+   
+  <div style="clear:both"> </div>
+  <br>
+
+   {% if postNum > 1 %}
+     {% if i.content|length > 400 %}
+     <p>{{i.content|truncatewords:104 |safe}} &nbsp &nbsp <a href="{% url 'blog_post' blog_post_id=i.seqId %}"> [...]</a> </p> 
+     <a href="{% url 'blog_post' blog_post_id=i.seqId %}">Read more....</a> 
+     {%else%}
+        <p>{{i.content|safe }} </p>
+      {%endif%}
+   {% else %}
+
+      <p>  {% autoescape off %} {{i.content}} {% endautoescape %}</p>
+   {% endif %}
+   
+ </div> {% comment %} post {% endcomment %}
+<br>
+  <hr style="width:90%;" >
+   <hr style="width:90%;" >
+   <hr style="width:90%;" >
+ 
+
+ 
+{% endfor %}  {% comment %} loop over blog posts {% endcomment %}
+
+ </div> <!-- blogWrapper  span9-->
+
+</div>
+
+{% endblock %}  {% comment %} body block {% endcomment %}

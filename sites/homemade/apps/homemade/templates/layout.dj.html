@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<head>
+
+{% load staticfiles %}
+
+{% load macros %}
+
+{% load replace %}
+
+
+        {% block favicon %}
+            <link rel="shortcut icon" href="{% static "favicon.png" %}" />
+        {% endblock %}
+
+{#<link rel='shortcut icon' href="{% static 'oscar/favicon.ico' %}" />#}
+
+
+{% block includes %}
+  <meta name="viewport" content="width=device-width"/>
+  <link rel='stylesheet' type='text/css' href="{% static 'style_colors.css' %}"/>
+  <link rel='stylesheet' media='screen and (max-width: 802px)' href="{% static 'style_narrow.css' %}"/>
+
+
+  <script type="text/javascript" src="{% static 'js/jquery-1.8.2.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'js/jquery.autocomplete.min.js' %}"> </script>
+
+{% endblock %}
+
+
+ <title>{% block title %}{% endblock %}</title>
+</head>
+
+
+
+
+
+<body>
+
+
+<div id="wrapper" >
+
+  <nav id="nav" >
+
+  {% block nav %}
+
+
+  <ul id="navigation">
+		<li id=menuListLL><a href="" class="first">HOME</a> </li>
+
+    <li> <div id="menuNoLink" >ABOUT  </div>
+       
+			<ul>
+				<li><a href="{% url 'about' %}>Our Mission</a></li>
+				<li><a href="#">More Info &raquo;</a>
+					<ul>
+						<li><a href="#">HM1616 Folks</a></li>
+						<li><a href="#">Other Web Resources</a></li>
+					</ul>					
+				</li>					
+			</ul>
+	</li>
+
+
+ {% endblock %}   
+
+
+</nav>
+
+
+<div style="clear:both"> </div>
+
+{% block logoBanner %}
+
+
+<div class="logoIndex span7">  
+
+   <a href="{% url 'catalogue:index' %}"> <img style="width:100%;margin-top:-32px;margin-left:6px;max-width:260px" src="{{ STATIC_URL }}icons/H1616-LOGO-BROWN.png" %}>  </a>
+
+
+{#   <h2>Home-Made 1616</h2>  #}
+
+</div> 
+
+
+
+  <div id="browseBannerWide" style="width: 102%;height:6em;overflow:hidden; float:left;margin-left:-2%;z-index:0;position:relative">
+    <img src="{% static 'icons/BannerImage-2.jpg' %} class="store_banner" style="width:100%;">
+  </div>
+
+
+{% endblock logoBanner %}
+
+	
+{% block msg %}
+{% if msg %}<div class=msg> {{ msg }}</div>{% endif %}
+{% endblock msg %}
+
+
+
+{% macro categoryListMacro(title='') -%}
+
+<div class="categoryBox">
+
+  
+  {% for c  in cList %}
+  <div class="category">
+  
+ 	<div  class="catIcon"  >    
+       <a href="{% url 'filter' category=c.name %} "><img style="position:relative;left:-1.0em;top:{% if c.name == "Granola and Cereals"%}-1.5em {%else %}-0.4em{%endif%};"src="{% static 'icons/' %} {{c.iconFileLink}}" onmouseover="this.src='{% static 'icons/'%} {{c.iconFileHover }}" onmouseout="this.src='{% static 'icons/'%} {{c.iconFileLink }}" /></a>
+    </div> 
+    <div class="catText"> 
+       <a href="{% url 'filter' category=c.name) }} " style="">{{c.name|upper|replace:{"AND ", " & "} }</a>
+  	</div>
+  </div> 
+
+  
+  {% endfor %}
+</div> 
+
+  {% endmacro %}
+
+{% macro giveBackMacro(title='') %}
+
+<div class="giveBackBox">
+
+  <img src="{% static 'icons/Icon-Heart.png' %}" class="giveBackHeart"  >
+  <div class="helpGiveText"> 
+  <a style="color:#ff6666;font-size:1.0em;float:left;" href="#openModalGive">HELP US GIVE BACK</a>
+ </div>
+     <div id="openModalGive" class="modalGiveBackDialog">
+	<div> 
+		<a href="#close" title="Close" class="close">X</a>
+		<h2>Giving Back To The Local Food Community</h2>
+	   <p> Every time you buy something on homemade1616.com, we donate 10% of our proceeds to an amazing California-based food-related nonprofit organization, and you get to choose which organization receives that donation upon checkout! </p> <p> Sellers pay nothing extra. You pay nothing extra. We think giving back is the right thing to do.
+    </p>
+    <form action="#close" method="" >
+	  <article>
+	  <label>
+	  <span></span>
+	  </label>
+	  </article>
+	  <input type="hidden" name="return" value="True" /> 
+	  <div class=deleteButto><input type=submit value="Close window"></div>
+	  
+	  
+
+	 </form>
+		
+	</div> 
+       </div> 
+     
+
+
+    <div style="clear:both;"  > </div>
+    <ul>
+      <li> Browse the delectable goods  </li>
+      <li> Add items to your basket </li>
+      <li> Make a payment  </li>
+      <li> Select from the list of nonprofits you'd like to support. </li>
+      <li> Enjoy your goodies and feel good about your good deeds. Got it? Good. </li>
+    </ul>
+  
+</div> 
+  {% endmacro %} 
+
+  {% block body %}
+  {% endblock %}
+
+{% block footer %}
+
+{% endblock footer %}
+
+</div>
+
+</div> <!-- wrapper -->
+
+<div class=footer3 > 
+
+ 
+
+
+<div class=footerText >
+
+<ul>
+     <li>2013 Homemade 1616</li>
+     <li>info@homemade1616.com </li>
+     <li><a href="#" >Top</a></li>
+  </ul>
+
+  -- -- 
+</div>
+
+
+
+ </div> 
+
+
+</body>
+
+
+
+
+{% block scripts %}
+
+{% endblock %}
