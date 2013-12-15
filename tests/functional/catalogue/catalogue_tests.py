@@ -429,7 +429,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         browser.get(surl)
 
         ## go to ship address form
-        browser.find_element_by_class_name("orgButton").click()
+        browser.find_element_by_id("selectShippingAddress").click()
 
         b = browser
 
@@ -637,6 +637,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         browser.find_element_by_id('skip-stripe').click()        
 
         # skip the address form
+        element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "id_skipSellerAddress")))
         browser.find_element_by_id('id_skipSellerAddress').click()
 
         ## go to booth

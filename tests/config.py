@@ -91,6 +91,7 @@ def configure():
 
             'OSCAR_CURRENCY_LOCALE':'en_US',
             'TEST_LOCAL':True,
+            'CHECKOUT_ENABLED':True,
 
 
 
