@@ -90,6 +90,7 @@ def configure():
             'OSCAR_DEFAULT_CURRENCY':'USD',
 
             'OSCAR_CURRENCY_LOCALE':'en_US',
+            'TEST_LOCAL':True,
 
 
 

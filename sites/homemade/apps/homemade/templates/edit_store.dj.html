@@ -51,7 +51,7 @@
   
     <dl>
       <dt>Store name (optional):
-      <dd><input id="store_name" autofocus="autofocus" type=text name=store_name size=30 value="{{ u.storeName }}" style="width:300px">
+      <dd><input id="store_name" autofocus="autofocus" type=text name=store_name size=30 value="{{ partner.name }}" style="width:300px">
  
  
 {% comment %} 
@@ -92,13 +92,13 @@
      {% comment %} <dd><input type=text name=county size=32> {% endcomment %}
       
       <dt> Zipcode (optional)
-      <dd><input id="zipcode" type=text name=zipcode size=5 {% if u.zipcode %} value="{{ u.zipcode }}" {%endif%}>
+      <dd><input id="zipcode" type=text name=zipcode size=5 {% if partner.zipcode %} value="{{ partner.zipcode }}" {%endif%}>
     
 
  
       <dt>Bio:  
-    {% if u.bio %} 
-      <dd><textarea id="bio" class="wide" rows=4 cols=80 name=bio>{{u.bio}}</textarea>
+    {% if partner.bio %} 
+      <dd><textarea id="bio" class="wide" rows=4 cols=80 name=bio>{{partner.bio}}</textarea>
     {% else %}
       <dd><textarea id="bio" rows=4 cols=80 name=bio></textarea>
     {% endif %}

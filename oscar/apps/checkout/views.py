@@ -566,7 +566,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         ctx['stripeAppPubKey'] = stripe_keys['publishable_key']
         ctx.update(kwargs)
 
-
+        ctx['pay_in_person_allowed'] = True
         if self.request.GET.has_key('pip'):
             pip = self.request.GET['pip']
             if pip == "hh6ywei22nzl":
@@ -777,10 +777,61 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
 
         if payment_method == "stripe":
             from apps.homemade.homeMade import chargeSharedOscar
-            from math import floor
+            from math import floor, ceil
             if self.request.POST.has_key('stripe'):
                 amountInCents = int(floor(float(total) * 100.0))
-                chargeResponse = chargeSharedOscar(self.request, self.request.basket, order_number, amountInCents)
+                #import ipdb;ipdb.set_trace()
+                shippingCost = float(self.checkout_session.shipping_method().basket_charge_excl_tax())
+                #shippingCostInCents = int(shippingCost * 100.0)
+                if shippingCost > float(total):
+                    errMsg = "There is a problem with the payment parameters. Please contact website support about error 678. Thank you."
+                    messages.error(self.request, errMsg)
+                    return HttpResponseRedirect(reverse('checkout:preview'))
+                total_incl_tax, total_excl_tax = self.get_order_totals()
+                totalWithoutShippingExclTax = float(total_excl_tax) - shippingCost
+                totalWithoutShippingInclTax = float(total_incl_tax) - shippingCost
+                #totalExclTaxCents =  int(floor(float(total_excl_tax) * 100.0))  
+
+                ## start over
+
+                tot1 = float(total_excl_tax)
+
+                #amountToSeller = (tot1 * (1. - 0.035) - 0.3) / 1.029
+                #tax = float(total_incl_tax) - float(total_excl_tax)
+
+                #amountGoingToSellerInCents = int(round(float(amountToSeller) * 100.0))
+
+
+                stripeFee = (0.029 * float(total) ) + 0.30
+                stripeFeeInCents = int(round(float(stripeFee) * 100.0))
+
+                fee = 0.035 * float(totalWithoutShippingExclTax) 
+                feeInCents = int(round(float(fee) * 100.0))
+                feeWithShipping = fee + shippingCost ##+ stripeFee
+                feeWithShippingInCents = int(round(float(feeWithShipping) * 100.0))
+
+                totalInCents = int(round(float(totalWithoutShippingInclTax) * 100.0))
+                amountUsedByStripeForFeeCalc = totalInCents - feeWithShippingInCents
+
+                #amountGoingToSellerInCents = int(round(float(totalWithoutShippingInclTax) * 100.0))
+                #amountGoingToSellerInCents = amountGoingToSellerInCents - feeInCents - stripeFeeInCents
+
+         
+                amountToSeller = float(total) - stripeFee - feeWithShipping
+                amountGoingToSellerInCents = int(round(float(amountToSeller) * 100.0))
+
+
+                ## assert that total is correct
+                tot = amountGoingToSellerInCents + feeWithShippingInCents + stripeFeeInCents
+                tot2 = int(float(total_incl_tax) * 100.0)
+
+                if tot != tot2:
+                    errMsg = "There is a problem with the payment parameters. Please contact website support about error 684. Thank you."
+                    messages.error(self.request, errMsg)
+                    #return HttpResponseRedirect(reverse('checkout:preview'))
+
+
+                chargeResponse = chargeSharedOscar(self.request, self.request.basket, order_number, amountInCents, feeWithShippingInCents)
                 try:
                     chargeSuccess = not chargeResponse.failure_code 
                 except:

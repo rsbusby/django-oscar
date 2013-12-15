@@ -2,7 +2,7 @@ from oscar.apps.address.abstract_models import AbstractPartnerAddress
 from oscar.apps.partner.abstract_models import (
     AbstractPartner, AbstractStockRecord, AbstractStockAlert)
 
-from oscar.apps.catalogue.models import Product
+from oscar.apps.catalogue.models import Product, ProductImage
 #from apps.homemade.homeMade import Item
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -33,6 +33,22 @@ class Partner(AbstractPartner):
 
     zipcode = models.CharField(
         _("Zipcode"), max_length=5, blank=True, null=True)
+
+    picPath = models.CharField(
+        _("Pic path"), max_length=255, blank=True, null=True)
+
+class PartnerImage(ProductImage):
+    
+    partner = models.ForeignKey(
+        'partner.Partner', related_name='images', verbose_name=_("Partner"))
+
+    class Meta:
+        abstract = True
+        unique_together = ("partner", "display_order")
+        ordering = ["display_order"]
+        verbose_name = _('Partner Image')
+        verbose_name_plural = _('Partner Images')
+
 
 
 class PartnerAddress(AbstractPartnerAddress):

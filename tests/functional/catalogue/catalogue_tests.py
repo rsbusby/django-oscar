@@ -345,6 +345,8 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         self.user2.save()        
         self.partner1 = G(Partner, users=[self.user1])
         self.partner2 = G(Partner, users=[self.user2])
+        self.partner2.stripeToken = None;
+        self.partner2.stripePubKey = None;        
         self.product1 = create_product(partner=self.partner1)
         self.product2 = create_product(partner=self.partner2, attributes={'weight':1.0})
 
@@ -617,10 +619,8 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         #ff(b, 'filter', "Los Angeles")
 
 
-        county = Counties(county = "Kern", state="CA")
-        county.save()
-
-
+        #county = Counties(county = "Kern", state="CA")
+        #county.save()
      
         #bcc = browser.find_element_by_class_name("select2-choice")
         #bcc.click()
@@ -633,19 +633,15 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         elem = browser.find_element_by_id('submit-booth').click()
 
-        ##
-
+        ## skip Stripe signup
         browser.find_element_by_id('skip-stripe').click()        
-
 
         # skip the address form
         browser.find_element_by_id('id_skipSellerAddress').click()
 
-
         ## go to booth
         browser.find_element_by_id('my-booth').click()
    
-
         ## add new item
         browser.find_element_by_id('addNewItemButton').click()
 
@@ -656,8 +652,6 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## click checkbox for local pickup
         browser.find_element_by_id('id_local_pickup_enabled').click()
-
-
 
 
         ## test pic upload
@@ -674,8 +668,6 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ## make sure no other items are there
         self.failIf(browser.page_source.count(self.product2.title) > 0)
         self.failIf(browser.page_source.count(self.product1.title) > 0)
-
-
 
 
         ## clean up
@@ -729,7 +721,6 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         self.loginUser(user3, browser)
 
-        ##import ipdb;ipdb.set_trace()
         ## go to open booth page
         browser.find_element_by_id
         elem = browser.find_element_by_id('open-booth')
@@ -746,11 +737,11 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
         from apps.homemade.homeMade import *
-        county = Counties(county = "Kern", state="CA")
-        county.save()
+        #county = Counties(county = "Kern", state="CA")
+        #county.save()
 
 
-        from selenium.webdriver.common.keys import Keys
+        #from selenium.webdriver.common.keys import Keys
 
         #bcc = browser.find_element_by_class_name("select2-choice")
         #bcc.click()
@@ -765,20 +756,41 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ##
 
-        browser.find_element_by_id('skip-stripe').click()        
+        #browser.find_element_by_id('skip-stripe').click()        
 
+        ## set partner2 to accept remote payments
+        browser.find_element_by_id("stripeConnectAfterBoothCreation").click()
 
-        ## now can deal with the address form!
+        ## use ability to skip this since in testing 
 
+        browser.find_element_by_id("skip-account-app").click()
 
+        ## go to ship address form
+        #browser.find_element_by_class_name("orgButton").click()
 
-        ## ok done
+        b = browser
+        element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "id_first_name")))
+        ff(b, 'id_first_name', 'Bob')
+        ff(b, 'id_last_name', 'number2')
+        ff(b, 'id_line1', '708 Hampton Dr')                
+        ff(b, 'id_line4', 'Venice') 
+        ##ff(b, 'id_country', 'US')                                               
+        ff(b, 'id_state', 'CA')  
+        ff(b, 'id_postcode', '90291')
+
+        browser.find_element_by_id("store-ship-new-submit").click()
+
+        ## should be back in booth 
+        self.failIf(browser.page_source.count(str(user3.partner.name)) < 1)        
+
 
         ## test the edit form
         self.go(reverse('register_store'), browser)
+        self.failIf(browser.page_source.count("Bio") < 1)        
         elem = browser.find_element_by_id('submit-booth').click()
 
-
+        ## check that back in booth now, not on Stripe page or address page
+        self.failIf(browser.page_source.count(str(user3.partner.name)) < 1)        
 
         ## test the add item form
         ## go to the booth page
@@ -852,11 +864,18 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         surl = self.live_server_url + url
         browser.get(surl)
 
+
+        ## set partner2 to accept remote payments
+        browser.find_element_by_id("stripeConnect").click()
+
+        ## use ability to skip this since in testing 
+        browser.find_element_by_id("skip-account-app").click()
+
         ## go to ship address form
-        browser.find_element_by_class_name("orgButton").click()
+        #browser.find_element_by_class_name("orgButton").click()
 
         b = browser
-
+        element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "id_first_name")))
         ff(b, 'id_first_name', 'Bob')
         ff(b, 'id_last_name', 'number2')
         ff(b, 'id_line1', '708 Hampton Dr')                
@@ -867,15 +886,17 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         browser.find_element_by_id("store-ship-new-submit").click()
 
+        ### the following use of the Mongo DB is deprecated
+        #from apps.homemade.homeMade import getSellerFromOscarID
+        #seller = getSellerFromOscarID(self.user2.id)
+        #seller.stripeSellerToken = "fkae_token"
+        #seller.stripeSellerPubKey = "fake_key"
+        #seller.save()
 
-        ## set user2 to accept remote payments
-
-        from apps.homemade.homeMade import getSellerFromOscarID
-        seller = getSellerFromOscarID(self.user2.id)
-
-        seller.stripeSellerToken = "fkae_token"
-        seller.stripeSellerPubKey = "fake_key"
-        seller.save()
+        ## use PSQL instead, and use actual credentials
+        #self.partner2.stripeToken = "fkae_token"
+        #self.partner2.stripePubKey = "fake_key"
+        #self.partner2.save()
 
 
         ## logout user2
@@ -972,18 +993,30 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
         ## choose payment method
-        #b.find_element_by_id("choose-stripe").click()
+        useStripe = False
+        ## pay with card 
+        if useStripe:
+            b.find_element_by_id("choose-stripe").click()
+            b.find_element_by_class_name("stripe-button-el").click()
 
-        ## preview looks OK?
+            ## Stripe checkout pops up? (This does not work, probably need to call charge explicitly)
+            bb = browser.find_element_by_id('paymentNumber')
+            bb.send_keys("4242424242424242")     
+            bb = browser.find_element_by_id('paymentExpiry')
+            bb.send_keys("222")
+            bb = browser.find_element_by_id('paymentName')
+            bb.send_keys("222")             
+            bb = browser.find_element_by_id('paymentCVC')
+            bb.send_keys("222")
+           
+            browser.find_element_by_class_name("submit").click()
+        else:
 
-        ## pay with card ?? (this probably won't work)
-
-        ## or set to pay later, skip stripe
-        ## post payment_method" value="in_person" to checkout/payment_details
-        self.go("/checkout/payment-details/?pip=hh6ywei22nzl")
-
-        b.find_element_by_id("payInPersonButton").click()
-        b.find_element_by_id("place-order").click()
+            ## or set to pay later using GET trick, skip stripe
+            ## post payment_method" value="in_person" to checkout/payment_details
+            self.go("/checkout/payment-details/?pip=hh6ywei22nzl")
+            b.find_element_by_id("payInPersonButton").click()
+            b.find_element_by_id("place-order").click()
 
 
         #import commands
@@ -999,15 +1032,12 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
         ## check that can reply to seller
+        element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "contactSellerButton")))
         b.find_element_by_id("contactSellerButton").click()        
 
         self.failIf(browser.page_source.count(self.partner2.name) < 1)
 
         self.failIf(browser.page_source.count("Message") < 1)        
-
-
-
-        ## 
 
 
         ## logout, login as seller

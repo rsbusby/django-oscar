@@ -2628,11 +2628,23 @@ def register_store(*args, **kwargs):
         request.form = request.POST
         request.files = request.FILES
         g = request
+        user = request.user
+        storeExists = False
+        partner = None
+        try:
+            if user.partner:
+                storeExists = True
+                partner = user.partner
+        except:
+            pass
+
         u = getSellerFromOscarID(request.user.id)
-        if u.storeExists: 
-            template = "edit_store.html"
-        else:
-            template = "register_store.html"
+        #if storeExists: 
+        #template = "edit_store.html"
+        #else:
+        template = "edit_store.html"
+
+
 
     msg = None
     if request.method == 'POST':
@@ -2672,7 +2684,7 @@ def register_store(*args, **kwargs):
                 u.zipcode = request.form['zipcode']
             except:
                 msg = "Invalid zipcode."
-                return render_template(template, u=u, msg=msg, counties = Counties.objects())
+                return render_template(template, u=u, partner=partner, msg=msg)
 
         if request.files.has_key('store_pic') and request.files['store_pic'] != '':
 
@@ -2705,6 +2717,8 @@ def register_store(*args, **kwargs):
         partner.name = u.storeName
         partner.zipcode = u.zipcode
         partner.bio = u.bio
+        partner.picPath = u.storePicPath
+
         partner.save() 
 
         ## set the partner address ?? 
@@ -2716,7 +2730,12 @@ def register_store(*args, **kwargs):
         # flash('Your booth was successfully registered')
         #return redirect(url_for('termsOfUse', store_name=u.name))
 
-        return redirect(url_for('stripe_connect_signup'))
+        ## if no payment credentials, set those up
+        if not partner.stripeToken or not partner.stripePubKey:
+            return redirect(url_for('stripe_connect_signup'))
+        ## otherwise go to the booth page
+        return redirect(url_for('catalogue:index', booth=partner.id))
+
 
     # if not STAND_ALONE:
     #     from django.http import HttpResponse
@@ -2730,7 +2749,7 @@ def register_store(*args, **kwargs):
     #     #c = RequestContext(request, {uuu:None, msg:msg, counties:Counties.objects()})
     #     return HttpResponse(t.render(c), content_type="text/html; charset=UTF-8")
     
-    return render_template(template, u=u, msg=msg, counties = Counties.objects())
+    return render_template(template, u=u, partner=partner, msg=msg)
 
 
 def emailAboutNewBooth(request):
@@ -3590,6 +3609,16 @@ def stripeLogin(*args):
 
 
     ##return redirect(stripeAuth.get_authorize_url(**params))
+
+    ## if testing then go to test redirect URL
+
+    try:
+        if settings.TEST_LOCAL:
+            testStripeRedirect = "http://localhost:8081/homemade/stripe_authorized/"
+            return redirect("https://connect.stripe.com/oauth/authorize?redirect_uri=" + testStripeRedirect +"&response_type=code&scope=read_write&client_id="+app.config['stripe_client_id'])
+    except:
+        pass
+
     return redirect("https://connect.stripe.com/oauth/authorize?response_type=code&scope=read_write&client_id="+app.config['stripe_client_id'])
 
 
@@ -3706,6 +3735,14 @@ def stripeAuthorized(*args):
 
     #flash('Logged in as ' + me['name'])
     #return redirect(url_for('catalogue:index', booth=u.storeName))
+
+    ## is there a default store address already? If so just go straight to booth
+    try:
+        defaultAddress = UserAddress._default_manager.filter(user=self.request.user).order_by('-is_default_for_store')[0]
+        if defaultAddress:
+            return redirect(url_for('catalogue:index', booth=partner.id))
+    except:
+        pass
     return redirect(url_for('customer:store-shipping-address'))
 
 
@@ -3716,7 +3753,7 @@ def stripeInfo():
     return render_template('stripe_info.html')
 
 # @app.route('/charge_shared', methods=['POST'])
-def chargeSharedOscar(request, basket, order_number, amountInCents):
+def chargeSharedOscar(request, basket, order_number, amountInCents, feeInCents):
 
     if not STAND_ALONE:
         #request = args[0]
@@ -3799,7 +3836,8 @@ def chargeSharedOscar(request, basket, order_number, amountInCents):
             card = tempToken.id,
             amount=amountInCents,
             currency='usd',
-            application_fee=int(floor(int(amountInCents) * 0.035)), # amount in cents
+            #application_fee=int(floor(int(amountInCents) * 0.035)), # amount in cents
+            application_fee=feeInCents, # amount in cents            
             api_key=basket.seller.stripeToken,  ##seller.stripeSellerToken,
             #api_key=stripe.api_key,
             description=str(order_number)

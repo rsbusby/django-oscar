@@ -30,3 +30,12 @@ class OrderTotalCalculator(object):
         if shipping_method:
             total += shipping_method.basket_charge_excl_tax()
         return total
+
+    def shipping_cost(self, basket, shipping_method=None, **kwargs):
+        """
+        Return order total excluding tax
+        """
+        shippingCost = 0
+        if shipping_method:
+            shippingCost += shipping_method.basket_charge_excl_tax()
+        return shippingCost

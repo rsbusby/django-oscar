@@ -70,6 +70,21 @@ class CheckoutSessionMixin(object):
         total_excl_tax = calc.order_total_excl_tax(basket, shipping_method, **kwargs)
         return total_incl_tax, total_excl_tax
 
+    def get_order_shipping_cost(self, basket=None, shipping_method=None, **kwargs):
+        """
+        Returns the shipping cost
+        """
+
+        if not basket:
+            basket = self.request.basket
+        if not shipping_method:
+            shipping_method = self.get_shipping_method(basket)
+        shippingCost = shipping_method.basket_charge_excl_tax()
+
+        ##calc = OrderTotalCalculator(self.request)
+        ##shipping_excl_tax = calc.shipping_cost(basket, shipping_method, **kwargs)
+        return shippingCost
+
     def get_context_data(self, **kwargs):
         """
         Assign common template variables to the context.

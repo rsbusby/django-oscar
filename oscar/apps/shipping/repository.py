@@ -110,7 +110,7 @@ class Repository(object):
             parcel = easypost.Parcel.create(
                 length = 20.2, 
                 width = 10.9,
-                height = 5,
+                height = 8,
                 weight = weight,
             )
 

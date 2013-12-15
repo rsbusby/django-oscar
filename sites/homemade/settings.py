@@ -424,7 +424,7 @@ MANDRILL_API_KEY = os.environ['MANDRILL_API_KEY']
 
 ## shipping setup
 POSTMASTER_IO_KEY = os.environ['POSTMASTER_IO_KEY_TEST']
-EASYPOST_KEY = os.environ['EASYPOST_KEY_TEST']
+EASYPOST_KEY = os.environ['EASYPOST_KEY']
 
 EMAIL_SUBJECT_PREFIX = ''
 ##EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -440,7 +440,7 @@ OSCAR_CURRENCY_LOCALE = 'en_US'
 # Address settings
 OSCAR_REQUIRED_ADDRESS_FIELDS = ('first_name', 'last_name', 'line1',
                                  'line4', 'postcode' )
-
+TEST_LOCAL=False
 
 # Reviews
 OSCAR_ALLOW_ANON_REVIEWS = False
