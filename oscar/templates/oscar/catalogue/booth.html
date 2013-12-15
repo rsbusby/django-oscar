@@ -266,15 +266,28 @@
    <br><br>
    You are signed up to accept payments using <a href="https://manage.stripe.com/dashboard" target="_blank">Stripe</a>.
    
+    <a class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;font-size:1em" href="https://manage.stripe.com/dashboard" target="_blank">{% trans 'Open your Stripe dashboard' %}</a>
+
+
    {% comment %}<a href="{% url 'stripeInfo' %}" > See more details about payments here. </a>{% endcomment %}
    
 {% endif  %}  {% comment %} if not stripeAccountToken {% endcomment %}
 
 </div>
 
+	<br>
 
-{# pick an outgoing shipping address #}
-  <a class="btn orgButton" style="bbackground-color:#F0F0F0" href="{% url 'customer:store-shipping-address' %}">{% trans 'Choose an outgoing address' %}</a>
+	{% if not partnerAddress %}
+	  {# pick an outgoing shipping address #}
+	  <a class="btn orgButton" style="bbackground-color:#F0F0F0" href="{% url 'customer:store-shipping-address' %}">{% trans 'Choose an outgoing address' %}</a>
+	{% else %}
+
+		You have an address on file, in zipcode {{partnerAddress.postcode}}
+		<br>
+
+		 <a class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;font-size:1em" href="{% url 'customer:store-shipping-address' %}">{% trans 'Select a different outgoing address' %}</a>
+
+	{% endif %}
 
 
 {% endif  %} {# is seller#}

@@ -803,6 +803,14 @@ class StoreShippingAddressView(CreateView):
         if self.request.user.is_authenticated():
             # Look up address book data
             kwargs['addresses'] = self.get_available_addresses()
+
+        try:
+            partner = self.request.user.partner
+            partnerAddress = UserAddress._default_manager.filter(user=self.request.user).order_by('-is_default_for_shipping')[0]
+            kwargs['partnerAddress'] = partnerAddress
+        except:
+            kwargs['partnerAddress'] = None
+
         return kwargs
 
     def get_available_addresses(self):

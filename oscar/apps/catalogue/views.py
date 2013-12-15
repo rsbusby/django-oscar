@@ -26,6 +26,8 @@ Category = get_model('catalogue', 'category')
 ProductAlert = get_model('customer', 'ProductAlert')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
 Partner = get_model('partner', 'partner')
+UserAddress = get_model('address', 'UserAddress')
+
 
 
 class ProductDetailView(DetailView):
@@ -368,6 +370,14 @@ class ProductListView(ListView):
                     partner = Partner.objects.filter(id=pq)[0]
                     context['partner'] = partner
                     context['summary'] = partner.name
+
+                    ## get primary partner address
+                    try:
+                        shipFromAddress = UserAddress._default_manager.filter(user=self.request.user).order_by('-is_default_for_shipping')[0]
+                    except:
+                        shipFromAddress = None
+                    context['partnerAddress'] = shipFromAddress
+
                     ## current user in MongoDB
                     try:
                         context['muser'] = Seller.objects.filter(oscarUserID=self.request.user.id)[0]
