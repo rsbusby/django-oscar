@@ -279,7 +279,7 @@
 
 	{% if not partnerAddress %}
 	  {# pick an outgoing shipping address #}
-	  <a id="selectShippingAddress" class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;" href="{% url 'customer:store-shipping-address' %}">{% trans 'Choose an outgoing address' %}</a>
+	  <a id="selectShippingAddress" class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;font-size:1em;" href="{% url 'customer:store-shipping-address' %}">{% trans 'Choose an outgoing address' %}</a>
 	{% else %}
 
 		You have an address on file, in zipcode {{partnerAddress.postcode}}
