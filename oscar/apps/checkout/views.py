@@ -125,6 +125,13 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
     form_class = ShippingAddressForm
 
     def get(self, request, *args, **kwargs):
+
+
+        ## for now, disable
+        if not settings.CHECKOUT_ENABLED:
+            messages.info(request, _("Checkout is disabled until the site launches. We'll let you know by email when it's ready!"))
+            return HttpResponseRedirect(reverse('basket:summary'))
+
         # Check that the user's basket is not empty
         if request.basket.is_empty:
             messages.error(request, _("You need to add some items to your basket to checkout"))
