@@ -317,15 +317,15 @@ class ProductListView(ListView):
             #    qs = qs.exclude(status__icontains='disabled')
             return qs ##.order_by('?')
         else:
-            ## if not filtered, don'tshow "Other" items
-            try:
-                category = Category.objects.filter(name="Other")[0]
-                categories = list(category.get_descendants())
-                categories.append(category)
-                qs = qs.exclude(categories__in=categories)
+            ## if not filtered, don'tshow "Other" items (no longer doing this Dec 14 2013)
+            # try:
+            #     category = Category.objects.filter(name="Other")[0]
+            #     categories = list(category.get_descendants())
+            #     categories.append(category)
+            #     qs = qs.exclude(categories__in=categories)
 
-            except:
-                pass
+            # except:
+            #     pass
 
             #qs = qs.exclude(status__contains='disabled')
             ## randomize
