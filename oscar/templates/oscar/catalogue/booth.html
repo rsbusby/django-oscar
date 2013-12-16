@@ -279,10 +279,12 @@
 
 	{% if not partnerAddress %}
 	  {# pick an outgoing shipping address #}
-	  <a id="selectShippingAddress" class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;font-size:1em;" href="{% url 'customer:store-shipping-address' %}">{% trans 'Choose an outgoing address' %}</a>
+	  Please add a primary address. <br>
+	  This is used to estimate shipping costs.
+	  <a id="selectShippingAddress" class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;font-size:1em;" href="{% url 'customer:store-shipping-address' %}">{% trans 'Submit an address' %}</a>
 	{% else %}
 
-		You have an address on file, in zipcode {{partnerAddress.postcode}}
+		You have an address on file, in zipcode {{partnerAddress.postcode}}.
 		<br>
 
 		 <a id="selectShippingAddress" class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;font-size:1em" href="{% url 'customer:store-shipping-address' %}">{% trans 'Select a different outgoing address' %}</a>
