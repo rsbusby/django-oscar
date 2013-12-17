@@ -454,7 +454,7 @@ OSCAR_SHOP_NAME = 'HomeMade 1616'
 OSCAR_SHOP_TAGLINE = ''
 
 # Enter Google Analytics ID for the tracking to be included in the templates
-#GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
+GOOGLE_ANALYTICS_ID = os.environ['GOOGLE_ANALYTICS_ID']
 
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = False
