@@ -21,6 +21,12 @@
       src="https://maps.googleapis.com/maps/api/js?key={{mapsKey}}&sensor=false">
     </script>
     <script type="text/javascript">
+      
+
+     var markers = [];
+     infoWindows = Array();
+
+
       function initialize() {
         var mapOptions = {
           center: new google.maps.LatLng(34., -118.244),
@@ -34,20 +40,33 @@
               {% if res.object.get_location  %}
                   
 
+           var myInfoWindow = new google.maps.InfoWindow({
+              content: "{{res.object.title}}",
+              minwidth:200,
+              maxwidth:20,
+
+          });
+
           var marker = new google.maps.Marker({
               position: new google.maps.LatLng({{res.object.getLatLong.0}}, {{res.object.getLatLong.1}}),
               map: map,
               title: "{{res.object.title}}",
+              infowindow: myInfoWindow,
+
           });
 
-          var infowindow = new google.maps.InfoWindow({
-              content: "{{res.object.title}}",
-          });
+       
 
           google.maps.event.addListener(marker, 'click', function() {
-            infowindow.open(map,marker);
+        for(var i=0; i < markers.length; i++){
+            markers[i].infowindow.close();
+        }
+
+            this.infowindow.open(map, this);
           });
 
+          markers.push(marker);
+       
             {% endif %}
 
             {% endfor %}
@@ -174,6 +193,13 @@
 
           <div id="map-canvas" style="width:100%;height:300px;"> </div>
 
+ {% for res in spatial_results %}
+              {% if res.object.get_location  %}
+              {{res.object.title}}  {{res.object.getLatLong}}
+              <br>
+              {% endif %}
+
+              {% endfor %}
         
 
 {% endblock %}

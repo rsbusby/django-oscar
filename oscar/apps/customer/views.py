@@ -832,6 +832,11 @@ class StoreShippingAddressView(CreateView):
             action = self.request.POST.get('action', None)
             if action == 'ship_to':
                 # User has selected a previous address to ship to
+
+                qq = UserAddress._default_manager.filter(user=self.request.user, is_default_for_store=True)
+                for q in qq:
+                    q.is_default_for_store = False
+                    q.save()
                 address.is_default_for_store = True
                 address.save()
                 return HttpResponseRedirect(self.get_success_url())

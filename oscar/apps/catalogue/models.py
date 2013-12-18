@@ -37,27 +37,27 @@ class Product(AbstractProduct):
 
     def getLatLong(self):
         # Remember, longitude FIRST!
+        #import ipdb;ipdb.set_trace()
         try:
             if not self.stockrecord:
                 return None
             
             #if hasattr(self.stockrecord, "latitude"):
-            if self.stockrecord.latitude:
-                    #print "location from sotckrecord for " + self.title +" : " + str(self.stockrecord.longitude) +"  " + str(self.stockrecord.latitude)
-                    self.stockrecord.longitude = None
-                    self.stockrecord.latitude = None
-                    self.stockrecord.save()
+            #if self.stockrecord.latitude:
+            #        #print "location from sotckrecord for " + self.title +" : " + str(self.stockrecord.longitude) +"  " + str(self.stockrecord.latitude)
+            #        self.stockrecord.longitude = None
+            #        self.stockrecord.latitude = None
+            #        self.stockrecord.save()
                 #return Point(self.stockrecord.longitude, self.stockrecord.latitude)
-            else:
+            #else:
                 # try:
 
-                #print "try"
+            try:
                 if self.stockrecord.partner.primary_address:
                     address = self.stockrecord.partner.primary_address
                     #print self.stockrecord.partner.name + " has address"
                    
                     try:
-
                         zipcode = address.postcode
                     except:
                         #print "user " +  self.stockrecord.partner.name + " has no zipcode"
@@ -67,8 +67,18 @@ class Product(AbstractProduct):
                     #print "OK"
                     #print "got location from " + str(zipcode) + " for " + self.stockrecord.partner.name
                     return [lat, long] ##Point(long, lat)
+
+            except:
+                pass
+
+            try:
+                zipcode = self.stockrecord.partner.zipcode
+                return self.getLatLongFromZipcode(zipcode)
+            except:
+                pass
         except:
-            pass        
+            pass
+
 
         return None ##Point(0.0, 0.0)
 
