@@ -36,6 +36,9 @@ class Product(AbstractProduct):
         return str(long) + ',' + str(lat) 
 
     def getLatLong(self):
+         return self.getLatLongFromZipcode(self.getZipcode())
+
+    def getZipcode(self):
         # Remember, longitude FIRST!
         #import ipdb;ipdb.set_trace()
         try:
@@ -63,17 +66,17 @@ class Product(AbstractProduct):
                         #print "user " +  self.stockrecord.partner.name + " has no zipcode"
                         return None ##Point(0.0, 0.0)
 
-                    [lat, long] = self.getLatLongFromZipcode(zipcode)
+                    #[lat, long] = self.getLatLongFromZipcode(zipcode)
                     #print "OK"
                     #print "got location from " + str(zipcode) + " for " + self.stockrecord.partner.name
-                    return [lat, long] ##Point(long, lat)
+                    return zipcode #[lat, long] ##Point(long, lat)
 
             except:
                 pass
 
             try:
                 zipcode = self.stockrecord.partner.zipcode
-                return self.getLatLongFromZipcode(zipcode)
+                return zipcode ##self.getLatLongFromZipcode(zipcode)
             except:
                 pass
         except:
