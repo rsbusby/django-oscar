@@ -30,12 +30,6 @@
             mapOptions);
 
 
-       var marker = new google.maps.Marker({
-              position: new google.maps.LatLng(33.397, -178.644),
-              map: map,
-              title: 'Hello World!'
-          });
-
         {% for res in spatial_results %}
               {% if res.object.get_location  %}
                   
@@ -43,7 +37,15 @@
           var marker = new google.maps.Marker({
               position: new google.maps.LatLng({{res.object.getLatLong.0}}, {{res.object.getLatLong.1}}),
               map: map,
-              title: 'Hello World!'
+              title: "{{res.object.title}}",
+          });
+
+          var infowindow = new google.maps.InfoWindow({
+              content: "{{res.object.title}}",
+          });
+
+          google.maps.event.addListener(marker, 'click', function() {
+            infowindow.open(map,marker);
           });
 
             {% endif %}
