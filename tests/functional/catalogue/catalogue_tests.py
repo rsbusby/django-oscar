@@ -21,6 +21,7 @@ from oscar.core.compat import get_user_model
 from oscar.apps.address.models import Country
 
 from selenium import webdriver
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
@@ -364,6 +365,11 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         surl = self.live_server_url + url
         browser.get(surl)
 
+    def wdw(self, id, seconds=10):
+        ''' Wait a few seconds before trying to click something. Why isn't this the deafault? **Sigh** '''
+
+        return WebDriverWait(self.browser, seconds).until(EC.presence_of_element_located((By.ID, id)))
+
 
     def loginUser(self, user = None, browser=None):
 
@@ -562,6 +568,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
     def test_register_user_and_add_item(self):
+       
         browser = webdriver.Firefox()
         self.browser = browser
 
@@ -644,7 +651,8 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         browser.find_element_by_id('my-booth').click()
    
         ## add new item
-        browser.find_element_by_id('addNewItemButton').click()
+        self.wdw("addNewItemButton").click()
+        #browser.find_element_by_id('addNewItemButton').click()
 
         title = "Test Itemzzzz"
         bb = browser.find_element_by_id('id_title')
@@ -692,6 +700,20 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ''' send msg from one user to another and check that the sent msges display'''
 
+        #FirefoxBinary ffBinary = new FirefoxBinary(pathToBinary);
+        #FirefoxProfile firefoxProfile = new FirefoxProfile();
+        #FirefoxDriver _driver = new FirefoxDriver(ffBinary,firefoxProfile);
+        #webdriver.
+
+
+        #binary = FirefoxBinary('/opt/local/bin/firefox-x11')
+        #profile = webdriver.FirefoxProfile()
+        #profile.add_extension('path/to/xpi') #XPI needs to be on disk and not downloaded from AMO
+        #profile.set_preference('general.useragent.local','<enter your value')
+
+        ##browser = webdriver.Firefox(firefox_binary=binary, firefox_profile=profile)
+        #browser = webdriver.Firefox(firefox_binary=binary)        
+
         browser = webdriver.Firefox()
         self.browser = browser
 
@@ -732,6 +754,8 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         storeName = 'Test Store2'
 
+        element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "store_name")))
+
         ff(b, 'store_name', storeName)
         ff(b, 'zipcode', "90291")
         #ff(b, 'filter', "Los Angeles")
@@ -763,8 +787,9 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         browser.find_element_by_id("stripeConnectAfterBoothCreation").click()
 
         ## use ability to skip this since in testing 
+        self.wdw("skip-account-app").click()
 
-        browser.find_element_by_id("skip-account-app").click()
+        #browser.find_element_by_id("skip-account-app").click()
 
         ## go to ship address form
         #browser.find_element_by_class_name("orgButton").click()

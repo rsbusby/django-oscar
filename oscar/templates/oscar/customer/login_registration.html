@@ -78,7 +78,7 @@
                 <button name="login_submit" type="submit" value="Log In" class="btn btn-large btn-primary">{% trans 'Log In' %}</button>
             </form>
         </div>
-        {% comment %}
+
         <div class="span6 register_form">
             <form id="register_form" action="{{ request.get_full_path }}" method="post" class="form-stacked">
                 <h2>{% trans 'Register' %}</h2>
@@ -87,7 +87,7 @@
                 <button name="registration_submit" type="submit" value="Register" class="btn btn-large btn-primary js-disable-on-click" data-loading-text="{%trans 'Registering...' %}">{% trans 'Register' %}</button>
             </form>
         </div>
-        {% endcomment %}
+
     </div>
 
 {% endblock content %}

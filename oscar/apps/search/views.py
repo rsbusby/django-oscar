@@ -244,8 +244,8 @@ class FacetedSearchView(views.FacetedSearchView):
                 sqs = sqs.filter(content=qStr)
 
         extra['spatial_results'] = sqs        
-
         #import ipdb;ipdb.set_trace()
+        extra['mapsKey'] = settings.GOOGLE_MAPS_KEY
 
 
         return extra

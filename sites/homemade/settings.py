@@ -455,6 +455,7 @@ OSCAR_SHOP_TAGLINE = ''
 
 # Enter Google Analytics ID for the tracking to be included in the templates
 GOOGLE_ANALYTICS_ID = os.environ['GOOGLE_ANALYTICS_ID']
+GOOGLE_MAPS_KEY = os.environ['GOOGLE_MAPS_KEY']
 
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = False
