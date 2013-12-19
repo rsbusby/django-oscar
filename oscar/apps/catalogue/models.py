@@ -25,15 +25,20 @@ class Product(AbstractProduct):
     def getLatLongFromZipcode(self, zipcode):
 
         from apps.homemade.homeMade import HMGeoData
-
-        gd = HMGeoData.objects.filter(zipcode=str(zipcode))[0]
-
+        if not zipcode:
+            return None
+        try:
+            gd = HMGeoData.objects.filter(zipcode=str(zipcode))[0]
+        except:
+            return None
         return [gd.lat, gd.long]
 
     def get_location(self):
-
-        [lat, long] = self.getLatLong() 
-        return str(long) + ',' + str(lat) 
+        try:
+            [lat, long] = self.getLatLong() 
+            return str(long) + ',' + str(lat) 
+        except:
+            return None
 
     def getLatLong(self):
          return self.getLatLongFromZipcode(self.getZipcode())
