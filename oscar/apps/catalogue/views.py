@@ -373,9 +373,10 @@ class ProductListView(ListView):
 
                     ## get primary partner address
                     try:
-                        shipFromAddress = UserAddress._default_manager.filter(user=self.request.user).order_by('-is_default_for_shipping')[0]
+                        shipFromAddress = UserAddress._default_manager.filter(user=partner.user).order_by('-is_default_for_store')[0]
                     except:
                         shipFromAddress = None
+
                     context['partnerAddress'] = shipFromAddress
 
                     ## current user in MongoDB
