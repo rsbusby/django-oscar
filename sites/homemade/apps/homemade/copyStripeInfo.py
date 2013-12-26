@@ -25,10 +25,16 @@ for p in Partner.objects.all():
 		#	p.stripeToken = mu.stripeSellerToken
 		#if mu.stripeSellerPubKey:
 		#	p.stripePubKey = mu.stripeSellerPubKey
-		if mu.bio:
-			p.bio = mu.bio
-		if mu.zipcode:
-			p.zipcode = mu.zipcode
+		
+		#if mu.bio:
+		#	p.bio = mu.bio
+		
+		#if mu.zipcode:
+		#	p.zipcode = mu.zipcode
+
+		if mu.storePicPath:
+			p.picPath = mu.storePicPath
+
 		p.save()
 
 
