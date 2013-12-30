@@ -45,8 +45,8 @@
     {% if not is_booth %}
     {% block product_seller %}
       <!-- <li> -->
-        Maker:
-        <a href="{% url 'catalogue:index' %}?booth={{product.stockrecord.partner.id}}"> {{ product.stockrecord.partner.name|truncatewords:4 }}</a>
+        {#Maker:#}
+        <a style="color:#999999" href="{% url 'catalogue:index' %}?booth={{product.stockrecord.partner.id}}"> {{ product.stockrecord.partner.name|truncatewords:4 }}</a>
       <!-- </li> -->
     {% endblock %}
     {% endif %}
