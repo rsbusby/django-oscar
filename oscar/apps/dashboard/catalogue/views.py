@@ -340,10 +340,11 @@ class ProductCreateUpdateView(generic.UpdateView):
                                     image_formset) ## , recommended_formset)
         else:
             # delete the temporary product again
-            if self.creating and form.is_valid():
-                self.object.delete()
-                self.object = None
+            #if self.creating and form.is_valid():
+            #    self.object.delete()
+            #    self.object = None
             ##self.object.stockrecord = stockrecordSaved
+            image_formset.save()
             return self.forms_invalid(form, stockrecord_form, category_formset,
                                       image_formset) ##, recommended_formset)
 

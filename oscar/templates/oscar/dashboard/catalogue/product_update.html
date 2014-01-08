@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block dashboard_content %}
-<form action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors" autocomplete="off">
+<form id="prodForm" action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors" autocomplete="off">
     {% csrf_token %}
     <div class="row-fluid">
         <div class="span1 pull-left hidden-phone">
@@ -489,6 +489,7 @@
                     </tr>
         </table>    
 
+<div id="local_pickup_err"></div>
 
    {# {% crispy stockrecord_form %} #}
 
@@ -519,7 +520,7 @@
 	{% endif %}
 	>
 	 {{ stockrecord_form.self_ship_cost.errors }}
-
+<div id="self_ship_err"></div>
 
 
 
@@ -551,6 +552,8 @@
 
 	   <input id="PMSmall_num" name="PMSmall_num" type="number" value="{{PMSmall_num}}" >
 	   	                                     {{ stockrecord_form.PMSmall_num.errors }}
+	   	                             	  	 <div id="PMSmall_err"> </div>
+
 
 	</div>
 
@@ -565,6 +568,8 @@
       <label for="PMMedium_num">Number of items that can fit in a 'medium' priority box: </label>
 	  <input id="PMMedium_num" name="PMMedium_num"  type="number" value="{{PMMedium_num}}" >
 	  	                                     {{ stockrecord_form.PMMedium_num.errors }}
+	  	                                    <div id="PMMedium_err"> </div>
+
 
 	</div>
 
@@ -582,7 +587,7 @@
 
 	  <input id="PMLarge_num" name="PMLarge_num" type="number" value="{{PMLarge_num}}" >
 	  	                             {{ stockrecord_form.PMLarge_num.errors }}
-
+	  	                             <div id="PMLarge_err"> </div>
 	</div>
 
 </fieldset>
@@ -613,6 +618,7 @@
                         <td>
                             {{ stockrecord_form.weight }}
                             {{ stockrecord_form.weight.errors }}
+                            <div id="weight_err"></div>
                         </td>
                   
                     </tr>
@@ -748,6 +754,96 @@ $('#demo12').click(function() {
     //  Do something else
 });
 
+function errWrap(text) {
+	return '<ul class="errorlist">' + text +' </ul>';
+}
+
+
+function errMsg(id, msg) {
+	return $('#'+ id).html(errWrap(msg));
+}
+
+function errClean(id) {
+	return $('#'+ id).html('');
+}
+
+function boxErr(idStub) {
+
+    if ($('#'+idStub+'_toggle').prop('checked')   && ! $('#'+idStub+'_num').val()  ){
+  	    errMsg(idStub + '_err', "Please enter the number of items per box.");
+  	    return 1;
+	  }
+	  else{errClean(idStub+'_err');}
+	  return 0;
+
+
+}
+
+function weightErr() {
+
+      if ( ($('#FirstClass_toggle').prop('checked') || $('#UPS_toggle').prop('checked') )   && ! $('#id_weight').val()  ){
+  	    errMsg('weight_err', "Please enter a weight if shipping by UPS or First Class.");
+  	    return 1;
+	  }
+	  else{errClean('weight_err');}
+	  return 0;
+}
+
+function hmItemValidate() {
+
+	var errCount = 0;
+	// should be a name
+	//if ( ! $('#shipChoice').val() {
+	//	errMsg('id_title_err',"Please enter a name for the item.");
+
+	//}
+	//else {errClean('id_title_err')}
+
+	// pick some sort of delvery
+	if ( ! $('#shipChoice').val()  && ! $('#id_local_pickup_enabled').prop('checked')){
+
+		errMsg('local_pickup_err',"Please choose a method of delivery.");
+		errCount  += 1;
+	}
+	else {errClean('local_pickup_err');}
+
+	// self ship OK?
+	if ($('#shipChoice').val() == "self_ship"){
+		if ( ! $('#self_ship_price_1').val()){
+		 errMsg('self_ship_err',"Please enter the shipping cost.");
+		errCount  += 1;
+		}
+		else{errClean('self_ship_err');}
+
+	}
+
+
+	if ($('#shipChoice').val() == "calculate_ship"){
+
+	  errCount  += boxErr("PMSmall");
+	  errCount += boxErr("PMMedium");
+	  errCount += boxErr("PMLarge");
+	 
+	  errCount += weightErr();
+
+	}
+
+	if ( ! errCount ){
+		$("#prodForm").submit();
+	}
+
+}
+
+$(document).ready(function() {
+
+$('#submitTheWholeDarnForm').click(function() { 
+	//alert("YEAH");
+    hmItemValidate();
+
+    //$("#prodForm").submit();
+});
+});
+
 
 </script
 
@@ -804,7 +900,10 @@ $('#demo12').click(function() {
                 {% trans "or" %}
                 <button class="btn btn-secondary btn-large" name="action" type="submit" value="continue">{% trans "Save and continue editing" %}</button>
                 {% endcomment %}
-                <button id="submitTheWholeDarnForm" style="margin-left:1.2em;font-size:1.2em" class="btn btn-primary btn-large" name="action" type="submit" value="save">{% trans "Save" %}</button>
+                <button id="submitTheWholeDarnForm" style="margin-left:1.2em;font-size:1.2em" class="btn btn-primary btn-large" name="actio" type="button" value="save">{% trans "Save" %}</button>
+
+
+
 
                 <a style="margin-right:1.2em;margin-left:1.2em;" href="/catalogue/?booth={{product.stockrecord.partner.id}}">{% trans "Cancel" %}</a>
 
