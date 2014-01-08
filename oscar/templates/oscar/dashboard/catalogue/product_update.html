@@ -419,6 +419,8 @@
                                 </tr>
                                 <tr>
                                     <td>
+                                    	   {#<input id="id_num_in_stock" name="num_in_stock" type="number" value="{{stockrecord_form.num_in_stock.}}" >#}
+
                                         {{ stockrecord_form.num_in_stock }}
                                         {{ stockrecord_form.num_in_stock.errors }}
                                     </td>
@@ -442,11 +444,20 @@
                  
 
     <hr>
+<div class="row-fluid">
+<div class="span3"> 
+    <h3 style="font-weight:bold;font-size:1.24em;margin:0px 0px 5px 0px;margin-bottom:0px"> Delivery options </h3>  
+</div> {# span6#}
+<div class="span4"> 
 
-    <h3 style="font-weight:bold;font-size:1.24em;margin:0px 0px 5px 0pxmargin-bottom:0px"> Delivery options </h3>  &nbsp; &nbsp;  &nbsp; &nbsp;  
+     <div id="shipInfoModalLink" style="margin-top:10px;">
+   <a id="shipInfoModalLinkLink" style="color:#ff6666;font-size:1.0em;float:lef;margin-top:10px;margin-left:0.5em" href="#openModalShipping"> About our shipping options</a>
+   </div>
 
-     
+</div> {# span6#}
+ </div>{#row#}
 
+<br>
     {#{% if payments_enabled %}#}
 {% comment %}
         <table>
@@ -505,9 +516,7 @@
 
 
 <br> 
-<div id="shipInfoModalLink" >
- <a id="shipInfoModalLinkLink" style="color:#ff6666;font-size:1.0em;float:lef;margin-left:0.5em" href="#openModalShipping"> About our shipping calculator</a>
-<br><br><br>
+
 </div>
 
 
@@ -923,19 +932,27 @@ $('#submitTheWholeDarnForm').click(function() {
 
 
 
-    <div id="openModalShipping" class="modalGiveBackDialog">
+    <div id="openModalShipping" class="modalShipInfo">
       <div> 
         <a href="#close" title="Close" class="close">X</a>
         <h2><b>Shipping Information</b></h2>
-        <p> <b>Calculate shipping by weight </b></p>
-        <p> Currently at HM1616 we can accurately calculate shipping costs for U.S.P.S. First Class mail and UPS based on the weight of an item, assuming moderately sized items. If your item is very large (more than  8"x8"x8") or otherwise requires special shipping, the shipping calculator would not be accurate, so please use the fixed price shipping option. 
-       </p>
 
-               <p> <b>Using flat-rate Priority Mail </b></p>
+     <p> <b>Using flat-rate Priority Mail </b></p>
 
        <p>
-        Another easy option is to use flat-rate Priority Mail boxes available through the postal service. Simply pick which boxes you will be using, and enter the number of items that can fit in the type of box(es) that you are shipping in. We'll then calculate how many boxes are needed to fulfill each order.
+        An easy option for domestic shipping is to use flat-rate Priority Mail boxes available through the postal service. Simply pick which boxes you will be using, and enter the number of items that can fit in the type of box(es) that you are shipping in. We'll then calculate how many boxes are needed to fulfill each order.
 </p>
+
+
+        <p> <b>Calculate shipping by weight </b></p>
+        <p> Currently at HM1616 we can accurately calculate shipping costs for USPS First Class mail and UPS based on the weight of an item, assuming moderately sized items. If your item is very large (more than  8"x8"x8") or otherwise requires special shipping, the shipping calculator would not be accurate, so please use the fixed price shipping option. 
+       </p>
+
+                  <p> <b>Custom shipping</b></p>
+                  <p> We realize that it may be easier for you to deal with shipping yourself. If that's the case, just select the option to provide your own shipping.</p>
+
+
+
 
                <p> <b>Going local</b></p>
 
