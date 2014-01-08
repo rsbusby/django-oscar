@@ -40,6 +40,7 @@ def configure():
                 'django.contrib.flatpages',
                 'django.contrib.staticfiles',
                 'sorl.thumbnail',
+                'crispy_forms',
                 'compressor',
                 'apps.homemade',
             ] + OSCAR_CORE_APPS,

@@ -26,6 +26,7 @@ class OrderTotalCalculator(object):
         """
         Return order total excluding tax
         """
+
         total = basket.total_excl_tax
         if shipping_method:
             total += shipping_method.basket_charge_excl_tax()

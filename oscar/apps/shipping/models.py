@@ -7,7 +7,7 @@ from oscar.core.utils import slugify
 from oscar.apps.shipping import Scales
 
 
-class ShippingMethod(models.Model):
+class AbstractShippingMethod(models.Model):
     """
     Fields from shipping.base.ShippingMethod must be added here manually.
     """
@@ -30,7 +30,7 @@ class ShippingMethod(models.Model):
     def save(self, *args, **kwargs):
         if not self.code:
             self.code = slugify(self.name)
-        super(ShippingMethod, self).save(*args, **kwargs)
+        super(AbstractShippingMethod, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
@@ -39,7 +39,11 @@ class ShippingMethod(models.Model):
         self._basket = basket
 
 
-class OrderAndItemCharges(ShippingMethod):
+class ShippingMethod(AbstractShippingMethod):
+    pass
+
+
+class OrderAndItemCharges(AbstractShippingMethod):
     """
     Standard shipping method
 
@@ -94,7 +98,7 @@ class OrderAndItemCharges(ShippingMethod):
         return self.basket_charge_incl_tax()
 
 
-class WeightBased(ShippingMethod):
+class WeightBased(AbstractShippingMethod):
     upper_charge = models.DecimalField(
         _("Upper Charge"), decimal_places=2, max_digits=12, null=True,
         help_text=_("This is the charge when the weight of the basket "

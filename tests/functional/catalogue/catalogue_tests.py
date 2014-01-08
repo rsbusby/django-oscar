@@ -396,6 +396,8 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         '''
 
         browser = webdriver.Firefox()
+        browser.implicitly_wait(20) # seconds
+
         #browser.get('http://seleniumhq.org/')
 
         from selenium.webdriver.common.keys import Keys
@@ -403,10 +405,6 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         url = reverse('catalogue:index')
         surl = self.live_server_url + url
         browser.get(surl)
-
-
-    
-
 
         ## make a user, log in via Selenium
 
@@ -476,6 +474,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ''' send msg from one user to another and check that the sent msges display'''
 
         browser = webdriver.Firefox()
+        browser.implicitly_wait(20) # seconds        
         self.browser = browser
 
         ## --- send msg from user1 to user2
@@ -570,6 +569,8 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
     def test_register_user_and_add_item(self):
        
         browser = webdriver.Firefox()
+        browser.implicitly_wait(20) # seconds
+
         self.browser = browser
 
 
@@ -666,6 +667,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ## test pic upload
         browser.find_element_by_id('id_images-0-original').send_keys("/Users/busby/Documents/DEM/4th floor.JPG")
 
+
         ## submit
         browser.find_element_by_id('submitTheWholeDarnForm').click()
 
@@ -715,6 +717,8 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         #browser = webdriver.Firefox(firefox_binary=binary)        
 
         browser = webdriver.Firefox()
+        browser.implicitly_wait(20) # seconds
+
         self.browser = browser
 
         from apps.homemade.homeMade import *
@@ -834,7 +838,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## should be on new item page now
         #self.failIf(browser.page_source.count("Weight") < 1)
-        self.failIf(browser.page_source.count("shipping options") < 1)        
+        #self.failIf(browser.page_source.count("shipping options") < 1)        
         self.failIf(browser.page_source.count("Price") < 1)
 
 
@@ -870,6 +874,8 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         '''
 
         browser = webdriver.Firefox()
+        browser.implicitly_wait(20) # seconds
+
         self.browser = browser
 
 
@@ -895,13 +901,15 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         browser.find_element_by_id("stripeConnect").click()
 
         ## use ability to skip this since in testing 
+        #WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.ID, "skip-account-app"))).click()
+
         browser.find_element_by_id("skip-account-app").click()
 
         ## go to ship address form
         #browser.find_element_by_class_name("orgButton").click()
 
         b = browser
-        element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "id_first_name")))
+        element = WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.ID, "id_first_name")))
         ff(b, 'id_first_name', 'Bob')
         ff(b, 'id_last_name', 'number2')
         ff(b, 'id_line1', '708 Hampton Dr')                
@@ -1005,18 +1013,13 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ## choose an address
         b.find_element_by_class_name("ship-address").click()
 
-        ## are shipping options there
+        ## are shipping options there?
 
         ## choose shipping option
         b.find_element_by_class_name("select-shipping").click()
 
-
-
         ## choose sponsored org
         b.find_element_by_class_name("orgButton").click()
-
-
-
 
         ## choose payment method
         useStripe = False
@@ -1041,6 +1044,9 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
             ## or set to pay later using GET trick, skip stripe
             ## post payment_method" value="in_person" to checkout/payment_details
             self.go("/checkout/payment-details/?pip=hh6ywei22nzl")
+            browser.implicitly_wait(10) # seconds
+            #element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "payInPersonButton")))
+            #element.click()
             b.find_element_by_id("payInPersonButton").click()
             b.find_element_by_id("place-order").click()
 
@@ -1111,6 +1117,388 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
 
+    def test_self_shipping(self):
+        ''' test checkout and shipping options for an item.
+
+        Also test the contact seller and buyer buttons?
+
+
+        '''
+
+        itemCost = 5
+        shippingCost = 23
+        totalCost = str(itemCost + shippingCost)
+
+        browser = webdriver.Firefox()
+        browser.implicitly_wait(20) # seconds
+
+        self.browser = browser
+
+
+
+        ## give user2 an address, needed for shipping
+
+        self.loginUser(self.user2, browser)
+
+
+        ## make a booth/partner
+        self.user2.partner = self.partner2
+        self.user2.save()
+        self.partner2.save()
+
+
+        ## go to the booth page
+        url = reverse('catalogue:index') + "?booth=" + str(self.partner2.id)
+        surl = self.live_server_url + url
+        browser.get(surl)
+
+
+        ## set partner2 to accept remote payments
+        browser.find_element_by_id("stripeConnect").click()
+
+        ## use ability to skip this since in testing 
+        #WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.ID, "skip-account-app"))).click()
+
+        browser.find_element_by_id("skip-account-app").click()
+
+        ## go to ship address form
+        #browser.find_element_by_class_name("orgButton").click()
+
+        b = browser
+        element = WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.ID, "id_first_name")))
+        ff(b, 'id_first_name', 'Bob')
+        ff(b, 'id_last_name', 'number2')
+        ff(b, 'id_line1', '708 Hampton Dr')                
+        ff(b, 'id_line4', 'Venice') 
+        ##ff(b, 'id_country', 'US')                                               
+        ff(b, 'id_state', 'CA')  
+        ff(b, 'id_postcode', '90291')
+
+        browser.find_element_by_id("store-ship-new-submit").click()
+
+        ### the following use of the Mongo DB is deprecated
+        #from apps.homemade.homeMade import getSellerFromOscarID
+        #seller = getSellerFromOscarID(self.user2.id)
+        #seller.stripeSellerToken = "fkae_token"
+        #seller.stripeSellerPubKey = "fake_key"
+        #seller.save()
+
+        ## use PSQL instead, and use actual credentials
+        #self.partner2.stripeToken = "fkae_token"
+        #self.partner2.stripePubKey = "fake_key"
+        #self.partner2.save()
+
+
+        ## go to the product page, edit shipping options
+
+        kwargs = {'pk': self.product2.id}
+        url = reverse('dashboard:catalogue-product', kwargs=kwargs)
+        self.go(url)
+
+        b.find_element_by_id("self_ship_toggle").click()
+
+        element = b.find_element_by_id("self_ship_price_1")
+        element.send_keys(str(shippingCost))
+
+        element = b.find_element_by_id("id_price_excl_tax")
+        element.send_keys(str(itemCost))
+
+        ## test pic upload
+        browser.find_element_by_id('id_images-0-original').send_keys("/Users/busby/Documents/DEM/4th floor.JPG")
+
+        b.find_element_by_id('submitTheWholeDarnForm').click()
+
+
+
+        ## logout user2
+        self.go(reverse('customer:logout'))
+
+        ## login
+        user3 = User.objects.create_user(username="user3",
+                                         email="rsbusby+234234@gmail.com", password=self.password)
+
+        self.loginUser(user3, browser)
+
+
+        ## add address
+
+        ## go to address page 
+        url = "/accounts/addresses/add/"
+        self.go(url)
+
+        ## fill out form
+
+        b = browser
+
+        ff(b, 'id_first_name', 'Bob')
+        ff(b, 'id_last_name', 'Borders')
+        ff(b, 'id_line1', '716 Hampton Dr')                
+        ff(b, 'id_line4', 'Venice') 
+        ##ff(b, 'id_country', 'US')                                               
+        ff(b, 'id_state', 'CA')  
+        ff(b, 'id_postcode', '90291')
+
+
+
+        ## submit form
+        b.find_element_by_id("save-address").click()
+
+        ## add sponsored org
+        sorg = SponsoredOrganization(name="Food Backwards", is_current=True)
+        sorg.save()
+
+        ## make an attribute
+        #ProductAttribute(name="weight", code="weight", type="float", product_class=self.product2.product_class)
+
+        ## give product a weight
+        ## make sure product2 has a weight
+
+
+        #setattr(self.product2.attr, 'weight', 5)
+        #setattr(self.product2.attr, 'Weight', 7)        
+       
+        ## add item to basket
+        ## go to item page
+
+        kwargs = {'product_slug': self.product2.slug,
+                  'pk': self.product2.id}
+        url = reverse('catalogue:detail', kwargs=kwargs)
+
+        self.go(url)
+
+        ## click add to basket
+
+        b.find_element_by_class_name("addToBasket").click()
+
+        ## go to basket, OK
+        self.go(reverse('basket:summary'))
+
+        ## click checkout
+        b.find_element_by_class_name("go-to-checkout").click()
+
+        ## choose an address
+        b.find_element_by_class_name("ship-address").click()
+
+        ## are shipping options there?
+
+        ## choose shipping option
+        b.find_element_by_class_name("select-shipping").click()
+
+        ## choose sponsored org
+        b.find_element_by_class_name("orgButton").click()
+
+        ## choose payment method
+        useStripe = False
+        ## pay with card 
+        if useStripe:
+            b.find_element_by_id("choose-stripe").click()
+
+            b.find_element_by_class_name("stripe-button-el").click()
+
+            ## Stripe checkout pops up? (This does not work, probably need to call charge explicitly)
+            bb = browser.find_element_by_name('email')
+            bb.send_keys("rsbusby@gmail.com")     
+
+            bb = browser.find_element_by_name('card_number')
+            bb.send_keys("4242424242424242")     
+            bb = browser.find_element_by_id('cc-exp-month')
+            bb.send_keys("02")
+            bb = browser.find_element_by_id('cc-exp-year')
+            bb.send_keys("22")
+            bb = browser.find_element_by_id('cc-csc')
+            bb.send_keys("222")
+           
+            browser.find_element_by_class_name("submit").click()
+        else:
+
+            ## or set to pay later using GET trick, skip stripe
+            ## post payment_method" value="in_person" to checkout/payment_details
+            self.go("/checkout/payment-details/?pip=hh6ywei22nzl")
+
+            b.find_element_by_id("payInPersonButton").click()
+
+            self.failIf(browser.page_source.count(str(totalCost)) < 1)
+
+            b.find_element_by_id("place-order").click()
+
+
+        #import commands
+        #res = commands.getoutput('curl --data "payment_method=in_person&param2=value2" http://127.0.0.1:8081/chackout/payment_details/')
+
+
+        ## check that order page is there
+        b.find_element_by_id("my-account").click()
+        b.find_element_by_id("my-orders").click()        
+
+        b.find_element_by_class_name("orderView").click()        
+
+
+
+        ## edit item again, use Priority Mail
+
+        self.go(reverse('customer:logout'))
+
+        self.loginUser(self.user2, browser)
+
+
+       ## go to the product page, edit shipping options for Priority Mail
+
+        kwargs = {'pk': self.product2.id}
+        url = reverse('dashboard:catalogue-product', kwargs=kwargs)
+        self.go(url)
+
+        b.find_element_by_id("hm_ship_toggle").click()
+
+        b.find_element_by_id("PMSmall_toggle").click()
+
+        element = b.find_element_by_id("PMSmall_num")
+        element.send_keys("5")
+
+        b.find_element_by_id('submitTheWholeDarnForm').click()
+
+        ## logout user2
+        self.go(reverse('customer:logout'))
+
+
+
+
+        self.loginUser(user3, browser)
+
+
+        ## add item to basket
+        ## go to item page
+
+        kwargs = {'product_slug': self.product2.slug,
+                  'pk': self.product2.id}
+        url = reverse('catalogue:detail', kwargs=kwargs)
+
+        self.go(url)
+
+        ## click add to basket
+
+        b.find_element_by_class_name("addToBasket").click()
+
+        ## go to basket, OK
+        self.go(reverse('basket:summary'))
+
+        ## click checkout
+        b.find_element_by_class_name("go-to-checkout").click()
+
+        ## choose an address
+        b.find_element_by_class_name("ship-address").click()
+
+        ## are shipping options there?
+
+        ## choose shipping option
+        b.find_element_by_class_name("select-shipping").click()
+
+        ## choose sponsored org
+        b.find_element_by_class_name("orgButton").click()
+
+        ## choose payment method
+        useStripe = False
+        ## pay with card 
+        if useStripe:
+            b.find_element_by_id("choose-stripe").click()
+
+            b.find_element_by_class_name("stripe-button-el").click()
+
+            ## Stripe checkout pops up? (This does not work, probably need to call charge explicitly)
+            bb = browser.find_element_by_name('email')
+            bb.send_keys("rsbusby@gmail.com")     
+
+            bb = browser.find_element_by_name('card_number')
+            bb.send_keys("4242424242424242")     
+            bb = browser.find_element_by_id('cc-exp-month')
+            bb.send_keys("02")
+            bb = browser.find_element_by_id('cc-exp-year')
+            bb.send_keys("22")
+            bb = browser.find_element_by_id('cc-csc')
+            bb.send_keys("222")
+           
+            browser.find_element_by_class_name("submit").click()
+        else:
+
+            ## or set to pay later using GET trick, skip stripe
+            ## post payment_method" value="in_person" to checkout/payment_details
+            self.go("/checkout/payment-details/?pip=hh6ywei22nzl")
+
+            b.find_element_by_id("payInPersonButton").click()
+            totalCost = 105 + 5.15
+            self.failIf(browser.page_source.count(str(totalCost)) < 1)
+
+            b.find_element_by_id("place-order").click()
+
+
+        #import commands
+        #res = commands.getoutput('curl --data "payment_method=in_person&param2=value2" http://127.0.0.1:8081/chackout/payment_details/')
+
+
+        ## check that order page is there
+        b.find_element_by_id("my-account").click()
+        b.find_element_by_id("my-orders").click()        
+
+        b.find_element_by_class_name("orderView").click()        
+
+
+
+
+
+        ## check that can reply to seller
+        element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "contactSellerButton")))
+        b.find_element_by_id("contactSellerButton").click()        
+
+        self.failIf(browser.page_source.count(self.partner2.name) < 1)
+
+        self.failIf(browser.page_source.count("Message") < 1)        
+
+
+        ## logout, login as seller
+        ## check that can reply to buyer
+        self.go(reverse('customer:logout'))
+
+        self.loginUser(self.user2, browser)
+
+        b.find_element_by_id("my-account").click()
+        try:
+            element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "my-sales")))
+            element.click()        
+        except:
+            pass
+
+        ##b.find_element_by_id("my-sales").click()        
+
+        b.find_element_by_class_name("saleView").click()     
+        try:
+            element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "contactBuyerButton")))
+            element.click()        
+        except:
+            pass
+
+
+
+        #self.failIf(browser.page_source.count(self.partner2.name) < 1)
+        self.failIf(browser.page_source.count("Message") < 1)        
+
+
+        self.go(reverse('customer:logout'))
+
+        ## tear down
+
+        ## clean up Mongo seller?
+        user3.delete()
+
+        #try:
+        #    Seller.objects.filter(storeName__icontains=self.partner2.name)[0].delete()
+        #except:
+        #    pass
+
+
+        browser.quit()
+
+
+
+
     def test_messaging_2_no_really_there_is_another(self):
         ''' test messaging, user to user emails.
 
@@ -1120,6 +1508,8 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         '''
 
         browser = webdriver.Firefox()
+        browser.implicitly_wait(20) # seconds
+
         self.browser = browser
 
         ## make a booth/partner

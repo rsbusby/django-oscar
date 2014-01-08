@@ -2,9 +2,11 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.methods import (
-    Free, LocalPickup, uspsShipping, First, UPSGround, Priority, NoShippingRequired, OfferDiscount)
+    Free, FixedPrice, Negotiable, LocalPickup, uspsShipping, First, UPSGround, 
+    Priority, PrioritySmall, PriorityMedium, NoShippingRequired, OfferDiscount)
 
 from decimal import Decimal as D
+from math import ceil
 
 from oscar.apps.address.models import UserAddress
 
@@ -34,11 +36,14 @@ class Repository(object):
     Repository class responsible for returning ShippingMethod
     objects for a given user, basket etc
     """
-    methods = (LocalPickup(), First(), Priority(), UPSGround())
+    methods = [LocalPickup(), First(), FixedPrice(), Priority(), UPSGround(), PrioritySmall(), PriorityMedium()]
 
     availableMethods = []
 
     easyPostServicesToIgnore = ("LibraryMail", "MediaMail", "CriticalMail")
+
+    easyPostServicesSelectedBySeller = []
+
 
     services = []
 
@@ -48,8 +53,112 @@ class Repository(object):
         import easypost
         easypost.api_key = settings.EASYPOST_KEY
 
+        ## make a dictionary of up-to-date shipping info. This is saved to the basket in JSON format, and accessed in shipping/base.py 
+        shipDict = {}
+
+        ## list of keywords corresponding to shipping services available
+        serviceList = []
+
+        ## zero out weight to start
         weight = 0.0
 
+        ## check for self shipping of options
+        selfShipCostTotal = 0.0
+        for line in basket.lines.all():
+
+            p = line.product
+            if not p.stockrecord.shipping_options:
+                break
+            soptsDict = json.loads(p.stockrecord.shipping_options)
+            if soptsDict:
+                if soptsDict.get('self_ship') == True:
+                    try:
+                        self_ship_cost = soptsDict['self_ship_cost']
+                        if self_ship_cost != '' and self_ship_cost != None:
+                            selfShipCostTotal = selfShipCostTotal + (float(self_ship_cost) * line.quantity)
+                    except:
+                        pass
+
+        if selfShipCostTotal > 0.0:
+            for m in self.methods:
+                if m.code == 'fixed-price-shipping':
+                    self.availableMethods.append(m)
+
+            shipDict['fixed-price-shipping'] = str(selfShipCostTotal)
+            basket.shipping_info = json.dumps(shipDict)
+            basket.save()
+            ## don't show calculated options
+            return serviceList
+
+        ## now deal with Priority Mail box filling. This doesn't need weight, or EasyPost.
+        smallBoxes = 0
+        mediumBoxes = 0
+        largeBoxes = 0
+        for line in basket.lines.all():
+
+            p = line.product
+            try:
+                soptsDict = json.loads(p.stockrecord.shipping_options)
+            except:
+                break
+            if soptsDict:
+
+                if soptsDict.get("PMSmall_used") and soptsDict.get("PMSmall_num"):
+                    PMSmall_num = soptsDict.get("PMSmall_num")
+                    try:
+                        if PMSmall_num > 0: 
+                            smallBoxes = smallBoxes + ( float(line.quantity) / float(PMSmall_num) )
+                    except:
+                        pass
+                if soptsDict.get("PMMedium_used") and soptsDict.get("PMMedium_num"):
+                    PMMedium_num = soptsDict.get("PMMedium_num")
+                    try:
+                        if PMMedium_num > 0: 
+                            mediumBoxes = mediumBoxes + ( float(line.quantity) / float(PMMedium_num) )
+                    except:
+                        pass
+                if soptsDict.get("PMLarge_used") and soptsDict.get("PMLarge_num"):
+                    PMLarge_num = soptsDict.get("PMLarge_num")
+                    try:
+                        if PMLarge_num > 0: 
+                            largeBoxes = largeBoxes + ( float(line.quantity) / float(PMLarge_num) )
+                    except:
+                        pass
+
+        smallBoxCost = 5.15
+        mediumBoxCost = 11.30
+        if smallBoxes > 0:
+
+            smallBoxes = int(ceil(smallBoxes))
+            print "Can ship in " + str(smallBoxes) + " small PM boxes."
+            shipDict['PrioritySmall'] = smallBoxes * smallBoxCost
+            basket.shipping_info = json.dumps(shipDict)
+            basket.save()
+            for m in self.methods:
+                if m.code == 'PrioritySmall':
+                    self.availableMethods.append(m)
+
+        if mediumBoxes > 0:
+            mediumBoxes = int(ceil(mediumBoxes))
+            print "Can ship in " + str(mediumBoxes) + " medium PM boxes."
+            shipDict['PriorityMedium'] = mediumBoxes * mediumBoxCost
+            basket.shipping_info = json.dumps(shipDict)
+            basket.save()
+            for m in self.methods:
+                if m.code == 'PriorityMedium':
+                    self.availableMethods.append(m)
+
+        if largeBoxes > 0:
+
+            largeBoxes = int(ceil(largeBoxes))                                    
+
+        #if mediumBoxes > 0 or largeBoxes > 0 or smallBoxes > 0:
+        #    return serviceList            
+
+        ##oscarToAddress = get_object_or_404(UserAddress, id=shippingAddress.id)
+
+        ## if still here, then using the rate calculator. Need weights (and ideally box size) for this
+        ## sum weights
         for line in basket.lines.all():
             p = line.product
 
@@ -67,7 +176,6 @@ class Repository(object):
                 break
                 pass
 
-        ##oscarToAddress = get_object_or_404(UserAddress, id=shippingAddress.id)
 
         ota = shippingAddress
 
@@ -108,9 +216,9 @@ class Repository(object):
                 raise ItemHasNoWeight
 
             parcel = easypost.Parcel.create(
-                length = 20.2, 
+                length = 10.9, 
                 width = 10.9,
-                height = 8,
+                height = 8.0,
                 weight = weight,
             )
 
@@ -126,23 +234,53 @@ class Repository(object):
         #
         #    return None
 
-        basket.shipping_info = json.dumps(shi.to_dict())
+        shipDict['easypost_info'] = shi.to_dict()
+        basket.shipping_info = json.dumps(shipDict)
         basket.save()
 
-        serviceList = []
+        self.easyPostServicesSelectedBySeller = self.getServicesForSeller(basket)
+
         for r in shi.rates:
-            if r.service not in self.easyPostServicesToIgnore:
+            print r.service
+            if r.service not in self.easyPostServicesToIgnore and r.service in self.easyPostServicesSelectedBySeller:
+                   
                 serviceList.append(r.service)
 
         return serviceList
 
+    def getServicesForSeller(self, basket):
+        services = []
+
+        try:
+            p = basket.lines.all()[0].product
+            soptsDict = json.loads(p.stockrecord.shipping_options)
+        except:
+            return []
+        if soptsDict:
+            if soptsDict.get("UPS_used"):
+                services.append("Ground")
+            if soptsDict.get("first_used"):
+                services.append("First")
+        return services
 
     def getServicesFromJSON(self, basket):
         shipping_info = basket.shipping_info
         if shipping_info:
+
             shipDict = json.loads(shipping_info)
+
+            ## first look for methods that are not EasyPost
+            shipMethods = ["local-pickup", "fixed-price-shipping", "PriorityMedium", "PrioritySmall"]
+            for code in shipMethods:
+                if shipDict.get(code):
+                    self.availableMethods.append(self.find_by_code(code)) 
+
             easypost.api_key = settings.EASYPOST_KEY
-            eo =  easypost.convert_to_easypost_object(shipDict, easypost.api_key)
+
+            ## if no EasyPost specific information, return null serviceList
+            if not shipDict.has_key('easypost_info'): return []
+
+            eo =  easypost.convert_to_easypost_object(shipDict['easypost_info'], easypost.api_key)
 
             serviceList = []
             for r in eo.rates:
@@ -186,11 +324,14 @@ class Repository(object):
                 self.methods = ()
 
         self.services = ()
+        self.availableMethods = []
+
         try:
             self.services = self.getShippingInfo(basket, shipping_addr)
+
+            print self.services
         except (SellerCannotShip, ItemHasNoWeight, ItemNotShippable) as e:
             ## only do local pickup
-            self.availableMethods = []           
             if self.localPickupEnabled(basket): 
                 self.availableMethods.append(LocalPickup())
             return self.prime_methods(basket, self.availableMethods)
@@ -199,8 +340,6 @@ class Repository(object):
 
         for m in self.methods:
             m.basket_total_shipping = None
-
-        self.availableMethods = []
 
         if self.localPickupEnabled(basket): 
             self.availableMethods.append(LocalPickup())
@@ -228,12 +367,12 @@ class Repository(object):
         #if not self.userAcceptsRemotePayments(basket):
         #    self.methods = (LocalPickup(),)
 
-
+        self.availableMethods = []
         self.services = self.getServicesFromJSON(basket)
         if not self.services:
             return self.get_shipping_methods(user, basket, shipping_addr)
 
-        self.availableMethods = []
+
 
         if self.localPickupEnabled(basket): 
             self.availableMethods.append(LocalPickup())
@@ -302,7 +441,7 @@ class Repository(object):
                 return OfferDiscount(method, discount['offer'])
         return method
 
-    def find_by_code(self, code, basket):
+    def find_by_code(self, code, basket=None):
         """
         Return the appropriate Method object for the given code
         """

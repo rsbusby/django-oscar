@@ -10,6 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from haystack.utils.geo import Point, D
 
+from oscar.apps.shipping.models import ShippingMethod
 
 class Partner(AbstractPartner):
 
@@ -78,6 +79,12 @@ class StockRecord(AbstractStockRecord):
     is_shippable = models.BooleanField(_("Is Shippable"), default=False, db_index=True)
     local_pickup_enabled = models.BooleanField(_("Local Pickup Enabled"), default=False, db_index=True)
     weight = models.FloatField(_("Weight"), blank=True, null=True)
+
+    #shipping_methods = models.ManyToManyField(ShippingMethod, null=True,
+    #                                   blank=True, verbose_name=_("Shipping Methods"))
+
+    shipping_options = models.TextField(_("Shipping Options"), blank=True, null=True)
+
 
     pass
 

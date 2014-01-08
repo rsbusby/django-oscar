@@ -16,6 +16,9 @@ ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
 ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
 
+from oscar.apps.shipping.models import ShippingMethod
+
+
 
 class BaseCategoryForm(MoveNodeForm):
 
@@ -64,7 +67,56 @@ class ProductSearchForm(forms.Form):
     title = forms.CharField(max_length=255, required=False, label=_('Title'))
 
 
+
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
+from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
+
+SHIPPING_CHOICES = (
+    ('Priority','USPS Priority Mail'),
+    ('First','USPS First Class Mail'),
+    ('UPS','UPS'),
+    ('Local','Local'),
+    ('SelfDelivery','Self Delivery'),
+)
+
+
 class StockRecordForm(forms.ModelForm):
+
+    # radio_buttons = forms.ChoiceField(
+    #     choices = (
+    #         ('option_one', "Option one is this and that be sure to include why it's great"), 
+    #         ('option_two', "Option two can is something else and selecting it will deselect option one")
+    #     ),
+    #     widget = forms.RadioSelect,
+    #     initial = 'option_two',
+    # )
+
+
+    ##shipping_method_choices = forms.MultipleChoiceField(label="Shipping/Delivery choices", widget=forms.CheckboxSelectMultiple, choices=SHIPPING_CHOICES)
+
+    ##import ipdb;ipdb.set_trace()
+
+    ##shipping_methods = forms.ModelMultipleChoiceField(queryset=ShippingMethod.objects.all(),
+    ##                                                widget=forms.CheckboxSelectMultiple())
+
+    checkboxes = forms.MultipleChoiceField(
+        choices = (
+            ('option_one', ""), 
+            ('option_two', 'Option two can also be checked and included in form results'),
+            ('option_three', 'Option three can yes, you guessed it also be checked and included in form results')
+        ),
+        initial = 'option_one',
+        required=False,
+        widget = forms.CheckboxSelectMultiple,
+        help_text = "<strong>Note:</strong> Labels surround all the options for much larger click areas and a more usable form.",
+    )
+ 
+    PMSmall_num = forms.IntegerField(required=False)
+    PMMedium_num = forms.IntegerField(required=False)
+    PMLarge_num = forms.IntegerField(required=False)
+
+    self_ship_cost = forms.FloatField(required=False)    
 
     def __init__(self, product_class, *args, **kwargs):
         self.product_class = product_class
@@ -82,24 +134,165 @@ class StockRecordForm(forms.ModelForm):
 
     class Meta:
         model = StockRecord
-        exclude = ('product', 'num_allocated', 'price_currency', 'low_stock_threshold','price_retail', 'cost_price', 'partner')
+        exclude = ('product', 'num_allocated', 'price_currency', 'low_stock_threshold','price_retail', 'cost_price', 
+            'partner', 'partner_sku','latitude', 'longitude')
+        # widgets = {
+        #     'shipping_methods': forms.CheckboxSelectMultiple()
+        # }
 
+
+    #def save(self):
+    #    super(StockRecordForm, self).save(commit=commit)
+
+    def is_valid(self):
+
+        is_valid = super(StockRecordForm, self).is_valid()
+
+
+        ## process shipping options
+        soptsDict = {}
+
+        data = self.data
+
+        ## add shipping options to the stockrecord
+        shipChoice = data.get('shipChoice')
+        soptsDict['shipChoice'] = data.get("shipChoice")
+
+        if shipChoice == "calculate_ship":
+            soptsDict['calculate_ship'] = True
+            soptsDict['self_ship'] = False
+
+        ## priority mail
+        soptsDict['PMMedium_num'] = data.get("PMMedium_num")
+        soptsDict['PMLarge_num'] = data.get("PMLarge_num")
+        soptsDict['PMSmall_num'] = data.get("PMSmall_num")
+    
+        if data.get("PMSmall_toggle") == "on":
+            soptsDict['PMSmall_used'] = True           
+            if soptsDict.get("PMSmall_num"):
+                self.instance.is_shippable = True  
+            elif shipChoice == "calculate_ship":             
+                is_valid = False     
+
+        if data.get("PMMedium_toggle") == "on":
+            soptsDict['PMMedium_used'] = True           
+            if soptsDict.get("PMMedium_num"):
+                self.instance.is_shippable = True  
+            elif shipChoice == "calculate_ship":             
+                is_valid = False     
+
+        if data.get("PMLarge_toggle") == "on":
+            soptsDict['PMLarge_used'] = True           
+            if soptsDict.get("PMLarge_num"):
+                self.instance.is_shippable = True  
+            elif shipChoice == "calculate_ship":             
+                is_valid = False     
+
+        if data.get("FirstClass_toggle") == "on":
+            soptsDict['first_used'] = True  
+
+        if data.get("UPS_toggle") == "on":
+            soptsDict['UPS_used'] = True  
+
+        if data.has_key("self_ship_cost"):
+
+            self_ship_cost = data['self_ship_cost']
+
+            ## add shipping options to the stockrecord
+            if self_ship_cost != '' and self_ship_cost != None:
+                soptsDict['self_ship_cost'] = self_ship_cost
+                if shipChoice == "self_ship":
+                    self.instance.is_shippable = True
+
+
+        if shipChoice == "self_ship":
+            soptsDict['calculate_ship'] = False
+            soptsDict['self_ship'] = True 
+            if not soptsDict.get('self_ship_cost'):
+                is_valid = False
+
+        import json
+
+        self.instance.shipping_options = json.dumps(soptsDict)
+
+        if soptsDict.get('first_used') or soptsDict.get('UPS_used') and self.cleaned_data.get('weight') > 0.0:
+            self.instance.is_shippable = True
+
+        #self.instance.save()
+
+        return is_valid
 
     def clean_weight(self):
-        data = self.cleaned_data
-        if data['is_shippable'] and not data['weight']:
-            raise forms.ValidationError(_("If item is shippable, please give an estimated weight for the item."))
 
-        return data['weight']
+        data = self.data
+        if data.get('shipChoice') == 'calculate_ship' and (data.get('UPS_toggle') == "on" or data.get('FirstClass_toggle') == "on") and not self.cleaned_data['weight']:
+            raise forms.ValidationError(_("If item is to be shipped by UPS or First Class mail, please give an estimated weight for the item."))
+
+        return self.cleaned_data['weight']
 
     def clean_local_pickup_enabled(self):
-        data = self.cleaned_data
-        if not data['is_shippable'] and not data['local_pickup_enabled']:
-            raise forms.ValidationError(_("You have not selected any delivery method. Please select shipping and/or local pickup."))
 
-        return data['local_pickup_enabled']
+        data = self.data
+        if not data.get('shipChoice') and not data.get('local_pickup_enabled'):
+            raise forms.ValidationError(_("You have not selected any delivery method. Please select a method of shipping and/or local pickup."))
+
+        return self.cleaned_data.get('local_pickup_enabled')
+
+    def clean_is_shippable(self):
+
+        data = self.data
+        return self.cleaned_data['is_shippable']
+
+        if data.get('shipChoice') == 'self_ship':
+            if not data.get('self_ship_cost'):
+                raise forms.ValidationError(_("Please enter the cost of shipping."))
+
+        if data.get('shipChoice') == 'calculate_ship':
+            if data.get('PMSmall_toggle') == "on" and not data.get('PMSmall_num'):
+                raise forms.ValidationError(_("Please enter the number of items per box."))
+
+        if data.get('shipChoice') == 'calculate_ship':
+            if data.get('PMMedium_toggle') == "on" and not data.get('PMMedium_num'):
+                raise forms.ValidationError(_("Please enter the number of items per box."))
+
+        if data.get('shipChoice') == 'calculate_ship':
+            if data.get('PMLarge_toggle') == "on" and not data.get('PMLarge_num'):
+                raise forms.ValidationError(_("Please enter the number of items per box."))
+
+        return self.cleaned_data['is_shippable']
 
 
+    def clean_PMSmall_num(self):
+
+        data = self.data
+        if data.get('shipChoice') == 'calculate_ship':
+            if data.get('PMSmall_toggle') == "on" and not data.get('PMSmall_num'):
+                raise forms.ValidationError(_("Please enter the number of items per box."))
+        return data.get('PMSmall_num')
+
+    def clean_PMMedium_num(self):
+        data = self.data
+
+        if data.get('shipChoice') == 'calculate_ship':
+            if data.get('PMMedium_toggle') == "on" and not data.get('PMMedium_num'):
+                raise forms.ValidationError(_("Please enter the number of items per box."))
+        return data.get('PMMedium_num')
+
+    def clean_PMLarge_num(self):
+        data = self.data
+
+        if data.get('shipChoice') == 'calculate_ship':
+            if data.get('PMLarge_toggle') == "on" and not data.get('PMLarge_num'):
+                raise forms.ValidationError(_("Please enter the number of items per box."))
+        return data.get('PMLarge_num')
+
+    def clean_self_ship_cost(self):
+        data = self.data
+
+        if data.get('shipChoice') == 'self_ship':
+            if not self.cleaned_data.get('self_ship_cost'):
+                raise forms.ValidationError(_("Please enter the cost of shipping."))
+        return self.cleaned_data.get('self_ship_cost')
 
 def _attr_text_field(attribute):
     return forms.CharField(label=attribute.name,

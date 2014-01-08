@@ -334,6 +334,7 @@ INSTALLED_APPS = INSTALLED_APPS + [
     #'debug_toolbar',
     'djrill',
     'haystack',
+    'crispy_forms',
     #'cache_panel',
     #'template_timings_panel',
     'storages',
@@ -442,6 +443,9 @@ OSCAR_REQUIRED_ADDRESS_FIELDS = ('first_name', 'last_name', 'line1',
                                  'line4', 'postcode' )
 TEST_LOCAL=False
 CHECKOUT_ENABLED=False
+
+CRISPY_TEMPLATE_PACK = 'bootstrap'
+
 
 # Reviews
 OSCAR_ALLOW_ANON_REVIEWS = False

@@ -543,8 +543,8 @@ input.wide, textarea.wide input.wideSearch{
 }
 
 
-#browseBannerWide, #storeBannerWide{display:none;}
-#storeBannerNarrow{display:block;}
+#browseBannerWide, #storeBannerWide, .noMobile {display:none;}
+#storeBannerNarrow, .onlyMobile {display:block;}
 
 textarea.wide {
     padding:2%;

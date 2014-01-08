@@ -11,6 +11,7 @@ import easypost
 import json
 
 
+
 class Free(ShippingMethod):
     """
     Simple method for free shipping
@@ -32,6 +33,26 @@ class LocalPickup(ShippingMethod):
     code = 'local-pickup'
     name = _('Local pickup')
 
+    def __init__(self, charge_incl_tax = 0.0, charge_excl_tax=None):
+
+        self.charge_incl_tax = charge_incl_tax
+        if not charge_excl_tax:
+            charge_excl_tax = charge_incl_tax
+        self.charge_excl_tax = charge_excl_tax
+
+    def basket_charge_incl_tax(self):
+        return D(self.charge_incl_tax)
+
+    def basket_charge_excl_tax(self):
+        return D(self.charge_excl_tax)
+
+class Negotiable(ShippingMethod):
+    """
+    Placeholder method for negotiable rates, for delivery or shipping.
+    """
+    code = 'negotiable'
+    name = _('Negotiable')
+
     def basket_charge_incl_tax(self):
         return D('0.00')
 
@@ -51,18 +72,19 @@ class NoShippingRequired(Free):
 class FixedPrice(ShippingMethod):
     code = 'fixed-price-shipping'
     name = _('Fixed price shipping')
+    basket_total_shipping = None
 
-    def __init__(self, charge_incl_tax, charge_excl_tax=None):
+    def __init__(self, charge_incl_tax=0.0, charge_excl_tax=None):
         self.charge_incl_tax = charge_incl_tax
         if not charge_excl_tax:
             charge_excl_tax = charge_incl_tax
         self.charge_excl_tax = charge_excl_tax
 
-    def basket_charge_incl_tax(self):
-        return self.charge_incl_tax
+    #def basket_charge_incl_tax(self):
+    #    return self.charge_incl_tax
 
-    def basket_charge_excl_tax(self):
-        return self.charge_excl_tax
+    #def basket_charge_excl_tax(self):
+    #    return self.charge_excl_tax
 
 
 class dotdict(dict):
@@ -102,6 +124,24 @@ class Priority(ShippingMethod):
     carrier = "USPS"
     name = _('USPS Priority Mail')
     basket_total_shipping = None
+
+class PrioritySmall(ShippingMethod):
+
+    code = 'PrioritySmall'
+    service = 'PrioritySmall'
+    carrier = "USPS"
+    name = _('USPS Priority Mail')
+    basket_total_shipping = None
+
+class PriorityMedium(ShippingMethod):
+
+    code = 'PriorityMedium'
+    service = 'PriorityMedium'
+    carrier = "USPS"
+    name = _('USPS Priority Mail')
+    basket_total_shipping = None
+
+
 
 class UPSGround(ShippingMethod):
 

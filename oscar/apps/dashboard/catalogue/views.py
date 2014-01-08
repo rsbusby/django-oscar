@@ -8,6 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_classes
 
+import json
+
 (ProductForm,
  ProductSearchForm,
  CategoryForm,
@@ -114,8 +116,10 @@ class ProductCreateUpdateView(generic.UpdateView):
     form_class = ProductForm
     category_formset = ProductCategoryFormSet
     image_formset = ProductImageFormSet
-    recommendations_formset = ProductRecommendationFormSet
+    ##recommendations_formset = ProductRecommendationFormSet
     stockrecord_form = StockRecordForm
+
+
 
     def get(self, request, *args, **kwargs):
 
@@ -183,6 +187,20 @@ class ProductCreateUpdateView(generic.UpdateView):
         return acceptsPayments
 
 
+    def getSelfShipCost(self):
+        p = self.object
+
+        if not p.stockrecord.shipping_options:
+            return None
+        soptsDict = json.loads(p.stockrecord.shipping_options)
+        if soptsDict:
+            if soptsDict.has_key('self_ship_cost'):
+                self_ship_cost = soptsDict['self_ship_cost']
+                return self_ship_cost
+
+        return None
+
+
     def get_context_data(self, **kwargs):
 
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
@@ -192,8 +210,8 @@ class ProductCreateUpdateView(generic.UpdateView):
             ctx['category_formset'] = self.category_formset(instance=self.object)
         if 'image_formset' not in ctx:
             ctx['image_formset'] = self.image_formset(instance=self.object, minimum_forms=1, minimum_forms_message="At least one image is needed for this item.")
-        if 'recommended_formset' not in ctx:
-            ctx['recommended_formset'] = self.recommendations_formset(instance=self.object)
+        #if 'recommended_formset' not in ctx:
+        #    ctx['recommended_formset'] = self.recommendations_formset(instance=self.object)
         if self.object is None:
             ctx['title'] = _('New item') ## % self.product_class.name
         else:
@@ -202,6 +220,34 @@ class ProductCreateUpdateView(generic.UpdateView):
         ## whether the seller/partner can take payments, and therefore ship
 
         ctx['payments_enabled'] = self.paymentsEnabled()
+
+
+
+        if not self.creating:
+            p = self.object
+            if p.stockrecord.shipping_options:
+                soptsDict = json.loads(p.stockrecord.shipping_options)
+                if soptsDict:
+
+
+                    ctx['self_ship_cost'] = soptsDict.get('self_ship_cost')
+                    #if ctx['self_ship_cost'] == None:
+                    #    ctx['self_ship_cost'] = ''
+
+                    ctx['self_ship'] = soptsDict.get('self_ship')
+                    ctx['calculate_ship'] = soptsDict.get('calculate_ship')
+
+                    ctx['PMSmall_num'] = soptsDict.get('PMSmall_num')
+                    ctx['PMMedium_num'] = soptsDict.get('PMMedium_num')
+                    ctx['PMLarge_num'] = soptsDict.get('PMLarge_num')
+
+                    ctx['PMSmall_used'] = soptsDict.get('PMSmall_used')
+                    ctx['PMMedium_used'] = soptsDict.get('PMMedium_used')
+                    ctx['PMLarge_used'] = soptsDict.get('PMLarge_used')
+
+                    ctx['first_used'] = soptsDict.get('first_used')
+                    ctx['UPS_used'] = soptsDict.get('UPS_used')
+
 
         return ctx
 
@@ -261,6 +307,8 @@ class ProductCreateUpdateView(generic.UpdateView):
         """
         # Need to create the product here because the inline forms need it
         # can't use commit=False because ProductForm does not support it
+
+
         if self.creating and form.is_valid():
             self.object = form.save()
 
@@ -271,32 +319,36 @@ class ProductCreateUpdateView(generic.UpdateView):
                                            self.request.FILES,
                                            instance=self.object,
                                            minimum_forms=1, minimum_forms_message="At least one image is needed for this item.")
-        recommended_formset = self.recommendations_formset(
-            self.request.POST, self.request.FILES, instance=self.object)
-
-
+        #recommended_formset = self.recommendations_formset(
+        #    self.request.POST, self.request.FILES, instance=self.object)
+        
+        ## this is a big hack, save the stockrecord to keep shipping info if invalid
+        ## Otherwise the instance is updated with new info, but doesn't keep the old info. Great....
+        #import copy
+        #stockrecordSaved = copy.deepcopy(self.object.stockrecord)
         is_valid = all([
             form.is_valid(),
             category_formset.is_valid(),
             image_formset.is_valid(),
-            recommended_formset.is_valid(),
+            #recommended_formset.is_valid(),
             # enforce if self.require_user_stockrecord, skip if not submitted
             stockrecord_form.is_valid() or not self.require_user_stockrecord, ## and not self.is_stockrecord_submitted()),
                         ])
 
         if is_valid:
             return self.forms_valid(form, stockrecord_form, category_formset,
-                                    image_formset, recommended_formset)
+                                    image_formset) ## , recommended_formset)
         else:
             # delete the temporary product again
             if self.creating and form.is_valid():
                 self.object.delete()
                 self.object = None
+            ##self.object.stockrecord = stockrecordSaved
             return self.forms_invalid(form, stockrecord_form, category_formset,
-                                      image_formset, recommended_formset)
+                                      image_formset) ##, recommended_formset)
 
     def forms_valid(self, form, stockrecord_form, category_formset,
-                    image_formset, recommended_formset):
+                    image_formset): ##, recommended_formset):
         """
         Save all changes and display a success url.
         """
@@ -308,7 +360,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         if self.is_stockrecord_submitted():
             # Save stock record
             stockrecord = stockrecord_form.save(commit=False)
-            stockrecord.product = self.object
+            stockrecord.product = self.object         
             stockrecord.save()
         elif self.creating:
             stockrecord = stockrecord_form.save(commit=False)
@@ -330,12 +382,86 @@ class ProductCreateUpdateView(generic.UpdateView):
         #else:
         #    # delete it
         #    if self.object.has_stockrecord:
+
+
         #        self.object.stockrecord.delete()
 
         # Save formsets
         category_formset.save()
         image_formset.save()
-        recommended_formset.save()
+        ##recommended_formset.save()
+
+
+
+        ## custom form handling:
+
+        if stockrecord.shipping_options:
+            soptsDict = json.loads(stockrecord.shipping_options)
+        else:
+            ## this will always get called since the stockrecord is 'new'
+            soptsDict = {}
+
+
+        print self.request.POST
+
+        if False:
+            ## add shipping options to the stockrecord
+            shipChoice = self.request.POST.get('shipChoice')
+            soptsDict['shipChoice'] = self.request.POST.get("shipChoice")
+
+            if shipChoice == "calculate_ship":
+                soptsDict['calculate_ship'] = True
+                soptsDict['self_ship'] = False
+
+            ## priority mail
+            soptsDict['PMMedium_num'] = self.request.POST.get("PMMedium_num")
+            soptsDict['PMLarge_num'] = self.request.POST.get("PMLarge_num")
+            soptsDict['PMSmall_num'] = self.request.POST.get("PMSmall_num")
+        
+            p = self.object
+
+            if self.request.POST.get("PMSmall_toggle") == "on" and soptsDict.get("PMSmall_num"):
+                soptsDict['PMSmall_used'] = True           
+                p.stockrecord.is_shippable = True       
+
+            if self.request.POST.get("PMMedium_toggle") == "on" and soptsDict.get("PMMedium_num"):
+                soptsDict['PMMedium_used'] = True   
+                p.stockrecord.is_shippable = True       
+        
+            if self.request.POST.get("PMLarge_toggle") == "on" and soptsDict.get("PMLarge_num"):
+                soptsDict['PMLarge_used'] = True
+                p.stockrecord.is_shippable = True       
+
+            if self.request.POST.get("FirstClass_toggle") == "on":
+                soptsDict['first_used'] = True  
+
+            if self.request.POST.get("UPS_toggle") == "on":
+                soptsDict['UPS_used'] = True  
+
+
+            if shipChoice == "self_ship":
+                soptsDict['calculate_ship'] = False
+                soptsDict['self_ship'] = False ## in case no ship cost given
+
+            if self.request.POST.has_key("self_ship_cost"):
+                self_ship_cost = self.request.POST['self_ship_cost']
+                ## add shipping options to the stockrecord
+                if self_ship_cost != '' and self_ship_cost != None:
+                    soptsDict['self_ship_cost'] = self_ship_cost
+                    if shipChoice == "self_ship":
+                        soptsDict['self_ship'] = True
+                        stockrecord.is_shippable = True
+
+
+
+
+            stockrecord.shipping_options = json.dumps(soptsDict)
+
+            if soptsDict.get('first_used') or soptsDict.get('UPS_used') and stockrecord.weight > 0.0:
+                stockrecord.is_shippable = True
+
+            stockrecord.save()
+
 
 
         ## check if store has payments enabled. If not, disable the item
@@ -353,7 +479,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def forms_invalid(self, form, stockrecord_form, category_formset,
-                      image_formset, recommended_formset):
+                      image_formset): ##, recommended_formset):
         
         messages.error(self.request,
                        _("There is more information needed to create the item -- please "
@@ -362,8 +488,8 @@ class ProductCreateUpdateView(generic.UpdateView):
         ctx = self.get_context_data(form=form,
                                     stockrecord_form=stockrecord_form,
                                     category_formset=category_formset,
-                                    image_formset=image_formset,
-                                    recommended_formset=recommended_formset)
+                                    image_formset=image_formset) #,
+                                    ##recommended_formset=recommended_formset)
         return self.render_to_response(ctx)
 
     def get_url_with_querystring(self, url):

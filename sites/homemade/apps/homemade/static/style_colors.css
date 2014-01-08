@@ -1179,7 +1179,7 @@ div.cartitem {
    mmargin-right: auto ;
 }
 
-#storeBannerNarrow {display:none; } 
+#storeBannerNarrow, .onlyMobile {display:none; } 
 
 div.storeitem {
 

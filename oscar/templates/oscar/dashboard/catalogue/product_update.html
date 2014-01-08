@@ -8,6 +8,7 @@
 {% load currency_filters %}
 {% load thumbnail %}
 {% load staticfiles %}
+{% load crispy_forms_tags %}
 
 
 {% block body_class %}create-page catalogue{% endblock %}
@@ -18,7 +19,8 @@
 
 
 
-{% block headertext %}{{ title }}{% endblock %}
+{% block headertext %}{{ title }} <div style="font-size:0.8em">Scroll down to bottom of page and click "Save" when finished</div>
+{% endblock %}
 
 {% block dashboard_content %}
 <form action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors" autocomplete="off">
@@ -443,23 +445,10 @@
 
     <h3 style="font-weight:bold;font-size:1.24em;margin:0px 0px 5px 0pxmargin-bottom:0px"> Delivery options </h3>  &nbsp; &nbsp;  &nbsp; &nbsp;  
 
-      <table>
-                  
-                    <tr>
-                        <th>Check below if this item is available for local pickup:  </th>
-
-                    </tr>
-                    <tr>
-                        <td>
-                            {{ stockrecord_form.local_pickup_enabled }}
-                            {{ stockrecord_form.local_pickup_enabled.errors }}
-                        </td>
-                  
-                    </tr>
-        </table>    
+     
 
     {#{% if payments_enabled %}#}
-
+{% comment %}
         <table>
                   
                     <tr>
@@ -476,14 +465,149 @@
                   
                     </tr>
         </table>    
+        {% endcomment %}
+{% comment %}
+<div class="btn-group" data-toggle="buttons-radio">
+  <button type="button" class="btn ">Left</button> 
+  <button type="button" class="btn btn-secondary ">Middle</button>
+  <button type="button" class="btn ">Right</button>
+</div>
+{% endcomment %}
+
+  
+            
+                    <tr>
+                        <th>Check if this item is available for local pickup:  </th>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ stockrecord_form.local_pickup_enabled }}
+                            {{ stockrecord_form.local_pickup_enabled.errors }}
+                        </td>
+                  
+                    </tr>
+        </table>    
+
+
+   {# {% crispy stockrecord_form %} #}
+
+
+<br><br><br>
+<div class="btn-group" data-toggle="buttons-radio">
+{#  <button type="button" class="btn ">Left</button> #}
+   <input id="shipChoice" type='hidden' name="shipChoice" value=''>
+
+  <button id="hm_ship_toggle" type="button" class="btn btnShipChoice ">Calculate shipping cost at time of order</button>
+  <button id="self_ship_toggle" type="button" class="btn btnShipChoice">Provide your own shipping for this item</button>
+</div>
+
+
+<br> 
+<div id="shipInfoModalLink" >
+ <a id="shipInfoModalLinkLink" style="color:#ff6666;font-size:1.0em;float:lef;margin-left:0.5em" href="#openModalShipping"> About our shipping calculator</a>
+<br><br><br>
+</div>
 
 
 
-   <table>
+  <div class="offset4 span6 shipShowOptions self_ship_info" style="display:none;">
+    <label for="self_ship_price"> Cost of shipping and handling for a single item</label>
+	  $<input id="self_ship_price_1" style="ddisplay:none;" type="float"  name="self_ship_cost" 
+	{% if self_ship_cost %}
+	  value="{{self_ship_cost}}"
+	{% endif %}
+	>
+	 {{ stockrecord_form.self_ship_cost.errors }}
+
+
+
+
+{% comment %}
+<br><p>... and for multiple items (optional )</p>
+	  <label for="self_ship_price_2"> For 2 items  </label>
+	  $<input id="self_ship_price_2" style="ddisplay:none;" type="float"  value="{{self_ship_cost2}}">
+
+	  <label for="self_ship_price_3"> For 3 items  </label>
+	  $<input id="self_ship_price_3" style="ddisplay:none;" type="float" value="{{self_ship_cost3}}" >
+
+	  <label for="self_ship_price_5"> For 5 items  </label>
+	  $<input id="self_ship_price_5" style="ddisplay:none;" type="float" value="{{self_ship_cost5}}" >
+{% endcomment %}
+
+
+	</div>
+{#</fieldset>#}
+
+
+<div class="hm_ship_info" style="display:none;">
+
+<fieldset>
+<legend class="">Check to use small Priority Mail boxes
+  <input id="PMSmall_toggle" type="checkbox" name="PMSmall_toggle" >
+</legend>
+    <div class="PMSmall_chosen"  style="display:none;">
+	   <label for="PMSmall_num">Number of items that can fit in a 'small' priority box: </label>
+
+	   <input id="PMSmall_num" name="PMSmall_num" type="number" value="{{PMSmall_num}}" >
+	   	                                     {{ stockrecord_form.PMSmall_num.errors }}
+
+	</div>
+
+</fieldset>
+
+<fieldset>
+
+<legend class="">Check to use medium Priority Mail boxes
+  <input id="PMMedium_toggle" type="checkbox" name="PMMedium_toggle" >
+</legend>
+    <div class="PMMedium_chosen " style="display:none;">
+      <label for="PMMedium_num">Number of items that can fit in a 'medium' priority box: </label>
+	  <input id="PMMedium_num" name="PMMedium_num"  type="number" value="{{PMMedium_num}}" >
+	  	                                     {{ stockrecord_form.PMMedium_num.errors }}
+
+	</div>
+
+</fieldset>
+
+
+
+<fieldset>
+
+<legend class="">Check to use large Priority Mail boxes
+  <input id="PMLarge_toggle" type="checkbox" name="PMLarge_toggle">
+</legend>
+    <div class="PMLarge_chosen " style="display:none;">
+      <label for="PMLarge_num">Number of items that can fit in large box: </label>
+
+	  <input id="PMLarge_num" name="PMLarge_num" type="number" value="{{PMLarge_num}}" >
+	  	                             {{ stockrecord_form.PMLarge_num.errors }}
+
+	</div>
+
+</fieldset>
+
+<fieldset>
+
+<legend class="">Check to use First Class mail
+  <input id="FirstClass_toggle" type="checkbox" name="FirstClass_toggle">
+</legend>
+</fieldset>
+
+<fieldset>
+
+<legend class="">Check to use UPS
+  <input id="UPS_toggle" type="checkbox" name="UPS_toggle">
+</legend>
+ 
+</fieldset>
+
+<div id="weightInput" class="UPS_chosen FirstClass_chosen">
+ <table>
                   
 
                     <tr>
-                        <th>Weight in ounces.  &nbsp &nbsp This is required if items are to be shipped. </th>
+                        <th>Weight of item in ounces.  &nbsp &nbsp This is needed if items are to be shipped using UPS or First Class mail. </th>
                     </tr>
                     <tr>
                         <td>
@@ -493,6 +617,141 @@
                   
                     </tr>
         </table>    
+        </div> {# weight input #}
+
+</div> {# hm_ship_info #}
+
+
+<script>
+
+
+  // $(function() {
+  //        $('input[type="checkbox"]').on('change', function() {
+  //        	alert($(this).closest('fieldset').find(".shipShowOptions"));
+  //            $(this).closest('fieldset').find(".shipShowOptions").fadeToggle(40);
+  //            //$("#PMSmall_num").fadeToggle();
+  //        });
+  //    });
+
+{% if self_ship %}
+$(function() {
+	$('#self_ship_toggle').click();
+ });
+{% endif %}
+
+{% if calculate_ship %}
+$(function() {
+	$('#hm_ship_toggle').click();
+ });
+
+{% endif %}
+
+{% if PMSmall_used %} 
+$(function() {
+	$('#PMSmall_toggle').click();
+ });
+{% endif %}
+
+{% if PMMedium_used %} 
+$(function() {
+	$('#PMMedium_toggle').click();
+ });
+{% endif %}
+
+{% if PMLarge_used %} 
+$(function() {
+	$('#PMLarge_toggle').click();
+ });
+{% endif %}
+
+
+{% if not first_used and not UPS_used %} 
+$(function() {
+	$('#weightInput').hide();
+ });
+{% endif %}
+
+{% if first_used %} 
+$(function() {
+	$('#FirstClass_toggle').click();
+ });
+{% endif %}
+
+{% if UPS_used %} 
+$(function() {
+	$('#UPS_toggle').click();
+ });
+{% endif %}
+
+$('#self_ship_toggle').click(function() { 
+    $(".self_ship_info").fadeIn(200);
+  	$('#hm_ship_toggle').prop('checked', false); 
+    $(".hm_ship_info").hide(200);
+    $("#shipInfoModalLink").hide(100);
+    $('#shipChoice').val("self_ship");
+});
+
+$('#hm_ship_toggle').click(function() { 
+    $(".hm_ship_info").fadeIn(200);
+	$('#self_ship_toggle').prop('checked', false); 
+    $(".self_ship_info").hide(200);
+    $("#shipInfoModalLink").show(100);
+    $('#shipChoice').val("calculate_ship");
+
+});
+
+$('#UPS_toggle').click(function() { 
+    // alert($('#FirstClass_toggle').prop('checked'));
+
+     if(this.checked)
+     	$('.UPS_chosen').fadeIn(200);
+     else
+     	if (! $('#FirstClass_toggle').prop('checked'))
+     		$('#weightInput').fadeOut(150);
+    //  Add items to the cart here
+});
+
+$('#FirstClass_toggle').click(function() { 
+    // alert(this.checked);
+     if(this.checked)
+     	$('.FirstClass_chosen').fadeIn(200);
+     else
+     	if (! $('#UPS_toggle').prop('checked'))
+     		$('#weightInput').fadeOut(200);
+    //  Add items to the cart here
+});
+
+$('#PMSmall_toggle').click(function() { 
+    $(".PMSmall_chosen").fadeToggle(200);
+    // if ($('#PMMedium_toggle').is(':checked')){
+      // $('#PMMedium_toggle').prop('checked', false); 
+      // $(".PMMedium_chosen").toggle();
+    // } 
+});
+
+$('#PMMedium_toggle').click(function() { 
+    $(".PMMedium_chosen").fadeToggle(200);
+    // if ($('#PMSmall_toggle').is(':checked')){
+      // $('#PMSmall_toggle').prop('checked', false); 
+      // $(".PMSmall_chosen").toggle();
+    // }
+});
+
+
+$('#PMLarge_toggle').click(function() { 
+    $(".PMLarge_chosen").fadeToggle(200);
+});
+
+
+$('#demo12').click(function() { 
+    alert('2nd click event');
+    //  Do something else
+});
+
+
+</script
+
+
 
 {% comment %}
     {% else %}
@@ -506,20 +765,9 @@
     {% endif %}
 {% endcomment %}
 
-
-
-
-
-
-                            
-
-                 
                 </div>
 
-
-
-           
-
+                {% comment %}
                 <div class="tab-pane" id="product_recommended">
                     <table class="table table-striped table-bordered fform-inline">
                         <caption>{% trans "Recommended products" %}</caption>
@@ -536,6 +784,7 @@
                         {% endfor %}
                     </table>
                 </div>
+               {% endcomment %}
 
  </div>
       
@@ -579,11 +828,21 @@
       <div> 
         <a href="#close" title="Close" class="close">X</a>
         <h2><b>Shipping Information</b></h2>
-        <p> Currently at HM1616 we calculate shipping costs for U.S. Postal Service and UPS based on the weight of an item, assuming moderately sized items. If your item is very large (more than 12"x12"x12") or otherwise requires special shipping, shipping costs will have to be calculated separately. We also plan on offering a fixed shipping price option in the near future. 
+        <p> <b>Calculate shipping by weight </b></p>
+        <p> Currently at HM1616 we can accurately calculate shipping costs for U.S.P.S. First Class mail and UPS based on the weight of an item, assuming moderately sized items. If your item is very large (more than  8"x8"x8") or otherwise requires special shipping, the shipping calculator would not be accurate, so please use the fixed price shipping option. 
+       </p>
+
+               <p> <b>Using flat-rate Priority Mail </b></p>
+
+       <p>
+        Another easy option is to use flat-rate Priority Mail boxes available through the postal service. Simply pick which boxes you will be using, and enter the number of items that can fit in the type of box(es) that you are shipping in. We'll then calculate how many boxes are needed to fulfill each order.
 </p>
+
+               <p> <b>Going local</b></p>
+
 <p>
         Of course, local pickup can be an option if you like, and we hope to offer local delivery options as they become available. 
-         If you know of a suitable delivery service in your area, let us know at support@homemade1616.com and we'll try to incorporate it as a future option. Thanks!
+         If you know of a suitable delivery service in your area, let us know at support@homemade1616.com and we'll try to incorporate it as an option in the future. Thanks!
         </p>
 
 

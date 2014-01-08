@@ -340,13 +340,13 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         # Need to check that this code is valid for this user
         if request.POST.get('method_reset'):
             self.checkout_session.unset_shipping_method()
-
         method_code = request.POST.get('method_code', None)
         is_valid = False
         newMethod = None
         methods = Repository().get_shipping_methods_no_reset(self.request.user, self.request.basket,
                                                  self.get_shipping_address())
         #for method in self.get_available_shipping_methods():
+
         for method in methods:
             if method.code == method_code:
                 is_valid = True
@@ -549,9 +549,9 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # Check that payment method has been set
         if self.preview:
             payment_method = self.checkout_session.payment_method()
-            if shipping_code != "local-pickup" and payment_method == 'in_person':
-                payment_method = None
-                self.checkout_session.unset_payment_method()
+            #if shipping_code != "local-pickup" and payment_method == 'in_person':
+            #    payment_method = None
+            #    self.checkout_session.unset_payment_method()
             if not payment_method:
                 messages.info(self.request, _("Please choose a payment method"))
                 return HttpResponseRedirect(reverse('checkout:payment-method'))
@@ -568,8 +568,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         if self.request.basket:
             ctx['basket'] = self.request.basket
 
-
-
         if self.request.basket:
             ctx['mseller'] = getSellerFromOscarID(self.request.basket.seller.user.id)
         ctx['mu'] = getSellerFromOscarID(self.request.user.id)
@@ -577,6 +575,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         ctx['current_sponsored_orgs']= SponsoredOrganization.objects.filter(is_current=True)
         ctx['stripeAppPubKey'] = stripe_keys['publishable_key']
         ctx.update(kwargs)
+
 
         ctx['pay_in_person_allowed'] = True
         if self.request.GET.has_key('pip'):
@@ -792,16 +791,19 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             from math import floor, ceil
             if self.request.POST.has_key('stripe'):
                 amountInCents = int(floor(float(total) * 100.0))
-                #import ipdb;ipdb.set_trace()
-                shippingCost = float(self.checkout_session.shipping_method().basket_charge_excl_tax())
-                #shippingCostInCents = int(shippingCost * 100.0)
+
+                ## depending on the shipping choices, shipping may be paid by website or by the seller
+                shippingCostToSite = float(self.checkout_session.shipping_method().basket_charge_excl_tax())
+                shippingCostToSeller = float(self.checkout_session.shipping_method().basket_seller_charge_excl_tax())
+
                 if shippingCost > float(total):
                     errMsg = "There is a problem with the payment parameters. Please contact website support about error 678. Thank you."
                     messages.error(self.request, errMsg)
                     return HttpResponseRedirect(reverse('checkout:preview'))
+
                 total_incl_tax, total_excl_tax = self.get_order_totals()
-                totalWithoutShippingExclTax = float(total_excl_tax) - shippingCost
-                totalWithoutShippingInclTax = float(total_incl_tax) - shippingCost
+                totalWithoutShippingExclTax = float(total_excl_tax) - shippingCostToSite - shippingCostToSeller
+                totalWithoutShippingInclTax = float(total_incl_tax) - shippingCostToSite - shippingCostToSeller
                 #totalExclTaxCents =  int(floor(float(total_excl_tax) * 100.0))  
 
                 ## start over
@@ -813,28 +815,29 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
 
                 #amountGoingToSellerInCents = int(round(float(amountToSeller) * 100.0))
 
-
                 stripeFee = (0.029 * float(total) ) + 0.30
                 stripeFeeInCents = int(round(float(stripeFee) * 100.0))
 
                 fee = 0.035 * float(totalWithoutShippingExclTax) 
                 feeInCents = int(round(float(fee) * 100.0))
-                feeWithShipping = fee + shippingCost ##+ stripeFee
-                feeWithShippingInCents = int(round(float(feeWithShipping) * 100.0))
+
+                feePossiblyWithShipping = fee + shippingCostToSite
+                
+                feePossiblyWithShippingInCents = int(round(float(feePossiblyWithShipping) * 100.0))
 
                 totalInCents = int(round(float(totalWithoutShippingInclTax) * 100.0))
-                amountUsedByStripeForFeeCalc = totalInCents - feeWithShippingInCents
+                amountUsedByStripeForFeeCalc = totalInCents - feePossiblyWithShippingInCents
 
                 #amountGoingToSellerInCents = int(round(float(totalWithoutShippingInclTax) * 100.0))
                 #amountGoingToSellerInCents = amountGoingToSellerInCents - feeInCents - stripeFeeInCents
 
          
-                amountToSeller = float(total) - stripeFee - feeWithShipping
+                amountToSeller = float(total) - stripeFee - feePossiblyWithShipping
                 amountGoingToSellerInCents = int(round(float(amountToSeller) * 100.0))
 
 
                 ## assert that total is correct
-                tot = amountGoingToSellerInCents + feeWithShippingInCents + stripeFeeInCents
+                tot = amountGoingToSellerInCents + feePossiblyWithShippingInCents + stripeFeeInCents
                 tot2 = int(float(total_incl_tax) * 100.0)
 
                 if tot != tot2:
@@ -843,7 +846,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                     #return HttpResponseRedirect(reverse('checkout:preview'))
 
 
-                chargeResponse = chargeSharedOscar(self.request, self.request.basket, order_number, amountInCents, feeWithShippingInCents)
+                chargeResponse = chargeSharedOscar(self.request, self.request.basket, order_number, amountInCents, feePossiblyWithShippingInCents)
                 try:
                     chargeSuccess = not chargeResponse.failure_code 
                 except:

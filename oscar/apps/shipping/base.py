@@ -39,13 +39,22 @@ class ShippingMethod(object):
     carrier = None
     service = None
 
-    def getEasyPostRate(self):
+
+
+    def getShippingRate(self):
 
         shipping_info = self.basket.shipping_info
         if shipping_info:
             shipDict = json.loads(shipping_info)
+
+            ## first look for methods that are not EasyPost
+            shipMethods = ["local-pickup", "fixed-price-shipping", "PriorityMedium", "PrioritySmall"]
+            if self.code in shipMethods:
+                rateStr = shipDict[self.code]
+                return D(rateStr)                
+
             easypost.api_key = settings.EASYPOST_KEY
-            eo =  easypost.convert_to_easypost_object(shipDict, easypost.api_key)
+            eo =  easypost.convert_to_easypost_object(shipDict['easypost_info'], easypost.api_key)
 
             rate = None
             for r in eo.rates:
@@ -65,12 +74,13 @@ class ShippingMethod(object):
         else:
             shipDict = json.loads(shipping_info)
             easypost.api_key = settings.EASYPOST_KEY
-            eo =  easypost.convert_to_easypost_object(shipDict, easypost.api_key)
+            if shipDict.get('easypost_info'):
+                eo =  easypost.convert_to_easypost_object(shipDict.get('easypost_info'), easypost.api_key)
 
 
-            for r in eo.rates:
-                if r.carrier == self.carrier and r.service == self.service:
-                    return r.id
+                for r in eo.rates:
+                    if r.carrier == self.carrier and r.service == self.service:
+                        return r.id
             ## none found
             return None
 
@@ -85,7 +95,7 @@ class ShippingMethod(object):
         """
         Return the shipping charge including any taxes
         """
-        return self.getEasyPostRate()
+        return self.getShippingRate()
 
         ##raise NotImplemented()
 
