@@ -54,7 +54,11 @@ class Repository(object):
         easypost.api_key = settings.EASYPOST_KEY
 
         ## make a dictionary of up-to-date shipping info. This is saved to the basket in JSON format, and accessed in shipping/base.py 
-        shipDict = {}
+        shipping_info = basket.shipping_info
+        if shipping_info:
+            shipDict = json.loads(shipping_info)
+        else:
+            shipDict = {}
 
         ## list of keywords corresponding to shipping services available
         serviceList = []
@@ -134,7 +138,7 @@ class Repository(object):
             shipDict['PrioritySmall'] = smallBoxes * smallBoxCost
             basket.shipping_info = json.dumps(shipDict)
             basket.save()
-            
+
             for m in self.methods:
                 if m.code == 'PrioritySmall':
                     self.availableMethods.append(m)
@@ -249,6 +253,42 @@ class Repository(object):
 
         return serviceList
 
+    def setWhetherShippingPaidBySeller(self, basket):
+        shippingPaidBySeller = None
+
+        for line in basket.lines.all():
+            p = line.product
+            if not p.stockrecord.shipping_options:
+                raise ImproperlyConfigured(
+                _("shipping options not present."))
+
+            soptsDict = json.loads(p.stockrecord.shipping_options)
+            if soptsDict:
+
+                if soptsDict.get('shipChoice') == "calculate_ship" and soptsDict.get('printLabel'):
+                    shippingForThisItemPaidBySeller = False
+                else:
+                    shippingForThisItemPaidBySeller = True
+
+                if shippingPaidBySeller == None:
+                    shippingPaidBySeller = shippingForThisItemPaidBySeller
+                else:
+                    if shippingPaidBySeller != shippingForThisItemPaidBySeller:
+                        raise ImproperlyConfigured(
+                            _("Inconsistency in shipping payment, seller vs site"))
+
+        ## save to basket
+        shipping_info = basket.shipping_info
+        if shipping_info:
+            shipDict = json.loads(shipping_info)
+        else:
+            shipDict = {}
+        shipDict['shippingPaidBySeller'] = shippingPaidBySeller
+        basket.shipping_info = json.dumps(shipDict)
+        basket.save()
+
+        return shippingPaidBySeller
+
     def getServicesForSeller(self, basket):
         services = []
 
@@ -317,7 +357,6 @@ class Repository(object):
         this behaviour can easily be overridden by subclassing this class
         and overriding this method.
         """
-
         if not self.userAcceptsRemotePayments(basket):
             if self.localPickupEnabled(basket): 
                 self.methods = (LocalPickup(),)
@@ -327,8 +366,12 @@ class Repository(object):
         self.services = ()
         self.availableMethods = []
 
+        self.setWhetherShippingPaidBySeller(basket)
+
         try:
+
             self.services = self.getShippingInfo(basket, shipping_addr)
+            ## set whether shipping paid by seller
 
             print self.services
         except (SellerCannotShip, ItemHasNoWeight, ItemNotShippable) as e:
@@ -350,6 +393,8 @@ class Repository(object):
                 if m.service in self.services:
                     self.availableMethods.append(m)
 
+
+
         #return self.availableMethods
 
         return self.prime_methods(basket, self.availableMethods)
@@ -370,10 +415,9 @@ class Repository(object):
 
         self.availableMethods = []
         self.services = self.getServicesFromJSON(basket)
+
         if not self.services:
             return self.get_shipping_methods(user, basket, shipping_addr)
-
-
 
         if self.localPickupEnabled(basket): 
             self.availableMethods.append(LocalPickup())

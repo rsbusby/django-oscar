@@ -166,6 +166,7 @@ class CatalogueImporter(object):
     def _create_stockrecord(self, item, partner_name, partner_sku,
                             price_excl_tax, num_in_stock, stats):
         # Create partner and stock record
+        import ipdb;ipdb.set_trace()
         partner, _ = Partner.objects.get_or_create(
             name=partner_name)
         try:

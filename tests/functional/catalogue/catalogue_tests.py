@@ -878,24 +878,19 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         self.browser = browser
 
-
-
         ## give user2 an address, needed for shipping
 
         self.loginUser(self.user2, browser)
-
 
         ## make a booth/partner
         self.user2.partner = self.partner2
         self.user2.save()
         self.partner2.save()
 
-
         ## go to the booth page
         url = reverse('catalogue:index') + "?booth=" + str(self.partner2.id)
         surl = self.live_server_url + url
         browser.get(surl)
-
 
         ## set partner2 to accept remote payments
         browser.find_element_by_id("stripeConnect").click()
@@ -919,22 +914,32 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ff(b, 'id_postcode', '90291')
 
         browser.find_element_by_id("store-ship-new-submit").click()
+    
+        ## go to the product page, edit shipping options
 
-        ### the following use of the Mongo DB is deprecated
-        #from apps.homemade.homeMade import getSellerFromOscarID
-        #seller = getSellerFromOscarID(self.user2.id)
-        #seller.stripeSellerToken = "fkae_token"
-        #seller.stripeSellerPubKey = "fake_key"
-        #seller.save()
+        kwargs = {'pk': self.product2.id}
+        url = reverse('dashboard:catalogue-product', kwargs=kwargs)
+        self.go(url)
 
-        ## use PSQL instead, and use actual credentials
-        #self.partner2.stripeToken = "fkae_token"
-        #self.partner2.stripePubKey = "fake_key"
-        #self.partner2.save()
+        b.find_element_by_id("self_ship_toggle").click()
+        itemCost = 5.23
+        shippingCost = 2.22
+
+        element = b.find_element_by_id("self_ship_price_1")
+        element.send_keys(str(shippingCost))
+
+        element = b.find_element_by_id("id_price_excl_tax")
+        element.send_keys(str(itemCost))
+
+        ## test pic upload
+        browser.find_element_by_id('id_images-0-original').send_keys("/Users/busby/Documents/DEM/4th floor.JPG")
+
+        b.find_element_by_id('submitTheWholeDarnForm').click()
 
 
         ## logout user2
         self.go(reverse('customer:logout'))
+
 
         ## login
         user3 = User.objects.create_user(username="user3",
@@ -984,12 +989,12 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
 
-        self.product2.stockrecord.is_shippable = True 
-        self.product2.stockrecord.local_pickup_enabled = True 
+        #self.product2.stockrecord.is_shippable = True 
+        #self.product2.stockrecord.local_pickup_enabled = True 
 
 
-        self.product2.save()
-        self.product2.stockrecord.save()
+        #self.product2.save()
+        #self.product2.stockrecord.save()
 
         ## add item to basket
         ## go to item page
@@ -1209,7 +1214,6 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         b.find_element_by_id('submitTheWholeDarnForm').click()
 
 
-
         ## logout user2
         self.go(reverse('customer:logout'))
 
@@ -1348,7 +1352,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         self.go(url)
 
         b.find_element_by_id("hm_ship_toggle").click()
-
+        b.find_element_by_id("PM_toggle").click()
         b.find_element_by_id("PMSmall_toggle").click()
 
         element = b.find_element_by_id("PMSmall_num")

@@ -91,6 +91,24 @@ class ShippingMethod(object):
     def set_basket(self, basket):
         self.basket = basket
 
+    def shippingPaidBySeller(self):
+
+        try:        
+            shipping_info = self.basket.shipping_info
+        except:
+            return True
+        if not shipping_info:
+            return True
+        else:
+            shipDict = json.loads(shipping_info)
+            if shipDict.has_key('shippingPaidBySeller'):
+                if shipDict.get('shippingPaidBySeller') == False:
+                    return False
+
+        ## by default, shipping costs go to seller
+        return True
+
+
     def basket_charge_incl_tax(self):
         """
         Return the shipping charge including any taxes

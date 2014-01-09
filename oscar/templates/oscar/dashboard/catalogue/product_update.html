@@ -719,6 +719,12 @@ $(function() {
  });
 {% endif %}
 
+{% if printLabel %}
+$(function() {
+	$('#print_label_toggle').click();
+ });
+{% endif %}
+
 {% if PMSmall_used %} 
 $(function() {
 	$('#PMSmall_toggle').click();
@@ -902,6 +908,14 @@ function hmItemValidate() {
 
 
 	if ($('#shipChoice').val() == "calculate_ship"){
+
+
+       if ( ! ($('#FirstClass_toggle').prop('checked') || $('#UPS_toggle').prop('checked') )   && ! $('#PM_toggle').prop('checked')   ){
+
+      		errMsg('local_pickup_err',"Please choose a method of delivery.");
+
+       }
+
 
 	  errCount  += boxErr("PMSmall");
 	  errCount += boxErr("PMMedium");

@@ -237,6 +237,8 @@ class ProductCreateUpdateView(generic.UpdateView):
                     ctx['self_ship'] = soptsDict.get('self_ship')
                     ctx['calculate_ship'] = soptsDict.get('calculate_ship')
 
+                    ctx['printLabel'] = soptsDict.get('printLabel')
+
                     ctx['PMSmall_num'] = soptsDict.get('PMSmall_num')
                     ctx['PMMedium_num'] = soptsDict.get('PMMedium_num')
                     ctx['PMLarge_num'] = soptsDict.get('PMLarge_num')
@@ -340,11 +342,11 @@ class ProductCreateUpdateView(generic.UpdateView):
                                     image_formset) ## , recommended_formset)
         else:
             # delete the temporary product again
-            #if self.creating and form.is_valid():
-            #    self.object.delete()
-            #    self.object = None
+            if self.creating and form.is_valid():
+                self.object.delete()
+                self.object = None
             ##self.object.stockrecord = stockrecordSaved
-            image_formset.save()
+            #image_formset.save()
             return self.forms_invalid(form, stockrecord_form, category_formset,
                                       image_formset) ##, recommended_formset)
 
@@ -376,6 +378,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         if not self.object.stockrecord.partner and self.require_user_stockrecord:
             try:
                 stockrecord.partner = self.request.user.partner
+
             except ObjectDoesNotExist:
                 partner = Partner.objects.create(user=self.request.user, name=self.request.user.get_full_name())
                 partner.save()    

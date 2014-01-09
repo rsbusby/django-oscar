@@ -214,7 +214,6 @@ class StockRecordForm(forms.ModelForm):
                 is_valid = False
 
         import json
-
         self.instance.shipping_options = json.dumps(soptsDict)
 
         if soptsDict.get('first_used') or soptsDict.get('UPS_used') and self.cleaned_data.get('weight') > 0.0:

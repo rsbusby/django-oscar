@@ -793,8 +793,14 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                 amountInCents = int(floor(float(total) * 100.0))
 
                 ## depending on the shipping choices, shipping may be paid by website or by the seller
-                shippingCostToSite = float(self.checkout_session.shipping_method().basket_charge_excl_tax())
-                shippingCostToSeller = float(self.checkout_session.shipping_method().basket_seller_charge_excl_tax())
+                shippingCost = float(self.checkout_session.shipping_method().basket_charge_excl_tax())
+
+                if self.checkout_session.shipping_method().shippingPaidBySeller():
+                    shippingCostToSeller = shippingCost
+                    shippingCostToSite = 0.0
+                else:
+                    shippingCostToSite = shippingCost
+                    shippingCostToSeller = 0.0
 
                 if shippingCost > float(total):
                     errMsg = "There is a problem with the payment parameters. Please contact website support about error 678. Thank you."
@@ -817,13 +823,18 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
 
                 stripeFee = (0.029 * float(total) ) + 0.30
                 stripeFeeInCents = int(round(float(stripeFee) * 100.0))
+                print "to stripe: " + str(float(stripeFee) * 100.0)
 
                 fee = 0.035 * float(totalWithoutShippingExclTax) 
                 feeInCents = int(round(float(fee) * 100.0))
 
                 feePossiblyWithShipping = fee + shippingCostToSite
                 
-                feePossiblyWithShippingInCents = int(round(float(feePossiblyWithShipping) * 100.0))
+                ## using magic number to avoid charging a fee that is too large when 10.5 for example, 
+                ## don't want to round up in that case
+                feePossiblyWithShippingInCents = int(round(float(feePossiblyWithShipping) * 100.0 - 0.00001))
+
+                print "fee: " + str(float(feePossiblyWithShipping) * 100.0)
 
                 totalInCents = int(round(float(totalWithoutShippingInclTax) * 100.0))
                 amountUsedByStripeForFeeCalc = totalInCents - feePossiblyWithShippingInCents
@@ -834,7 +845,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
          
                 amountToSeller = float(total) - stripeFee - feePossiblyWithShipping
                 amountGoingToSellerInCents = int(round(float(amountToSeller) * 100.0))
-
+                print "Seller: " + str(float(amountToSeller) * 100.0)
 
                 ## assert that total is correct
                 tot = amountGoingToSellerInCents + feePossiblyWithShippingInCents + stripeFeeInCents
@@ -843,6 +854,10 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                 if tot != tot2:
                     errMsg = "There is a problem with the payment parameters. Please contact website support about error 684. Thank you."
                     messages.error(self.request, errMsg)
+                    print str(tot) + "  " + str(tot2)
+                    print amountGoingToSellerInCents
+                    print feePossiblyWithShippingInCents
+                    print stripeFeeInCents
                     #return HttpResponseRedirect(reverse('checkout:preview'))
 
 
