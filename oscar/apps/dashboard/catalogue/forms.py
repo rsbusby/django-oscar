@@ -161,6 +161,8 @@ class StockRecordForm(forms.ModelForm):
         if shipChoice == "calculate_ship":
             soptsDict['calculate_ship'] = True
             soptsDict['self_ship'] = False
+            if data.get('print_label_toggle') == "on":
+                soptsDict['printLabel'] = True
 
         ## priority mail
         soptsDict['PMMedium_num'] = data.get("PMMedium_num")

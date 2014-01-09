@@ -134,6 +134,7 @@ class Repository(object):
             shipDict['PrioritySmall'] = smallBoxes * smallBoxCost
             basket.shipping_info = json.dumps(shipDict)
             basket.save()
+            
             for m in self.methods:
                 if m.code == 'PrioritySmall':
                     self.availableMethods.append(m)

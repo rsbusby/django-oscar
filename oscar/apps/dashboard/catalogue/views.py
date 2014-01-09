@@ -355,8 +355,12 @@ class ProductCreateUpdateView(generic.UpdateView):
         """
         if not self.creating:
             # a just created product was already saved in process_all_forms()
-            self.object = form.save()
-     
+            try:
+                self.object = form.save()
+            except:
+                ## probably bad Haystack to index connection, if index is in the cloud
+                ## not much I can do, 'cept update the index manually later
+                pass
 
         if self.is_stockrecord_submitted():
             # Save stock record

@@ -522,6 +522,9 @@
 
 
   <div class="offset4 span6 shipShowOptions self_ship_info" style="display:none;">
+<div id="labelNotPrintedInfo" style="color:#666666;margin-bottom:12px;"> Shipping labels are not provided. The buyer's address will be available from the order summary page.</div>
+
+
     <label for="self_ship_price"> Cost of shipping and handling for a single item</label>
 	  $<input id="self_ship_price_1" style="ddisplay:none;" type="float"  name="self_ship_cost" 
 	{% if self_ship_cost %}
@@ -552,9 +555,53 @@
 
 <div class="hm_ship_info" style="display:none;">
 
+
+<div class="row-fluid">
+  <div class="span8"> 
+   <legend class="">
+    <input style="margin-right:10px" id="print_label_toggle" type="checkbox" name="print_label_toggle" >
+     Use printing labels provided by Homemade 1616
+   </legend>
+   <div id="print_label_err"> </div>
+
+  </div> {# span8 #}
+
+  <div class="span4"> 
+
+    <div id="labelPrintedInfo" style="color:#777777;margin-bottom:8px;"> 
+    	Shipping labels will be available for printing from the order summary page. 
+    </div>
+
+  </div> {#span #}
+
+</div>{#row#}
+
+<div class="row-fluid">
+
+ <div class="span8"> 
+   <legend class="">
+    <input id="PM_toggle" style="margin-right:10px" type="checkbox" name="PM_toggle">
+	   Ship with Priority Mail flat-rate boxes
+  
+
+	</legend>
+  </div> {#span#}
+
+  <div class="span4">
+    <a href="http://www.ebay.com/gds/Priority-Mail-Flat-Rate-Shipping-Guide-/10000000001454445/g.html" target="_blank">More info</a>
+  </div> {# span #}
+
+</div> {#row#}
+
+<div style="clear:both;"></div>
+
+<div id="PM_info" class="offset1 span11" style="display:none;background-color:#eeeeee;padding-left:5%;" >
+
 <fieldset>
-<legend class="">Check to use small Priority Mail boxes
-  <input id="PMSmall_toggle" type="checkbox" name="PMSmall_toggle" >
+<legend class="">
+  <input id="PMSmall_toggle"  style="margin-right:10px" type="checkbox" name="PMSmall_toggle" >
+
+  Use <a href="https://store.usps.com/store/browse/uspsProductDetailMultiSkuDropDown.jsp?categoryNavIds=catGetMailingShippingSupplies%3asubcatMSS_FlatRate&categoryNav=false&navAction=push&navCount=2&productId=P_SMALL_FRB&categoryId=subcatMSS_FlatRate" target="_blank">small</a> Priority Mail boxes
 </legend>
     <div class="PMSmall_chosen"  style="display:none;">
 	   <label for="PMSmall_num">Number of items that can fit in a 'small' priority box: </label>
@@ -570,8 +617,10 @@
 
 <fieldset>
 
-<legend class="">Check to use medium Priority Mail boxes
-  <input id="PMMedium_toggle" type="checkbox" name="PMMedium_toggle" >
+<legend class="">
+  <input id="PMMedium_toggle" style="margin-right:10px" type="checkbox" name="PMMedium_toggle" >
+
+  Use <a href="https://store.usps.com/store/browse/uspsProductDetailMultiSkuDropDown.jsp?productId=P_O_FRB2&categoryId=subcatMSS_FlatRate" target="_blank">medium</a> Priority Mail boxes
 </legend>
     <div class="PMMedium_chosen " style="display:none;">
       <label for="PMMedium_num">Number of items that can fit in a 'medium' priority box: </label>
@@ -588,8 +637,10 @@
 
 <fieldset>
 
-<legend class="">Check to use large Priority Mail boxes
-  <input id="PMLarge_toggle" type="checkbox" name="PMLarge_toggle">
+<legend class="">
+  <input id="PMLarge_toggle" style="margin-right:10px" type="checkbox" name="PMLarge_toggle">
+
+  Use <a href="https://store.usps.com/store/browse/uspsProductDetailMultiSkuDropDown.jsp?productId=P_LARGE_FRB" target="_blank">large</a> Priority Mail boxes
 </legend>
     <div class="PMLarge_chosen " style="display:none;">
       <label for="PMLarge_num">Number of items that can fit in large box: </label>
@@ -601,17 +652,25 @@
 
 </fieldset>
 
-<fieldset>
 
-<legend class="">Check to use First Class mail
-  <input id="FirstClass_toggle" type="checkbox" name="FirstClass_toggle">
+
+<hr>
+</div>{# pm_info #}
+
+<fieldset>
+<legend class="">
+  <input id="FirstClass_toggle"  style="margin-right:10px" type="checkbox" name="FirstClass_toggle">
+
+Use First Class mail
 </legend>
 </fieldset>
 
 <fieldset>
 
-<legend class="">Check to use UPS
-  <input id="UPS_toggle" type="checkbox" name="UPS_toggle">
+<legend class="">
+  <input id="UPS_toggle"  style="margin-right:10px" type="checkbox" name="UPS_toggle">
+
+Use UPS
 </legend>
  
 </fieldset>
@@ -621,7 +680,7 @@
                   
 
                     <tr>
-                        <th>Weight of item in ounces.  &nbsp &nbsp This is needed if items are to be shipped using UPS or First Class mail. </th>
+                        <th>Weight of item in ounces.  &nbsp &nbsp This is needed for rate calculation if items are to be shipped using UPS or First Class mail. </th>
                     </tr>
                     <tr>
                         <td>
@@ -658,7 +717,6 @@ $(function() {
 $(function() {
 	$('#hm_ship_toggle').click();
  });
-
 {% endif %}
 
 {% if PMSmall_used %} 
@@ -677,6 +735,13 @@ $(function() {
 $(function() {
 	$('#PMLarge_toggle').click();
  });
+{% endif %}
+
+{% if calculate_ship %}
+	{% if PMSmall_used or PMMedium_used or PMLarge_used  %} 
+		$('#PM_toggle').click();
+		$('#PM_info').show();
+	{% endif %}
 {% endif %}
 
 
@@ -713,6 +778,15 @@ $('#hm_ship_toggle').click(function() {
     $("#shipInfoModalLink").show(100);
     $('#shipChoice').val("calculate_ship");
 
+});
+
+$('#PM_toggle').click(function() { 
+	if( this.checked){
+	    $("#PM_info").fadeIn(200);
+	}
+	else{
+	    $("#PM_info").fadeOut(200);		
+	}
 });
 
 $('#UPS_toggle').click(function() { 
@@ -940,7 +1014,7 @@ $('#submitTheWholeDarnForm').click(function() {
      <p> <b>Using flat-rate Priority Mail </b></p>
 
        <p>
-        An easy option for domestic shipping is to use flat-rate Priority Mail boxes available through the postal service. Simply pick which boxes you will be using, and enter the number of items that can fit in the type of box(es) that you are shipping in. We'll then calculate how many boxes are needed to fulfill each order.
+        An easy option for domestic shipping is to use flat-rate Priority Mail boxes available through the postal service. Simply pick which boxes you will be using, and enter the number of items that can fit in the type of box(es) that you are shipping in. We'll then calculate how many boxes are needed to fulfill each order. A shipping label with the buyer's address will be available for printing from the order summary page.
 </p>
 
 
