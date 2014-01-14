@@ -1,0 +1,24 @@
+{% load currency_filters i18n %} Hello,
+
+Your pending order on Homemade1616 has a shipping quote from the seller.
+{% trans 'The pending order contains:' %}
+
+{% for line in basket.lines.all %} * {{ line.title }} - {%  trans 'quantity:' %} {{ line.quantity }} - {% trans 'price:' %} {{ line.line_price_incl_tax|currency }}
+{% endfor %}
+{% trans 'Basket total:' %} {{ basket_total }}
+{% trans 'Shipping:' %} {{ shipCost|currency}}
+{% trans 'Order Total:' %} {{ orderTotal|currency }}
+
+{% for field in shipping_address.active_address_fields %}  {{ field }}
+{% endfor %}
+
+
+{% blocktrans %}
+
+You may continue checking out at:
+{{continueCheckoutUrl}}
+
+{% endblocktrans %}
+
+
+{% blocktrans %}Thank you. {% endblocktrans %}

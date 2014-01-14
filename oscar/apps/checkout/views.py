@@ -19,6 +19,9 @@ from oscar.core.loading import get_class, get_classes
 from oscar.apps.order.models import SponsoredOrganization
 from oscar.apps.payment.models import SourceType, Source
 
+from django.contrib.sites.models import Site, get_current_site
+Dispatcher = get_class('customer.utils', 'Dispatcher')
+
 from apps.homemade.homeMade import  *
 
 ShippingAddressForm, GatewayForm = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
@@ -336,10 +339,58 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
             print "order_kwargs"
         return methods
 
+
+    def sendQueryToSeller(self, request):
+
+        import ipdb;ipdb.set_trace()
+        basket = request.basket
+        seller = basket.seller
+
+        sellerUser = seller.user
+
+        ctx = {'user': self.request.user,
+               'basket': basket,
+               'site': get_current_site(self.request),
+               'lines': basket.lines.all()}
+
+        site = Site.objects.get_current()
+        path = reverse('basket:single') + "?basket_id=" + str(basket.id)
+
+        ctx['shipQuoteUrl'] = 'http://%s%s' % (site.domain, path)
+        ctx['basket_total'] = basket.total_incl_tax
+        shipAddressId = self.checkout_session.shipping_user_address_id()
+        if shipAddressId:
+            shipAddress = UserAddress.objects.get(id=shipAddressId)
+        else:
+            shipAddress = None
+        ctx['shipping_address'] = shipAddress
+
+        ## send the email to seller with a link to the basket ship estimate form
+        messages = CommunicationEventType.objects.get_and_render('SHIP_QUOTE_SELLER', ctx)
+        event_type = None
+
+        if messages and messages['body']:
+            #logger.info("Order #%s - sending %s messages", order.number, code)
+            dispatcher = Dispatcher(logger)
+            dispatcher.dispatch_user_messages(sellerUser, messages,
+                                               event_type)
+
+        return True
+
     def post(self, request, *args, **kwargs):
         # Need to check that this code is valid for this user
         if request.POST.get('method_reset'):
             self.checkout_session.unset_shipping_method()
+
+
+        ## if method is get shipping estimate, then do this
+        if request.POST.get('query-needed'):
+            self.sendQueryToSeller(request)
+            messages.success(request, _("The seller has been contacted about determining the shipping cost."))
+
+            return HttpResponseRedirect(reverse('catalogue:index'))
+
+
         method_code = request.POST.get('method_code', None)
         is_valid = False
         newMethod = None
@@ -354,6 +405,8 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         if not is_valid:
             messages.error(request, _("Your submitted shipping method is not permitted"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
+
+
 
         # Save the code for the chosen shipping method in the session
         # and continue to the next step.
@@ -842,10 +895,11 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                 #amountGoingToSellerInCents = int(round(float(totalWithoutShippingInclTax) * 100.0))
                 #amountGoingToSellerInCents = amountGoingToSellerInCents - feeInCents - stripeFeeInCents
 
-         
-                amountToSeller = float(total) - stripeFee - feePossiblyWithShipping
-                amountGoingToSellerInCents = int(round(float(amountToSeller) * 100.0))
-                print "Seller: " + str(float(amountToSeller) * 100.0)
+                amountGoingToSellerInCents = amountInCents - stripeFeeInCents - feePossiblyWithShippingInCents
+
+                #amountToSeller = float(total) - stripeFee - feePossiblyWithShipping
+                #amountGoingToSellerInCents = int(round(float(amountToSeller) * 100.0))
+                print "Seller: " + str(amountGoingToSellerInCents)
 
                 ## assert that total is correct
                 tot = amountGoingToSellerInCents + feePossiblyWithShippingInCents + stripeFeeInCents

@@ -82,6 +82,10 @@ class TestProductStuff(WebTestCase, ClientTestCase):
         #                           shipping_address=self.address)
         self.order12 = create_order(basket=self.basket12,
                                     shipping_address=self.address)
+        self.partner1.shipping_options = None
+        self.partner1.save()
+        self.partner2.shipping_options = None
+        self.partner2.save()
 
     def test_add_and_delete_from_basket(self):
 
@@ -651,6 +655,13 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ## go to booth
         browser.find_element_by_id('my-booth').click()
    
+
+        ## shipping options
+        b.find_element_by_id("selectShippingOptions").click()
+        #b.find_element_by_id("self_ship_toggle").click()
+        b.find_element_by_id("local_pickup_toggle").click()
+        b.find_element_by_id("submitShippingOptions").click()
+
         ## add new item
         self.wdw("addNewItemButton").click()
         #browser.find_element_by_id('addNewItemButton').click()
@@ -832,7 +843,11 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         print url
         self.go(url)
 
-
+        ## shipping options
+        b.find_element_by_id("selectShippingOptions").click()
+        #b.find_element_by_id("self_ship_toggle").click()
+        b.find_element_by_id("local_pickup_toggle").click()
+        b.find_element_by_id("submitShippingOptions").click()
 
         browser.find_element_by_id('addNewItemButton').click()
 
@@ -877,6 +892,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         browser.implicitly_wait(20) # seconds
 
         self.browser = browser
+        b= browser
 
         ## give user2 an address, needed for shipping
 
@@ -903,7 +919,6 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ## go to ship address form
         #browser.find_element_by_class_name("orgButton").click()
 
-        b = browser
         element = WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.ID, "id_first_name")))
         ff(b, 'id_first_name', 'Bob')
         ff(b, 'id_last_name', 'number2')
@@ -915,15 +930,27 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         browser.find_element_by_id("store-ship-new-submit").click()
     
+        ## should be at the booth page, now go to edit overall shipping option
+
+        self.partner2.shipping_options = None
+        self.partner2.save()
+        b.find_element_by_id("selectShippingOptions").click()
+        b.find_element_by_id("remote_ship_toggle").click()
+        b.find_element_by_id("self_ship_toggle").click()
+        b.find_element_by_id("local_pickup_toggle").click()
+        b.find_element_by_id("submitShippingOptions").click()
+
         ## go to the product page, edit shipping options
 
         kwargs = {'pk': self.product2.id}
         url = reverse('dashboard:catalogue-product', kwargs=kwargs)
         self.go(url)
 
-        b.find_element_by_id("self_ship_toggle").click()
+
         itemCost = 5.23
         shippingCost = 2.22
+
+        b.find_element_by_id("id_local_pickup_enabled").click()
 
         element = b.find_element_by_id("self_ship_price_1")
         element.send_keys(str(shippingCost))
@@ -1156,9 +1183,9 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         url = reverse('catalogue:index') + "?booth=" + str(self.partner2.id)
         surl = self.live_server_url + url
         browser.get(surl)
+        
 
-
-        ## set partner2 to accept remote payments
+        ## set partner2 to accept remote payments. Does this not work/save?
         browser.find_element_by_id("stripeConnect").click()
 
         ## use ability to skip this since in testing 
@@ -1194,13 +1221,27 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         #self.partner2.save()
 
 
+
+        ## should be at the booth page, now go to edit overall shipping option
+        self.partner2.shipping_options = None
+        self.partner2.save()
+
+        b.find_element_by_id("selectShippingOptions").click()
+
+        b.find_element_by_id("remote_ship_toggle").click()
+        b.find_element_by_id("self_ship_toggle").click()
+        #b.find_element_by_id("local_pickup_toggle").click()
+        b.find_element_by_id("submitShippingOptions").click()
+
+
         ## go to the product page, edit shipping options
 
         kwargs = {'pk': self.product2.id}
         url = reverse('dashboard:catalogue-product', kwargs=kwargs)
         self.go(url)
 
-        b.find_element_by_id("self_ship_toggle").click()
+        #b.find_element_by_id("self_ship_toggle").click()
+        #b.find_element_by_id("id_local_pickup_enabled").click()
 
         element = b.find_element_by_id("self_ship_price_1")
         element.send_keys(str(shippingCost))
@@ -1345,13 +1386,27 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         self.loginUser(self.user2, browser)
 
 
-       ## go to the product page, edit shipping options for Priority Mail
+        ## go to the booth page, edit shipping options for Priority Mail
+        b.find_element_by_id("my-booth").click()
+        ## gor to ship options
+        b.find_element_by_id("selectShippingOptions").click()
+
+        #b.find_element_by_id("remote_ship_toggle").click()
+        b.find_element_by_id("hm_ship_toggle").click()
+        b.find_element_by_id("PM_toggle").click()        
+        b.find_element_by_id("PMSmall_toggle").click()                
+
+        #b.find_element_by_id("local_pickup_toggle").click()
+        b.find_element_by_id("submitShippingOptions").click()
+
+
+        ## go to the product page, edit shipping options for Priority Mail
 
         kwargs = {'pk': self.product2.id}
         url = reverse('dashboard:catalogue-product', kwargs=kwargs)
         self.go(url)
 
-        b.find_element_by_id("hm_ship_toggle").click()
+        # b.find_element_by_id("hm_ship_toggle").click()
         b.find_element_by_id("PM_toggle").click()
         b.find_element_by_id("PMSmall_toggle").click()
 

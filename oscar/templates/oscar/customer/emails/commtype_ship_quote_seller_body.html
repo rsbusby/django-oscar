@@ -1,0 +1,30 @@
+{% extends "customer/emails/base.html" %}
+{% load currency_filters i18n %}
+
+{% block body %}<p xmlns="http://www.w3.org/1999/html">{% trans 'Hello,' %}</p>
+
+<p>You have a request for a shipping quote.</p>
+
+<p>{% trans 'The pending order contains:' %}</p>
+
+<ul>
+    {% for line in basket.lines.all %}
+    <li>{{ line.title }} - {%  trans 'quantity:' %} {{ line.quantity }} - {% trans 'price:' %} {{ line.line_price_incl_tax|currency }}</li>
+    {% endfor %}
+</ul>
+<p>
+{% trans 'Basket total:' %} {{ basket_total}}</br>
+</p>
+
+<p>{% trans 'Shipping address:' %}</p>
+<p>{% for field in shipping_address.active_address_fields %}  {{ field }}<br/>
+{% endfor %}</p>
+
+{% if shipQuoteUrl %}
+<p>{% blocktrans %}Please determine a shipping quote and enter the amount at <a href="{{shipQuoteUrl}}" title="shipQuotePage">{{shipQuoteUrl}}</a>{% endblocktrans %}</p>
+{% endif %}
+<br>
+
+Thank you.
+
+{% endblock %}

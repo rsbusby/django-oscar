@@ -445,14 +445,16 @@
 
     <hr>
 <div class="row-fluid">
-<div class="span3"> 
-    <h3 style="font-weight:bold;font-size:1.24em;margin:0px 0px 5px 0px;margin-bottom:0px"> Delivery options </h3>  
+<div class="span6"> 
+    <h3 style="font-weight:bold;font-size:1.24em;margin:0px 0px 5px 0px;margin-bottom:0px"> Shipping and Delivery Options </h3>  
 </div> {# span6#}
 <div class="span4"> 
 
-     <div id="shipInfoModalLink" style="margin-top:10px;">
+     <div id="shipInfoModalLink" style="margin-top:10px;display:none;">
    <a id="shipInfoModalLinkLink" style="color:#ff6666;font-size:1.0em;float:lef;margin-top:10px;margin-left:0.5em" href="#openModalShipping"> About our shipping options</a>
    </div>
+
+   <div> Overall shipping options can be changed from the booth page.</div>
 
 </div> {# span6#}
  </div>{#row#}
@@ -485,8 +487,8 @@
 </div>
 {% endcomment %}
 
-  
-            
+  <table id="local_pickup_group">
+           
                     <tr>
                         <th>Check if this item is available for local pickup:  </th>
 
@@ -560,7 +562,7 @@
   <div class="span8"> 
    <legend class="">
     <input style="margin-right:10px" id="print_label_toggle" type="checkbox" name="print_label_toggle" >
-     Use printing labels provided by Homemade 1616
+     <div id="print_label_label"> Use printing labels provided by Homemade 1616 </div>
    </legend>
    <div id="print_label_err"> </div>
 
@@ -595,15 +597,15 @@
 
 <div style="clear:both;"></div>
 
-<div id="PM_info" class="offset1 span11" style="display:none;background-color:#eeeeee;padding-left:5%;" >
+<div id="PM_info" class="offset1 span11" style="display:none;background-color:#eeeeee;padding-left:5%;padding-top:0.8em;" >
 
-<fieldset>
+<fieldset id="PMSmall_group">
 <legend class="">
   <input id="PMSmall_toggle"  style="margin-right:10px" type="checkbox" name="PMSmall_toggle" >
 
   Use <a href="https://store.usps.com/store/browse/uspsProductDetailMultiSkuDropDown.jsp?categoryNavIds=catGetMailingShippingSupplies%3asubcatMSS_FlatRate&categoryNav=false&navAction=push&navCount=2&productId=P_SMALL_FRB&categoryId=subcatMSS_FlatRate" target="_blank">small</a> Priority Mail boxes
 </legend>
-    <div class="PMSmall_chosen"  style="display:none;">
+    <div class="PMSmall_chosen"  style="display:none;margin:0 0 1.4em 3em;">
 	   <label for="PMSmall_num">Number of items that can fit in a 'small' priority box: </label>
 
 	   <input id="PMSmall_num" name="PMSmall_num" type="number" value="{{PMSmall_num}}" >
@@ -615,16 +617,16 @@
 
 </fieldset>
 
-<fieldset>
+<fieldset id="PMMedium_group">
 
 <legend class="">
   <input id="PMMedium_toggle" style="margin-right:10px" type="checkbox" name="PMMedium_toggle" >
 
   Use <a href="https://store.usps.com/store/browse/uspsProductDetailMultiSkuDropDown.jsp?productId=P_O_FRB2&categoryId=subcatMSS_FlatRate" target="_blank">medium</a> Priority Mail boxes
 </legend>
-    <div class="PMMedium_chosen " style="display:none;">
+    <div class="PMMedium_chosen " style="display:none;margin:0 0 1.4em 3em;">
       <label for="PMMedium_num">Number of items that can fit in a 'medium' priority box: </label>
-	  <input id="PMMedium_num" name="PMMedium_num"  type="number" value="{{PMMedium_num}}" >
+	  <input id="PMMedium_num"  name="PMMedium_num"  type="number" value="{{PMMedium_num}}" >
 	  	                                     {{ stockrecord_form.PMMedium_num.errors }}
 	  	                                    <div id="PMMedium_err"> </div>
 
@@ -635,17 +637,17 @@
 
 
 
-<fieldset>
+<fieldset id="PMLarge_group">
 
 <legend class="">
   <input id="PMLarge_toggle" style="margin-right:10px" type="checkbox" name="PMLarge_toggle">
 
   Use <a href="https://store.usps.com/store/browse/uspsProductDetailMultiSkuDropDown.jsp?productId=P_LARGE_FRB" target="_blank">large</a> Priority Mail boxes
 </legend>
-    <div class="PMLarge_chosen " style="display:none;">
+    <div class="PMLarge_chosen " style="display:none;margin:0 0 1.4em 3em;">
       <label for="PMLarge_num">Number of items that can fit in large box: </label>
 
-	  <input id="PMLarge_num" name="PMLarge_num" type="number" value="{{PMLarge_num}}" >
+	  <input id="PMLarge_num"  name="PMLarge_num" type="number" value="{{PMLarge_num}}" >
 	  	                             {{ stockrecord_form.PMLarge_num.errors }}
 	  	                             <div id="PMLarge_err"> </div>
 	</div>
@@ -657,7 +659,7 @@
 <hr>
 </div>{# pm_info #}
 
-<fieldset>
+<fieldset id="first_class_group">
 <legend class="">
   <input id="FirstClass_toggle"  style="margin-right:10px" type="checkbox" name="FirstClass_toggle">
 
@@ -665,7 +667,7 @@ Use First Class mail
 </legend>
 </fieldset>
 
-<fieldset>
+<fieldset id="UPS_group">
 
 <legend class="">
   <input id="UPS_toggle"  style="margin-right:10px" type="checkbox" name="UPS_toggle">
@@ -707,17 +709,92 @@ Use UPS
   //        });
   //    });
 
-{% if self_ship %}
+{% if s_self_ship %}
 $(function() {
 	$('#self_ship_toggle').click();
+	$('#self_ship_toggle').hide();
+	$('#hm_ship_toggle').hide();
+
  });
 {% endif %}
 
-{% if calculate_ship %}
+{% if s_calculate_ship %}
 $(function() {
 	$('#hm_ship_toggle').click();
+	$('#self_ship_toggle').hide();
+	$('#hm_ship_toggle').hide();
+
  });
 {% endif %}
+
+{% if s_printLabel %}
+$(function() {
+	$('#print_label_toggle').click();
+	$('#print_label_toggle').hide();
+	$('#print_label_label').text("Using shipping labels provided by Homemade 1616");
+
+ });
+{% else %}
+
+$(function() {
+	// $('#print_label_toggle').click();
+	$('#print_label_toggle').hide();
+	$('#print_label_label').text("Shipping labels are not provided.");
+	$('#labelPrintedInfo').hide();
+
+ });
+
+{% endif %}
+
+{% if not s_PMSmall_used %} 
+$(function() {
+	$('#PMSmall_group').hide();
+ });
+{% endif %}
+
+{% if not s_PMMedium_used %} 
+$(function() {
+	$('#PMMedium_group').hide();
+ });
+{% endif %}
+
+{% if not s_PMLarge_used %} 
+$(function() {
+	$('#PMLarge_group').hide();
+ });
+{% endif %}
+
+{% if not s_first_used %} 
+$(function() {
+	$('#first_class_group').hide();
+ });
+{% endif %}
+
+{% if not s_UPS_used %} 
+$(function() {
+	$('#UPS_group').hide();
+ });
+{% endif %}
+
+{% if not s_local_pickup_used %} 
+$(function() {
+	$('#local_pickup_group').hide();
+ });
+{% endif %}
+
+
+
+// {% if self_ship %}
+// $(function() {
+// 	$('#self_ship_toggle').click();
+//  });
+// {% endif %}
+
+// {% if calculate_ship %}
+// $(function() {
+// 	$('#hm_ship_toggle').click();
+//  });
+// {% endif %}
 
 {% if printLabel %}
 $(function() {
@@ -725,19 +802,19 @@ $(function() {
  });
 {% endif %}
 
-{% if PMSmall_used %} 
+{% if PMSmall_used and s_PMSmall_used %} 
 $(function() {
 	$('#PMSmall_toggle').click();
  });
 {% endif %}
 
-{% if PMMedium_used %} 
+{% if PMMedium_used and s_PMMedium_used %} 
 $(function() {
 	$('#PMMedium_toggle').click();
  });
 {% endif %}
 
-{% if PMLarge_used %} 
+{% if PMLarge_used and s_PMLarge_used %} 
 $(function() {
 	$('#PMLarge_toggle').click();
  });
@@ -773,7 +850,7 @@ $('#self_ship_toggle').click(function() {
     $(".self_ship_info").fadeIn(200);
   	$('#hm_ship_toggle').prop('checked', false); 
     $(".hm_ship_info").hide(200);
-    $("#shipInfoModalLink").hide(100);
+    // $("#shipInfoModalLink").hide(100);
     $('#shipChoice').val("self_ship");
 });
 
@@ -781,7 +858,7 @@ $('#hm_ship_toggle').click(function() {
     $(".hm_ship_info").fadeIn(200);
 	$('#self_ship_toggle').prop('checked', false); 
     $(".self_ship_info").hide(200);
-    $("#shipInfoModalLink").show(100);
+    // $("#shipInfoModalLink").show(100);
     $('#shipChoice').val("calculate_ship");
 
 });
@@ -910,9 +987,10 @@ function hmItemValidate() {
 	if ($('#shipChoice').val() == "calculate_ship"){
 
 
-       if ( ! ($('#FirstClass_toggle').prop('checked') || $('#UPS_toggle').prop('checked') )   && ! $('#PM_toggle').prop('checked')   ){
+       if ( ! ($('#FirstClass_toggle').prop('checked') || $('#UPS_toggle').prop('checked') || $('#id_local_pickup_enabled').prop('checked') )   && ! ( $('#PM_toggle').prop('checked') && ($('#PMSmall_toggle').prop('checked') || $('#PMMedium_toggle').prop('checked') || $('#PMLarge_toggle').prop('checked') )  ) ){
 
       		errMsg('local_pickup_err',"Please choose a method of delivery.");
+      		errCount += 1
 
        }
 

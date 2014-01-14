@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.methods import (
     Free, FixedPrice, Negotiable, LocalPickup, uspsShipping, First, UPSGround, 
-    Priority, PrioritySmall, PriorityMedium, NoShippingRequired, OfferDiscount)
+    Priority, PrioritySmall, PriorityMedium, NoShippingRequired, OfferDiscount, QuerySeller)
 
 from decimal import Decimal as D
 from math import ceil
@@ -36,7 +36,7 @@ class Repository(object):
     Repository class responsible for returning ShippingMethod
     objects for a given user, basket etc
     """
-    methods = [LocalPickup(), First(), FixedPrice(), Priority(), UPSGround(), PrioritySmall(), PriorityMedium()]
+    methods = [QuerySeller(), LocalPickup(), First(), FixedPrice(), Priority(), UPSGround(), PrioritySmall(), PriorityMedium()]
 
     availableMethods = []
 
@@ -60,6 +60,7 @@ class Repository(object):
         else:
             shipDict = {}
 
+
         ## list of keywords corresponding to shipping services available
         serviceList = []
 
@@ -68,6 +69,27 @@ class Repository(object):
 
         ## check for self shipping of options
         selfShipCostTotal = 0.0
+
+        ## whether the seller needs to be contacted for an estimate
+        needNewEstimate = False
+
+        ## in the case where estimate already exists
+        if shipDict:
+            if shipDict.get('customShipAmount') and shipDict.get('needNewEstimate') == False: ## and basket.status=="Frozen":
+                ## customShipAmount should have the estimate already if this condition holds
+                selfShipCostTotal = shipDict.get('customShipAmount')
+                if selfShipCostTotal > 0.0:
+                    for m in self.methods:
+                        if m.code == 'fixed-price-shipping':
+                            self.availableMethods.append(m)
+
+                    shipDict['fixed-price-shipping'] = str(selfShipCostTotal)
+                    basket.shipping_info = json.dumps(shipDict)
+                    basket.save()
+                    ## don't show calculated options
+                    return serviceList
+
+
         for line in basket.lines.all():
 
             p = line.product
@@ -82,6 +104,31 @@ class Repository(object):
                             selfShipCostTotal = selfShipCostTotal + (float(self_ship_cost) * line.quantity)
                     except:
                         pass
+                    ## if more than one item, need an estimate.
+                    if line.quantity > 1: ## and soptsDict.get('newEstimateForMultipleItems'):
+                        needNewEstimate = True
+                    ## if more than one type of item, get an estimate
+                    if len(basket.lines.all() ) > 1:
+                        needNewEstimate = True
+
+
+        ## if a new estimate is needed, this trumps everything else
+        if needNewEstimate:
+            for m in self.methods:
+                if m.code == 'query-seller':
+                    self.availableMethods.append(m)
+
+            shipDict['needNewEstimate'] = True
+            shipDict['customShipAmount'] = None
+            shipDict['query-seller'] = None
+
+
+            basket.shipping_info = json.dumps(shipDict)
+            ## freeze basket if need a shipping estimate
+            #basket.freeze()
+            basket.save()
+            ## don't show calculated options
+            return serviceList
 
         if selfShipCostTotal > 0.0:
             for m in self.methods:
@@ -311,7 +358,7 @@ class Repository(object):
             shipDict = json.loads(shipping_info)
 
             ## first look for methods that are not EasyPost
-            shipMethods = ["local-pickup", "fixed-price-shipping", "PriorityMedium", "PrioritySmall"]
+            shipMethods = ["local-pickup", "query-seller", "fixed-price-shipping", "PriorityMedium", "PrioritySmall"]
             for code in shipMethods:
                 if shipDict.get(code):
                     self.availableMethods.append(self.find_by_code(code)) 
@@ -357,7 +404,8 @@ class Repository(object):
         this behaviour can easily be overridden by subclassing this class
         and overriding this method.
         """
-        if not self.userAcceptsRemotePayments(basket):
+
+        if not self.sellerAcceptsRemotePayments(basket):
             if self.localPickupEnabled(basket): 
                 self.methods = (LocalPickup(),)
             else:
@@ -410,7 +458,7 @@ class Repository(object):
         and overriding this method.
         """
 
-        #if not self.userAcceptsRemotePayments(basket):
+        #if not self.sellerAcceptsRemotePayments(basket):
         #    self.methods = (LocalPickup(),)
 
         self.availableMethods = []
@@ -429,16 +477,22 @@ class Repository(object):
         return self.prime_methods(basket, self.availableMethods)
 
 
-    def userAcceptsRemotePayments(self, basket):
+    def sellerAcceptsRemotePayments(self, basket):
 
-        from apps.homemade.homeMade import getSellerFromOscarID
+        #from apps.homemade.homeMade import getSellerFromOscarID
 
-        seller = getSellerFromOscarID(basket.seller.user.id)
+        try:
+            #seller = getSellerFromOscarID(basket.seller.user.id)
 
         #if seller.stripeSellerToken and seller.stripeSellerPubKey:
-        if basket.seller.stripeToken and basket.seller.stripePubKey:
-            return True
-
+            if basket.seller.stripeToken and basket.seller.stripePubKey:
+                return True
+            elif settings.TEST_LOCAL:
+                return True
+        except:
+            
+            pass
+        
         return False
 
     def get_default_shipping_method(self, user, basket, shipping_addr=None,

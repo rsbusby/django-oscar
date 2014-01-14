@@ -221,14 +221,16 @@ class ProductCreateUpdateView(generic.UpdateView):
 
         ctx['payments_enabled'] = self.paymentsEnabled()
 
-
-
         if not self.creating:
             p = self.object
+            partner = p.stockrecord.partner
+        else:
+            partner = self.request.user.partner
+
+        if not self.creating:
             if p.stockrecord.shipping_options:
                 soptsDict = json.loads(p.stockrecord.shipping_options)
                 if soptsDict:
-
 
                     ctx['self_ship_cost'] = soptsDict.get('self_ship_cost')
                     #if ctx['self_ship_cost'] == None:
@@ -249,6 +251,24 @@ class ProductCreateUpdateView(generic.UpdateView):
 
                     ctx['first_used'] = soptsDict.get('first_used')
                     ctx['UPS_used'] = soptsDict.get('UPS_used')
+
+        ## get shipping preferences for the booth/seller
+        if partner.shipping_options:
+            soptsDict = json.loads(partner.shipping_options)
+            if soptsDict:
+                ctx['s_self_ship'] = soptsDict.get('self_ship')
+                ctx['s_calculate_ship'] = soptsDict.get('calculate_ship')
+
+                ctx['s_printLabel'] = soptsDict.get('printLabel')
+
+                ctx['s_PMSmall_used'] = soptsDict.get('PMSmall_used')
+                ctx['s_PMMedium_used'] = soptsDict.get('PMMedium_used')
+                ctx['s_PMLarge_used'] = soptsDict.get('PMLarge_used')
+
+                ctx['s_first_used'] = soptsDict.get('first_used')
+                ctx['s_UPS_used'] = soptsDict.get('UPS_used')
+
+                ctx['s_local_pickup_used'] = soptsDict.get('local_pickup_used')
 
 
         return ctx
@@ -469,7 +489,6 @@ class ProductCreateUpdateView(generic.UpdateView):
                 stockrecord.is_shippable = True
 
             stockrecord.save()
-
 
 
         ## check if store has payments enabled. If not, disable the item

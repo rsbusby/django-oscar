@@ -8,7 +8,7 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
-from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
+from oscar.apps.basket.managers import OpenBasketManager, OpenOrFrozenBasketManager, SavedBasketManager
 from oscar.apps.offer import results
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.templatetags.currency_filters import currency
@@ -67,6 +67,9 @@ class AbstractBasket(models.Model):
     objects = models.Manager()
     open = OpenBasketManager()
     saved = SavedBasketManager()
+
+    openOrFrozen = OpenOrFrozenBasketManager()
+
 
     def __init__(self, *args, **kwargs):
         super(AbstractBasket, self).__init__(*args, **kwargs)

@@ -24,8 +24,20 @@ Applicator = get_class('offer.utils', 'Applicator')
                       'SavedLineForm', 'ProductSelectionForm'))
 Repository = get_class('shipping.repository', ('Repository'))
 
+from django.contrib.sites.models import Site, get_current_site
 
 Basket = get_model('basket', 'basket')
+CommunicationEvent = get_model('order', 'CommunicationEvent')
+CommunicationEventType = get_model('customer', 'CommunicationEventType')
+
+Dispatcher = get_class('customer.utils', 'Dispatcher')
+
+# Standard logger for checkout events
+import logging
+logger = logging.getLogger('oscar.checkout')
+
+from decimal import Decimal
+
 
 from oscar.apps.order.models import SponsoredOrganization
 
@@ -97,8 +109,89 @@ class BasketView(ModelFormSetView):
        super(BasketView, self).__init__()
        return
 
+
+    def post(self, request, *args, **kwargs):
+        ## should throw some exceptions?
+
+        if not request.POST.has_key('basket_id'):
+            return self.get(request, **kwargs)
+        basket = Basket.objects.filter(id=request.POST['basket_id'])[0]
+
+        ## seller sets the shipping cost/quote for a basket
+        if request.POST.has_key('ship_cost'):
+            shipCost = request.POST.get('ship_cost')
+            shipping_info = basket.shipping_info
+            if shipping_info:
+                shipDict = json.loads(shipping_info)
+            else:
+                shipDict = {}
+            shipDict['needNewEstimate'] = False
+            shipDict['customShipAmount'] = shipCost
+            shipDict['query-seller'] = shipCost
+
+            basket.shipping_info = json.dumps(shipDict)
+            ## freeze basket if need a shipping estimate
+            #basket.freeze()
+            basket.save()
+
+            ## set the shipping cost, then go back to same page, 
+            ##    with success message that is set, msg sent to buyer
+            msg = _("The total shipping cost for this basket has been set to  " + str(shipCost))
+                        
+            messages.success(request, msg)
+
+
+            ## send a message to the buyer 
+            self.sendMessageAboutQuoteToBuyer(request, basket, shipCost)
+    
+            ##return HttpResponseRedirect(reverse('catalogue:index'))
+            return self.get(request, *args, **kwargs)
+
+
+    def sendMessageAboutQuoteToBuyer(self, request, basket, shipCost):
+        seller = basket.seller
+
+        ## send the email to buyer with a link to the checkout
+ 
+
+        # sellerUser = seller.user
+
+        buyerUser = basket.owner
+
+        ctx = {'user': self.request.user,
+               'basket': basket,
+               'site': get_current_site(self.request),
+               'lines': basket.lines.all()}
+
+        site = Site.objects.get_current()
+        path = reverse('checkout:preview') + "?basket_id=" + str(basket.id)
+
+        ctx['continueCheckoutUrl'] = 'http://%s%s' % (site.domain, path)
+        ctx['basket_total'] = basket.total_incl_tax
+        ctx['shipCost'] = shipCost
+        ctx['orderTotal'] = Decimal(float(shipCost) + float(basket.total_incl_tax))
+
+        #shipAddressId = self.checkout_session.shipping_user_address_id()
+        #if shipAddressId:
+        #    shipAddress = UserAddress.objects.get(id=shipAddressId)
+        #else:
+        shipAddress = None
+        ctx['shipping_address'] = shipAddress
+
+
+        messages = CommunicationEventType.objects.get_and_render('SHIP_QUOTE_BUYER', ctx)
+        event_type = None
+
+        if messages and messages['body']:
+            #logger.info("Order #%s - sending %s messages", order.number, code)
+            dispatcher = Dispatcher(logger)
+            dispatcher.dispatch_user_messages(buyerUser, messages,
+                                               event_type)
+
+        return True
+
+
     def get(self, request, *args, **kwargs):
-        
         if request.GET.has_key('basket_id'):
             try:
                 self.basket = Basket.objects.filter(id=request.GET['basket_id'])[0]
@@ -299,14 +392,17 @@ class BasketListView(ListView):
     pq = None
 
 
+    def get(self, request, *args, **kwargs):
+        # import ipdb;ipdb.set_trace()
+        return super(BasketListView, self).get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         ## should throw some exceptions?
-
-
 
         if not request.POST.has_key('basket_id'):
             return self.get(request, **kwargs)
         basket = Basket.objects.filter(id=request.POST['basket_id'])[0]
+
         if request.POST.has_key('setSponsoredOrg'):
             sOrg = SponsoredOrganization.objects.filter(id=request.POST['sponsored_org_id'])[0]
             basket.sponsored_org = sOrg

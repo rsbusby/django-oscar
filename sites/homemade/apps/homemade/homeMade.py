@@ -175,6 +175,8 @@ if not STAND_ALONE:
     from oscar.core.loading import get_class, get_profile_class, get_classes
     from django.db.models import get_model
 
+    UserAddress = get_model('address', 'UserAddress')
+ 
 
 
 
@@ -3737,6 +3739,7 @@ def stripeAuthorized(*args):
     #return redirect(url_for('catalogue:index', booth=u.storeName))
 
     ## is there a default store address already? If so just go straight to booth
+
     try:
         defaultAddress = UserAddress._default_manager.filter(user=self.request.user).order_by('-is_default_for_store')[0]
         if defaultAddress:
@@ -3761,6 +3764,9 @@ def chargeSharedOscar(request, basket, order_number, amountInCents, feeInCents):
         request.form = request.POST
         #g = request
 
+        u = request.user
+
+
         mu = getSellerFromOscarID(request.user.id)
 
         #basket = request.basket
@@ -3779,23 +3785,25 @@ def chargeSharedOscar(request, basket, order_number, amountInCents, feeInCents):
 
     #amountDollars = float(amountInCents) / 100.0 
 
-    print "is there a stripe ID? "
-    print mu.stripeID
-    print mu.stripeHasCard 
+    #print "is there a stripe ID? "
+    #print mu.stripeID
+    #print mu.stripeHasCard 
     
    
-    if mu.stripeID:
-        print "has a stripe ID **********************" 
-        custID = mu.stripeID
-        ## make a new token??
-        # Create a Token from the existing customer on the application's account
+    # if mu.stripeID:
+    #     print "has a stripe ID **********************" 
+    #     custID = mu.stripeID
+    #     ## make a new token??
+    #     # Create a Token from the existing customer on the application's account
 
 
-    else:    
+    # else: 
+    ## not saving the Stripe IS for now
+    if True:   
         print "no stripe ID ##################"
         try:
             customer = stripe.Customer.create(
-                                      email=mu.email,
+                                      email=request.user.email,
                                       card=request.form['stripeToken'],
                                       api_key=stripe.api_key
                                       )
@@ -3810,8 +3818,8 @@ def chargeSharedOscar(request, basket, order_number, amountInCents, feeInCents):
             return False
 
         custID = customer.id
-        mu.stripeID = customer.id
-        mu.save()
+        #mu.stripeID = customer.id
+        #mu.save()
 
     ## make a token
     # Create a Token from the existing customer on the application's account
@@ -3862,7 +3870,7 @@ def chargeSharedOscar(request, basket, order_number, amountInCents, feeInCents):
 
     success = not charge.failure_code 
     if not charge.failure_code:
-        print "no fail, charging " + str(mu.stripeHasCard )
+        print "no fail, charging " ##+ str(mu.stripeHasCard )
         
         #if not mu.stripeHasCard:
         #    print "did it work?"

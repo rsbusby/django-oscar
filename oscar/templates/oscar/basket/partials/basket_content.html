@@ -36,7 +36,15 @@
     {% endblock %}
 
     {% block basket_form_main %}
-        <form action="." method="post" class="basket_summary" id="basket_formset">
+
+     {% if request.user == basket.seller.user  %}
+
+        <form action="#" method="post" class="basket_summary" id="basket_formset_no_ajax">
+    {% else %}
+        <form action="{% url 'basket:single' %}" method="post" class="basket_summary" id="basket_formset">
+
+    {% endif %}
+
             {% csrf_token %}
             {{ formset.management_form }}
 
@@ -61,8 +69,13 @@
 
                         </div>
                         <div class="span4">
+
                             <div class="checkout-quantity control-group {% if form.errors %}error{% endif %}">
+
                                 {{ form.quantity }}
+                               <div {% if request.user != basket.owner %}style="display:none"{%endif%}>
+
+
                                 <button class="btn" type="submit">{% trans "Update" %}</button>
                                 <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">{% trans "Remove" %}</a>
                                 {% if request.user.is_authenticated %}
@@ -72,23 +85,30 @@
                                     {{ form.save_for_later }}
                                     {{ form.DELETE }}
                                 </div>
+
+
                                 {% for field_errors in form.errors.values %}
                                     {% for error in field_errors %}
                                         <span class="help-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
                                     {% endfor %}
                                 {% endfor %}
+                          
+                                </div>{#wrapper to hide if not buyer#}
                             </div>
+                           
+
+
                         </div>
+
                         <div class="span2">
                             <p class="price_color align-right">{{ form.instance.unit_price_incl_tax|currency }}</p>
                         </div>
                     </div>
                 </div>
             {% endfor %}
-        </form>
-    {% endblock %}
+    }
 
-    <div class="row-fluid">
+   <div class="row-fluid">
         {% block vouchers %}
            
         {% endblock vouchers %}
@@ -102,11 +122,58 @@
     </div>
 
 
+
+
+     {% if request.user == basket.seller.user  %}
+                        <div class="row-fluid">
+                        <div id="ship_cost_info"  class="offset2 span6" style="margin-top:2.4em"  >
+
+                        <input id="basket_id_post" class="" style="ddisplay:none;" type="hidden"  name="basket_id" value="{{basket.id}}">
+
+
+                               Please enter the total shipping cost for these items.<br>
+                                    $<input id="ship_cost" class="" style="ddisplay:none;" type="float"  name="ship_cost" 
+                                 {% if ship_cost %}
+                                      value="{{ship_cost}}"
+                                 {% endif %}
+                                    >
+    <div class="form-actions"><input type=submit value="Submit shipping cost"></div>
+
+                       
+
+                                </div>
+                                </div>
+                            {% endif %}
+
+
+
+
+
+
+        </form>
+    {% endblock %}
+
+ 
+
+
+ 
+
+
+
+
     {% block formactions %}
+
+        {% if request.user == basket.owner %}
         <div class="form-actions clearfix" >
             <a href="{% url 'checkout:index' %}" class="pull-right btn btn-large btn-primary btn-full">{% trans "Proceed to checkout" %}</a>
         </div>
+
+        {% endif %}
+
     {% endblock formactions %}
+
+                          
+
 
 {% else %}
     {% block emptybasket %}

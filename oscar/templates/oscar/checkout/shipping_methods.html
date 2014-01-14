@@ -53,7 +53,14 @@
             <form method="post" action="{% url 'checkout:shipping-method' %}?basket_id={{basket.id}}">
                 {% csrf_token %}
                 <input type="hidden" name="method_code" value="{{ method.code }}" class="btn" />
-                <button type="submit" class="btn btn-large btn-primary pull-right select-shipping">{% trans "Select option" %}</button>
+
+                {% if method.code == 'query-seller' %}
+                   <input type="hidden" name="query-needed" value="True"> 
+                   <button type="submit" class="btn btn-large btn-primary pull-right select-shipping">{% trans "Request shipping cost from seller" %}</button>
+                    
+                {% else %}
+                  <button type="submit" class="btn btn-large btn-primary pull-right select-shipping">{% trans "Select option" %}</button>
+                {% endif %}
             </form>
         </div>    
     </div>

@@ -38,6 +38,10 @@ class Partner(AbstractPartner):
     picPath = models.CharField(
         _("Pic path"), max_length=255, blank=True, null=True)
 
+    ## JSON blob of shipping prefs
+    shipping_options = models.TextField(("Shipping Options"), null=True, blank=True)
+
+
 class PartnerImage(ProductImage):
     
     partner = models.ForeignKey(

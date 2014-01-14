@@ -4,7 +4,7 @@ from oscar.apps.basket.abstract_models import (
 from django.db import models
 from django.utils.translation import ugettext as _
 
-
+from oscar.apps.basket.managers import OpenOrFrozenBasketManager
 
 class InvalidBasketLineError(Exception):
     pass

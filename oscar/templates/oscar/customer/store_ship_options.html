@@ -1,0 +1,542 @@
+{% extends "layout.html" %}
+{% load url from future %}
+{% load i18n %}
+{% load staticfiles %}
+{% load macros %}
+
+
+
+{% block title %}
+    {% trans "Shipping Options" %} | {{ block.super }}
+{% endblock %}
+
+
+{% block extrastyles %}
+  {{ block.super }}
+  <link rel='stylesheet' type='text/css' href="{% static 'style_modal.css' %}"/>
+
+{% endblock %}
+
+
+{% block content %}
+
+
+
+<form id="shipping_options_form" action="{% url 'customer:store-shipping-options' %}" method="post">
+    {% csrf_token %}
+
+
+<div class="row-fluid">
+<div class="span8"> 
+    <h3 style="font-weight:bold;font-size:1.24em;margin:0px 0px 5px 0px;margin-bottom:0px"> Shipping and Delivery Options </h3>  
+</div> {# span6#}
+
+<div style="clear:both"></div>
+<div class="span4 clearfix"> 
+
+     <div id="shipInfoModalLink" style="margin-top:10px;">
+   <a id="shipInfoModalLinkLink" style="color:#ff6666;font-size:1.1em;float:lef;margin-top:10px;margin-left:0.5em" href="#openModalShipping"> About our shipping options</a>
+   </div>
+
+</div> {# span6#}
+ </div>{#row#}
+
+<br>
+    {#{% if payments_enabled %}#}
+
+  
+            
+  <legend class="">
+    <input style="margin-right:10px" id="local_pickup_toggle" type="checkbox" name="local_pickup_toggle" >
+   Check if items may be available for local pickup 
+   </legend>
+
+
+<div id="local_pickup_err"></div>
+
+   {# {% crispy stockrecord_form %} #}
+
+  <legend class="">
+    <input style="margin-right:10px" id="remote_ship_toggle" type="checkbox" name="remote_ship_toggle" >
+   Check if you plan to ship items 
+   </legend>
+
+
+<div id="all_shipping_options" style="display:none">
+<div class="btn-group" data-toggle="buttons-radio">
+{#  <button type="button" class="btn ">Left</button> #}
+   <input id="shipChoice" type='hidden' name="shipChoice" value=''>
+
+  <button id="hm_ship_toggle" type="button" class="btn btnShipChoice ">Calculate shipping cost at time of order</button>
+  <button id="self_ship_toggle" type="button" class="btn btnShipChoice">Provide your own shipping for items</button>
+</div>
+
+
+<br> 
+
+
+  <div class="offset4 span6 shipShowOptions self_ship_info" style="display:none;">
+<div id="labelNotPrintedInfo" style="color:#666666;margin-bottom:12px;"> Shipping labels are not provided. After an order is completed, the buyer's address will be available from the order summary page.</div>
+
+
+
+
+
+{% comment %}
+<br><p>... and for multiple items (optional )</p>
+      <label for="self_ship_price_2"> For 2 items  </label>
+      $<input id="self_ship_price_2" style="ddisplay:none;" type="float"  value="{{self_ship_cost2}}">
+
+      <label for="self_ship_price_3"> For 3 items  </label>
+      $<input id="self_ship_price_3" style="ddisplay:none;" type="float" value="{{self_ship_cost3}}" >
+
+      <label for="self_ship_price_5"> For 5 items  </label>
+      $<input id="self_ship_price_5" style="ddisplay:none;" type="float" value="{{self_ship_cost5}}" >
+{% endcomment %}
+
+
+    </div>
+{#</fieldset>#}
+
+
+<div class="hm_ship_info" style="display:none;">
+
+
+<div class="row-fluid">
+  <div class="span8"> 
+   <legend class="">
+    <input style="margin-right:10px" id="print_label_toggle" type="checkbox" name="print_label_toggle" >
+     Use shipping labels provided by Homemade 1616
+   </legend>
+   <div id="print_label_err"> </div>
+
+  </div> {# span8 #}
+
+  <div class="span4"> 
+
+    <div id="labelPrintedInfo" style="color:#777777;margin-bottom:8px;"> 
+        Shipping labels will be available for printing from the order summary page. 
+    </div>
+
+  </div> {#span #}
+
+</div>{#row#}
+
+<div class="row-fluid">
+
+ <div class="span8"> 
+   <legend class="">
+    <input id="PM_toggle" style="margin-right:10px" type="checkbox" name="PM_toggle">
+       Ship with Priority Mail flat-rate boxes
+  
+
+    </legend>
+  </div> {#span#}
+
+  <div class="span4">
+    <a href="http://www.ebay.com/gds/Priority-Mail-Flat-Rate-Shipping-Guide-/10000000001454445/g.html" target="_blank">More info</a>
+  </div> {# span #}
+
+</div> {#row#}
+
+<div style="clear:both;"></div>
+
+<div id="PM_info" class="offset1 span11" style="display:none;background-color:#eeeeee;padding-left:5%;padding-top:0.8em;" >
+
+<fieldset>
+<legend class="">
+  <input id="PMSmall_toggle"  style="margin-right:10px" type="checkbox" name="PMSmall_toggle" >
+
+  Use <a href="https://store.usps.com/store/browse/uspsProductDetailMultiSkuDropDown.jsp?categoryNavIds=catGetMailingShippingSupplies%3asubcatMSS_FlatRate&categoryNav=false&navAction=push&navCount=2&productId=P_SMALL_FRB&categoryId=subcatMSS_FlatRate" target="_blank">small</a> Priority Mail boxes when practical
+</legend>
+
+
+</fieldset>
+
+<fieldset>
+
+<legend class="">
+  <input id="PMMedium_toggle" style="margin-right:10px" type="checkbox" name="PMMedium_toggle" >
+
+  Use <a href="https://store.usps.com/store/browse/uspsProductDetailMultiSkuDropDown.jsp?productId=P_O_FRB2&categoryId=subcatMSS_FlatRate" target="_blank">medium</a> Priority Mail boxes
+</legend>
+    
+
+</fieldset>
+
+
+
+<fieldset>
+
+<legend class="">
+  <input id="PMLarge_toggle" style="margin-right:10px" type="checkbox" name="PMLarge_toggle">
+
+  Use <a href="https://store.usps.com/store/browse/uspsProductDetailMultiSkuDropDown.jsp?productId=P_LARGE_FRB" target="_blank">large</a> Priority Mail boxes
+</legend>
+   
+</fieldset>
+
+
+
+<hr>
+</div>{# pm_info #}
+
+<fieldset>
+<legend class="">
+  <input id="FirstClass_toggle"  style="margin-right:10px" type="checkbox" name="FirstClass_toggle">
+
+Allow the use of First Class mail when practical (less than 13 ounces)
+</legend>
+</fieldset>
+
+<fieldset>
+
+<legend class="">
+  <input id="UPS_toggle"  style="margin-right:10px" type="checkbox" name="UPS_toggle">
+
+Allow shipping with UPS
+</legend>
+ 
+</fieldset>
+
+</div> {# hm_ship_info #}
+
+</div> {# all ship options#}
+
+<script>
+
+
+  // $(function() {
+  //        $('input[type="checkbox"]').on('change', function() {
+  //            alert($(this).closest('fieldset').find(".shipShowOptions"));
+  //            $(this).closest('fieldset').find(".shipShowOptions").fadeToggle(40);
+  //            //$("#PMSmall_num").fadeToggle();
+  //        });
+  //    });
+
+{% if self_ship %}
+$(function() {
+    $('#all_shipping_options').show();
+    $('#remote_ship_toggle').click();
+    $('#self_ship_toggle').click();
+ });
+{% endif %}
+
+{% if calculate_ship %}
+$(function() {
+    $('#remote_ship_toggle').click();    
+    $('#all_shipping_options').show();
+    $('#hm_ship_toggle').click();
+ });
+{% endif %}
+
+{% if local_pickup_used %}
+$(function() {
+    $('#local_pickup_toggle').click();
+ });
+{% endif %}
+
+{% if printLabel %}
+$(function() {
+    $('#print_label_toggle').click();
+ });
+{% endif %}
+
+{% if PMSmall_used %} 
+$(function() {
+    $('#PMSmall_toggle').click();
+ });
+{% endif %}
+
+{% if PMMedium_used %} 
+$(function() {
+    $('#PMMedium_toggle').click();
+ });
+{% endif %}
+
+{% if PMLarge_used %} 
+$(function() {
+    $('#PMLarge_toggle').click();
+ });
+{% endif %}
+
+{% if calculate_ship %}
+    {% if PMSmall_used or PMMedium_used or PMLarge_used  %} 
+        $('#PM_toggle').click();
+        $('#PM_info').show();
+    {% endif %}
+{% endif %}
+
+
+{% if not first_used and not UPS_used %} 
+$(function() {
+    $('#weightInput').hide();
+ });
+{% endif %}
+
+{% if first_used %} 
+$(function() {
+    $('#FirstClass_toggle').click();
+ });
+{% endif %}
+
+{% if UPS_used %} 
+$(function() {
+    $('#UPS_toggle').click();
+ });
+{% endif %}
+
+$('#self_ship_toggle').click(function() { 
+    $(".self_ship_info").fadeIn(200);
+    $('#hm_ship_toggle').prop('checked', false); 
+    $(".hm_ship_info").hide(200);
+    $("#shipInfoModalLink").hide(100);
+    $('#shipChoice').val("self_ship");
+});
+
+$('#hm_ship_toggle').click(function() { 
+    $(".hm_ship_info").fadeIn(200);
+    $('#self_ship_toggle').prop('checked', false); 
+    $(".self_ship_info").hide(200);
+    $("#shipInfoModalLink").show(100);
+    $('#shipChoice').val("calculate_ship");
+
+});
+
+$('#remote_ship_toggle').click(function() { 
+    if( this.checked){
+        $("#all_shipping_options").fadeIn(200);
+    }
+    else{
+        $("#all_shipping_options").fadeOut(200);     
+    }
+});
+
+$('#PM_toggle').click(function() { 
+    if( this.checked){
+        $("#PM_info").fadeIn(200);
+    }
+    else{
+        $("#PM_info").fadeOut(200);     
+    }
+});
+
+$('#UPS_toggle').click(function() { 
+    // alert($('#FirstClass_toggle').prop('checked'));
+
+     if(this.checked)
+        $('.UPS_chosen').fadeIn(200);
+     else
+        if (! $('#FirstClass_toggle').prop('checked'))
+            $('#weightInput').fadeOut(150);
+    //  Add items to the cart here
+});
+
+$('#FirstClass_toggle').click(function() { 
+    // alert(this.checked);
+     if(this.checked)
+        $('.FirstClass_chosen').fadeIn(200);
+     else
+        if (! $('#UPS_toggle').prop('checked'))
+            $('#weightInput').fadeOut(200);
+    //  Add items to the cart here
+});
+
+$('#PMSmall_toggle').click(function() { 
+    $(".PMSmall_chosen").fadeToggle(200);
+    // if ($('#PMMedium_toggle').is(':checked')){
+      // $('#PMMedium_toggle').prop('checked', false); 
+      // $(".PMMedium_chosen").toggle();
+    // } 
+});
+
+$('#PMMedium_toggle').click(function() { 
+    $(".PMMedium_chosen").fadeToggle(200);
+    // if ($('#PMSmall_toggle').is(':checked')){
+      // $('#PMSmall_toggle').prop('checked', false); 
+      // $(".PMSmall_chosen").toggle();
+    // }
+});
+
+
+$('#PMLarge_toggle').click(function() { 
+    $(".PMLarge_chosen").fadeToggle(200);
+});
+
+
+$('#demo12').click(function() { 
+    alert('2nd click event');
+    //  Do something else
+});
+
+function errWrap(text) {
+    return '<ul class="errorlist">' + text +' </ul>';
+}
+
+
+function errMsg(id, msg) {
+    return $('#'+ id).html(errWrap(msg));
+}
+
+function errClean(id) {
+    return $('#'+ id).html('');
+}
+
+function boxErr(idStub) {
+
+    if ($('#'+idStub+'_toggle').prop('checked')   && ! $('#'+idStub+'_num').val()  ){
+        errMsg(idStub + '_err', "Please enter the number of items per box.");
+        return 1;
+      }
+      else{errClean(idStub+'_err');}
+      return 0;
+
+
+}
+
+function weightErr() {
+
+      if ( ($('#FirstClass_toggle').prop('checked') || $('#UPS_toggle').prop('checked') )   && ! $('#id_weight').val()  ){
+        errMsg('weight_err', "Please enter a weight if shipping by UPS or First Class.");
+        return 1;
+      }
+      else{errClean('weight_err');}
+      return 0;
+}
+
+function hmItemValidate() {
+
+    var errCount = 0;
+    // should be a name
+    //if ( ! $('#shipChoice').val() {
+    //  errMsg('id_title_err',"Please enter a name for the item.");
+
+    //}
+    //else {errClean('id_title_err')}
+
+    // pick some sort of delvery
+    if ( ! $('#shipChoice').val()  && ! $('#id_local_pickup_enabled').prop('checked')){
+
+        errMsg('local_pickup_err',"Please choose a method of delivery.");
+        errCount  += 1;
+    }
+    else {errClean('local_pickup_err');}
+
+    // self ship OK?
+    if ($('#shipChoice').val() == "self_ship"){
+        if ( ! $('#self_ship_price_1').val()){
+         errMsg('self_ship_err',"Please enter the shipping cost.");
+        errCount  += 1;
+        }
+        else{errClean('self_ship_err');}
+
+    }
+
+
+    if ($('#shipChoice').val() == "calculate_ship"){
+
+
+       if ( ! ($('#FirstClass_toggle').prop('checked') || $('#UPS_toggle').prop('checked') )   && ! $('#PM_toggle').prop('checked')   ){
+
+            errMsg('local_pickup_err',"Please choose a method of delivery.");
+
+       }
+
+
+      errCount  += boxErr("PMSmall");
+      errCount += boxErr("PMMedium");
+      errCount += boxErr("PMLarge");
+     
+      errCount += weightErr();
+
+    }
+
+    if ( ! errCount ){
+        $("#prodForm").submit();
+    }
+
+}
+
+$(document).ready(function() {
+
+$('#submitTheWholeDarnForm').click(function() { 
+    //alert("YEAH");
+    hmItemValidate();
+
+    //$("#prodForm").submit();
+});
+
+$('#submitShippingOptions').click(function() { 
+    //alert("YEAH");
+    // hmItemValidate();
+
+    $("#shipping_options_form").submit();
+});
+
+
+});
+
+
+</script
+
+
+
+
+            <div class="pull-left" style="margin-left:5em;font-size:1.2em;margin-top:1.4em">
+
+
+                <button id="submitShippingOptions" style="margin-left:1.2em;font-size:1.2em" class="btn btn-primary btn-large" name="actio" type="button" value="save">{% trans "Save" %}</button>
+
+                <a style="margin-right:1.2em;margin-left:1.2em;" href="/catalogue/?booth={{product.stockrecord.partner.id}}">{% trans "Cancel" %}</a>
+
+            </div>
+
+</form>
+
+
+
+    <div id="openModalShipping" class="modalShipInfo">
+      <div> 
+        <a href="#close" title="Close" class="close">X</a>
+        <h2><b>Shipping Information</b></h2>
+
+     <p> <b>Using flat-rate Priority Mail </b></p>
+
+       <p>
+        An easy option for domestic shipping is to use flat-rate Priority Mail boxes available through the postal service. Simply pick which boxes you will be using, and enter the number of items that can fit in the type of box(es) that you are shipping in. We'll then calculate how many boxes are needed to fulfill each order. A shipping label with the buyer's address will be available for printing from the order summary page.
+</p>
+
+
+        <p> <b>Calculate shipping by weight </b></p>
+        <p> Currently at HM1616 we can accurately calculate shipping costs for USPS First Class mail and UPS based on the weight of an item, assuming moderately sized items. If your item is very large (more than  8"x8"x8") or otherwise requires special shipping, the shipping calculator would not be accurate, so please use the fixed price shipping option. 
+       </p>
+
+                  <p> <b>Custom shipping</b></p>
+                  <p> We realize that it may be easier for you to deal with shipping yourself. If that's the case, just select the option to provide your own shipping.</p>
+
+
+
+
+               <p> <b>Going local</b></p>
+
+<p>
+        Of course, local pickup can be an option if you like, and we hope to offer local delivery options as they become available. 
+         If you know of a suitable delivery service in your area, let us know at support@homemade1616.com and we'll try to incorporate it as an option in the future. Thanks!
+        </p>
+
+
+          <article>
+          <label>
+            <span></span>
+          </label>
+          </article>
+
+          
+          <a class="btn orgButton" style="margin-top:14px;" href="#close"> Close window</a>
+
+    </div> 
+  </div>
+
+
+
+{% endblock %}

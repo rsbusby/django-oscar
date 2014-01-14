@@ -872,6 +872,143 @@ class StoreShippingAddressView(CreateView):
 
 
 
+class StoreShippingOptionsView(TemplateView):
+    """
+    Determine the outgoing shipping preferences for the seller.
+
+    """
+    template_name = 'customer/store_ship_options.html'
+    #form_class = UserAddressForm
+    #model = UserAddress
+
+    #def __init__(self):
+    #   super(StoreShippingAddressView, self).__init__(no_checkboxes=True)
+    #   return
+
+##    def get(self, request, *args, **kwargs):
+
+##        return super(StoreShippingOptionsView, self).get(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = {}
+        initial['is_default_for_store']=True
+
+        return initial
+
+    def get_context_data(self, **kwargs):
+        ctx = super(StoreShippingOptionsView, self).get_context_data(**kwargs)
+        if self.request.user.is_authenticated():
+            ## get current shipping preferences
+            partner = self.request.user.partner
+            if partner.shipping_options:
+                soptsDict = json.loads(partner.shipping_options)
+                if soptsDict:
+                    ctx['self_ship'] = soptsDict.get('self_ship')
+                    ctx['calculate_ship'] = soptsDict.get('calculate_ship')
+
+                    ctx['printLabel'] = soptsDict.get('printLabel')
+
+                    ctx['PMSmall_used'] = soptsDict.get('PMSmall_used')
+                    ctx['PMMedium_used'] = soptsDict.get('PMMedium_used')
+                    ctx['PMLarge_used'] = soptsDict.get('PMLarge_used')
+
+                    ctx['first_used'] = soptsDict.get('first_used')
+                    ctx['UPS_used'] = soptsDict.get('UPS_used')
+
+                    ctx['local_pickup_used'] = soptsDict.get('local_pickup_used')
+
+
+        return ctx
+
+    def post(self, request, *args, **kwargs):
+        # Check if ship preferences 
+
+        try:
+            partner = self.request.user.partner
+        except:
+            return HttpResponseRedirect(reverse('catalogue:index'))
+
+        if self.request.user.is_authenticated():
+
+                ## action = self.request.POST.get('action', None)
+
+            #if partner.shipping_options:
+            #    soptsDict = json.loads(partner.shipping_options)
+            #else:
+            #    ## 
+            soptsDict = {}
+
+
+            ## process form
+            data = self.request.POST
+
+            ## add shipping options to the stockrecord
+            shipChoice = data.get('shipChoice')
+            soptsDict['shipChoice'] = data.get("shipChoice")
+
+            if shipChoice == "calculate_ship":
+                soptsDict['calculate_ship'] = True
+                soptsDict['self_ship'] = False
+                if data.get('print_label_toggle') == "on":
+                    soptsDict['printLabel'] = True
+
+            ## priority mail
+
+            if data.get("PMSmall_toggle") == "on":
+                soptsDict['PMSmall_used'] = True           
+
+            if data.get("PMMedium_toggle") == "on":
+                soptsDict['PMMedium_used'] = True           
+
+            if data.get("PMLarge_toggle") == "on":
+                soptsDict['PMLarge_used'] = True           
+
+            if data.get("FirstClass_toggle") == "on":
+                soptsDict['first_used'] = True  
+
+            if data.get("UPS_toggle") == "on":
+                soptsDict['UPS_used'] = True  
+
+            if data.get("local_pickup_toggle") == "on":
+                soptsDict['local_pickup_used'] = True  
+
+            if shipChoice == "self_ship":
+                soptsDict['calculate_ship'] = False
+                soptsDict['self_ship'] = True 
+
+            ## repack
+            partner.shipping_options = json.dumps(soptsDict)
+
+            #if soptsDict.get('first_used') or soptsDict.get('UPS_used'):
+            #    stockrecord.is_shippable = True
+
+            partner.save()
+
+            messages.success(self.request, _("Your shipping preferences have been saved"))
+            return HttpResponseRedirect(self.get_success_url())
+
+
+
+
+        #         # Delete the selected address
+
+        #         messages.info(self.request, _("Address deleted from your address book"))
+        #         return HttpResponseRedirect(reverse('customer:address-list'))
+        #     else:
+        #         return HttpResponseBadRequest()
+        # else:
+        #     return HttpResponseRedirect(reverse('catalogue:index'))
+
+
+
+    def get_success_url(self):
+
+        #messages.success(self.request, _("Shipping preferences saved"))
+        return "../../catalogue?booth=" + str(self.request.user.partner.id)
+
+
+
+
 # ------------
 # Order status
 # ------------

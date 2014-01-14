@@ -1,0 +1,35 @@
+{% extends "customer/emails/base.html" %}
+{% load currency_filters i18n %}
+
+{% block body %}<p xmlns="http://www.w3.org/1999/html">{% trans 'Hello,' %}</p>
+
+<p>Your pending order has a shipping quote from the seller.</p>
+
+<p>{% trans 'The pending order contains:' %}</p>
+
+<ul>
+    {% for line in basket.lines.all %}
+    <li>{{ line.title }} - {%  trans 'quantity:' %} {{ line.quantity }} - {% trans 'price:' %} {{ line.line_price_incl_tax|currency }}</li>
+    {% endfor %}
+</ul>
+<p>
+{% trans 'Basket total:' %} {{ basket_total|currency}}</br>
+{% trans 'Shipping:' %} {{ shipCost|currency}}</br>
+{% trans 'Order Total:' %} {{ orderTotal|currency }}
+</p>
+
+{% if shipAddress %}
+
+<p>{% trans 'Shipping address:' %}</p>
+<p>{% for field in shipping_address.active_address_fields %}  {{ field }}<br/>
+{% endfor %}</p>
+{% endif %}
+
+{% if continueCheckoutUrl %}
+<p>{% blocktrans %}You may continue checking out at <a href="{{continueCheckoutUrl}}" title="continuePage">{{continueCheckoutUrl}}</a>{% endblocktrans %}</p>
+{% endif %}
+<br>
+
+Thanks.
+
+{% endblock %}

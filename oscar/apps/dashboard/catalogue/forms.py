@@ -95,7 +95,6 @@ class StockRecordForm(forms.ModelForm):
 
     ##shipping_method_choices = forms.MultipleChoiceField(label="Shipping/Delivery choices", widget=forms.CheckboxSelectMultiple, choices=SHIPPING_CHOICES)
 
-    ##import ipdb;ipdb.set_trace()
 
     ##shipping_methods = forms.ModelMultipleChoiceField(queryset=ShippingMethod.objects.all(),
     ##                                                widget=forms.CheckboxSelectMultiple())
@@ -151,7 +150,6 @@ class StockRecordForm(forms.ModelForm):
 
         ## process shipping options
         soptsDict = {}
-
         data = self.data
 
         ## add shipping options to the stockrecord

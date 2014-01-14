@@ -69,6 +69,8 @@ class NoShippingRequired(Free):
     name = _('No shipping required')
 
 
+
+
 class FixedPrice(ShippingMethod):
     code = 'fixed-price-shipping'
     name = _('Fixed price shipping')
@@ -85,6 +87,12 @@ class FixedPrice(ShippingMethod):
 
     #def basket_charge_excl_tax(self):
     #    return self.charge_excl_tax
+
+class QuerySeller(FixedPrice):
+    code = 'query-seller'
+    name = _('Shipping estimate unavailable')
+    basket_total_shipping = None
+
 
 
 class dotdict(dict):

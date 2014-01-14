@@ -1,0 +1,23 @@
+{% load currency_filters i18n %} Hello,
+
+You have a request for a shipping quote.
+{% trans 'The pending order contains:' %}
+
+{% for line in basket.lines.all %} * {{ line.title }} - {%  trans 'quantity:' %} {{ line.quantity }} - {% trans 'price:' %} {{ line.line_price_incl_tax|currency }}
+{% endfor %}
+{% trans 'Basket total:' %} {{ basket_total }}
+
+{% trans 'Shipping address:' %}
+
+{% for field in shipping_address.active_address_fields %}  {{ field }}
+{% endfor %}
+
+
+{% blocktrans %}
+Please determine a shipping quote and enter the amount at: 
+{{shipQuoteUrl}}
+
+{% endblocktrans %}
+
+
+{% blocktrans %}Thank you. {% endblocktrans %}

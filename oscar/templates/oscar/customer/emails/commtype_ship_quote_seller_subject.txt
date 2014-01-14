@@ -1,0 +1,1 @@
+{% load i18n %}{% blocktrans %} Homemade1616 shipping quote request {% endblocktrans %}
