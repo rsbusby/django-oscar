@@ -27,8 +27,8 @@
 
 
 <div class="row-fluid">
-<div class="span8"> 
-    <h3 style="font-weight:bold;font-size:1.24em;margin:0px 0px 5px 0px;margin-bottom:0px"> Shipping and Delivery Options </h3>  
+<div class="span8" style="dddisplay:inline-block"> 
+    <span style="font-weight:bold;font-size:1.24em;margin:0px 17px 5px 0px;margin-bottom:0px"> Shipping and Delivery Options  </span> <span> (detailed options for each item are set from the item page) </span>
 </div> {# span6#}
 
 <div style="clear:both"></div>
@@ -75,9 +75,16 @@
 <br> 
 
 
-  <div class="offset4 span6 shipShowOptions self_ship_info" style="display:none;">
-<div id="labelNotPrintedInfo" style="color:#666666;margin-bottom:12px;"> Shipping labels are not provided. After an order is completed, the buyer's address will be available from the order summary page.</div>
+  <div class="offset3 span6 shipShowOptions self_ship_info " style="display:none;">
+<div id="labelNotPrintedInfo" style="color:#666666;margin-bottom:12px;"> 
+<ul>
+<li type=circle>You will be asked to enter the shipping costs for individual items from the item page.</li>
+<li type=circle>  If someone wishes to buy multiple items, you will be contacted for a shipping quote. </li>
+<li type=circle> Shipping labels are not provided. </li>
+<li type=circle>After an order is completed, the buyer's address will be available from the order summary page. </li>
 
+</ul>
+</div>
 
 
 
@@ -96,6 +103,10 @@
 
 
     </div>
+
+<div style="clear:both"></div>
+
+
 {#</fieldset>#}
 
 
@@ -103,20 +114,33 @@
 
 
 <div class="row-fluid">
-  <div class="span8"> 
+  <div class="span10"> 
    <legend class="">
     <input style="margin-right:10px" id="print_label_toggle" type="checkbox" name="print_label_toggle" >
      Use shipping labels provided by Homemade 1616
+
+
    </legend>
+   <div id="labelPrintedInfo" style="color:#666666;margin-bottom:12px;margin-left:20px"> 
+<ul>
+<li type=circle> After an order is completed, shipping labels will be available for printing from the order summary page. </li>
+
+</ul>
+</div>
    <div id="print_label_err"> </div>
+
+
 
   </div> {# span8 #}
 
   <div class="span4"> 
 
-    <div id="labelPrintedInfo" style="color:#777777;margin-bottom:8px;"> 
+    <div id="labelPrintedInfo2" style="color:#777777;margin-bottom:8px;;display:none"> 
         Shipping labels will be available for printing from the order summary page. 
     </div>
+
+
+
 
   </div> {#span #}
 
@@ -290,7 +314,7 @@ $('#self_ship_toggle').click(function() {
     $(".self_ship_info").fadeIn(200);
     $('#hm_ship_toggle').prop('checked', false); 
     $(".hm_ship_info").hide(200);
-    $("#shipInfoModalLink").hide(100);
+    // $("#shipInfoModalLink").hide(100);
     $('#shipChoice').val("self_ship");
 });
 
@@ -309,6 +333,15 @@ $('#remote_ship_toggle').click(function() {
     }
     else{
         $("#all_shipping_options").fadeOut(200);     
+    }
+});
+
+$('#print_label_toggle').click(function() { 
+    if( this.checked){
+        $("#labelPrintedInfo").fadeIn(200);
+    }
+    else{
+        $("#labelPrintedInfo").fadeOut(200);     
     }
 });
 
