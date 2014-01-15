@@ -1860,10 +1860,31 @@ div#resourcesInfo p {
 
 div#labelNotPrintedInfo li {
 
+
   margin-top:0.8em;
 
 }
 
+.btnShipChoice {
+
+  padding-top:0.8em;
+  padding-bottom:0.8em;  
+  color: #777777;
+
+}
+
+.btnShipChoice:hover {
+
+  background-color: #eeeeee;
+
+}
+
+.btnShipChoice.active {
+
+  background-color: #99ff99;
+  color:#333333;
+
+}
 
 }  /*  end, don't go past here?*/
 
