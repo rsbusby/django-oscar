@@ -1858,6 +1858,12 @@ div#resourcesInfo p {
 }
 
 
+div#labelNotPrintedInfo li {
+
+  margin-top:0.8em;
+
+}
+
 
 }  /*  end, don't go past here?*/
 
