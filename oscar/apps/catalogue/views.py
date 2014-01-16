@@ -307,13 +307,20 @@ class ProductListView(ListView):
             #qs = qs.exclude(status__contains='disabled')
             return qs ##.order_by('?')
         elif pq:
-            #try:
-            partner = Partner.objects.filter(id=int(pq))[0]
-            #except:
-            #    return qs
+            self.pq = pq
+            try:
+                partner = Partner.objects.filter(id=int(pq))[0]
+            except:
+                ## if not an integer, go to the user's booth
+                try:
+                    partner = Partner.objects.filter(user=self.request.user)[0]
+                    self.pq = partner.id
+                    pq = partner.id
+                except:
+                    return qs
 
             qs = Product.objects.all()
-            qs = qs.filter(stockrecord__partner__id=int(pq))
+            qs = qs.filter(stockrecord__partner__id=partner.id)
             owner = partner.user
             #if not (self.request.user.is_staff or self.request.user == owner):
             #    qs = qs.exclude(status__icontains='disabled')
@@ -354,7 +361,7 @@ class ProductListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
 
-        self.get_search_query()
+        #self.get_search_query()
         q = self.q
         pq = self.pq
         if not q and not pq:
@@ -365,6 +372,7 @@ class ProductListView(ListView):
             if pq:
 
                 try:
+
                 ##if True:
                     #partner = self.request.user.partner
                     partner = Partner.objects.filter(id=pq)[0]

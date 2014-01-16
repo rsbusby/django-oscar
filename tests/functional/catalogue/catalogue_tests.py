@@ -729,7 +729,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         #browser = webdriver.Firefox(firefox_binary=binary)        
 
         browser = webdriver.Firefox()
-        browser.implicitly_wait(20) # seconds
+        browser.implicitly_wait(16) # seconds
 
         self.browser = browser
 
@@ -806,8 +806,9 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         browser.find_element_by_id("stripeConnectAfterBoothCreation").click()
 
         ## use ability to skip this since in testing 
-        self.wdw("skip-account-app").click()
-        #browser.find_element_by_id("skip-account-app").click()
+        ##self.wdw("skip-account-app").click()
+
+        browser.find_element_by_id("skip-account-app").click()
 
         ## shipping options
         #b.find_element_by_id("selectShippingOptions").click()
