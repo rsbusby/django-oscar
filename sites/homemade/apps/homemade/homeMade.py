@@ -3746,7 +3746,7 @@ def stripeAuthorized(*args):
             return redirect(url_for('catalogue:index', booth=partner.id))
     except:
         pass
-    return redirect(url_for('customer:store-shipping-address'))
+    return redirect(url_for('customer:store-shipping-options'))
 
 
 @app.route('/stripe_info')

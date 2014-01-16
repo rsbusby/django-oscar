@@ -1865,7 +1865,36 @@ div#labelNotPrintedInfo li {
 
 }
 
-.btnShipChoice {
+.btnBooth2 {
+  display: inline-block;
+  width:100% !important;
+  /*margin:0 0 0 0; !important*/
+  padding:0.4em 0.5em 0.5em 0.5em;
+  bbbackground-color: #dddddd;
+  background-color:#F5EBCC;
+  margin:0 auto !important ;
+  border-width:3px; 
+  border:solid 2px;
+  wwwidth:100%
+
+}
+
+.btnBooth {
+  display: inline-block;
+
+  width:100% !important;
+  /*margin:0 0 0 0; !important*/
+  padding:0.4em 0.5em 0.5em 0.5em;
+  bbbackground-color: #dddddd;
+  background-color:#F5EBCC;
+  margin:0 auto !important ;
+  border-width:3px; 
+  wwwidth:100%;
+  font-size:1em;
+
+}
+
+.btnShipChoice, .btnBooth {
 
   padding-top:0.8em;
   padding-bottom:0.8em;  
@@ -1873,7 +1902,7 @@ div#labelNotPrintedInfo li {
 
 }
 
-.btnShipChoice:hover {
+.btnShipChoice:hover, btnBooth:hover {
 
   background-color: #eeeeee;
 

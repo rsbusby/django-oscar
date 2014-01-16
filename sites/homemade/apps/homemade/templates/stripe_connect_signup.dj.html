@@ -22,8 +22,8 @@ What is Stripe? See more details about payments<a href="http://www.stripe.com" t
     <input id="skip-stripe" class="pull-rig" style="margin:0.6em;font-size:0.9em;width:190px;height:2" type="button" value="Not at this time, thanks" onclick='location.href="../../catalogue?booth={{partner.id}}"'>
 {% endcomment %}
 
-{# pick an outgoing shipping address #}
-  <a id="skip-stripe" class="btn btn-info" href="{% url 'customer:store-shipping-address' %}">{% trans 'Not at this time, thanks' %}</a>
+{# pick shipping options #}
+  <a id="skip-stripe" class="btn btn-info" href="{% url 'customer:store-shipping-options' %}">{% trans 'Not at this time, thanks' %}</a>
 
 
     <div style="clear:both;">  </div>

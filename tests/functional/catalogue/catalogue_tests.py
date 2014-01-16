@@ -649,18 +649,19 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         browser.find_element_by_id('skip-stripe').click()        
 
         # skip the address form
-        element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "id_skipSellerAddress")))
-        browser.find_element_by_id('id_skipSellerAddress').click()
+        #element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "id_skipSellerAddress")))
+        #browser.find_element_by_id('id_skipSellerAddress').click()
 
-        ## go to booth
-        browser.find_element_by_id('my-booth').click()
-   
 
         ## shipping options
-        b.find_element_by_id("selectShippingOptions").click()
+        #b.find_element_by_id("selectShippingOptions").click()
         #b.find_element_by_id("self_ship_toggle").click()
         b.find_element_by_id("local_pickup_toggle").click()
         b.find_element_by_id("submitShippingOptions").click()
+
+        ## go to booth
+        #browser.find_element_by_id('my-booth').click()
+
 
         ## add new item
         self.wdw("addNewItemButton").click()
@@ -798,18 +799,26 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         #browser.find_element_by_id('skip-stripe').click()        
 
+        self.partner2.shipping_options = None
+        self.partner2.save()
+
         ## set partner2 to accept remote payments
         browser.find_element_by_id("stripeConnectAfterBoothCreation").click()
 
         ## use ability to skip this since in testing 
         self.wdw("skip-account-app").click()
-
         #browser.find_element_by_id("skip-account-app").click()
 
-        ## go to ship address form
-        #browser.find_element_by_class_name("orgButton").click()
+        ## shipping options
+        #b.find_element_by_id("selectShippingOptions").click()
+        #b.find_element_by_id("self_ship_toggle").click()
+        b.find_element_by_id("local_pickup_toggle").click()
+        b.find_element_by_id("submitShippingOptions").click()
 
-        b = browser
+
+        ## go to ship address form
+        b.find_element_by_id("selectShippingAddress").click()
+
         element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "id_first_name")))
         ff(b, 'id_first_name', 'Bob')
         ff(b, 'id_last_name', 'number2')
@@ -823,7 +832,6 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## should be back in booth 
         self.failIf(browser.page_source.count(str(user3.partner.name)) < 1)        
-
 
         ## test the edit form
         self.go(reverse('register_store'), browser)
@@ -843,11 +851,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         print url
         self.go(url)
 
-        ## shipping options
-        b.find_element_by_id("selectShippingOptions").click()
-        #b.find_element_by_id("self_ship_toggle").click()
-        b.find_element_by_id("local_pickup_toggle").click()
-        b.find_element_by_id("submitShippingOptions").click()
+
 
         browser.find_element_by_id('addNewItemButton').click()
 
@@ -908,6 +912,10 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         surl = self.live_server_url + url
         browser.get(surl)
 
+        self.partner2.shipping_options = None
+        self.partner2.save()
+
+
         ## set partner2 to accept remote payments
         browser.find_element_by_id("stripeConnect").click()
 
@@ -916,8 +924,17 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         browser.find_element_by_id("skip-account-app").click()
 
-        ## go to ship address form
-        #browser.find_element_by_class_name("orgButton").click()
+
+
+        #b.find_element_by_id("selectShippingOptions").click()
+        b.find_element_by_id("remote_ship_toggle").click()
+        b.find_element_by_id("self_ship_toggle").click()
+        b.find_element_by_id("local_pickup_toggle").click()
+        b.find_element_by_id("submitShippingOptions").click()
+
+
+        ## go to ship address form from booth
+        b.find_element_by_id("selectShippingAddress").click()
 
         element = WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.ID, "id_first_name")))
         ff(b, 'id_first_name', 'Bob')
@@ -930,15 +947,6 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         browser.find_element_by_id("store-ship-new-submit").click()
     
-        ## should be at the booth page, now go to edit overall shipping option
-
-        self.partner2.shipping_options = None
-        self.partner2.save()
-        b.find_element_by_id("selectShippingOptions").click()
-        b.find_element_by_id("remote_ship_toggle").click()
-        b.find_element_by_id("self_ship_toggle").click()
-        b.find_element_by_id("local_pickup_toggle").click()
-        b.find_element_by_id("submitShippingOptions").click()
 
         ## go to the product page, edit shipping options
 
@@ -1165,7 +1173,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         browser.implicitly_wait(20) # seconds
 
         self.browser = browser
-
+        b = browser
 
 
         ## give user2 an address, needed for shipping
@@ -1184,6 +1192,8 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         surl = self.live_server_url + url
         browser.get(surl)
         
+        self.partner2.shipping_options = None
+        self.partner2.save()
 
         ## set partner2 to accept remote payments. Does this not work/save?
         browser.find_element_by_id("stripeConnect").click()
@@ -1193,10 +1203,23 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         browser.find_element_by_id("skip-account-app").click()
 
+        ## now will be in ship options
+
+        ##b.find_element_by_id("selectShippingOptions").click()
+
+        b.find_element_by_id("remote_ship_toggle").click()
+        b.find_element_by_id("self_ship_toggle").click()
+        #b.find_element_by_id("local_pickup_toggle").click()
+        b.find_element_by_id("submitShippingOptions").click()
+
+
         ## go to ship address form
         #browser.find_element_by_class_name("orgButton").click()
 
         b = browser
+        b.find_element_by_id("selectShippingAddress").click()
+
+
         element = WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.ID, "id_first_name")))
         ff(b, 'id_first_name', 'Bob')
         ff(b, 'id_last_name', 'number2')
@@ -1220,18 +1243,6 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         #self.partner2.stripePubKey = "fake_key"
         #self.partner2.save()
 
-
-
-        ## should be at the booth page, now go to edit overall shipping option
-        self.partner2.shipping_options = None
-        self.partner2.save()
-
-        b.find_element_by_id("selectShippingOptions").click()
-
-        b.find_element_by_id("remote_ship_toggle").click()
-        b.find_element_by_id("self_ship_toggle").click()
-        #b.find_element_by_id("local_pickup_toggle").click()
-        b.find_element_by_id("submitShippingOptions").click()
 
 
         ## go to the product page, edit shipping options

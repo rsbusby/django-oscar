@@ -371,6 +371,14 @@ class ProductListView(ListView):
                     context['partner'] = partner
                     context['summary'] = partner.name
 
+                    ## needs ship-from address
+                    try:
+                        soptsDict = json.loads(partner.shipping_options)
+                        if soptsDict.get('calculate_ship') == True:
+                            needsShipFromAddress = True
+                    except:
+                        needsShipFromAddress = False
+
                     ## get primary partner address
                     try:
                         shipFromAddress = UserAddress._default_manager.filter(user=partner.user).order_by('-is_default_for_store')[0]
@@ -378,6 +386,8 @@ class ProductListView(ListView):
                         shipFromAddress = None
 
                     context['partnerAddress'] = shipFromAddress
+
+
 
                     ## current user in MongoDB
                     try:

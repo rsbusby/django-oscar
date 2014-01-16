@@ -985,6 +985,19 @@ class StoreShippingOptionsView(TemplateView):
             partner.save()
 
             messages.success(self.request, _("Your shipping preferences have been saved"))
+
+
+            ## if the seller does not have a shipping address, send them to that page.
+            ## get primary partner address
+            try:
+                shipFromAddress = UserAddress._default_manager.filter(user=partner.user).order_by('-is_default_for_store')[0]
+            except:
+                shipFromAddress = None
+
+            if soptsDict.get('printLabel') == True and not shipFromAddress:
+                return HttpResponseRedirect(reverse('customer:store-shipping-address'))
+
+            ## otherwise go back to the booth 
             return HttpResponseRedirect(self.get_success_url())
 
 

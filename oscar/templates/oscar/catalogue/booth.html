@@ -51,36 +51,40 @@
  {% block product_seller%}
    <div class="row-fluid" style="margin: 2em 0 1.3em 1em">
 
-    <div class="span6" >
+    <div class="span5" >
       <div style="font-size:1.8em;font-weight:bold">{{summary}}</div>   
     </div>
 
     {% if request.user.partner == partner or user.is_staff %} 
 
 
-    <div class="span4" style="block-inline;max-width:300px;margin:0 auto;">
+    <div class="span4" style="mmax-width:300px;;display:block">
 
        <div class="row-fluid">
-        <div class="span6">
+        <div class="span6" style="margin:0">
        {#<a href="../dashboard/catalogue/products/create/1/"><i class="icon-hand-up"></i> Add new item</a> #}
-        <input id="addNewItemButton" class="pull-lef" style="margin:0;margin-lef:1em;width:100%" type="button" value="Add New Item" onclick=location.href="../dashboard/catalogue/products/create/1/">
+        <input id="addNewItemButton" class="btnBooth pull-lef" style="margin:0;margin-lef:1em;width:100%" type="button" value="Add New Item" onclick=location.href="../dashboard/catalogue/products/create/1/">
         </div>
 
-        <div class="span6">
-          <input class="pull-left" style="margin:0;width:100%" type="button" value="Edit this Booth" onclick=location.href="/homemade/edit_store/">
+        <div class="span6" style="margin:0">
+          <input class="btnBooth pull-left" style="margin:0;width:100%" type="button" value="Edit this Booth" onclick=location.href="/homemade/edit_store/">
         </div>
+</div>
+
+
+
         <div style="clear:both"></div>
 
 
                  <form action="#" method="post" style="min-width:100%">
                   <input type="hidden" name="id" value={{partner.id}}>
                   <input type="hidden" name="enable" value="True">
-                  <input style="background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.8em;width:100%" type=submit value="{% trans "Click to make all items visible to buyers" %}">
+                  <input class="btnBooth" style="background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.8em;width:100%" type=submit value="{% trans "Click to make all items visible to buyers" %}">
                 </form>
                 <form action="#" method="post" style="min-width:100%;margin:0">
                   <input type="hidden" name="id" value={{partner.id}}>
                   <input type="hidden" name="disable" value="True">
-                  <input style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.8em;width:100%" type=submit value="{% trans "Click to hide all items from buyers" %}">
+                  <input class="btnBooth" style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.8em;width:100%" type=submit value="{% trans "Click to hide all items from buyers" %}">
                 </form>
                
 
@@ -187,7 +191,71 @@
     {% endif %}
 {% endblock content %}
 
+
+
+
 {% block column_right %} 
+
+
+ {% if request.user.partner == partner %}
+<div style="clear:both;margin-top:1.3em"></div>
+<div style="pull-right">
+
+ {% if not partner.stripeToken %} 
+{% comment %}
+   <div class="stripesignupstore">
+ 
+<br><br>
+
+{% if u.getFirstName %}
+{{u.getFirstName}}, c{%else%}C{%endif%}lick below to set up a Stripe account for payment processing.
+
+
+<br><br>
+<a href="{% url 'stripeLogin' %}" > <img src="{% static 'icons/blue.png' %}"></a>
+     
+   </div>
+  {% endcomment %}
+  {% else %} 
+   
+   <br><br>
+   You are signed up to accept payments using <a href="https://manage.stripe.com/dashboard" target="_blank">Stripe</a>.
+   
+    <a id="stripeDashboard" class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;font-size:1em" href="https://manage.stripe.com/dashboard" target="_blank">{% trans 'View your Stripe dashboard' %}</a>
+
+
+   {% comment %}<a href="{% url 'stripeInfo' %}" > See more details about payments here. </a>{% endcomment %}
+   
+{% endif  %}  {% comment %} if not stripeAccountToken {% endcomment %}
+
+</div>
+
+  <br>
+
+  {% if not partnerAddress %}
+    {# pick an outgoing shipping address #}
+    Please add a primary address. <br>
+    This is used to estimate shipping costs.
+    <a id="selectShippingAddress" class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;font-size:1em;" href="{% url 'customer:store-shipping-address' %}">{% trans 'Submit an address' %}</a>
+  {% else %}
+
+    You have an address on file, in zipcode {{partnerAddress.postcode}}.
+    <br>
+
+     <a id="selectShippingAddress" class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;font-size:1em" href="{% url 'customer:store-shipping-address' %}">{% trans 'Select a different outgoing address' %}</a>
+
+  {% endif %}
+
+
+ <a id="selectShippingOptions" class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;font-size:1em" href="{% url 'customer:store-shipping-options' %}">{% trans 'Select shipping and delivery options' %}</a>
+
+
+
+{% endif  %} {# is seller#}
+
+
+
+
 
 <!-- <div class="sellerinfo"> -->
 <div class="sellerinfobox"  style="width:85%;max-width:400px;float:right"> 
@@ -240,61 +308,6 @@
  </div> {# seller box #}
 
 
- {% if request.user.partner == partner %}
-<div style="clear:both;margin-top:1.3em"></div>
-<div style="pull-right">
-
- {% if not partner.stripeToken %} 
-{% comment %}
-   <div class="stripesignupstore">
- 
-<br><br>
-
-{% if u.getFirstName %}
-{{u.getFirstName}}, c{%else%}C{%endif%}lick below to set up a Stripe account for payment processing.
-
-
-<br><br>
-<a href="{% url 'stripeLogin' %}" > <img src="{% static 'icons/blue.png' %}"></a>
-     
-   </div>
-  {% endcomment %}
-  {% else %} 
-   
-   <br><br>
-   You are signed up to accept payments using <a href="https://manage.stripe.com/dashboard" target="_blank">Stripe</a>.
-   
-    <a id="stripeDashboard" class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;font-size:1em" href="https://manage.stripe.com/dashboard" target="_blank">{% trans 'View your Stripe dashboard' %}</a>
-
-
-   {% comment %}<a href="{% url 'stripeInfo' %}" > See more details about payments here. </a>{% endcomment %}
-   
-{% endif  %}  {% comment %} if not stripeAccountToken {% endcomment %}
-
-</div>
-
-	<br>
-
-	{% if not partnerAddress %}
-	  {# pick an outgoing shipping address #}
-	  Please add a primary address. <br>
-	  This is used to estimate shipping costs.
-	  <a id="selectShippingAddress" class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;font-size:1em;" href="{% url 'customer:store-shipping-address' %}">{% trans 'Submit an address' %}</a>
-	{% else %}
-
-		You have an address on file, in zipcode {{partnerAddress.postcode}}.
-		<br>
-
-		 <a id="selectShippingAddress" class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;font-size:1em" href="{% url 'customer:store-shipping-address' %}">{% trans 'Select a different outgoing address' %}</a>
-
-	{% endif %}
-
-
- <a id="selectShippingOptions" class="btn orgButton" style="bbackground-color:#F0F0F0;margin-left:0;font-size:1em" href="{% url 'customer:store-shipping-options' %}">{% trans 'Select shipping options' %}</a>
-
-
-
-{% endif  %} {# is seller#}
 
 <!-- </div> -->
  

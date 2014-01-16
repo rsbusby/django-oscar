@@ -63,6 +63,9 @@
 
 
 <div id="all_shipping_options" style="display:none">
+
+<div id="shipPrompt" style="margin:1.3em 0 2em 3em"> Please choose whether you wish to use our shipping calculator.</div>
+
 <div class="btn-group" data-toggle="buttons-radio">
 {#  <button type="button" class="btn ">Left</button> #}
    <input id="shipChoice" type='hidden' name="shipChoice" value=''>
@@ -125,7 +128,9 @@
 <ul>
 <li type=circle> After an order is completed, shipping labels will be available for printing from the order summary page. </li>
 
+
 </ul>
+
 </div>
    <div id="print_label_err"> </div>
 
@@ -137,6 +142,9 @@
 
     <div id="labelPrintedInfo2" style="color:#777777;margin-bottom:8px;;display:none"> 
         Shipping labels will be available for printing from the order summary page. 
+    
+
+
     </div>
 
 
@@ -317,6 +325,7 @@ $('#self_ship_toggle').click(function() {
     $(".hm_ship_info").hide(200);
     // $("#shipInfoModalLink").hide(100);
     $('#shipChoice').val("self_ship");
+    $('#shipPrompt').hide();
 });
 
 $('#hm_ship_toggle').click(function() { 
@@ -325,7 +334,7 @@ $('#hm_ship_toggle').click(function() {
     $(".self_ship_info").hide(200);
     $("#shipInfoModalLink").show(100);
     $('#shipChoice').val("calculate_ship");
-
+    $('#shipPrompt').hide();
 });
 
 $('#remote_ship_toggle').click(function() { 
