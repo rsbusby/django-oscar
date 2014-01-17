@@ -525,8 +525,8 @@ class ProductImageForm(forms.ModelForm):
         return self.prefix.split('-').pop()
 
 ## this was the original, not using minimum formset
-# ProductImageFormSet = inlineformset_factory(
-#     Product, ProductImage, form=ProductImageForm, extra=2)
+ProductImageFormSet = inlineformset_factory(
+     Product, ProductImage, form=ProductImageForm, extra=2)
 
 ## the following class lets you require a miniumum of one image. 
 class MinimumRequiredFormSet(forms.models.BaseInlineFormSet):
@@ -574,12 +574,12 @@ class MinimumRequiredFormSet(forms.models.BaseInlineFormSet):
 
 ## the following formset lets you require a miniumum of one image. 
 
-ProductImageFormSet = inlineformset_factory(
-    Product,
-    ProductImage,
-    formset=MinimumRequiredFormSet,
-    form=ProductImageForm,
-)
+# ProductImageFormSet = inlineformset_factory(
+#     Product,
+#     ProductImage,
+#     formset=MinimumRequiredFormSet,
+#     form=ProductImageForm,
+# )
 
 
 ProductRecommendationFormSet = inlineformset_factory(
