@@ -421,6 +421,16 @@ class ProductCreateUpdateView(generic.UpdateView):
         ##recommended_formset.save()
 
 
+        ## if no pic, hide the item
+
+
+        imageTest = self.object.primary_image()
+        if imageTest.get("is_missing"):
+            self.object.status = "admin_disabled"
+            self.object.save()
+            messages.info(self.request,    
+                       _("No image was added for this item, so it will not yet be displayed on the market.  Please "
+                         "add an image to enable buyers to see your products. "))
 
         ## custom form handling:
 
