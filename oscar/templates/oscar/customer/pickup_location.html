@@ -121,11 +121,23 @@
 
         <span style="font-size:1.4em;font-weight:bold">  When  </span>&nbsp;&nbsp;&nbsp;  (optional) </span>
         <br>
-<input type="text" id="datepicker" />
+<input type="text" id="datepicker" /> to <input type="text" id="datepicker_endtime" />
+
 
  <script>
    $(function() {
-     $("#datepicker").datetimepicker();
+     $("#datepicker").datetimepicker(
+        {
+            stepMinute: 5,
+    }
+        );
+
+ $("#datepicker_endtime").timepicker(
+        {
+            stepMinute: 5,
+    }
+        );
+
      $('.ui-datepicker-div').css('z-index', 99);
    });
  </script>
