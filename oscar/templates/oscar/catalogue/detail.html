@@ -87,10 +87,9 @@
                   <input type="hidden" name="id" value={{product.id}}>
                   <input type="hidden" name="enable" value="True">
                   <input style="clear:both;float:right;background-color:#FF8533;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="Item is hidden{% if 'user_disabled' in product.status  %}.
-                  Click to make item visible to buyers{% endif%}{% if 'image_disabled' in product.status  %}. 
-Upload a product image to make item visible to buyers{% endif%}{% if 'admin_disabled' in product.status  %}
-                  by the site admin. Please contact us for clarification.
-                  {% endif%}">
+                  Click to make item visible to buyers{% endif%}{% if 'image_disabled' in product.status  %}.
+                  Upload a product image to make item visible to buyers{% endif%}{% if 'admin_disabled' in product.status  %}by the site admin. 
+                  Please contact us for clarification.{% endif%}">
                 </form>
                  {% else %}
                  <div style="clear:both"> </div>
