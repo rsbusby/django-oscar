@@ -425,7 +425,15 @@ class ProductCreateUpdateView(generic.UpdateView):
 
 
         imageTest = self.object.primary_image()
-        if imageTest.get("is_missing"):
+        imageExists = True
+        
+        try:
+            if imageTest.get("is_missing"):
+                imageExists = False
+        except:
+            pass
+
+        if not imageExists:
             self.object.status = "admin_disabled"
             self.object.save()
             messages.info(self.request,    
