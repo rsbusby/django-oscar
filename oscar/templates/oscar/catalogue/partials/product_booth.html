@@ -70,24 +70,20 @@
     <div class="product_pric" style="width:70%">
         {% include "catalogue/partials/stock_record.html" %}
 
-      
-
-         {% if user.is_authenticated and user == product.stockrecord.partner.user or user.is_staff %}
+           {% if user.is_staff or user == product.stockrecord.partner.user  %}
                 {#<a class="pull-right" href="{% url 'dashboard:catalogue-product' product.id %}"><i class="icon-edit"></i> {% trans "Edit this item" %}</a>#}
 
                 <input class="pull-right" type="button" value="Edit this item" onclick=location.href="{% url 'dashboard:catalogue-product' product.id  %}">
 
 
-
-  
                 {% if "disabled" in product.status  %}
                  <form action="{% url 'catalogue:detail' product.slug product.id %}" method="post">
                   <input type="hidden" name="id" value={{product.id}}>
                   <input type="hidden" name="enable" value="True">
                   <input style="clear:both;float:right;background-color:#FF8533;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="Item is hidden{% if 'user_disabled' in product.status  %}
-                  . Click to make item visible to buyers{% endif%}{% if 'image_disabled' in product.status  %}. 
-Upload a product image to make item visible to buyers{% endif%}{% if 'admin_disabled' in product.status  %}
-                  by the site admin. Please contact us for clarification.
+                  . Click to make item visible to buyers{% endif%}{% if 'image_disabled' in product.status  %}.
+                  Upload a product image to make item visible to buyers{% endif%}{% if 'admin_disabled' in product.status  %} by the site admin. 
+Please contact us for clarification.
                   {% endif%}
 ">
                 </form>
