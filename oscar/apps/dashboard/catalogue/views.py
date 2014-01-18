@@ -426,7 +426,7 @@ class ProductCreateUpdateView(generic.UpdateView):
 
         imageTest = self.object.primary_image()
         imageExists = True
-        
+
         try:
             if imageTest.get("is_missing"):
                 imageExists = False
@@ -434,11 +434,14 @@ class ProductCreateUpdateView(generic.UpdateView):
             pass
 
         if not imageExists:
-            self.object.status = "admin_disabled"
+            self.object.status = "no_image_disabled"
             self.object.save()
             messages.info(self.request,    
-                       _("No image was added for this item, so it will not yet be displayed on the market.  Please "
+                       _("No image was given for this item, so it will not yet be displayed on the market.  Please "
                          "add an image to enable buyers to see your products. "))
+        elif self.object.status == "no_image_disabled":
+            self.object.status = None
+            self.object.save()
 
         ## custom form handling:
 

@@ -29,6 +29,19 @@ Partner = get_model('partner', 'partner')
 UserAddress = get_model('address', 'UserAddress')
 
 
+def enableItem(product, user):
+       ## only enable under certain conditions. i.e. there is no_image_disabled 
+    if user.is_staff or product.status == "user_disabled":                    
+        product.status = None
+        product.save()  
+
+
+def disableItem(product, user):    
+    if user.is_staff:
+        product.status = "admin_disabled"
+    else:
+        product.status = "user_disabled"
+    product.save()
 
 class ProductDetailView(DetailView):
     context_object_name = 'product'
@@ -45,15 +58,9 @@ class ProductDetailView(DetailView):
             return self.get(request, **kwargs)
         print request.POST
         if request.POST.has_key('enable'):
-            self.object = product = self.get_object()
-            product.status = None
-            product.save()  
+            enableItem(product, self.request.user)
         if request.POST.has_key('disable'):    
-            if request.user.is_staff:
-                product.status = "admin_disabled"
-            else:
-                product.status = "user_disabled"
-            product.save()
+            disableItem(product, self.request.user)
         return self.get(request, **kwargs)
 
 
@@ -266,14 +273,10 @@ class ProductListView(ListView):
                 return self.get(request, **kwargs)
 
             if request.POST.has_key('enable'):
-                p.status = None
-                p.save()  
+                enableItem(product, self.request.user)
             if request.POST.has_key('disable'):    
-                if request.user.is_staff:
-                    p.status = "admin_disabled"
-                else:
-                    p.status = "user_disabled"
-                p.save()
+                disableItem(product, self.request.user)
+
         return self.get(request, **kwargs)
 
 

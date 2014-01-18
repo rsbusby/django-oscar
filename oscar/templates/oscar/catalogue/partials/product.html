@@ -78,12 +78,18 @@
         {% if user.is_authenticated and request.user.partner and user == product.stockrecord.partner.user %}   {# edit_item_form #}
         <input class="pull-right" type="button" value="Edit this Item" onclick=location.href="{% url 'dashboard:catalogue-product' product.id %}">
  
-
+     
          {% if "disabled" in product.status  %}
                  <form action="/catalogue/{{product.title|replace:' ,-' }}_{{product.id}}/" method="post">
                   <input type="hidden" name="id" value={{product.id}}>
                   <input type="hidden" name="enable" value="True">
-                  <input style="clear:both;background-color:#FF8533;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Item is hidden. Click to make item visble to buyers" %}">
+                  <input style="clear:both;background-color:#FF8533;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="Item is hidden{% if 'user_disabled' in product.status  %}
+                  . Click to make item visible to buyers{% endif%}{% if 'image_disabled' in product.status  %}. 
+Upload a product image to make item visible to buyers{% endif%}{% if 'admin_disabled' in product.status  %}
+                  by the site admin. Please contact us for clarification.
+                  {% endif%}">
+
+  
                 </form>
                  {% else %}
                 <form action="/catalogue/{{product.title|replace:' ,-' }}_{{product.id}}/" method="post">
