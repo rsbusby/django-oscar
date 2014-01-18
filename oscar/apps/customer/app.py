@@ -26,6 +26,8 @@ class CustomerApplication(Application):
     store_shipping_address_view = views.StoreShippingAddressView
     store_shipping_options_view = views.StoreShippingOptionsView
 
+    store_pickup_location_view = views.StorePickupLocationView
+
 
     email_list_view = views.EmailHistoryView
     email_detail_view = views.EmailDetailView
@@ -97,6 +99,8 @@ class CustomerApplication(Application):
             url(r'store-shipping-options/$',
                 login_required(self.store_shipping_options_view.as_view()), name='store-shipping-options'),
 
+            url(r'store-pickup-location/$',
+                login_required(self.store_pickup_location_view.as_view()), name='store-pickup-location'),
 
             # Email history
             url(r'^emails/$',

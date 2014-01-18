@@ -1022,6 +1022,133 @@ class StoreShippingOptionsView(TemplateView):
 
 
 
+class StorePickupLocationView(CreateView):
+    """
+    Get a pickup location and time (optional) for the seller.
+
+    The default behaviour is to display a list of addresses from the users's
+    address book, from which the user can choose one to be a pickup location.
+    They can add/edit/delete these USER addresses. 
+
+    Alternatively, the user can enter a USER address directly which will be
+    saved as a pickup location.
+    """
+    template_name = 'customer/pickup_location.html'
+    form_class = UserAddressForm
+    model = UserAddress
+
+    #def __init__(self):
+    #   super(StoreShippingAddressView, self).__init__(no_checkboxes=True)
+    #   return
+
+    def get(self, request, *args, **kwargs):
+
+        return super(StorePickupLocationView, self).get(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = {}
+        initial['is_default_for_store']=True
+
+        return initial
+
+    #def get_initial(self):
+    #    return self.checkout_session.new_shipping_address_fields()
+
+    # def get_form(self, form_class):
+    #     # Initialize the form with initial values and the subscriber object
+    #     # to be used in EmailPreferenceForm for populating fields
+
+    #     return form_class(
+    #         initial=self.get_initial(),
+    #         #subscriber=self.subscriber,
+    #         no_checkboxes = True
+    #     )
+
+
+    def get_form_kwargs(self):
+        kwargs = super(StorePickupLocationView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        kwargs['no_checkboxes'] = True
+
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        kwargs = super(StorePickupLocationView, self).get_context_data(**kwargs)
+        if self.request.user.is_authenticated():
+            # Look up address book data
+            kwargs['addresses'] = self.get_available_addresses()
+
+        try:
+            partner = self.request.user.partner
+            partnerAddress = UserAddress._default_manager.filter(user=self.request.user).order_by('-is_default_for_shipping')[0]
+            kwargs['partnerAddress'] = partnerAddress
+        except:
+            kwargs['partnerAddress'] = None
+
+        return kwargs
+
+    def get_available_addresses(self):
+        return UserAddress._default_manager.filter(user=self.request.user).order_by('-is_default_for_store')
+
+    def post(self, request, *args, **kwargs):
+        # Check if a store address was selected directly (eg no form was
+        # filled in)
+        ## invalid POST if not store...
+
+        try:
+            p = self.request.user.partner
+        except:
+            return HttpResponseRedirect(reverse('customer:address-list'))
+
+        if self.request.user.is_authenticated() and 'address_id' in self.request.POST:
+            address = UserAddress._default_manager.get(
+                pk=self.request.POST['address_id'], user=self.request.user)
+            action = self.request.POST.get('action', None)
+            if action == 'ship_to':
+                # User has selected a previous address to ship to
+
+                #qq = UserAddress._default_manager.filter(user=self.request.user, is_default_for_store=True)
+                #for q in qq:
+                #    q.is_default_for_store = False
+                #    q.save()
+                #address.is_default_for_store = True
+                
+                address.save()
+                
+                return HttpResponseRedirect(self.get_success_url())
+            elif action == 'delete':
+                # Delete the selected address
+                address.delete()
+                messages.info(self.request, _("Address deleted from your address book"))
+                return HttpResponseRedirect(reverse('customer:address-list'))
+            else:
+                return HttpResponseBadRequest()
+        else:
+
+            return super(StorePickupLocationView, self).post(
+                request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # Store the address details in the session and redirect to next step
+        #address_fields = dict(
+        #    (k, v) for (k, v) in form.instance.__dict__.items()
+        #    if not k.startswith('_'))
+        #self.checkout_session.ship_to_new_address(address_fields)
+        ## set as default shipping address, since that's what this is all about
+
+        #form.cleaned_data['is_default_for_store'] = True
+        #form.instance.is_default_for_store = True
+        return super(StorePickupLocationView, self).form_valid(form)
+
+    def get_success_url(self):
+
+        messages.success(self.request, _("Pickup location saved"))
+        return "../../catalogue?booth=" + str(self.request.user.partner.id)
+
+
+
+
+
 # ------------
 # Order status
 # ------------

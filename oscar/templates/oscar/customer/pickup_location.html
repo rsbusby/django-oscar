@@ -1,0 +1,158 @@
+{% extends "layout.html" %}
+{% load url from future %}
+{% load i18n %}
+{% load staticfiles %}
+
+
+{% block title %}
+    {% trans "Set the location and time for pickup" %} | {{ block.super }}
+{% endblock %}
+
+
+{% block extrastyles %}
+  {{ block.super }}
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.1/themes/pepper-grinder/jquery-ui.css" />
+
+
+<script type="text/javascript" src="{% static 'oscar/js/jquery-ui-timepicker-addon.js' %}"></script>
+
+
+<style>
+
+/* css for timepicker */
+.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; z-index:10;}
+.ui-timepicker-div dl { text-align: left; }
+.ui-timepicker-div dl dt { float: left; clear:left; padding: 0 0 0 5px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 45%; }
+.ui-timepicker-div td { font-size: 90%; }
+.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+
+.ui-timepicker-rtl{ direction: rtl; }
+.ui-timepicker-rtl dl { text-align: right; padding: 0 5px 0 0; }
+.ui-timepicker-rtl dl dt{ float: right; clear: right; }
+.ui-timepicker-rtl dl dd { margin: 0 45% 10px 10px; }
+.ui-datepicker {z-index:10; }
+</style>
+
+
+{% endblock %}
+
+
+{% block content %}
+
+ <div style="clear:both;"></div>
+
+<div class="row-fluid"> 
+
+ <div class="offset5 span4 pull-right" style="margin-bottom:12px;">
+              <a id="id_skipSellerAddress" class="btn orgButton" style="font-size:1.1em" href="{% url 'catalogue:index' %}?booth={{request.user.partner.id}}">{% trans "Cancel" %}</a>
+
+
+              {% if not partnerAddress%}
+               
+              {% endif %}
+</div>
+</div>
+
+{% block shipping_address %}
+
+
+
+
+<div class="row-fluid"> 
+
+<div class="span7"> 
+
+
+        <h2>{% trans "Where" %}</h2>
+ 
+
+    {% if request.user.is_authenticated %}
+
+
+        {% if addresses %}
+            
+            <h3>{% trans "An address from your address book?" %}</h3>
+            <div class="choose-block">
+                <ul class="row-fluid">
+                    {% for address in addresses %}
+					<li class="span4">
+						<div class="well well-info {% if address.is_default_for_store %}default-address{% endif %}">
+							<address>{% for field in address.active_address_fields %}
+							{{ field }}<br/>
+							{% endfor %}</address>
+							<form action="{% url 'customer:store-shipping-address' %}?basket_id={{basket.id}}" method="post">
+								{% csrf_token %}
+								<input type="hidden" name="action" value="ship_to" />
+								<input type="hidden" name="address_id" value="{{ address.id }}" />
+								
+
+								<a class="btn btn-small btn-info" href="{% url 'checkout:user-address-update' address.id %}?basket_id={{basket.id}}">{% trans "Edit" %}</a>
+								<a href="{% url 'checkout:user-address-delete' address.id %}?basket_id={{basket.id}}" class="btn btn-small btn-danger">{% trans "Delete" %}</a>
+
+                                                                <div style="clear:both"></div>
+
+
+                        <button type="submit" style="position:relative;margin:10 0 10 0" class="btn btn-primary btn-full ship-address js-disable-on-click" data-loading-text="{% trans 'Setting shipping address, please wait...' %}">{% trans "Use this address" %}</button>
+
+							</form>
+						</div>
+					</li>
+                    {% if forloop.counter|divisibleby:3 %}
+                        </ul>
+                        {% if not forloop.last %}<ul class="row-fluid">{% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+                
+            </div>
+            <h3>{% trans "Or a new address?" %}</h3>
+        {% endif %}
+
+    {% endif %}
+
+
+   </div> {# span7 #}
+
+    <div class="span5"> 
+
+
+        <span style="font-size:1.4em;font-weight:bold">  When  </span>&nbsp;&nbsp;&nbsp;  (optional) </span>
+        <br>
+<input type="text" id="datepicker" />
+
+ <script>
+   $(function() {
+     $("#datepicker").datetimepicker();
+     $('.ui-datepicker-div').css('z-index', 99);
+   });
+ </script>
+
+</div> {# span5 #}
+</div>  {#row#}
+
+
+
+ <div style="clear:both;"></div>
+
+
+    <form action="{% url 'customer:store-shipping-address' %}" method="post" class="form-horizontal"  data-behaviours="lock">
+        <div class="well well-info">
+            {% csrf_token %}
+            {% include "partials/form_fields.html" with form=form %}
+        </div>
+        <div class="form-actions">
+
+            <button id='store-ship-new-submit' type="submit" style="position:relative;margin:10 0 10 0" class="btn btn-primary btn-full ship-address">{% trans "Save the new address" %}</button>
+
+            {#<button type="submit" class="btn btn-large btn-primary">{% trans "Submit" %}</button>#}
+      
+        </div>
+    </form>
+
+
+{% endblock shipping_address %}
+
+{% endblock %}
