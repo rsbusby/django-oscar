@@ -16,7 +16,7 @@
 <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.1/themes/pepper-grinder/jquery-ui.css" />
 
 
-<script type="text/javascript" src="{% static 'oscar/js/jquery-ui-timepicker-addon.js' %}"></script>
+<script type="text/javascript" src="{% static 'oscar/js/timepicker/jquery-ui-timepicker-addon.js' %}"></script>
 
 
 <style>
@@ -124,22 +124,80 @@
 <input type="text" id="datepicker" /> to <input type="text" id="datepicker_endtime" />
 
 
- <script>
-   $(function() {
-     $("#datepicker").datetimepicker(
-        {
-            stepMinute: 5,
-    }
-        );
+<input type="text" id="d1" /> to <input type="text" id="d2" />
 
- $("#datepicker_endtime").timepicker(
-        {
-            stepMinute: 5,
+
+ <script>
+
+   // $(function() {
+
+   //   $("#datepicker").datetimepicker(
+   //      {
+   //          stepMinute: 5,
+
+   //      onClose: function(dateText, inst) {
+   //      if (startDateTextBox.val() != '') {
+   //          var testStartDate = startDateTextBox.datetimepicker('getDate');
+   //          var testEndDate = endDateTextBox.datetimepicker('getDate');
+   //          if (testStartDate > testEndDate)
+   //              startDateTextBox.datetimepicker('setDate', testEndDate);
+   //      }
+   //      else {
+   //          startDateTextBox.val(dateText);
+   //      }
+
+   //    }
+   //      );
+
+   //   $("#datepicker_endtime").timepicker(
+   //      {
+   //          stepMinute: 5,
+   //  }
+   //      );
+
+var startDateTextBox = $('#d1');
+var endDateTextBox = $('#d2');
+
+startDateTextBox.datetimepicker({ 
+    timeFormat: 'HH:mm',
+    onClose: function(dateText, inst) {
+        if (endDateTextBox.val() != '') {
+            var testStartTime = startDateTextBox.datetimepicker('getHours');
+            var testEndTime = endDateTextBox.datetimepicker('getHours');
+            if (testStartTime > testEndTime)
+                endDateTextBox.datetimepicker('setHours', testStartTime);
+        }
+        else {
+            endDateTextBox.val(dateText);
+        }
+    },
+    onSelect: function (selectedDateTime){
+        endDateTextBox.datetimepicker('option', 'minHour', startDateTextBox.datetimepicker('getHours') );
     }
-        );
+});
+endDateTextBox.timepicker({ 
+    timeFormat: 'HH:mm ',
+    onClose: function(dateText, inst) {
+        if (startDateTextBox.val() != '') {
+            var testStartTime = startDateTextBox.datetimepicker('getHours');
+            var testEndTime = endDateTextBox.datetimepicker('getHours');
+            if (testStartTime > testEndTime)
+                startDateTextBox.datetimepicker('setHours', testEndTime);
+        }
+        else {
+            startDateTextBox.val(dateText);
+        }
+    },
+    onSelect: function (selectedDateTime){
+        startDateTextBox.datetimepicker('option', 'maxHour', endDateTextBox.datetimepicker('getHours') );
+    }
+});
+
+    $(function() {
 
      $('.ui-datepicker-div').css('z-index', 99);
-   });
+
+});
  </script>
 
 </div> {# span5 #}
