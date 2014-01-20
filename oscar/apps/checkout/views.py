@@ -131,7 +131,8 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
 
 
         ## for now, disable
-        if not settings.CHECKOUT_ENABLED:
+        seller = request.basket.seller
+        if not settings.CHECKOUT_ENABLED and not seller.status == seller.APPROVED:
             messages.warning(request, _("Checkout is disabled until the site launches. We'll let you know by email when it's ready!"))
             return HttpResponseRedirect(reverse('basket:summary'))
 
@@ -482,7 +483,9 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
 
 
         ## for now, disable
-        if not settings.CHECKOUT_ENABLED:
+        seller = request.basket.seller
+        if not settings.CHECKOUT_ENABLED and not seller.status == seller.APPROVED:
+        ##if not settings.CHECKOUT_ENABLED:
             messages.warning(request, _("Checkout is disabled until the site launches. We'll let you know by email when it's ready!"))
             return HttpResponseRedirect(reverse('basket:summary'))
 
@@ -905,6 +908,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                 tot = amountGoingToSellerInCents + feePossiblyWithShippingInCents + stripeFeeInCents
                 tot2 = int(float(total_incl_tax) * 100.0)
 
+
+                
                 if tot != tot2:
                     errMsg = "There is a problem with the payment parameters. Please contact website support about error 684. Thank you."
                     messages.error(self.request, errMsg)
