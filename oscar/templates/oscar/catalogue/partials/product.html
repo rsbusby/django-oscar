@@ -44,7 +44,7 @@
     {#<ul style="margin-left:0;list-style:none;display:block;"> #}
    {# <li style="float:right">   </li> #}
 
-   {% if product.get_title|length > 26 %}
+   {% if product.get_title|length > 25 %}
    <a style="float:left;font-weight:bold;font-size:0.9em;{%if product.get_title|length > 33 %}line-height:15px;margin-top:0.5em{% endif %}" href="{{ product.get_absolute_url }}">{{ product.get_title|truncatechars:62 }}</a>
 
    {% else %}
