@@ -13,7 +13,11 @@
 
 
     {% block product_image %}
+    {% if product.get_title|length > 26 %}
+    <div class="image_container_long_title booth_image">
+    {% else %}
     <div class="image_container booth_image">
+    {% endif %}
         {% with image=product.primary_image %}
        {# {% if image.original|is_portrait %}#}
             {% thumbnail image.original "x155" upscale=False as thumb %}
@@ -39,7 +43,13 @@
 
     {#<ul style="margin-left:0;list-style:none;display:block;"> #}
    {# <li style="float:right">   </li> #}
+
+   {% if product.get_title|length > 26 %}
+   <a style="float:left;font-weight:bold;font-size:0.9em;line-height:15px;margin-top:0.5em" href="{{ product.get_absolute_url }}">{{ product.get_title|truncatechars:62 }}</a>
+
+   {% else %}
     <a style="float:left;font-weight:bold;font-size:1.1em;" href="{{ product.get_absolute_url }}">{{ product.get_title|truncatechars:26 }}</a>
+    {% endif %}
     <!-- </li> -->
     <div style="clear:both"></div>
     {% if not is_booth %}
