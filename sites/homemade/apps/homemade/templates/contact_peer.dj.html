@@ -55,16 +55,18 @@
 
     {% csrf_token %}
   
-
     <input id="emailSubjectHidden" type='hidden' name="subject" value="{{subject}}" >
 
     <dl style="padding=0;margin:0">
       {% if not subject %}
       <dt> Select a topic: </dt>
-	       <select style="padding:0.5em 1em; border-color: #aaaaaa; background-color:dddddd;" name="topicChoice">
+	       <select style="padding:0.5em 1em; border-color: #aaaaaa; background-color:dddddd;" name="topicChoice" autocomplete="off">
 
 		      {% for topic, topicName in topicDict.items %}
-		          <option  {% if topic == "general question" %} selected="selected"  {%endif%} value ="{{topic}}">{{topicName}} </option>
+
+		          <option  {% if topic == "other" %} selected="selected" {%endif%} value ="{{topic}}">{{topicName}} </option>
+            }
+            }
 		      {%endfor%}
         </select>
       {% endif %}

@@ -1263,6 +1263,10 @@ def contactUs(*args, **kwargs):
     #adminName = app.config['ADMIN_USERNAME']
 
     topicDict = OrderedDict()
+    if request.method == 'GET':
+        if request.GET.get("topic"):
+            topicDict['other'] = request.GET.get("topic")
+
     topicDict["general question"] = "General question"
     topicDict["website"] = "Website issue"
 
