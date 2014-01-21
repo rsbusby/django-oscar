@@ -508,6 +508,17 @@
 
 
 <br>
+<div id="local_delivery_group">
+<legend class="">
+    <input style="margin-right:10px" id="local_delivery_toggle" type="checkbox" name="local_delivery_toggle" >
+   Check if this item is available for local delivery 
+   </legend>
+ <div id="local_delivery_err"> </div>
+
+</div> {# local delivery group #}
+
+ 
+<div id="remoteShipGroup">
 <div class="btn-group" data-toggle="buttons-radio">
 {#  <button type="button" class="btn ">Left</button> #}
    <input id="shipChoice" type='hidden' name="shipChoice" value=''>
@@ -696,7 +707,7 @@ Use UPS
         </div> {# weight input #}
 
 </div> {# hm_ship_info #}
-
+</div> {#remote ship group #}
 
 <script>
 
@@ -725,6 +736,11 @@ $(function() {
 	$('#hm_ship_toggle').hide();
 
  });
+{% endif %}
+
+{% if not s_calculate_ship and not s_self_ship %}
+	$('#self_ship_toggle').hide();
+	$('#hm_ship_toggle').hide();
 {% endif %}
 
 {% if s_printLabel %}
@@ -773,6 +789,12 @@ $(function() {
 {% if not s_UPS_used %} 
 $(function() {
 	$('#UPS_group').hide();
+ });
+{% endif %}
+
+{% if not s_local_delivery_used %} 
+$(function() {
+	$('#local_delivery_group').hide();
  });
 {% endif %}
 
@@ -843,6 +865,12 @@ $(function() {
 {% if UPS_used %} 
 $(function() {
 	$('#UPS_toggle').click();
+ });
+{% endif %}
+
+{% if local_delivery_used %} 
+$(function() {
+	$('#local_delivery_toggle').click();
  });
 {% endif %}
 
@@ -966,7 +994,7 @@ function hmItemValidate() {
 	//else {errClean('id_title_err')}
 
 	// pick some sort of delvery
-	if ( ! $('#shipChoice').val()  && ! $('#id_local_pickup_enabled').prop('checked')){
+	if ( ! $('#shipChoice').val() && ! ( $('#id_local_pickup_enabled').prop('checked') || $('#local_delivery_toggle').prop('checked') ) ){
 
 		errMsg('local_pickup_err',"Please choose a method of delivery.");
 		errCount  += 1;

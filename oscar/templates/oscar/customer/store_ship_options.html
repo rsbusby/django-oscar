@@ -52,7 +52,29 @@
    Check if items may be available for local pickup 
    </legend>
 
+ <legend class="">
+    <input style="margin-right:10px" id="local_delivery_toggle" type="checkbox" name="local_delivery_toggle" >
+   Check if items may be available for local delivery 
+   </legend>
 
+<div id="local_delivery_options" style="margin-left:3em;margin-bottom:2em;display:none;">
+  <label for="local_delivery_cost"> Cost of local delivery</label>
+      $<input id="local_delivery_cost" style="ddisplay:none;" type="float"  name="local_delivery_cost" 
+    {% if local_delivery_cost %}
+      value="{{local_delivery_cost}}"
+    {% endif %}
+    >
+<div id="local_delivery_cost_err"></div>
+
+ <label for="local_delivery_radius"> Maximum distance of local delivery (radius in miles) </label>
+      $<input id="local_delivery_radius" style="ddisplay:none;" type="float"  name="local_delivery_radius" 
+    {% if local_delivery_radius %}
+      value="{{local_delivery_radius}}"
+    {% endif %}
+    >
+<div id="local_delivery_radius_err"></div>
+
+</div> {#delivery option#}
 
    {# {% crispy stockrecord_form %} #}
 
@@ -277,6 +299,12 @@ $(function() {
  });
 {% endif %}
 
+{% if local_delivery_used %}
+$(function() {
+    $('#local_delivery_toggle').click();
+ });
+{% endif %}
+
 {% if printLabel %}
 $(function() {
     $('#print_label_toggle').click();
@@ -326,6 +354,15 @@ $(function() {
     $('#UPS_toggle').click();
  });
 {% endif %}
+
+$('#local_delivery_toggle').click(function() { 
+    if( this.checked){
+        $("#local_delivery_options").fadeIn(200);
+    }
+    else{
+        $("#local_delivery_options").fadeOut(200);     
+    }
+});
 
 $('#self_ship_toggle').click(function() { 
     $(".self_ship_info").fadeIn(200);
@@ -466,7 +503,8 @@ function hmItemValidate() {
     //else {errClean('id_title_err')}
 
     // pick some sort of delivery
-    if ( ! ( $('#shipChoice').val() &&  $('#remote_ship_toggle').prop('checked'))  && ! $('#local_pickup_toggle').prop('checked') ) {
+    if ( ! ( $('#shipChoice').val() &&  $('#remote_ship_toggle').prop('checked'))  
+        && ! ( $('#local_pickup_toggle').prop('checked') || $('#local_delivery_toggle').prop('checked') ) ) {
 
         errMsg('local_pickup_err',"Please choose a method of delivery.");
         errCount  += 1;
@@ -479,6 +517,23 @@ function hmItemValidate() {
         errCount  += 1;
     }
     else {errClean('remote_ship_err');}
+
+
+    // local delivery OK?
+    if ( $('#local_delivery_toggle').prop('checked')  ){
+        if ( ! $('#local_delivery_cost').val()){
+         errMsg('local_delivery_cost_err',"Please enter the delivery cost. If delivery is free, enter 0.");
+        errCount  += 1;
+        }
+        else{errClean('local_delivery_cost_err');}
+        if ( ! $('#local_delivery_radius').val()){
+         errMsg('local_delivery_radius_err',"Please enter the maximum delivery distance.");
+        errCount  += 1;
+        }
+        else{errClean('local_delivery_radius_err');}
+
+    }
+
 
 
     // self ship OK?
@@ -517,7 +572,7 @@ function hmItemValidate() {
 
     }
 
-     // alert(errCount);
+      // alert(errCount);
 
     if ( ! errCount ){
         $("#shipping_options_form").submit();
@@ -581,7 +636,7 @@ $('#submitShippingOptions').click(function() {
                <p> <b>Going local</b></p>
 
 <p>
-        Of course, local pickup can be an option if you like, and we hope to offer local delivery options as they become available. 
+        Of course, local pickup or self-delivery can be an option if you like, and we hope to offer more local delivery options as they become available. 
          If you know of a suitable delivery service in your area, let us know at support@homemade1616.com and we'll try to incorporate it as an option in the future. Thanks!
         </p>
 

@@ -252,6 +252,9 @@ class ProductCreateUpdateView(generic.UpdateView):
                     ctx['first_used'] = soptsDict.get('first_used')
                     ctx['UPS_used'] = soptsDict.get('UPS_used')
 
+                    ctx['local_delivery_used'] = soptsDict.get('local_delivery_used')
+
+
         ## get shipping preferences for the booth/seller
         if partner.shipping_options:
             soptsDict = json.loads(partner.shipping_options)
@@ -269,6 +272,7 @@ class ProductCreateUpdateView(generic.UpdateView):
                 ctx['s_UPS_used'] = soptsDict.get('UPS_used')
 
                 ctx['s_local_pickup_used'] = soptsDict.get('local_pickup_used')
+                ctx['s_local_delivery_used'] = soptsDict.get('local_delivery_used')
 
 
         return ctx
@@ -282,6 +286,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         """
         Check if there's POST data that matches StockRecordForm field names
         """
+
         fields = dict(self.stockrecord_form.base_fields.items() +
                       self.stockrecord_form.declared_fields.items())
         for name, field in fields.iteritems():
@@ -488,6 +493,8 @@ class ProductCreateUpdateView(generic.UpdateView):
             if self.request.POST.get("UPS_toggle") == "on":
                 soptsDict['UPS_used'] = True  
 
+            if self.request.POST.get("local_delivery_toggle") == "on":
+                soptsDict['local_delivery_used'] = True  
 
             if shipChoice == "self_ship":
                 soptsDict['calculate_ship'] = False

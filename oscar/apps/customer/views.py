@@ -916,7 +916,9 @@ class StoreShippingOptionsView(TemplateView):
                     ctx['UPS_used'] = soptsDict.get('UPS_used')
 
                     ctx['local_pickup_used'] = soptsDict.get('local_pickup_used')
-
+                    ctx['local_delivery_used'] = soptsDict.get('local_delivery_used')
+                    ctx['local_delivery_cost'] = soptsDict.get('local_delivery_cost')
+                    ctx['local_delivery_radius'] = soptsDict.get('local_delivery_radius')
 
         return ctx
 
@@ -946,11 +948,22 @@ class StoreShippingOptionsView(TemplateView):
             shipChoice = data.get('shipChoice')
             soptsDict['shipChoice'] = data.get("shipChoice")
 
-            if shipChoice == "calculate_ship":
-                soptsDict['calculate_ship'] = True
+            ## check if shipping at all
+            if data.get("remote_ship_toggle") == "on":
+                if shipChoice == "calculate_ship":
+                    soptsDict['calculate_ship'] = True
+                    soptsDict['self_ship'] = False
+                    if data.get('print_label_toggle') == "on":
+                        soptsDict['printLabel'] = True
+
+                if shipChoice == "self_ship":
+                    soptsDict['calculate_ship'] = False
+                    soptsDict['self_ship'] = True 
+            else:
+                ## not shipping
+                soptsDict['calculate_ship'] = False
                 soptsDict['self_ship'] = False
-                if data.get('print_label_toggle') == "on":
-                    soptsDict['printLabel'] = True
+
 
             ## priority mail
 
@@ -972,9 +985,12 @@ class StoreShippingOptionsView(TemplateView):
             if data.get("local_pickup_toggle") == "on":
                 soptsDict['local_pickup_used'] = True  
 
-            if shipChoice == "self_ship":
-                soptsDict['calculate_ship'] = False
-                soptsDict['self_ship'] = True 
+            if data.get("local_delivery_toggle") == "on":
+                soptsDict['local_delivery_used'] = True 
+            
+            soptsDict['local_delivery_cost'] = data.get('local_delivery_cost')
+            soptsDict['local_delivery_radius'] = data.get('local_delivery_radius')                 
+
 
             ## repack
             partner.shipping_options = json.dumps(soptsDict)

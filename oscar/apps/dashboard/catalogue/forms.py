@@ -194,6 +194,9 @@ class StockRecordForm(forms.ModelForm):
         if data.get("UPS_toggle") == "on":
             soptsDict['UPS_used'] = True  
 
+        if data.get("local_delivery_toggle") == "on":
+            soptsDict['local_delivery_used'] = True 
+
         if data.has_key("self_ship_cost"):
 
             self_ship_cost = data['self_ship_cost']
@@ -232,8 +235,8 @@ class StockRecordForm(forms.ModelForm):
     def clean_local_pickup_enabled(self):
 
         data = self.data
-        if not data.get('shipChoice') and not data.get('local_pickup_enabled'):
-            raise forms.ValidationError(_("You have not selected any delivery method. Please select a method of shipping and/or local pickup."))
+        if not data.get('shipChoice') and not data.get('local_pickup_enabled') and not data.get('local_delivery_toggle') == 'on':
+            raise forms.ValidationError(_("You have not selected any delivery method. Please select a method of shipping and/or local pickup or delivery."))
 
         return self.cleaned_data.get('local_pickup_enabled')
 
