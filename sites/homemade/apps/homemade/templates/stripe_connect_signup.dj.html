@@ -2,13 +2,20 @@
 {% load staticfiles %}
 {% load i18n %}
 
+{% block extrastyles %}
+  {{ block.super }}
+  <link rel='stylesheet' type='text/css' href="{% static 'style_modal.css' %}"/>
+
+{% endblock %}
 
 {% block title %}Connect with Stripe payments{% endblock %}
 {% block body %}
 
 <div style="font-size:1.6em;margin-bottom:0.4em;" >Set up a <a href="http://www.stripe.com" target="_blank">Stripe</a> account for payment processing.</div>
 
-What is Stripe? See more details about payments<a href="http://www.stripe.com" target="_blank" >  here. </a>
+
+ <a id="paymentInfoModalLinkLink" style="color:#ff6666;font-size:1.1em;float:lef;margin-top:10px;margin-left:0.5em" href="#openModalPayments"> What is Stripe? Click to see more details about payments</a>
+
 <br><br><br>
 {% comment %}<a href="{% url 'stripeInfo' %}" > See more details about payments here. </a>{% endcomment %}
 {#<a href="{% url 'stripeLogin' %}" > <img src="{% static 'icons/blue.png' %}"></a> #}
@@ -35,5 +42,43 @@ What is Stripe? See more details about payments<a href="http://www.stripe.com" t
 	{% comment %} <a href="{% url 'store' booth=partner.id %}">  Not at this time, thanks. </a> {% endcomment %}
 
 </div> 
+
+
+
+
+  <div id="openModalPayments" class="modalShipInfo">
+      <div> 
+        <a href="#close" title="Close" class="close">X</a>
+        <h2><b>Payment Processing Information</b></h2>
+
+     <p> <b>Stripe</b></p>
+    
+       <p style="margin-left:1.6em">
+         Stripe is a payment service that takes care of credit card payments, and makes deposits directly to a bank account of your choosing. It comes with a easy to understand view of your payment history, and gives you direct control over refunds. The buyer's credit card information goes straight to Stripe over a secure connection without passing through our site, so your customers will know that their payments are safe. <br><br>The fees for using Stripe are currently 2.9% of the sale plus 30 cents, which is taken from the sale price of your items. Our fees are 3.5% of the sale, so the total fees on each transaction are 6.4% + 30 cents.
+  </p>
+  <br>
+               <p> <b>Other payment options</b></p>
+
+<p style="margin-left:1.6em">
+    We plan to offer <b>PayPal</b> as a payment service in the near future. We're also interested in payment methods which have lower fees, such as <b>Dwolla</b> and <b>Bitcoin</b>.
+         If you have a preferred payment method that we do not offer, please <a href="{% url 'contactUs' %}?topic=Payment processing" target="_blank" >let us know</a> and we'll try to incorporate it as an option down the road. Thanks!
+        </p>
+<br>
+<p>
+<b>If you have any further questions please <a href="{% url 'contactUs' %}?topic=Payment processing" target="_blank" >contact us</a>.</b>
+</p>
+
+          <article>
+          <label>
+            <span></span>
+          </label>
+          </article>
+
+          
+          <a class="btn orgButton" style="margin-top:14px;" href="#close"> Close window</a>
+
+    </div> 
+  </div>
+
 
 {% endblock %}
