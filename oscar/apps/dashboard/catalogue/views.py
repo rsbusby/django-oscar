@@ -125,12 +125,23 @@ class ProductCreateUpdateView(generic.UpdateView):
 
         ## don't let staff create new items right now
         user = self.request.user
+
         self.creating = not 'pk' in self.kwargs
         if self.creating:
             if self.request.user.is_staff:
                 messages.error(self.request,
                            _("Currently admin users are not allowed to create items"))
                 return HttpResponseRedirect(reverse('catalogue:index'))
+
+
+        if not self.creating:
+            self.object = product = self.get_object()
+            partner = product.stockrecord.partner
+            owner = partner.user
+
+            if self.request.user != owner and not self.request.user.is_staff:
+                return HttpResponseRedirect(reverse('catalogue:index'))
+
         return super(ProductCreateUpdateView, self).get(request, *args, **kwargs)
 
 
@@ -141,6 +152,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         is that self.object is None. We emulate this behavior.
         Additionally, self.product_class is set.
         """
+
         user = self.request.user
         self.require_user_stockrecord = not user.is_staff
         self.creating = not 'pk' in self.kwargs
