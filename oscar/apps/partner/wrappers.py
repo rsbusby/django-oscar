@@ -17,7 +17,7 @@ class DefaultWrapper(object):
 
         This is used to determine whether to show the add-to-basket button.
         """
-        if stockrecord.made_to_order == True:  ##or stockrecord.num_in_stock == None 
+        if stockrecord.made_to_order == True or stockrecord.num_in_stock == None: 
             return True
         return stockrecord.net_stock_level > 0
 
@@ -72,7 +72,10 @@ class DefaultWrapper(object):
         if stockrecord.net_stock_level > 0:
             return _("In stock (%d available)") % stockrecord.net_stock_level
         if self.is_available_to_buy(stockrecord):
-            return _('Made to order')
+            if stockrecord.made_to_order == True:
+                return _('Made to order')
+            else:
+                return _('In Stock')
         return _("Not available")
 
     def dispatch_date(self, stockrecord):
