@@ -58,10 +58,16 @@
 
     {% if is_booth %}
 
-
     {% block product_description %}
        {% if product.description %}
-              <pre>{{product.description|two_sentences|safe}}</pre>
+
+         <div class="noMobile">
+         <pre>{{product.description|safe }}</pre>
+         </div>
+         <div class="onlyMobile">
+           <pre>{{product.description|two_sentences|safe }}</pre>
+         </div>
+
        {% endif %}
     {% endblock %}
 
