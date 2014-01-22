@@ -228,7 +228,7 @@ class ProductCategoryView(ListView):
 class ShuffledPaginator(Paginator):
     def page(self, number):
         page = super(ShuffledPaginator, self).page(number)
-  
+
         items = sorted(page.object_list, key=lambda x: random.random())
         #random.shuffle(page.object_list)
         page.object_list = items
@@ -250,6 +250,7 @@ class ProductListView(ListView):
 
 
     def randomItem(self):
+        import ipdb;ipdb.set_trace()
         count = self.aggregate(count=Count('id'))['count']
         random_index = randint(0, count - 1)
         return self.all()[random_index]
@@ -311,6 +312,9 @@ class ProductListView(ListView):
             return qs ##.order_by('?')
         elif pq:
             self.pq = pq
+
+            self.paginator_class = Paginator
+
             try:
                 partner = Partner.objects.filter(id=int(pq))[0]
             except:
@@ -343,6 +347,7 @@ class ProductListView(ListView):
             ## randomize
             #qs = qs
             #import random
+
             if not self.request.session.get('random_seed', False) or self.request.GET.has_key('shuffle'):
                 self.request.session['random_seed'] = random.randint(1, 10000)
 

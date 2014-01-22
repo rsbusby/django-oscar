@@ -808,7 +808,10 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ## use ability to skip this since in testing 
         ##self.wdw("skip-account-app").click()
 
-        browser.find_element_by_id("skip-account-app").click()
+        try:
+            browser.find_element_by_id("skip-account-app").click()
+        except:
+            browser.find_element_by_id("skip-account-app").click()
 
         ## shipping options
         #b.find_element_by_id("selectShippingOptions").click()
@@ -923,8 +926,10 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ## use ability to skip this since in testing 
         #WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.ID, "skip-account-app"))).click()
 
-        browser.find_element_by_id("skip-account-app").click()
-
+        try:
+            browser.find_element_by_id("skip-account-app").click()
+        except:
+            browser.find_element_by_id("skip-account-app").click()
 
 
         #b.find_element_by_id("selectShippingOptions").click()
@@ -961,6 +966,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         b.find_element_by_id("id_local_pickup_enabled").click()
 
+        b.find_element_by_id("remote_ship_toggle").click()
         element = b.find_element_by_id("self_ship_price_1")
         element.send_keys(str(shippingCost))
 
@@ -1201,13 +1207,17 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## use ability to skip this since in testing 
         #WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.ID, "skip-account-app"))).click()
-
-        browser.find_element_by_id("skip-account-app").click()
-
+        #import ipdb;ipdb.set_trace()
+        WebDriverWait(browser, 15)
+        try:
+            browser.find_element_by_id("skip-account-app").click()
+        except:
+            browser.find_element_by_id("skip-account-app").click()
         ## now will be in ship options
 
         ##b.find_element_by_id("selectShippingOptions").click()
 
+        ## booth shipping options
         b.find_element_by_id("remote_ship_toggle").click()
         b.find_element_by_id("self_ship_toggle").click()
         #b.find_element_by_id("local_pickup_toggle").click()
@@ -1220,8 +1230,9 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         b = browser
         b.find_element_by_id("selectShippingAddress").click()
 
+        #WebDriverWait(browser, 5)
 
-        element = WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.ID, "id_first_name")))
+        #element = WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.ID, "id_first_name")))
         ff(b, 'id_first_name', 'Bob')
         ff(b, 'id_last_name', 'number2')
         ff(b, 'id_line1', '708 Hampton Dr')                
@@ -1255,6 +1266,8 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         #b.find_element_by_id("self_ship_toggle").click()
         #b.find_element_by_id("id_local_pickup_enabled").click()
 
+
+        b.find_element_by_id("remote_ship_toggle").click()
         element = b.find_element_by_id("self_ship_price_1")
         element.send_keys(str(shippingCost))
 

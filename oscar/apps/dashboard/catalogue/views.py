@@ -284,8 +284,11 @@ class ProductCreateUpdateView(generic.UpdateView):
                 ctx['s_UPS_used'] = soptsDict.get('UPS_used')
 
                 ctx['s_local_pickup_used'] = soptsDict.get('local_pickup_used')
+                if not soptsDict.get('local_pickup_used'):
+                    p.stockrecord.local_pickup_enabled = False
+                    p.stockrecord.save()
+                    
                 ctx['s_local_delivery_used'] = soptsDict.get('local_delivery_used')
-
 
         return ctx
 

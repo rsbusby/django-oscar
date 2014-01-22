@@ -66,13 +66,25 @@
     >
 <div id="local_delivery_cost_err"></div>
 
- <label for="local_delivery_radius"> Maximum distance of local delivery (radius in miles) </label>
+<label for="local_delivery_radius"> Maximum distance of local delivery (radius in miles) </label>
       $<input id="local_delivery_radius" style="ddisplay:none;" type="float"  name="local_delivery_radius" 
     {% if local_delivery_radius %}
       value="{{local_delivery_radius}}"
     {% endif %}
     >
 <div id="local_delivery_radius_err"></div>
+
+{% comment %}
+<label for="local_delivery_minimum"> Minimum order amount for local delivery</label>
+      $<input id="local_delivery_minimum" style="ddisplay:none;" type="float"  name="local_delivery_minimum" 
+    {% if local_delivery_minimum %}
+      value="{{local_delivery_minimum}}"
+    {% else %}
+      value="0.00"
+    {% endif %}
+    >
+<div id="local_delivery_minimum_err"></div>
+{% endcomment %}
 
 </div> {#delivery option#}
 

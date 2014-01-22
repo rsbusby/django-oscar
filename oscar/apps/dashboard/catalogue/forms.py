@@ -147,7 +147,6 @@ class StockRecordForm(forms.ModelForm):
 
         is_valid = super(StockRecordForm, self).is_valid()
 
-
         ## process shipping options
         soptsDict = {}
         data = self.data
@@ -167,21 +166,21 @@ class StockRecordForm(forms.ModelForm):
         soptsDict['PMLarge_num'] = data.get("PMLarge_num")
         soptsDict['PMSmall_num'] = data.get("PMSmall_num")
     
-        if data.get("PMSmall_toggle") == "on":
+        if data.get("PMSmall_toggle") == "on" and data.get('PM_toggle') == "on":
             soptsDict['PMSmall_used'] = True           
             if soptsDict.get("PMSmall_num"):
                 self.instance.is_shippable = True  
             elif shipChoice == "calculate_ship":             
                 is_valid = False     
 
-        if data.get("PMMedium_toggle") == "on":
+        if data.get("PMMedium_toggle") == "on" and data.get('PM_toggle') == "on":
             soptsDict['PMMedium_used'] = True           
             if soptsDict.get("PMMedium_num"):
                 self.instance.is_shippable = True  
             elif shipChoice == "calculate_ship":             
                 is_valid = False     
 
-        if data.get("PMLarge_toggle") == "on":
+        if data.get("PMLarge_toggle") == "on" and data.get('PM_toggle') == "on":
             soptsDict['PMLarge_used'] = True           
             if soptsDict.get("PMLarge_num"):
                 self.instance.is_shippable = True  
@@ -208,17 +207,25 @@ class StockRecordForm(forms.ModelForm):
                     self.instance.is_shippable = True
 
 
-        if shipChoice == "self_ship":
+        if shipChoice == "self_ship" and data.get('remote_ship_toggle') == "on":
             soptsDict['calculate_ship'] = False
             soptsDict['self_ship'] = True 
             if not soptsDict.get('self_ship_cost'):
                 is_valid = False
+
+
+
 
         import json
         self.instance.shipping_options = json.dumps(soptsDict)
 
         if soptsDict.get('first_used') or soptsDict.get('UPS_used') and self.cleaned_data.get('weight') > 0.0:
             self.instance.is_shippable = True
+
+        if data.get('remote_ship_toggle') != "on":
+            soptsDict['calculate_ship'] = False
+            soptsDict['self_ship'] = False
+            self.instance.is_shippable = False
 
         #self.instance.save()
 
@@ -227,7 +234,7 @@ class StockRecordForm(forms.ModelForm):
     def clean_weight(self):
 
         data = self.data
-        if data.get('shipChoice') == 'calculate_ship' and (data.get('UPS_toggle') == "on" or data.get('FirstClass_toggle') == "on") and not self.cleaned_data['weight']:
+        if data.get('shipChoice') == 'calculate_ship' and data.get('remote_ship_toggle') == "on" and (data.get('UPS_toggle') == "on" or data.get('FirstClass_toggle') == "on") and not self.cleaned_data['weight']:
             raise forms.ValidationError(_("If item is to be shipped by UPS or First Class mail, please give an estimated weight for the item."))
 
         return self.cleaned_data['weight']
@@ -244,6 +251,10 @@ class StockRecordForm(forms.ModelForm):
 
         data = self.data
         return self.cleaned_data['is_shippable']
+
+        ## no validation if not shipping
+        if data.get('remote_ship_toggle') != "on":
+            return self.cleaned_data['is_shippable']
 
         if data.get('shipChoice') == 'self_ship':
             if not data.get('self_ship_cost'):
@@ -267,7 +278,7 @@ class StockRecordForm(forms.ModelForm):
     def clean_PMSmall_num(self):
 
         data = self.data
-        if data.get('shipChoice') == 'calculate_ship':
+        if data.get('shipChoice') == 'calculate_ship' and data.get('PM_toggle') == "on" and data.get('remote_ship_toggle') == "on":
             if data.get('PMSmall_toggle') == "on" and not data.get('PMSmall_num'):
                 raise forms.ValidationError(_("Please enter the number of items per box."))
         return data.get('PMSmall_num')
@@ -275,7 +286,7 @@ class StockRecordForm(forms.ModelForm):
     def clean_PMMedium_num(self):
         data = self.data
 
-        if data.get('shipChoice') == 'calculate_ship':
+        if data.get('shipChoice') == 'calculate_ship' and data.get('PM_toggle') == "on" and data.get('remote_ship_toggle') == "on":
             if data.get('PMMedium_toggle') == "on" and not data.get('PMMedium_num'):
                 raise forms.ValidationError(_("Please enter the number of items per box."))
         return data.get('PMMedium_num')
@@ -283,17 +294,17 @@ class StockRecordForm(forms.ModelForm):
     def clean_PMLarge_num(self):
         data = self.data
 
-        if data.get('shipChoice') == 'calculate_ship':
+        if data.get('shipChoice') == 'calculate_ship' and data.get('PM_toggle') == "on" and data.get('remote_ship_toggle') == "on":
             if data.get('PMLarge_toggle') == "on" and not data.get('PMLarge_num'):
                 raise forms.ValidationError(_("Please enter the number of items per box."))
         return data.get('PMLarge_num')
 
     def clean_self_ship_cost(self):
         data = self.data
-
-        if data.get('shipChoice') == 'self_ship':
-            if not self.cleaned_data.get('self_ship_cost'):
-                raise forms.ValidationError(_("Please enter the cost of shipping."))
+        if data.get('remote_ship_toggle') == "on":
+            if data.get('shipChoice') == 'self_ship':
+                if not self.cleaned_data.get('self_ship_cost'):
+                    raise forms.ValidationError(_("Please enter the cost of shipping."))
         return self.cleaned_data.get('self_ship_cost')
 
 def _attr_text_field(attribute):

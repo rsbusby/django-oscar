@@ -966,15 +966,15 @@ class StoreShippingOptionsView(TemplateView):
 
 
             ## priority mail
+            if data.get("PM_toggle") == "on":
+                if data.get("PMSmall_toggle") == "on":
+                    soptsDict['PMSmall_used'] = True           
 
-            if data.get("PMSmall_toggle") == "on":
-                soptsDict['PMSmall_used'] = True           
+                if data.get("PMMedium_toggle") == "on":
+                    soptsDict['PMMedium_used'] = True           
 
-            if data.get("PMMedium_toggle") == "on":
-                soptsDict['PMMedium_used'] = True           
-
-            if data.get("PMLarge_toggle") == "on":
-                soptsDict['PMLarge_used'] = True           
+                if data.get("PMLarge_toggle") == "on":
+                    soptsDict['PMLarge_used'] = True           
 
             if data.get("FirstClass_toggle") == "on":
                 soptsDict['first_used'] = True  
@@ -997,6 +997,10 @@ class StoreShippingOptionsView(TemplateView):
 
             #if soptsDict.get('first_used') or soptsDict.get('UPS_used'):
             #    stockrecord.is_shippable = True
+            if data.get('remote_ship_toggle') != "on":
+                soptsDict['calculate_ship'] = False
+                soptsDict['self_ship'] = False
+                
 
             partner.save()
 
