@@ -17,7 +17,7 @@ class DefaultWrapper(object):
 
         This is used to determine whether to show the add-to-basket button.
         """
-        if stockrecord.num_in_stock == None or stockrecord.made_to_order == True:
+        if stockrecord.made_to_order == True:  ##or stockrecord.num_in_stock == None 
             return True
         return stockrecord.net_stock_level > 0
 
