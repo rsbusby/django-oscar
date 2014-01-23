@@ -461,8 +461,11 @@ OSCAR_SHOP_TAGLINE = ''
 GOOGLE_ANALYTICS_ID = os.environ['GOOGLE_ANALYTICS_ID']
 GOOGLE_MAPS_KEY = os.environ['GOOGLE_MAPS_KEY']
 
-OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
+OSCAR_RECENTLY_VIEWED_PRODUCTS = 21
 OSCAR_ALLOW_ANON_CHECKOUT = False
+
+
+OSCAR_PRODUCTS_PER_PAGE = 21
 
 # This is added to each template context by the core context processor.  It is
 # useful for test/stage/qa sites where you want to show the version of the site
