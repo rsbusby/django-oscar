@@ -235,8 +235,16 @@ class ProductCategoryView(ListView):
         #if not (self.request.user.is_staff or self.request.user == owner):
         #qs = qs.exclude(status__icontains='disabled')
 
-        return qs
+        if not self.request.session.get('random_seed', False) or self.request.GET.has_key('shuffle'):
+            self.request.session['random_seed'] = random.randint(1, 10000)
 
+        seed = self.request.session['random_seed']
+
+        ##.order_by('?')
+        random.seed(seed)
+        items = sorted(qs, key=lambda x: random.random())
+        qs = items
+        return qs
 
 
 class ProductListView(ListView):
