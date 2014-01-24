@@ -43,6 +43,16 @@ def disableItem(product, user):
         product.status = "user_disabled"
     product.save()
 
+class ShuffledPaginator(Paginator):
+    def page(self, number):
+        page = super(ShuffledPaginator, self).page(number)
+
+        items = sorted(page.object_list, key=lambda x: random.random())
+        #random.shuffle(page.object_list)
+        page.object_list = items
+        return page
+
+
 class ProductDetailView(DetailView):
     context_object_name = 'product'
     model = Product
@@ -183,6 +193,8 @@ class ProductCategoryView(ListView):
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
+    paginator_class = ShuffledPaginator
+
 
     def get_object(self):
         if 'pk' in self.kwargs:
@@ -225,14 +237,6 @@ class ProductCategoryView(ListView):
 
         return qs
 
-class ShuffledPaginator(Paginator):
-    def page(self, number):
-        page = super(ShuffledPaginator, self).page(number)
-
-        items = sorted(page.object_list, key=lambda x: random.random())
-        #random.shuffle(page.object_list)
-        page.object_list = items
-        return page
 
 
 class ProductListView(ListView):
