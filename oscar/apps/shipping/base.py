@@ -48,7 +48,7 @@ class ShippingMethod(object):
             shipDict = json.loads(shipping_info)
 
             ## first look for methods that are not EasyPost
-            shipMethods = ["local-pickup", "query-seller", "fixed-price-shipping", "PriorityMedium", "PrioritySmall"]
+            shipMethods = ["local-pickup", "self-delivery",  "query-seller", "fixed-price-shipping", "PriorityMedium", "PrioritySmall"]
             if self.code in shipMethods:
                 rateStr = shipDict[self.code]
                 return D(rateStr)                

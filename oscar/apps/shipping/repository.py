@@ -2,7 +2,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.methods import (
-    Free, FixedPrice, Negotiable, LocalPickup, uspsShipping, First, UPSGround, 
+    Free, FixedPrice, Negotiable, LocalPickup, SelfDelivery, uspsShipping, First, UPSGround, 
     Priority, PrioritySmall, PriorityMedium, NoShippingRequired, OfferDiscount, QuerySeller)
 
 from decimal import Decimal as D
@@ -36,7 +36,7 @@ class Repository(object):
     Repository class responsible for returning ShippingMethod
     objects for a given user, basket etc
     """
-    methods = [QuerySeller(), LocalPickup(), First(), FixedPrice(), Priority(), UPSGround(), PrioritySmall(), PriorityMedium()]
+    methods = [QuerySeller(), LocalPickup(), SelfDelivery(), First(), FixedPrice(), Priority(), UPSGround(), PrioritySmall(), PriorityMedium()]
 
     availableMethods = []
 
@@ -90,6 +90,30 @@ class Repository(object):
                     return serviceList
 
 
+        local_delivery_cost = 0.0
+
+        for line in basket.lines.all():
+
+            p = line.product
+            if not p.stockrecord.shipping_options:
+                break
+            soptsDict = json.loads(p.stockrecord.shipping_options)
+            if soptsDict:
+                if soptsDict.get('local_delivery_used') == True:
+                    try:
+                        boothOpts = json.loads(p.stockrecord.partner.shipping_options)
+                        local_delivery_cost = boothOpts['local_delivery_cost']
+                        for m in self.methods:
+                            if m.code == 'self-delivery':
+                                self.availableMethods.append(m)
+                                shipDict['self-delivery'] = local_delivery_cost
+
+                                basket.shipping_info = json.dumps(shipDict)
+                                ## freeze basket if need a shipping estimate
+                                #basket.freeze()
+                                basket.save()
+                    except:
+                        print "Problem with self-delivery in repo.py"
         for line in basket.lines.all():
 
             p = line.product
@@ -268,8 +292,8 @@ class Repository(object):
                 raise ItemHasNoWeight
 
             parcel = easypost.Parcel.create(
-                length = 10.9, 
-                width = 10.9,
+                length = 6.0, 
+                width = 6.0,
                 height = 8.0,
                 weight = weight,
             )
@@ -286,6 +310,7 @@ class Repository(object):
         #
         #    return None
 
+        print shi
         shipDict['easypost_info'] = shi.to_dict()
         basket.shipping_info = json.dumps(shipDict)
         basket.save()
@@ -358,7 +383,7 @@ class Repository(object):
             shipDict = json.loads(shipping_info)
 
             ## first look for methods that are not EasyPost
-            shipMethods = ["local-pickup", "query-seller", "fixed-price-shipping", "PriorityMedium", "PrioritySmall"]
+            shipMethods = ["local-pickup", "query-seller", "fixed-price-shipping", "self-delivery", "PriorityMedium", "PrioritySmall"]
             for code in shipMethods:
                 if shipDict.get(code):
                     self.availableMethods.append(self.find_by_code(code)) 

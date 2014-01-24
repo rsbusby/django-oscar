@@ -88,11 +88,16 @@ class FixedPrice(ShippingMethod):
     #def basket_charge_excl_tax(self):
     #    return self.charge_excl_tax
 
+class SelfDelivery(FixedPrice):
+    code = 'self-delivery'
+    name = _('Local delivery')
+    basket_total_shipping = None
+
+
 class QuerySeller(FixedPrice):
     code = 'query-seller'
     name = _('Shipping estimate unavailable')
     basket_total_shipping = None
-
 
 
 class dotdict(dict):
