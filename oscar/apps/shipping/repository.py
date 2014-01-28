@@ -235,6 +235,7 @@ class Repository(object):
 
         ## if still here, then using the rate calculator. Need weights (and ideally box size) for this
         ## sum weights
+
         for line in basket.lines.all():
             p = line.product
 
@@ -242,7 +243,7 @@ class Repository(object):
                 raise ItemNotShippable
 
             try:
-                weight = weight + p.stockrecord.weight
+                weight = weight + p.stockrecord.weight * line.quantity
             except:
                 #messages.error(request, "Some items in your basket do not have listed weights so the shipping estimate will be low.")
                 print "Some items in your basket do not have listed weights so the shipping estimate will be low."
@@ -304,6 +305,23 @@ class Repository(object):
                 parcel = parcel,
 
             )
+
+            # parcelHalf = easypost.Parcel.create(
+            #     length = 16.0, 
+            #     width = 16.0,
+            #     height = 18.0,
+            #     weight = weight/2.0,
+            # )
+
+            # shipment2 = easypost.Shipment.create(
+            #     to_address = to_address,
+            #     from_address = from_address,
+            #     parcel = parcelHalf,
+
+            # )
+
+
+
         #except:
         #    print "problem with easypost call"
         #    #messages.warning(request, _("Shipping information unavailable - please check your network connection"))
@@ -311,6 +329,7 @@ class Repository(object):
         #    return None
 
         print shi
+        # print shipment2
         shipDict['easypost_info'] = shi.to_dict()
         basket.shipping_info = json.dumps(shipDict)
         basket.save()
