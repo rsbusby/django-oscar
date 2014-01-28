@@ -16,6 +16,19 @@
       html { height: 100% }
       body { height: 100%; margin: 0; padding: 0 }
 
+      .yoInfoWindow {
+        wwidth:400px;
+        padding:5px;
+        mmargin:10px;
+        bbborder-radius: 8px;
+      }
+
+
+img[src*="gstatic.com/"], img[src*="googleapis.com/"] {
+max-width: none;
+}
+
+
     </style>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key={{mapsKey}}&sensor=false">
@@ -37,13 +50,17 @@
 
 
         {% for res in spatial_results %}
+
               {% if res.object.get_location  %}
                   
 
            var myInfoWindow = new google.maps.InfoWindow({
-              content: "{{res.object.title}}",
-              minwidth:200,
-              maxwidth:20,
+              content: '<div class="yoInfoWindow" ><a href="{{ res.object.get_absolute_url }}" >{{res.object.title}}</a> </div>',
+              {% comment %}
+                             content: '<div class="yoInfoWindow" ><a href="{%url 'catalogue:index' %}?booth={{ res.object.stockrecord.partner.id }}" >{{res.object.stockrecord.partner.name}}</a> </div>',
+                             {% endcomment %}
+               maxWidth:400,
+            
 
           });
 
@@ -191,6 +208,9 @@
     {% endif %}
 
 
+
+
+
           <div id="map-canvas" style="width:100%;height:300px;"> </div>
 {% comment %}
          {% for res in spatial_results %}
@@ -199,6 +219,6 @@
              <br>
            {% endif %}
          {% endfor %}
-        {% endcomment %}
+{% endcomment %}
 
 {% endblock %}
