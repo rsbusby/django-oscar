@@ -15,6 +15,8 @@ class CustomerApplication(Application):
     sales_history_view = views.SalesHistoryView
 
     order_detail_view = views.OrderDetailView
+    sale_detail_view = views.SaleDetailView
+
     anon_order_detail_view = views.AnonymousOrderDetailView
     order_line_view = views.OrderLineView
     address_list_view = views.AddressListView
@@ -76,6 +78,10 @@ class CustomerApplication(Application):
             url(r'^sales/$',
                 login_required(self.sales_history_view.as_view()),
                 name='sales-list'),
+
+            url(r'^sales/(?P<order_number>[\w-]*)/$',
+                login_required(self.sale_detail_view.as_view()),
+                name='sale'),
 
 
             # Address book

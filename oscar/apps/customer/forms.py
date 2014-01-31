@@ -23,6 +23,11 @@ CommunicationEventType = get_model('customer', 'communicationeventtype')
 ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
+Parcel = get_model('order', 'Parcel')
+Order = get_model('order', 'Order')
+
+from django.forms.models import inlineformset_factory, BaseInlineFormSet
+
 
 def generate_username():
     uname = ''.join([random.choice(string.letters + string.digits + '_') for i in range(30)])
@@ -389,3 +394,42 @@ class ProductAlertForm(forms.ModelForm):
         exclude = ('user', 'key',
                    'status', 'date_confirmed', 'date_cancelled', 'date_closed',
                    'product')
+
+
+
+class ParcelForm(forms.ModelForm):
+
+    #def __init__(self, user, *args, **kwargs):
+    #    #self.user = user
+    #    #kwargs['instance'] = user
+    #    super(ParcelForm, self).__init__(*args, **kwargs)
+
+    # def save(self, commit=True):
+    #     alert = super(ProductAlertForm, self).save(commit=False)
+    #     if self.user.is_authenticated():
+    #         alert.user = self.user
+    #     alert.product = self.product
+    #     if commit:
+    #         alert.save()
+    #     return alert
+
+    # def clean_email(self):
+    #     """
+    #     Make sure that the email address is aways unique as it is
+    #     used instead of the username. This is necessary because the
+    #     unique-ness of email addresses is *not* enforced on the model
+    #     level in ``django.contrib.auth.models.User``.
+    #     """
+    #     email = normalise_email(self.cleaned_data['email'])
+    #     if User._default_manager.filter(
+    #             email=email).exclude(id=self.user.id).exists():
+    #         raise ValidationError(
+    #             _("A user with this email address already exists"))
+    #     return email
+
+    class Meta:
+        model = Parcel
+        exclude = ('shipping_rate_id', 'is_current', 'shipping_carrier', 'shipping_service', 'name', 'status', 'description')
+
+ParcelFormSet = inlineformset_factory(
+     Order, Parcel, form=ParcelForm, extra=1)

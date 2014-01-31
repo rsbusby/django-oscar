@@ -39,7 +39,7 @@
     <form action="." method="get">
         {% include "partials/form_fields.html" with form=form %}
         <button type="submit" class="btn btn-primary">{% trans 'Filter results' %}</button>
-        <a href="{% url 'customer:order-list' %}" class="btn">{% trans 'Reset' %}</a>
+        <a href="{% url 'customer:sales-list' %}" class="btn">{% trans 'Reset' %}</a>
     </form>
 
     <h3>{{ form.description }}</h3>
@@ -57,13 +57,13 @@
                     <td>{{ order.total_incl_tax|currency }}</td>
                     <td>{{ order.date_placed }}</td>
                     <td>
-                        <a class="btn btn-info" href="{% url 'customer:order' order.number %}?user_id={{order.user.id}}">{% trans 'View Order Detail' %}</a>
+                        <a class="btn btn-info" href="{% url 'customer:sale' order.number %}?user_id={{order.user.id}}">{% trans 'View Order Detail' %}</a>
                        
                         <div style="clear:both"></div>
                        {% if order.shipping_incl_tax > 0.0 %}
                     
                     
-                         <form id="order_form_{{ order.id }}" action="{% url 'customer:order' order.number %}?user_id={{order.user.id}}" method="post">
+                         <form id="order_form_{{ order.id }}" action="{% url 'customer:sale' order.number %}?user_id={{order.user.id}}" method="post">
                             {% csrf_token %}
                             <input type="hidden" name="order_id" value="{{ order.id }}" />
                             <input type="hidden" name="action" value="show_label" />

@@ -48,6 +48,10 @@ UserAddress = get_model('address', 'UserAddress')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 ProductAlert = get_model('customer', 'ProductAlert')
 
+ParcelForm = get_class('customer.forms', 'ParcelForm')
+ParcelFormSet = get_class('customer.forms', 'ParcelFormSet')
+
+
 User = get_user_model()
 
 
@@ -492,11 +496,7 @@ class OrderDetailView(PostActionMixin, DetailView):
     model = Order
 
     def get_template_names(self):
-
-        if self.request.GET.has_key('sales'):
-            return ["customer/sale.html"]
-        else:
-            return ["customer/order.html"]
+        return ["customer/order.html"]
 
     def get_object(self, queryset=None):
 
@@ -522,50 +522,6 @@ class OrderDetailView(PostActionMixin, DetailView):
                 return
 
         return o
-
-    def do_show_label(self, order):
-        """
-        show shipping label for a previous order.
-
-        """
-        basket = get_object_or_404(Basket, id = order.basket_id)
-
-        shipping_info = basket.shipping_info
-        if shipping_info:
-            shipDict = json.loads(shipping_info)
-            easypost.api_key = settings.EASYPOST_KEY
-            eo =  easypost.convert_to_easypost_object(shipDict, easypost.api_key)
-
-            selectedRate = None
-            ## get the rate from what is saved in the basket.
-            for r in eo.rates:
-                if r.carrier == order.shipping_carrier and r.service == order.shipping_service:
-                    selectedRate = r
-
-            print eo
-            eo.refresh()
-            if not eo.postage_label:
-                labelInfo = eo.buy(rate=selectedRate)
-                order.shipping_label_json = labelInfo  
-            else:
-                labelInfo = eo.postage_label
-                
-            #print self.request.POST
-            ## can switch to show PDF, get hidden POST data
-            self.response = HttpResponseRedirect(eo.postage_label.label_url) 
-            ##self.response = HttpResponseRedirect(eo.postage_label.label_pdf_url) 
-            return
-
-
-        self.response = HttpResponseRedirect(reverse('customer:sales-list'))
-        messages.warning(
-                self.request,
-                _("It is not possible to get a label for order %(number)s "
-                  "as the service is unavailable, please contact support") %
-                {'number': order.number})
-
-
-
 
 
     def do_reorder(self, order):
@@ -630,6 +586,178 @@ class OrderDetailView(PostActionMixin, DetailView):
                 _("It is not possible to re-order order %(number)s "
                   "as none of its lines are available to purchase") %
                 {'number': order.number})
+
+
+
+class SaleDetailView(OrderDetailView, UpdateView):
+    """Sale details"""
+
+    parcel_formset = ParcelFormSet
+
+
+    def get_template_names(self):
+        return ["customer/sale.html"]
+
+    def get_context_data(self, **kwargs):
+
+        self.object = self.get_object()
+        ctx = super(SaleDetailView, self).get_context_data(**kwargs)
+
+
+
+        if 'parcel_formset' not in ctx:
+            ctx['parcel_formset'] = self.parcel_formset(instance=self.object )#, minimum_forms=1, minimum_forms_message="At least one package    is needed for this order.")
+    
+        return ctx
+
+
+
+    # def form_valid(self, form):
+    #     #context = self.get_context_data()
+    #     #bookimage_form = context['bookimage_formset']
+    #     #bookpage_form = context['bookpage_formset']
+    #     parcel_formset = ParcelFormSet(self.request.POST)
+    #     self.object = form.save()
+    #     parcel_formset.instance = self.object
+    #     parcel_formset.save()
+    #     messages.info(self.request,
+    #                      _("Added a package "))
+    #     return self.render_to_response()
+
+
+    def post(self, request, *args, **kwargs):
+
+        ## don't process formset if doing something else.......
+        if self.request.POST.has_key('action'):
+            return super(SaleDetailView, self).post(request, *args, **kwargs)
+
+        parcel_formset = ParcelFormSet(self.request.POST, instance=self.get_object())
+
+
+        #parcel_formset.clean()
+        if parcel_formset.is_valid():
+            parcel_formset.save()
+            messages.success(self.request,
+                        _("Added a package "))
+        #self.parcel_formset.save(instance=self.get_object())
+        ctx = self.get_context_data(
+                                     ##parcel_formset=parcel_formset,
+                                     ) #,
+
+
+        return self.render_to_response(ctx)
+
+        
+
+
+    # def form_valid(self, form):
+    #     import ipdb;ipdb.set_trace()
+    #     messages.info(self.request,
+    #                     _("Added a package "))
+    #     parcel_formset = self.parcel_formset(self.request.POST,
+    #                                          instance=self.object)
+    #     parcel_formset.save()
+    #     ctx = self.get_context_data(
+    #                                  parcel_formset=parcel_formset,
+    #                                  ) #,
+
+    #     return self.render_to_response()
+    #     #
+    
+    #     return self.process_all_forms(form)
+
+    # def form_invalid(self, form):
+    #     return self.process_all_forms(form)
+
+    # def process_all_forms(self, form):
+    #     """
+    #     Short-circuits the regular logic to have one place to have our
+    #     logic to check all forms
+    #     """
+    #     # Need to create the parcel here because the inline forms need it
+    #     # can't use commit=False because ParcelForm does not support it???
+
+
+    #     #parcel_formset = self.parcel_formset(self.request.POST,
+    #     #                                         instance=self.object)
+
+
+    #     if self.parcel_formset.is_valid:
+    #         self.parcel_formset.save()
+
+    #         messages.info(self.request,
+    #                    _("Added a package "))
+    #         ctx = self.get_context_data(
+    #                                 parcel_formset=parcel_formset,
+    #                                 ) #,
+    #         return self.render_to_response()
+
+    #         #return HttpResponseRedirect(self.get_success_url())
+    #     else:
+    #         messages.error(self.request,
+    #                    _("There is more information needed to create the item -- please "
+    #                      "see below to add to or correct the form. "))
+        
+    #         ctx = self.get_context_data(
+
+    #                                 parcel_formset=parcel_formset,
+    #                                 ) #,
+    #         return self.render_to_response(ctx)
+    #         #return self.forms_valid(parcel_formset) 
+
+
+
+    def do_show_label(self, order):
+        """
+        show shipping label for a previous order.
+
+        """
+        print "POSSST"
+        print self.request.POST
+
+
+        #try:
+        basket = get_object_or_404(Basket, id = order.basket_id)
+
+        shipping_info = basket.shipping_info
+        if shipping_info:
+            shipDict = json.loads(shipping_info)
+            easypost.api_key = settings.EASYPOST_KEY
+            eo =  easypost.convert_to_easypost_object(shipDict['easypost_info'], easypost.api_key)
+
+            selectedRate = None
+            ## get the rate from what is saved in the basket.
+            for r in eo.rates:
+                if r.carrier == order.shipping_carrier and r.service == order.shipping_service:
+                    selectedRate = r
+
+            print eo
+            eo.refresh()
+            if not eo.postage_label:
+                labelInfo = eo.buy(rate=selectedRate)
+                order.shipping_label_json = labelInfo  
+            else:
+                labelInfo = eo.postage_label
+                
+            #print self.request.POST
+            ## can switch to show PDF, get hidden POST data
+            self.response = HttpResponseRedirect(eo.postage_label.label_url) 
+            ##self.response = HttpResponseRedirect(eo.postage_label.label_pdf_url) 
+            return
+
+        #except:
+        self.response = HttpResponseRedirect(reverse('customer:sales-list'))
+        messages.warning(
+                self.request,
+                _("It is not possible to get a label for order %(number)s "
+                  "as the service is unavailable, please contact support") %
+                {'number': order.number})
+
+
+
+
+
+
 
 
 class OrderLineView(PostActionMixin, DetailView):
