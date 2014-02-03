@@ -303,7 +303,7 @@ class StockRecordForm(forms.ModelForm):
         data = self.data
         if data.get('remote_ship_toggle') == "on":
             if data.get('shipChoice') == 'self_ship':
-                if not self.cleaned_data.get('self_ship_cost'):
+                if self.cleaned_data.get('self_ship_cost') == None or self.cleaned_data.get('self_ship_cost') == '':
                     raise forms.ValidationError(_("Please enter the cost of shipping."))
         return self.cleaned_data.get('self_ship_cost')
 
