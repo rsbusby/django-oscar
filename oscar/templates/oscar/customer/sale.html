@@ -52,10 +52,10 @@
 <div class="pull-right">
 
 {% if user == order.user %}
-  <input style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{order.lines.all.0.partner.name}}"'>
+  <input id="contactSellerButton" style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{order.lines.all.0.partner.name}}"'>
 {% else %}
 
-  <input style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Buyer" onclick='location.href="/homemade/contact?user={{user.username}}"'>
+  <input id="contactBuyerButton" style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Buyer" onclick='location.href="/homemade/contact?user={{user.username}}"'>
 
 {% endif %}
 </div>
@@ -63,21 +63,26 @@
 
 
 {% if order.shipping_incl_tax > 0.0  %}
-    {% if 'USPS' in order.shipping_method or "UPS" in order.shipping_method.count %}
-                     {% if order.parcels.all.count %}
+    {% if 'USPS' in order.shipping_method or "UPS" in order.shipping_method %}
+                     {% if not "UPS" in order.shipping_method or order.parcels.all.count %}
                          <form id="order_form_{{ order.id }}" action="{% url 'customer:sale' order.number %}?user_id={{order.user.id}}" method="post">
                             {% csrf_token %}
                             <input type="hidden" name="order_id" value="{{ order.id }}" />
                             <input type="hidden" name="action" value="show_label" />
-                            <button type="submit" class="btn btn-large">{% trans 'Show shipping label' %}</button>
+                            <button id="showShipLabel" type="submit" class="btn btn-large">{% trans 'Show shipping label' %}</button>
                          </form>
                     
-                    <button id="showParcelForm" style="margin-left:0.5em;font-size:1.em" class="btn btn-large" name="actio" type="button" value="showParcel">{% trans "Add another package" %}</button>
+                    {% if "UPS" in order.shipping_method %}
+
+                    <button id="showParcelForm" style="margin-left:0.5em;font-size:1.em" class="btn btn-large" name="actio" type="button" value="showParcel">{% trans "Edit specifications of package(s)" %}</button>
+                    {% endif %}
 
                     {% else %}
                         <div style="font-weight:bold;font-size:1.1em;margin-bottom:12px;color:#99cc00" >Please add package dimensions to allow us to generate a shipping label </div>
                     {% endif %}
 
+
+                {% if "UPS" in order.shipping_method %}
 
                     <form id="shipParcelForm" action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked ffixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors" autocomplete="off">
                     {% csrf_token %}
@@ -88,7 +93,7 @@
                         {% for parcel_form in parcel_formset %}
                        
                         <tr>
-                            <td>{% if forloop.last and not forloop.first %}Select Another{%endif%}
+                            <td>{% if forloop.last and not forloop.first %}<div style="font-weight:bold;margin:1.2em;font-size:1.1em">Add another package</div>{%endif%}
                                 {% include "partials/form_fields_inline_parcel.html" with form=parcel_form %}
                             
                             </td>
@@ -102,6 +107,7 @@
   
 </form>
 
+                      {% endif %}
 
 
 
@@ -298,15 +304,33 @@ $(function() {
 {% endif %}
 
 
-{% if order.parcels.all.count %}
+{% if order.parcels.all.count and parcelFormValid %}
 
     $('#shipParcelForm').hide();
 
+
 {% endif %}
 
- $('#showParcelForm').click(function() { 
+{% if not parcelFormValid %}
+    $('#showShipLabel').hide();
+    $('#showParcelForm').hide();
 
-         $('#shipParcelForm').show();
+{% endif %}
+
+
+var showParcelStatus = false;
+ $('#showParcelForm').click(function() { 
+        if ( showParcelStatus == false){
+         $('#shipParcelForm').fadeIn(100);
+         $('#showParcelForm').text("Hide package info");
+         showParcelStatus = true;
+     }
+     else{
+        $('#shipParcelForm').fadeOut(100);
+        $('#showParcelForm').text("Show package info");
+         showParcelStatus = false;
+
+     }
 });
 
 
@@ -330,7 +354,17 @@ $('#submitParcel').click(function() {
 
     //$("#shipParcelForm").submit();
 });
+
+
+$('#showShipLabel').click(function() { 
+    // alert("YEAH");
+    $('#showShipLabel').text("Please wait, retrieving label....");
+
+    //$("#shipParcelForm").submit();
 });
+
+}); // doc ready
+
 </script>
 
 {% endblock content %}

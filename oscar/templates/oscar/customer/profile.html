@@ -168,7 +168,7 @@
                     <td>{{ order.total_incl_tax|currency }}</td>
                     <td>{{ order.date_placed }}</td>
                     <td>
-                        <a class="btn btn-info saleView" href="{% url 'customer:order' order.number %}?user_id={{order.user.id}}">{% trans 'View' %}</a>
+                        <a class="btn btn-info saleView" href="{% url 'customer:sale' order.number %}?user_id={{order.user.id}}">{% trans 'View' %}</a>
 
                            {% for source in order.sources.all %}
                               {% if source.source_type.name = "Stripe" %}

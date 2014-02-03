@@ -62,14 +62,19 @@
                         <div style="clear:both"></div>
                        {% if order.shipping_incl_tax > 0.0 %}
                     
-                    
+                   
+                   {% if order.shipping_incl_tax > 0.0  %}
+                    {% if "UPS" in order.shipping_method or "USPS" in order.shipping_method %}
+                     {% if not "UPS" in order.shipping_method or order.parcels.all.count %}
                          <form id="order_form_{{ order.id }}" action="{% url 'customer:sale' order.number %}?user_id={{order.user.id}}" method="post">
                             {% csrf_token %}
                             <input type="hidden" name="order_id" value="{{ order.id }}" />
                             <input type="hidden" name="action" value="show_label" />
-                            <button type="submit" class="btn btn-info">{% trans 'Show label' %}</button>
+                            <button type="submit" class="btn btn-success" style="font-size:1em">{% trans 'Show label for printing' %}</button>
                          </form>
-
+                        {% endif %}
+                      {% endif %}
+                    {% endif %}
                           {% for source in order.sources.all %}
                             
                                 {% if source.source_type.name = "Stripe" %}

@@ -427,9 +427,46 @@ class ParcelForm(forms.ModelForm):
     #             _("A user with this email address already exists"))
     #     return email
 
+
+    def clean_weight(self):
+        if not self.cleaned_data.get("weight"):
+            raise forms.ValidationError(
+                _("Please add a weight in ounces"))
+        return self.cleaned_data.get("weight")
+
+    def clean_length(self):
+        if not self.cleaned_data.get("length"):
+            raise forms.ValidationError(
+                _("Please add a length in inches"))
+        return self.cleaned_data.get("length")
+
+    def clean_width(self):
+        if not self.cleaned_data.get("width"):
+            raise forms.ValidationError(
+                _("Please add a width in inches"))
+        return self.cleaned_data.get("width")
+
+    def clean_height(self):
+        if not self.cleaned_data.get("height"):
+            raise forms.ValidationError(
+                _("Please add a height in inches"))
+        return self.cleaned_data.get("height")
+
+
+    # def is_valid(self):
+
+    #     import ipdb;ipdb.set_trace()
+    #     validVal = super(ParcelForm, self).is_valid()
+
+    #     cd = self.cleaned_data
+    #     if not (cd.get('weight') and cd.get('length') and cd.get('height') and cd.get('width') ):
+    #         return False
+
+    #     return validVal
+
     class Meta:
         model = Parcel
-        exclude = ('shipping_rate_id', 'is_current', 'shipping_carrier', 'shipping_service', 'name', 'status', 'description')
+        exclude = ('shipping_info_json', 'shipping_label_json', 'shipping_rate_id', 'is_current', 'shipping_carrier', 'shipping_service', 'name', 'status', 'description')
 
 ParcelFormSet = inlineformset_factory(
      Order, Parcel, form=ParcelForm, extra=1)

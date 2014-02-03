@@ -635,16 +635,22 @@ class SaleDetailView(OrderDetailView, UpdateView):
 
 
         #parcel_formset.clean()
-        if parcel_formset.is_valid():
+        validVal = parcel_formset.is_valid()
+        if validVal:
             parcel_formset.save()
             messages.success(self.request,
                         _("Added a package "))
+            ctx = self.get_context_data()
+        else:
+            messages.error(self.request,
+                        _("Please correct errors in the package specification "))
+            ctx = self.get_context_data(parcel_formset=parcel_formset)
         #self.parcel_formset.save(instance=self.get_object())
-        ctx = self.get_context_data(
-                                     ##parcel_formset=parcel_formset,
-                                     ) #,
+        #ctx = self.get_context_data(
+        #                             ##parcel_formset=parcel_formset,
+        #                             ) #,
 
-
+        ctx['parcelFormValid'] = validVal
         return self.render_to_response(ctx)
 
         
@@ -715,33 +721,77 @@ class SaleDetailView(OrderDetailView, UpdateView):
         print "POSSST"
         print self.request.POST
 
-
+        self.object = self.get_object()
         #try:
         basket = get_object_or_404(Basket, id = order.basket_id)
 
         shipping_info = basket.shipping_info
+
         if shipping_info:
             shipDict = json.loads(shipping_info)
             easypost.api_key = settings.EASYPOST_KEY
             eo =  easypost.convert_to_easypost_object(shipDict['easypost_info'], easypost.api_key)
 
             selectedRate = None
-            ## get the rate from what is saved in the basket.
-            for r in eo.rates:
-                if r.carrier == order.shipping_carrier and r.service == order.shipping_service:
-                    selectedRate = r
+            if self.object.parcels.count():
+                ## if UPS, recalculate the parcel based on new info
+                for parcel in self.object.parcels.all():
 
-            print eo
-            eo.refresh()
-            if not eo.postage_label:
-                labelInfo = eo.buy(rate=selectedRate)
-                order.shipping_label_json = labelInfo  
+                    if not parcel.shipping_info_json:
+                        parcelEP = easypost.Parcel.create(
+                            length = parcel.length, 
+                            width = parcel.width,
+                            height = parcel.height,
+                            weight = parcel.weight,
+                        )
+
+                        pshi = easypost.Shipment.create(
+                            to_address = eo.to_address,
+                            from_address = eo.from_address,
+                            parcel = parcelEP,
+
+                        )
+                        shipDict = {}
+                        shipDict['easypost_info'] = pshi.to_dict()
+                        parcel.shipping_info_json = json.dumps(shipDict)
+                        parcel.save()
+
+                    else:
+                        shipDict = json.loads(parcel.shipping_info_json)
+                        easypost.api_key = settings.EASYPOST_KEY
+                        pshi =  easypost.convert_to_easypost_object(shipDict['easypost_info'], easypost.api_key)
+
+                    if not pshi.postage_label:
+                        for r in pshi.rates:
+                            if r.carrier == order.shipping_carrier and r.service == order.shipping_service:
+                                selectedRate = r
+                        labelInfo = pshi.buy(rate=selectedRate)
+                        shipDict = {}
+                        shipDict['easypost_info'] = pshi.to_dict()
+                        parcel.shipping_info_json = json.dumps(shipDict)
+                        parcel.save()
+                        parcel.shipping_label_json = labelInfo  
+
+                    postage_label = pshi.postage_label
+
             else:
-                labelInfo = eo.postage_label
+                ## get the rate from what is saved in the basket.
+                for r in eo.rates:
+                    if r.carrier == order.shipping_carrier and r.service == order.shipping_service:
+                        selectedRate = r
+
+                print eo
+                eo.refresh()
+                if not eo.postage_label:
+                    labelInfo = eo.buy(rate=selectedRate)
+                    order.shipping_label_json = labelInfo  
+                    postage_label = eo.postage_label
+                else:
+                    postage_label = eo.postage_label
                 
             #print self.request.POST
             ## can switch to show PDF, get hidden POST data
-            self.response = HttpResponseRedirect(eo.postage_label.label_url) 
+            self.response = HttpResponseRedirect(postage_label.label_url) 
             ##self.response = HttpResponseRedirect(eo.postage_label.label_pdf_url) 
             return
 
@@ -752,12 +802,6 @@ class SaleDetailView(OrderDetailView, UpdateView):
                 _("It is not possible to get a label for order %(number)s "
                   "as the service is unavailable, please contact support") %
                 {'number': order.number})
-
-
-
-
-
-
 
 
 class OrderLineView(PostActionMixin, DetailView):

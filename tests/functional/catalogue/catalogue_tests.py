@@ -934,7 +934,9 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         #b.find_element_by_id("selectShippingOptions").click()
         b.find_element_by_id("remote_ship_toggle").click()
-        b.find_element_by_id("self_ship_toggle").click()
+        b.find_element_by_id("hm_ship_toggle").click()
+        b.find_element_by_id("UPS_toggle").click()
+
         b.find_element_by_id("local_pickup_toggle").click()
         b.find_element_by_id("submitShippingOptions").click()
 
@@ -963,12 +965,18 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         itemCost = 5.23
         shippingCost = 2.22
+        itemWeight = 14.0
 
         b.find_element_by_id("id_local_pickup_enabled").click()
 
         b.find_element_by_id("remote_ship_toggle").click()
-        element = b.find_element_by_id("self_ship_price_1")
-        element.send_keys(str(shippingCost))
+        #element = b.find_element_by_id("self_ship_price_1")
+        #element.send_keys(str(shippingCost))
+
+        b.find_element_by_id("UPS_toggle").click()
+        element = b.find_element_by_id("id_weight")
+        element.send_keys( str(itemWeight) )
+
 
         element = b.find_element_by_id("id_price_excl_tax")
         element.send_keys(str(itemCost))
@@ -1063,7 +1071,9 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ## are shipping options there?
 
         ## choose shipping option
-        b.find_element_by_class_name("select-shipping").click()
+
+        ## take the last shipping option
+        b.find_elements_by_class_name("select-shipping")[-1].click()
 
         ## choose sponsored org
         b.find_element_by_class_name("orgButton").click()
@@ -1135,17 +1145,35 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ##b.find_element_by_id("my-sales").click()        
 
         b.find_element_by_class_name("saleView").click()     
-        try:
-            element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "contactBuyerButton")))
-            element.click()        
-        except:
-            pass
+        #try:
+        #    element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "contactBuyerButton")))
+        #    element.click()        
+        #except:
+        #    pass
 
+             
 
+        ## input package info, show label
+        b.find_element_by_id("id_parcels-0-width").send_keys("10.")
+        b.find_element_by_id("id_parcels-0-length").send_keys("10.")
+        b.find_element_by_id("id_parcels-0-height").send_keys("10.")
+        b.find_element_by_id("id_parcels-0-weight").send_keys("10.")                        
+
+        b.find_element_by_id("submitParcel").click()  
+        b.find_element_by_id("showShipLabel").click()  
+
+        ## go back to sale page
+        b.back()
+
+        ## should happen quickly this time
+        b.find_element_by_id("showShipLabel").click()  
+        b.back()
+
+        ## is messaging ok?
+        b.find_element_by_id("contactBuyerButton").click()
 
         #self.failIf(browser.page_source.count(self.partner2.name) < 1)
-        self.failIf(browser.page_source.count("Message") < 1)        
-
+        self.failIf(browser.page_source.count("Message") < 1) 
 
         self.go(reverse('customer:logout'))
 
