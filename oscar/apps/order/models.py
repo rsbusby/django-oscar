@@ -52,6 +52,9 @@ class Parcel(models.Model):
     shipping_carrier = models.CharField(("Shipping Carrier"), max_length=128, null=True, blank=True)
     shipping_service = models.CharField(("Shipping Service"), max_length=128, null=True, blank=True)
 
+    shipping_info_json = models.TextField(("Shipping Info"), blank=True, null=True)
+    shipping_label_json = models.TextField(("Shipping Label Info"), blank=True, null=True)
+
 class OrderNote(AbstractOrderNote):
     pass
 

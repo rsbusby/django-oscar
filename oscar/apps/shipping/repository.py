@@ -68,7 +68,7 @@ class Repository(object):
         weight = 0.0
 
         ## check for self shipping of options
-        selfShipCostTotal = 0.0
+        selfShipCostTotal = -1
 
         ## whether the seller needs to be contacted for an estimate
         needNewEstimate = False
@@ -125,6 +125,8 @@ class Repository(object):
                     try:
                         self_ship_cost = soptsDict['self_ship_cost']
                         if self_ship_cost != '' and self_ship_cost != None:
+                            if selfShipCostTotal < 0:
+                                selfShipCostTotal = 0.0
                             selfShipCostTotal = selfShipCostTotal + (float(self_ship_cost) * line.quantity)
                     except:
                         pass
@@ -154,7 +156,7 @@ class Repository(object):
             ## don't show calculated options
             return serviceList
 
-        if selfShipCostTotal > 0.0:
+        if selfShipCostTotal >= 0.0:
             for m in self.methods:
                 if m.code == 'fixed-price-shipping':
                     self.availableMethods.append(m)
