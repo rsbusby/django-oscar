@@ -75,6 +75,7 @@ from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
 SHIPPING_CHOICES = (
     ('Priority','USPS Priority Mail'),
     ('First','USPS First Class Mail'),
+    ('ParcelSelect','USPS Parcel Select Mail'),
     ('UPS','UPS'),
     ('Local','Local'),
     ('SelfDelivery','Self Delivery'),
@@ -189,6 +190,8 @@ class StockRecordForm(forms.ModelForm):
 
         if data.get("FirstClass_toggle") == "on":
             soptsDict['first_used'] = True  
+            soptsDict['parcel_select_used'] = True  
+
 
         if data.get("UPS_toggle") == "on":
             soptsDict['UPS_used'] = True  
@@ -219,7 +222,7 @@ class StockRecordForm(forms.ModelForm):
         import json
         self.instance.shipping_options = json.dumps(soptsDict)
 
-        if soptsDict.get('first_used') or soptsDict.get('UPS_used') and self.cleaned_data.get('weight') > 0.0:
+        if soptsDict.get('first_used') or soptsDict.get('parcel_select_used') and self.cleaned_data.get('weight') > 0.0:
             self.instance.is_shippable = True
 
         if data.get('remote_ship_toggle') != "on":

@@ -262,6 +262,8 @@ class ProductCreateUpdateView(generic.UpdateView):
                     ctx['PMLarge_used'] = soptsDict.get('PMLarge_used')
 
                     ctx['first_used'] = soptsDict.get('first_used')
+                    ctx['parcel_select_used'] = soptsDict.get('parcel_select_used')
+
                     ctx['UPS_used'] = soptsDict.get('UPS_used')
 
                     ctx['local_delivery_used'] = soptsDict.get('local_delivery_used')
@@ -281,6 +283,8 @@ class ProductCreateUpdateView(generic.UpdateView):
                 ctx['s_PMLarge_used'] = soptsDict.get('PMLarge_used')
 
                 ctx['s_first_used'] = soptsDict.get('first_used')
+                ctx['s_parcel_select_used'] = soptsDict.get('parcel_select_used')                
+
                 ctx['s_UPS_used'] = soptsDict.get('UPS_used')
 
                 ctx['s_local_pickup_used'] = soptsDict.get('local_pickup_used')
@@ -504,6 +508,8 @@ class ProductCreateUpdateView(generic.UpdateView):
 
             if self.request.POST.get("FirstClass_toggle") == "on":
                 soptsDict['first_used'] = True  
+                soptsDict['parcel_select_used'] = True  
+
 
             if self.request.POST.get("UPS_toggle") == "on":
                 soptsDict['UPS_used'] = True  
@@ -529,7 +535,7 @@ class ProductCreateUpdateView(generic.UpdateView):
 
             stockrecord.shipping_options = json.dumps(soptsDict)
 
-            if soptsDict.get('first_used') or soptsDict.get('UPS_used') and stockrecord.weight > 0.0:
+            if soptsDict.get('first_used') or soptsDict.get('parcel_select_used') or soptsDict.get('UPS_used') and stockrecord.weight > 0.0:
                 stockrecord.is_shippable = True
 
             stockrecord.save()

@@ -687,7 +687,7 @@
 <legend class="">
   <input id="FirstClass_toggle"  style="margin-right:10px" type="checkbox" name="FirstClass_toggle">
 
-Use First Class mail
+Use USPS mail (First Class under 13oz, and Parcel Select for shipments over 13oz)
 </legend>
 </fieldset>
 
@@ -706,7 +706,7 @@ Use UPS
                   
 
                     <tr>
-                        <th>Weight of item in ounces.  &nbsp &nbsp This is needed for rate calculation if items are to be shipped using UPS or First Class mail. </th>
+                        <th>Weight of item in ounces.  &nbsp &nbsp This is needed for rate calculation if items are to be shipped using UPS, First Class, or Parcel Select </th>
                     </tr>
                     <tr>
                         <td>
@@ -1033,7 +1033,7 @@ function boxErr(idStub) {
 function weightErr() {
 
       if ( ($('#FirstClass_toggle').prop('checked') || $('#UPS_toggle').prop('checked') )   && ! $('#id_weight').val()  ){
-  	    errMsg('weight_err', "Please enter a weight if shipping by UPS or First Class.");
+  	    errMsg('weight_err', "Please enter a weight if shipping by UPS, USPS First Class, or USPS Parcel Select.");
   	    return 1;
 	  }
 	  else{errClean('weight_err');}
@@ -1218,7 +1218,7 @@ $('#submitTheWholeDarnForm').click(function() {
 
 
         <p> <b>Calculate shipping by weight </b></p>
-        <p> Currently at HM1616 we can accurately calculate shipping costs for USPS First Class mail and UPS based on the weight of an item, assuming moderately sized items. If your item is very large (more than  8"x8"x8") or otherwise requires special shipping, the shipping calculator would not be accurate, so please use the fixed price shipping option. 
+        <p> Currently at HM1616 we can accurately calculate shipping costs for UPS, USPS First Class, and USPS Parcel Select based on the weight of an item, assuming moderately sized items. If your item is very large (more than  8"x8"x8") or otherwise requires special shipping, the shipping calculator would not be accurate, so please use the fixed price shipping option. 
        </p>
 
                   <p> <b>Custom shipping</b></p>

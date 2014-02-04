@@ -2,7 +2,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.methods import (
-    Free, FixedPrice, Negotiable, LocalPickup, SelfDelivery, uspsShipping, First, UPSGround, 
+    Free, FixedPrice, Negotiable, LocalPickup, SelfDelivery, uspsShipping, First, ParcelSelect, UPSGround, 
     Priority, PrioritySmall, PriorityMedium, NoShippingRequired, OfferDiscount, QuerySeller)
 
 from decimal import Decimal as D
@@ -36,7 +36,7 @@ class Repository(object):
     Repository class responsible for returning ShippingMethod
     objects for a given user, basket etc
     """
-    methods = [QuerySeller(), LocalPickup(), SelfDelivery(), First(), FixedPrice(), Priority(), UPSGround(), PrioritySmall(), PriorityMedium()]
+    methods = [QuerySeller(), LocalPickup(), SelfDelivery(), First(), ParcelSelect(), FixedPrice(), Priority(), UPSGround(), PrioritySmall(), PriorityMedium()]
 
     availableMethods = []
 
@@ -330,6 +330,7 @@ class Repository(object):
         #
         #    return None
 
+
         print shi
         # print shipment2
         shipDict['easypost_info'] = shi.to_dict()
@@ -395,6 +396,8 @@ class Repository(object):
                 services.append("Ground")
             if soptsDict.get("first_used"):
                 services.append("First")
+            if soptsDict.get("parcel_select_used"):
+                services.append("ParcelSelect")
         return services
 
     def getServicesFromJSON(self, basket):

@@ -64,7 +64,7 @@
 
 {% if order.shipping_incl_tax > 0.0  %}
     {% if 'USPS' in order.shipping_method or "UPS" in order.shipping_method %}
-                     {% if not "UPS" in order.shipping_method or order.parcels.all.count %}
+                     {% if "First" in order.shipping_method or order.parcels.all.count %}
                          <form id="order_form_{{ order.id }}" action="{% url 'customer:sale' order.number %}?user_id={{order.user.id}}" method="post">
                             {% csrf_token %}
                             <input type="hidden" name="order_id" value="{{ order.id }}" />
@@ -72,7 +72,7 @@
                             <button id="showShipLabel" type="submit" class="btn btn-large">{% trans 'Show shipping label' %}</button>
                          </form>
                     
-                    {% if "UPS" in order.shipping_method %}
+                    {% if "UPS" in order.shipping_method or "Parcel" in order.shipping_method %}
 
                     <button id="showParcelForm" style="margin-left:0.5em;font-size:1.em" class="btn btn-large" name="actio" type="button" value="showParcel">{% trans "Edit specifications of package(s)" %}</button>
                     {% endif %}
@@ -82,7 +82,7 @@
                     {% endif %}
 
 
-                {% if "UPS" in order.shipping_method %}
+                {% if "UPS" in order.shipping_method or "Parcel" in order.shipping_method%}
 
                     <form id="shipParcelForm" action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked ffixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors" autocomplete="off">
                     {% csrf_token %}

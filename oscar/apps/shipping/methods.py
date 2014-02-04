@@ -130,6 +130,14 @@ class First(ShippingMethod):
     basket_total_shipping = None
 
 
+class ParcelSelect(ShippingMethod):
+
+    code = 'ParcelSelect'
+    service = 'ParcelSelect'
+    carrier = "USPS"
+    name = _('Parcel Select USPS Mail')
+    basket_total_shipping = None
+
 class Priority(ShippingMethod):
 
     code = 'Priority'
