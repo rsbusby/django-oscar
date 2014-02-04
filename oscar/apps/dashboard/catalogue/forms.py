@@ -195,7 +195,6 @@ class StockRecordForm(forms.ModelForm):
             soptsDict['first_used'] = False
             soptsDict['parcel_select_used'] = False 
 
-        import ipdb;ipdb.set_trace()
         if data.get("UPS_toggle") == "on":
             soptsDict['UPS_used'] = True  
         else:
