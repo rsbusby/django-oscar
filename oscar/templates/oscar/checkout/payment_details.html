@@ -69,8 +69,8 @@ transaction. </p>
 {% endif %}
 
 <div style="clear:both"></div>
-{% if pay_in_person_allowed %}
-{% if shipping_method.code == 'local-pickup' %}
+{% if pay_in_person_allowed or test_local %}
+{% if shipping_method.code == 'local-pickup' or test_local %}
 
  <form style="float:left;margin:1.2em 0 0 0" method="POST" action="{% url 'checkout:preview' %}">
    

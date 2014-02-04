@@ -383,7 +383,6 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         if request.POST.get('method_reset'):
             self.checkout_session.unset_shipping_method()
 
-
         ## if method is get shipping estimate, then do this
         if request.POST.get('query-needed'):
             self.sendQueryToSeller(request)
@@ -633,11 +632,13 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         ctx.update(kwargs)
 
 
-        ctx['pay_in_person_allowed'] = True
-        if self.request.GET.has_key('pip'):
-            pip = self.request.GET['pip']
-            if pip == "hh6ywei22nzl":
-                ctx['pay_in_person_allowed'] = True
+        ctx['pay_in_person_allowed'] = settings.PAY_IN_PERSON
+        ctx['test_local'] = settings.TEST_LOCAL
+
+        #if self.request.GET.has_key('pip'):
+        #    pip = self.request.GET['pip']
+        #    if pip == "hh6ywei22nzl":
+        #        ctx['pay_in_person_allowed'] = True
 
         return ctx
 

@@ -443,6 +443,7 @@ OSCAR_REQUIRED_ADDRESS_FIELDS = ('first_name', 'last_name', 'line1',
                                  'line4', 'postcode' )
 TEST_LOCAL=False
 CHECKOUT_ENABLED=True
+PAY_IN_PERSON=True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap'
 

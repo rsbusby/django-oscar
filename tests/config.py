@@ -82,6 +82,7 @@ def configure():
             'COMPRESS_ENABLED': False,
             'ADMINS': ('admin@example.com',),
             'DEBUG': False,
+            'PAY_IN_PERSON': True,
             'SITE_ID': 1,
             'APPEND_SLASH': True,
             'MONGODB_DB' :'my_test_db',
