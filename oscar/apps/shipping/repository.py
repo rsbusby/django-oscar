@@ -239,7 +239,7 @@ class Repository(object):
 
         ## if still here, then using the rate calculator. Need weights (and ideally box size) for this
         ## sum weights
-
+        import ipdb;ipdb.set_trace()
         weightBasedShippingAllowed = True
         for line in basket.lines.all():
 
@@ -431,12 +431,18 @@ class Repository(object):
         except:
             return []
 
+        try:
+            seller = basket.seller
+            boothShipOptsDict = json.loads(basket.seller.shipping_options)
+        except:
+            return []
+
         if soptsDict:
-            if soptsDict.get("UPS_used"):
+            if soptsDict.get("UPS_used") and boothShipOptsDict.get("UPS_used"):
                 services.append("Ground")
-            if soptsDict.get("first_used"):
+            if soptsDict.get("first_used") and boothShipOptsDict.get("first_used"):
                 services.append("First")
-            if soptsDict.get("parcel_select_used"):
+            if soptsDict.get("parcel_select_used") and boothShipOptsDict.get("first_used"):
                 services.append("ParcelSelect")
         return services
 

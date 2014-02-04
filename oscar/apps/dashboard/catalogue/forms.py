@@ -191,16 +191,24 @@ class StockRecordForm(forms.ModelForm):
         if data.get("FirstClass_toggle") == "on":
             soptsDict['first_used'] = True  
             soptsDict['parcel_select_used'] = True  
+        else:
+            soptsDict['first_used'] = False
+            soptsDict['parcel_select_used'] = False 
 
-
+        import ipdb;ipdb.set_trace()
         if data.get("UPS_toggle") == "on":
             soptsDict['UPS_used'] = True  
+        else:
+            soptsDict['UPS_used'] = False 
 
         if data.get("max_per_box"):
             soptsDict['max_per_box'] = data.get("max_per_box")
 
         if data.get("local_delivery_toggle") == "on":
             soptsDict['local_delivery_used'] = True 
+        else:
+            soptsDict['local_delivery_used'] = False 
+
 
         if data.has_key("self_ship_cost"):
 
