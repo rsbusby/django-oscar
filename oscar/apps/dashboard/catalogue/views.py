@@ -263,6 +263,8 @@ class ProductCreateUpdateView(generic.UpdateView):
 
                     ctx['first_used'] = soptsDict.get('first_used')
                     ctx['parcel_select_used'] = soptsDict.get('parcel_select_used')
+                    ctx['max_per_box'] = soptsDict.get('max_per_box')
+
 
                     ctx['UPS_used'] = soptsDict.get('UPS_used')
 

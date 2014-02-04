@@ -60,7 +60,6 @@ class Repository(object):
         else:
             shipDict = {}
 
-
         ## list of keywords corresponding to shipping services available
         serviceList = []
 
@@ -114,6 +113,9 @@ class Repository(object):
                                 basket.save()
                     except:
                         print "Problem with self-delivery in repo.py"
+
+
+
         for line in basket.lines.all():
 
             p = line.product
@@ -238,11 +240,30 @@ class Repository(object):
         ## if still here, then using the rate calculator. Need weights (and ideally box size) for this
         ## sum weights
 
+        weightBasedShippingAllowed = True
+        for line in basket.lines.all():
+
+            p = line.product
+            if not p.stockrecord.shipping_options:
+                break
+            soptsDict = json.loads(p.stockrecord.shipping_options)
+            if soptsDict:
+                if soptsDict.get("max_per_box"):
+                    try:
+                        if soptsDict.get('max_per_box') != '' and soptsDict.get('max_per_box') != None:
+                            if line.quantity > int(soptsDict.get('max_per_box')):
+                                ## too many items to predict for now, instead of UPS/USPS ask for quote
+                                weightBasedShippingAllowed = False
+                    except:
+                        pass
+
         for line in basket.lines.all():
             p = line.product
 
+
             if not p.stockrecord.is_shippable:
-                raise ItemNotShippable
+                #raise ItemNotShippable
+                weightBasedShippingAllowed = False
 
             try:
                 weight = weight + p.stockrecord.weight * line.quantity
@@ -256,6 +277,24 @@ class Repository(object):
                 pass
 
 
+        if not weightBasedShippingAllowed:
+            for m in self.methods:
+                if m.code == 'query-seller':
+                    self.availableMethods.append(m)
+
+            shipDict['needNewEstimate'] = True
+            shipDict['customShipAmount'] = None
+            shipDict['query-seller'] = None
+
+
+            basket.shipping_info = json.dumps(shipDict)
+            ## freeze basket if need a shipping estimate
+            #basket.freeze()
+            basket.save()
+            ## don't show calculated options
+            return serviceList
+
+        ## weight based shipping calculation
         ota = shippingAddress
 
         ofa = basket.seller.primary_address
@@ -391,6 +430,7 @@ class Repository(object):
             soptsDict = json.loads(p.stockrecord.shipping_options)
         except:
             return []
+
         if soptsDict:
             if soptsDict.get("UPS_used"):
                 services.append("Ground")

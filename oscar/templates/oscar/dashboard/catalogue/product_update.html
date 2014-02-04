@@ -687,7 +687,7 @@
 <legend class="">
   <input id="FirstClass_toggle"  style="margin-right:10px" type="checkbox" name="FirstClass_toggle">
 
-Use USPS mail (First Class under 13oz, and Parcel Select for shipments over 13oz)
+Use USPS mail <span style="color:#888888;font-size:0.8em;margin-left:1em" >(First Class under 13oz, and Parcel Select for shipments over 13oz)</span>
 </legend>
 </fieldset>
 
@@ -701,12 +701,12 @@ Use UPS
  
 </fieldset>
 
-<div id="weightInput" class="UPS_chosen FirstClass_chosen">
+<div id="weightInput" class="UPS_chosen FirstClass_chosen" style="ddisplay:none;margin:1.2em 0 1.4em 1.1em;">
  <table>
                   
 
                     <tr>
-                        <th>Weight of item in ounces.  &nbsp &nbsp This is needed for rate calculation if items are to be shipped using UPS, First Class, or Parcel Select </th>
+                      <th>  <div style="font-size:1.3em;font-weight:normal">Weight of item in ounces. <span style="color:#888888; font-size:0.9em"> &nbsp &nbsp This is needed for rate calculation if items are to be shipped using UPS, First Class, or Parcel Select</span> </div></th> 
                     </tr>
                     <tr>
                         <td>
@@ -717,6 +717,15 @@ Use UPS
                   
                     </tr>
         </table>    
+
+
+   <div class="max_per_box_chosen " style="ddisplay:none;margin:1.2em 0 1.4em 1.1em;">
+      <label for="max_per_box">Maximum number of items that can fit in a single package: <span style="color:#888888">(optional) </span></label>
+
+      <input id="max_per_box"  name="max_per_box" type="number" value="{{max_per_box}}" >
+                                     <div id="max_per_box_err"> </div>
+    </div>
+
         </div> {# weight input #}
 
 </div> {# hm_ship_info #}

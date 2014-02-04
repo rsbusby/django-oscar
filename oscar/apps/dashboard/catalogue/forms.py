@@ -196,6 +196,9 @@ class StockRecordForm(forms.ModelForm):
         if data.get("UPS_toggle") == "on":
             soptsDict['UPS_used'] = True  
 
+        if data.get("max_per_box"):
+            soptsDict['max_per_box'] = data.get("max_per_box")
+
         if data.get("local_delivery_toggle") == "on":
             soptsDict['local_delivery_used'] = True 
 
