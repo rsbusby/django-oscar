@@ -205,7 +205,7 @@
 
 
   <div class="span4">
-    <a href="http://www.ebay.com/gds/Priority-Mail-Flat-Rate-Shipping-Guide-/10000000001454445/g.html" target="_blank">More info</a>
+    <a href="http://www.ebay.com/gds/Priority-Mail-Flat-Rate-Shipping-Guide-/10000000001454445/g.html" target="_blank">More info about flat-rate Priority shipping</a>
   </div> {# span #}
 
 </div> {#row#}
@@ -260,7 +260,7 @@
 <legend class="">
   <input id="FirstClass_toggle"  style="margin-right:10px" type="checkbox" name="FirstClass_toggle">
 
-Allow the use of First Class mail when practical (less than 13 ounces)
+Allow the use of USPS shipping  &nbsp &nbsp  <span style="color:#888888;font-size:0.8em"> (Not flat-rate. <a href="http://www.usps.com/ship/first-class.htm">First Class</a> for shipments under 13oz, <a href="http://www.usps.com/business/parcel-select.htm"> Parcel Select</a> over 13oz ) </span>
 </legend>
 </fieldset>
 
@@ -497,7 +497,7 @@ function boxErr(idStub) {
 function weightErr() {
 
       if ( ($('#FirstClass_toggle').prop('checked') || $('#UPS_toggle').prop('checked') )   && ! $('#id_weight').val()  ){
-        errMsg('weight_err', "Please enter a weight if shipping by UPS or First Class.");
+        errMsg('weight_err', "Please enter a weight if shipping by UPS or USPS ");
         return 1;
       }
       else{errClean('weight_err');}
@@ -636,7 +636,7 @@ $('#submitShippingOptions').click(function() {
 
 
         <p> <b>Calculate shipping by weight </b></p>
-        <p> Currently at HM1616 we can accurately calculate shipping costs for USPS First Class mail and UPS based on the weight of an item, assuming moderately sized items. If your item is very large (more than  8"x8"x8") or otherwise requires special shipping, the shipping calculator would not be accurate, so please use the fixed price shipping option. 
+        <p> Currently at HM1616 we can accurately calculate shipping costs for USPS First Class, USPS Parcel Select, and UPS based on the weight of an item, assuming moderately sized items. If your item is very large (more than  8"x8"x8") or otherwise requires special shipping, the shipping calculator would not be accurate, so please use the fixed price shipping option. 
        </p>
 
                   <p> <b>Custom shipping</b></p>
