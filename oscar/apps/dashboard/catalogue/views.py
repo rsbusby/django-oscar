@@ -535,7 +535,7 @@ class ProductCreateUpdateView(generic.UpdateView):
 
             stockrecord.shipping_options = json.dumps(soptsDict)
 
-            if soptsDict.get('first_used') or soptsDict.get('parcel_select_used') or soptsDict.get('UPS_used') and stockrecord.weight > 0.0:
+            if (soptsDict.get('first_used') or soptsDict.get('parcel_select_used') or soptsDict.get('UPS_used') ) and stockrecord.weight > 0.0:
                 stockrecord.is_shippable = True
 
             stockrecord.save()

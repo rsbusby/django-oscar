@@ -1235,7 +1235,7 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## use ability to skip this since in testing 
         #WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.ID, "skip-account-app"))).click()
-        #import ipdb;ipdb.set_trace()
+
         WebDriverWait(browser, 15)
         try:
             browser.find_element_by_id("skip-account-app").click()

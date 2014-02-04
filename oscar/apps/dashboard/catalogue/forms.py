@@ -222,7 +222,7 @@ class StockRecordForm(forms.ModelForm):
         import json
         self.instance.shipping_options = json.dumps(soptsDict)
 
-        if soptsDict.get('first_used') or soptsDict.get('parcel_select_used') and self.cleaned_data.get('weight') > 0.0:
+        if (soptsDict.get('first_used') or soptsDict.get('parcel_select_used') or soptsDict.get('UPS_used') ) and self.cleaned_data.get('weight') > 0.0:
             self.instance.is_shippable = True
 
         if data.get('remote_ship_toggle') != "on":
