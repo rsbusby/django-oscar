@@ -239,7 +239,7 @@ class Repository(object):
 
         ## if still here, then using the rate calculator. Need weights (and ideally box size) for this
         ## sum weights
-        import ipdb;ipdb.set_trace()
+
         weightBasedShippingAllowed = True
         for line in basket.lines.all():
 
