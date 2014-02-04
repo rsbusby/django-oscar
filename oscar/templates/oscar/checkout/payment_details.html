@@ -70,7 +70,7 @@ transaction. </p>
 
 <div style="clear:both"></div>
 {% if pay_in_person_allowed %}
-{#{% if shipping_method.code == 'local-pickup' %}#}
+{% if shipping_method.code == 'local-pickup' %}
 {% if True %}
  <form style="float:left;margin:1.2em 0 0 0" method="POST" action="{% url 'checkout:preview' %}">
    
