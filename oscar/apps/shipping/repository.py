@@ -522,6 +522,9 @@ class Repository(object):
             if self.localPickupEnabled(basket): 
                 self.availableMethods.append(LocalPickup())
             return self.prime_methods(basket, self.availableMethods)
+        except (ImproperlyConfigured) as e:
+            print e
+            return self.prime_methods(basket, [])
 
         print self.services
 
