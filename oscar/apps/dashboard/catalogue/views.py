@@ -229,6 +229,8 @@ class ProductCreateUpdateView(generic.UpdateView):
         else:
             ctx['title'] = ctx['product'].get_title()
 
+        ctx['scoreVal'] = self.object.score
+
         ## whether the seller/partner can take payments, and therefore ship
 
         ctx['payments_enabled'] = self.paymentsEnabled()
@@ -410,6 +412,13 @@ class ProductCreateUpdateView(generic.UpdateView):
                 ## probably bad Haystack to index connection, if index is in the cloud
                 ## not much I can do, 'cept update the index manually later
                 pass
+
+        try:
+            if form.data.get('scoreVal'):
+                self.object.score = form.data.get('scoreVal')
+                self.object.save()
+        except:
+            pass
 
         if self.is_stockrecord_submitted():
             # Save stock record

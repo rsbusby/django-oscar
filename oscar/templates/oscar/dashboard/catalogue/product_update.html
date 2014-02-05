@@ -25,6 +25,13 @@
 {% block dashboard_content %}
 <form id="prodForm" action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors" autocomplete="off">
     {% csrf_token %}
+
+    {% if request.user.is_staff %}
+        Score:  (higher scores appear first in item browsing. Most items have score 0)
+        <input type="number" name="scoreVal" value="{{scoreVal}}" />
+    {% endif %}
+
+
     <div class="row-fluid">
         <div class="span1 pull-left hidden-phone">
             {% comment %}
@@ -826,6 +833,7 @@ $(function() {
 {% if not s_UPS_used %} 
 $(function() {
 	$('#UPS_group').hide();
+
  });
 {% endif %}
 
