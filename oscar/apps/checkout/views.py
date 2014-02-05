@@ -631,8 +631,12 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         ctx['stripeAppPubKey'] = stripe_keys['publishable_key']
         ctx.update(kwargs)
 
+        pip = settings.PAY_IN_PERSON
 
-        ctx['pay_in_person_allowed'] = settings.PAY_IN_PERSON
+        if pip == True or pip == 1:
+            ctx['pay_in_person_allowed'] = True
+        else:
+            ctx['pay_in_person_allowed'] = False
         ctx['test_local'] = settings.TEST_LOCAL
 
         #if self.request.GET.has_key('pip'):
