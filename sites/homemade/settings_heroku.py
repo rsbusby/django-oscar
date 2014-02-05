@@ -15,6 +15,7 @@ DATABASES = {
     }
 }
 
+TEMPLATE_DEBUG = False
 
 TEMPLATE_LOADERS = (
     ('django.template.loaders.cached.Loader', (
