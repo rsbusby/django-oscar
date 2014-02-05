@@ -39,6 +39,7 @@ django-dynamic-fixture==1.6.5
 django-extensions==0.9
 django-extra-views==0.5.5
 django-haystack==2.1.0
+django-heroku-memcacheify
 django-jinja==0.21
 #django-nose==1.1
 #-e git+git@github.com:rsbusby/django-oscar.git@c1d3be31973966de4153a0f60a450f32ffdbc0da#egg=django_oscar-dev
