@@ -6,6 +6,7 @@
 {% load thumbnail %}
 {% load product_tags %}
 {% load i18n %}
+{% load staticfiles %}
 
 
 {% block extrahead %}
@@ -33,6 +34,9 @@ max-width: none;
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key={{mapsKey}}&sensor=false">
     </script>
+
+    <script type="text/javascript" src="{% static 'oscar/js/google-maps-spiderfier/oms.min.js' %}"></script>
+
     <script type="text/javascript">
       
 
@@ -43,15 +47,20 @@ max-width: none;
       function initialize() {
         var mapOptions = {
           center: new google.maps.LatLng(34., -118.244),
-          zoom: 8
+          zoom: 8,
+          streetViewControl: false,
+          mapTypeControl: false,
         };
         var map = new google.maps.Map(document.getElementById("map-canvas"),
             mapOptions);
 
 
+        var oms = new OverlappingMarkerSpiderfier(map, {keepSpiderfied: true} );
+
+
         {% for res in spatial_results %}
 
-              {% if res.object.get_location  %}
+          {% if res.object.get_location  %}
                   
 
            var myInfoWindow = new google.maps.InfoWindow({
@@ -72,24 +81,35 @@ max-width: none;
 
           });
 
-       
+       oms.addListener('click', function(marker, event) {
+        //marker.infowindow.setContent(marker.desc);
+        //marker.infowindow.open(map, marker);
+         this.infowindow.open(map, this);
+        // for(var i=0; i < markers.length; i++){
+        //     markers[i].infowindow.close();
+        // }
+       });
+
+      // oms.addListener('spiderfy', function(markers) {
+      //   marker.infowindow.close();
+      // });
 
           google.maps.event.addListener(marker, 'click', function() {
-        for(var i=0; i < markers.length; i++){
-            markers[i].infowindow.close();
-        }
+         for(var i=0; i < markers.length; i++){
+             markers[i].infowindow.close();
+         }
 
             this.infowindow.open(map, this);
           });
 
           markers.push(marker);
-       
+          oms.addMarker(marker); 
+          
             {% endif %}
 
-            {% endfor %}
+          {% endfor %}
 
        
-
 
 
       }
