@@ -14,6 +14,10 @@
            {% if request.user.is_authenticated %}
 
                <input class="addToBasket" style="clear:both;" type=submit value="{% trans "Add to basket" %}">
+            {% else %}
+
+            <a style="color:#436488;font-size:1.1em" href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "Sign up or log in to purchase this item" %}</a>
+
            {% endif %}
 
            </div>
