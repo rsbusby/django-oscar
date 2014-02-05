@@ -633,10 +633,15 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
 
         pip = settings.PAY_IN_PERSON
 
+        print "PAY IN PERSON"
+        print settings.PAY_IN_PERSON
+        print settings.TEST_LOCAL
+
         if pip == True or pip == 1:
             ctx['pay_in_person_allowed'] = True
         else:
             ctx['pay_in_person_allowed'] = False
+
         ctx['test_local'] = settings.TEST_LOCAL
 
         #if self.request.GET.has_key('pip'):
