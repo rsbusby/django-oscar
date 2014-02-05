@@ -1456,6 +1456,7 @@ def contactPeer(*args, **kwargs):##store_name=None, orderSeqId=None):
 
     msg = None
     if request.method == 'POST':
+
         if not request.form['text']:
             msg = 'Please enter a message.'
             return render_template('contact_peer.html', msg=msg, topicDict=topicDict, oscarUserToMsg=oscarUserToMsg)
@@ -1467,6 +1468,10 @@ def contactPeer(*args, **kwargs):##store_name=None, orderSeqId=None):
                 if topic != "misc":
                     topicForSubject = " regarding an " + topic 
 
+            anonEmail = None
+            if request.form.get('email'):
+                anonEmail = request.form.get('email')
+
 
             if request.form['subject'] != "None" and request.form['subject'] != '':
                 subject = request.form['subject']
@@ -1474,6 +1479,9 @@ def contactPeer(*args, **kwargs):##store_name=None, orderSeqId=None):
                 subject = "Message from " + personalNameOfSender + " " + topicForSubject
             ##emailUser(userToMsg, sender=u, subject=subject, msgStr=msg)
             
+            if anonEmail:
+                subject = subject + ", from " + anonEmail
+
             ctx = {
                 'user': request.user,
                 'userToMsg': oscarUserToMsg,

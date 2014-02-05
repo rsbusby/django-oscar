@@ -35,6 +35,7 @@
       </h2>
     
 
+
 </div>
   <div class="sellerPic" style="float:left;margin-left:2em">
   {% if userToMsg.personalPicPath %}
@@ -54,7 +55,16 @@
   <form action="" method="post" style="padding=0;margin:0">
 
     {% csrf_token %}
-  
+
+    {% if not request.user or request.user.is_anonymous %}
+
+    Please enter your email address:
+    <input type="email" name="email">
+
+    {% endif %}
+
+
+
     <input id="emailSubjectHidden" type='hidden' name="subject" value="{{subject}}" >
 
     <dl style="padding=0;margin:0">
