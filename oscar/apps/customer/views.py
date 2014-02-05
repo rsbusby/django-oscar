@@ -607,7 +607,17 @@ class SaleDetailView(OrderDetailView, UpdateView):
 
         if 'parcel_formset' not in ctx:
             ctx['parcel_formset'] = self.parcel_formset(instance=self.object )#, minimum_forms=1, minimum_forms_message="At least one package    is needed for this order.")
-    
+            try:
+                totalWeight = 0.0
+                for line in self.object.lines.all():
+                    firstLine = self.object.lines.all()[0]
+                    weight = line.product.stockrecord.weight
+                    quantity = line.quantity
+                    totalWeight = totalWeight + weight*quantity
+                if totalWeight > 0.0:
+                    ctx['parcel_formset'].forms[0].fields['weight'].initial = totalWeight
+            except:
+                pass
         return ctx
 
 
@@ -657,7 +667,6 @@ class SaleDetailView(OrderDetailView, UpdateView):
 
 
     # def form_valid(self, form):
-    #     import ipdb;ipdb.set_trace()
     #     messages.info(self.request,
     #                     _("Added a package "))
     #     parcel_formset = self.parcel_formset(self.request.POST,
