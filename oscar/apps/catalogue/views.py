@@ -360,6 +360,7 @@ class ProductListView(ListView):
             #qs = qs
             #import random
 
+
             if not self.request.session.get('random_seed', False) or self.request.GET.has_key('shuffle'):
                 self.request.session['random_seed'] = random.randint(1, 10000)
 
@@ -375,7 +376,7 @@ class ProductListView(ListView):
             ##.order_by('?')
             random.seed(seed)
             items = sorted(qs, key=lambda x: random.random())
-            qs = items
+            qs = qs.order_by('-score')
             return qs
 
     def get_context_data(self, **kwargs):
