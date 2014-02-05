@@ -58,11 +58,11 @@ AWS_QUERYSTRING_EXPIRE = 7200
 #CACHES = memcacheify()
 
 
-CACHES = {
-      'default': {
-         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-      }
-  }
+# CACHES = {
+#       'default': {
+#          'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#       }
+#   }
 
 import mongoengine 
 
