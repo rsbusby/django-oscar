@@ -76,6 +76,7 @@ purl==0.8
 pyelasticsearch
 pyflakes==0.7.3
 #pygccxml==1.1.0
+pylibmc==1.2.3
 pymongo==2.5.2
 pyprof2calltree==1.1.0
 python-dateutil==1.5
