@@ -1,6 +1,6 @@
 from settings import *
 import os
-from memcacheify import memcacheify
+#from memcacheify import memcacheify
 
 PG_PASS = os.environ["PG_PASS"]
 PG_NAME = os.environ["PG_NAME"]
@@ -55,14 +55,14 @@ AWS_LOCATION = ''
 AWS_QUERYSTRING_EXPIRE = 7200
  
 
-CACHES = memcacheify()
+#CACHES = memcacheify()
 
 
-# CACHES = {
-#       'default': {
-#          'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-#       }
-#   }
+CACHES = {
+      'default': {
+         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+      }
+  }
 
 import mongoengine 
 
