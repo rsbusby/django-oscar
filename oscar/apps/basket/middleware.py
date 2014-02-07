@@ -58,6 +58,8 @@ class BasketMiddleware(object):
                 ## If people really need that, then . .. weell deal with it later
                 ## Oops, non-merge just results in 2 baskets, not that bad really
 
+                print "OK, transferring baskets from anon to user"
+
                 for basket in cookie_baskets:
                     if basket.owner:
                         raise Exception
@@ -71,12 +73,18 @@ class BasketMiddleware(object):
                 request.cookies_to_delete.append(settings.OSCAR_BASKET_COOKIE_OPEN)  
 
                 ## get rid of empty default basket if exists
+                print "About to get rid of empty basket"
                 try:
                     baskets = Basket.objects.filter(owner=request.user, status=Basket.OPEN)
+                    print "Baskets::"
+                    print baskets
                     for basket in baskets:
                         if basket.is_empty:
+                            print "deleting basket"
+                            print basket
                             basket.delete()
                 except:
+                    print "hmm problem..."
                     pass
 
                 return cookie_baskets[0]
