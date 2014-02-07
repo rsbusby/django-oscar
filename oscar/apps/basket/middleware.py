@@ -57,6 +57,7 @@ class BasketMiddleware(object):
                 ## for now I'm not going to merge the contents really, just overwrite.
                 ## If people really need that, then . .. weell deal with it later
                 ## Oops, non-merge just results in 2 baskets, not that bad really
+
                 for basket in cookie_baskets:
                     if basket.owner:
                         raise Exception
@@ -71,9 +72,10 @@ class BasketMiddleware(object):
 
                 ## get rid of empty default basket if exists
                 try:
-                    basket = Basket.objects.filter(owner=request.user)[0]
-                    if basket.is_empty():
-                        basket.delete()
+                    baskets = Basket.objects.filter(owner=request.user, status=Basket.OPEN)
+                    for basket in baskets:
+                        if basket.is_empty:
+                            basket.delete()
                 except:
                     pass
 
