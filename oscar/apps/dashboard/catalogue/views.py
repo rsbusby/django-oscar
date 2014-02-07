@@ -226,10 +226,11 @@ class ProductCreateUpdateView(generic.UpdateView):
         #    ctx['recommended_formset'] = self.recommendations_formset(instance=self.object)
         if self.object is None:
             ctx['title'] = _('New item') ## % self.product_class.name
+            ctx['scoreVal'] = None
         else:
             ctx['title'] = ctx['product'].get_title()
+            ctx['scoreVal'] = self.object.score
 
-        ctx['scoreVal'] = self.object.score
 
         ## whether the seller/partner can take payments, and therefore ship
 
