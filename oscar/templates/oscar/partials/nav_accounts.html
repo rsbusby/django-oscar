@@ -134,14 +134,14 @@
                         <li><a href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "LOGIN or REGISTER" %}</a></li>
                     {% endif %}
 
-                    {% if user.is_authenticated %}
+                    {#{% if user.is_authenticated %}#}
                     
                     <li class="divider-vertical"></li>                   
 
                     <li style="margin-right:0"><a style="mmargin-right:0;padding-right:6px" href="{% url 'basket:summary' %}"> BASKET </a></li>
 
                      <li style="margin-left:0;padding-left:0"><a style="margin-left:0;padding-left:0" href="{% url 'basket:summary' %}"> <img src="{{STATIC_URL}}icons/Icon-Basket-A.png" class="basketIcon" alt=''> </a></li>
-                     {% endif  %}
+                     {#{% endif  %}#}
 
                 </ul>
             </div>
