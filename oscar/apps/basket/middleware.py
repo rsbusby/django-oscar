@@ -67,7 +67,16 @@ class BasketMiddleware(object):
 
                 ## delete anon cookie(s)
                 request.cookies_to_delete.append(settings.OSCAR_BASKET_COOKIE_OPEN + 's')
-                request.cookies_to_delete.append(settings.OSCAR_BASKET_COOKIE_OPEN)                
+                request.cookies_to_delete.append(settings.OSCAR_BASKET_COOKIE_OPEN)  
+
+                ## get rid of empty default basket if exists
+                try:
+                    basket = Basket.objects.filter(owner=request.user)[0]
+                    if basket.is_empty():
+                        basket.delete()
+                except:
+                    pass
+
                 return cookie_baskets[0]
 
             try:
