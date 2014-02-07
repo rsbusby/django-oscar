@@ -55,7 +55,7 @@
   <input id="contactSellerButton" style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{order.lines.all.0.partner.name}}"'>
 {% else %}
 
-  <input id="contactBuyerButton" style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Buyer" onclick='location.href="/homemade/contact?user={{user.username}}"'>
+  <input id="contactBuyerButton" style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Buyer" onclick='location.href="/homemade/contact?user={{order.user.username}}"'>
 
 {% endif %}
 </div>
@@ -82,7 +82,7 @@
                     {% endif %}
 
 
-                {% if "UPS" in order.shipping_method or "Parcel" in order.shipping_method%}
+                {% if "UPS" in order.shipping_method or "Parcel" in order.shipping_method %}
 
                     <form id="shipParcelForm" action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked ffixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors" autocomplete="off">
                     {% csrf_token %}
