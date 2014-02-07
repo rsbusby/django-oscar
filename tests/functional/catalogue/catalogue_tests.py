@@ -1157,7 +1157,8 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         b.find_element_by_id("id_parcels-0-width").send_keys("10.")
         b.find_element_by_id("id_parcels-0-length").send_keys("10.")
         b.find_element_by_id("id_parcels-0-height").send_keys("10.")
-        b.find_element_by_id("id_parcels-0-weight").send_keys("10.")                        
+        ## weight should be filled in automatically
+        #b.find_element_by_id("id_parcels-0-weight").send_keys("10.")                        
 
         b.find_element_by_id("submitParcel").click()  
         b.find_element_by_id("showShipLabel").click()  

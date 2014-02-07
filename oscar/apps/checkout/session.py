@@ -2,7 +2,7 @@ import logging
 
 from django.db.models import get_model
 
-from oscar.apps.shipping.methods import Free, LocalPickup
+from oscar.apps.shipping.methods import Free, LocalPickup, SelfDelivery
 from oscar.core.loading import get_class
 OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
 CheckoutSessionData = get_class('checkout.utils', 'CheckoutSessionData')

@@ -37,6 +37,9 @@ import logging
 logger = logging.getLogger('oscar.checkout')
 
 from decimal import Decimal
+from django.conf import settings
+from oscar.apps.basket.middleware import BasketMiddleware
+
 
 
 from oscar.apps.order.models import SponsoredOrganization
@@ -105,7 +108,7 @@ class BasketView(ModelFormSetView):
     template_name = 'basket/basket.html'
 
     def __init__(self):
-       #import ipdb;ipdb.set_trace()
+
        super(BasketView, self).__init__()
        return
 
@@ -286,7 +289,7 @@ class BasketView(ModelFormSetView):
         offers_before = self.request.basket.applied_offers()
         save_for_later = False
 
-        #import ipdb;ipdb.set_trace()
+
         print self.request.POST
         # Keep a list of messages - we don't immediately call
         # django.contrib.messages as we may be returning an AJAX response in
@@ -393,7 +396,7 @@ class BasketListView(ListView):
 
 
     def get(self, request, *args, **kwargs):
-        # import ipdb;ipdb.set_trace()
+
         return super(BasketListView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -464,7 +467,16 @@ class BasketListView(ListView):
         #q = self.q
         #pq = self.pq
 
-        baskets = Basket.objects.filter(owner=self.request.user, status="Open").order_by('-id')
+        if self.request.user.is_authenticated():
+            baskets = Basket.objects.filter(owner=self.request.user, status="Open").order_by('-id')
+        else:
+##            import ipdb;ipdb.set_trace()
+            ## get baskets from the cookies
+            bm = BasketMiddleware()
+            cookie_basket = bm.get_cookie_basket(settings.OSCAR_BASKET_COOKIE_OPEN, self.request, Basket.open)
+            cookie_baskets = bm.get_cookie_baskets(settings.OSCAR_BASKET_COOKIE_OPEN + 's', self.request, Basket.open)
+            baskets = cookie_baskets            
+
         context['baskets'] = baskets
         context['current_sponsored_orgs']= SponsoredOrganization.objects.filter(status__icontains='current')
         ## give context for each of the baskets?? Or just set it in the damn model
@@ -522,11 +534,14 @@ class BasketAddView(FormView):
         print form.instance
 
         partner = form.instance.stockrecord.partner
-        bb = Basket.objects.filter(owner=self.request.user, status="Open", seller=partner)
-
+        
+        try:
+            bb = Basket.objects.filter(owner=self.request.user, status="Open", seller=partner)
+        except:
+            bb = None
         bask = None
 
-        if len(bb) == 0:
+        if bb == None or len(bb) == 0:
 
             ## take the default basket if possible
             if self.request.basket.seller == None:
@@ -535,7 +550,15 @@ class BasketAddView(FormView):
                 bask.save()
             else:   
                 ## create a new one
-                bask = Basket(owner=self.request.user, status="Open", seller=partner)
+                #bask = Basket(owner=self.request.user, status="Open", seller=partner)
+                bask = Basket(status="Open", seller=partner)                    
+                if self.request.user.is_authenticated():
+                    bask.owner = self.request.user
+                    bask.save()
+                else:
+                    ## add to the cookies 
+                    r = 9
+
         elif len(bb) == 1:  
             bask = bb[0]
         else:

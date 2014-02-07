@@ -11,9 +11,11 @@
             <div class="form-actions">
         {% comment %}        <button type="submit" class="btn btn-large btn-primary btn-full" value="{% trans "Add to basket" %}">{% trans "Add to basket" %}</button> {% endcomment %}
 
-           {% if request.user.is_authenticated %}
+           {#{% if request.user.is_authenticated %}#}
 
+           {% if 1 %}
                <input class="addToBasket" style="clear:both;" type=submit value="{% trans "Add to basket" %}">
+           
             {% else %}
 
             <a style="color:#436488;font-size:1.1em" href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "Sign up or log in to purchase this item" %}</a>

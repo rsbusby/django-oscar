@@ -65,8 +65,20 @@ class IndexView(CheckoutSessionMixin, FormView):
     def get(self, request, *args, **kwargs):
         # We redirect immediately to shipping address stage if the user is
         # signed in
+
         if request.user.is_authenticated():
             return self.get_success_response()
+
+        if 1:
+            ## for now, just redirect to the login page with a message
+            messages.info(
+                        self.request,
+                        _("Please log in or create your account and then you will be redirected "
+                          "back to the checkout process"))
+            return HttpResponseRedirect(reverse('customer:login') + "?next=/checkout/preview")
+
+
+
         return super(IndexView, self).get(request, *args, **kwargs)
 
     def get_form_kwargs(self):
@@ -343,7 +355,7 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
 
     def sendQueryToSeller(self, request):
 
-        import ipdb;ipdb.set_trace()
+  
         basket = request.basket
         seller = basket.seller
 
@@ -478,15 +490,21 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     preview = False
     basket = None
 
+
     def get(self, request, *args, **kwargs):
+
 
 
         ## for now, disable
         seller = request.basket.seller
         if not settings.CHECKOUT_ENABLED and not seller.status == seller.APPROVED:
         ##if not settings.CHECKOUT_ENABLED:
-            messages.warning(request, _("Checkout is disabled until the site launches. We'll let you know by email when it's ready!"))
+            messages.warning(request, _("Checkout is disabled for this seller at the moment. We'll keep your basket filled, please check back later."))
             return HttpResponseRedirect(reverse('basket:summary'))
+
+        ## if not authenticated, remedy this, send to gateway
+        if not request.user.is_authenticated():
+            return HttpResponseRedirect(reverse('checkout:index'))
 
         if request.GET.has_key('basket_id'):
             try:
@@ -520,7 +538,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         validate the forms from the payment details page.  If the forms are
         valid then the method can call submit()
         """
-       
+
         if request.POST.has_key('payment_method'):
             method_code = request.POST['payment_method']
             self.checkout_session.pay_by(method_code)
@@ -573,6 +591,11 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         return self.get(request, *args, **kwargs)
 
     def get_error_response(self):
+
+
+
+
+
         # Check that the user's basket is not empty
         if self.request.basket.is_empty:
             messages.error(self.request, _("You need to add some items to your basket to checkout"))

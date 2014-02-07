@@ -18,6 +18,7 @@ class BasketMiddleware(object):
 
     def process_request(self, request):
         request.cookies_to_delete = []
+
         #print "in basket middleware, yay"
         #print request.user
         basket = self.get_basket(request)
@@ -36,15 +37,39 @@ class BasketMiddleware(object):
     def get_basket(self, request):
         manager = Basket.open
 
+
         cookie_basket = self.get_cookie_basket(
             settings.OSCAR_BASKET_COOKIE_OPEN, request, manager)
-        #import ipdb;ipdb.set_trace()
+
+        cookie_baskets = self.get_cookie_baskets(
+            settings.OSCAR_BASKET_COOKIE_OPEN + 's', request, manager)
+
         if not hasattr(request, 'seller'):
             seller = None
         if hasattr(request, 'user') and request.user.is_authenticated():
             # Signed-in user: if they have a cookie basket too, it means
             # that they have just signed in and we need to merge their cookie
             # basket into their user basket, then delete the cookie
+
+            ## if cookie baskets, rtansfer those
+            if cookie_baskets:
+                ## merge is easy, since just means to set the owner
+                ## for now I'm not going to merge the contents really, just overwrite.
+                ## If people really need that, then . .. weell deal with it later
+                ## Oops, non-merge just results in 2 baskets, not that bad really
+                for basket in cookie_baskets:
+                    if basket.owner:
+                        raise Exception
+                    ## don;t add baskets for your own booth yo
+                    if basket.seller != request.user:
+                        basket.owner = request.user
+                        basket.save()
+
+                ## delete anon cookie(s)
+                request.cookies_to_delete.append(settings.OSCAR_BASKET_COOKIE_OPEN + 's')
+                request.cookies_to_delete.append(settings.OSCAR_BASKET_COOKIE_OPEN)                
+                return cookie_baskets[0]
+
             try:
                 basket, _ = manager.get_or_create(owner=request.user) #seller=seller
             except Basket.MultipleObjectsReturned:
@@ -88,7 +113,7 @@ class BasketMiddleware(object):
         manager = Basket.open
         cookie_baskets = self.get_cookie_baskets(
             settings.OSCAR_BASKET_COOKIE_OPEN, request, manager)
-        #import ipdb;ipdb.set_trace()
+
         #if not hasattr(request, 'seller'):
         #    seller = None
         if hasattr(request, 'user') and request.user.is_authenticated():
@@ -155,6 +180,7 @@ class BasketMiddleware(object):
 
     def process_response(self, request, response):
         # Delete any surplus cookies
+
         if hasattr(request, 'cookies_to_delete'):
             for cookie_key in request.cookies_to_delete:
                 response.delete_cookie(cookie_key)
@@ -165,8 +191,15 @@ class BasketMiddleware(object):
         baskets = []
         #print request.basket
         if hasattr(request, 'basket') and request.basket.id > 0 and not request.user.is_authenticated():
-            baskets.append(request.basket)
+            baskets = self.get_cookie_baskets( settings.OSCAR_BASKET_COOKIE_OPEN + 's', request, Basket.open)
+            print "Process response"
+            print baskets
+            if request.basket not in baskets:
+                baskets.append(request.basket)
+            print baskets
             basket_ids = [b.id for b in baskets]
+            #cookie = "%s_%s" % (
+            #    request.basket.id, self.get_basket_hash(request.basket.id))
             response.set_cookie( settings.OSCAR_BASKET_COOKIE_OPEN + 's',
                                     _get_json_string_from_list(basket_ids),
                                     max_age=settings.OSCAR_BASKET_COOKIE_LIFETIME,
@@ -211,6 +244,7 @@ class BasketMiddleware(object):
         it to the list to be deleted.
         """
         basket = None
+
         if cookie_key in request.COOKIES:
             parts = request.COOKIES[cookie_key].split("_")
             if len(parts) != 2:
@@ -235,19 +269,26 @@ class BasketMiddleware(object):
         it to the list to be deleted.
         """
         baskets = []
+        
         if cookie_key in request.COOKIES:
-            parts = request.COOKIES[cookie_key].split("_")
-            if len(parts) != 2:
-                return baskets
-            basket_id, basket_hash = parts
-            if basket_hash == self.get_basket_hash(basket_id):
-                try:
-                    basket = Basket.objects.get(pk=basket_id, owner=None,
-                                                status=Basket.OPEN)
-                except Basket.DoesNotExist:
+            #parts = request.COOKIES[cookie_key].split("_")
+            #if len(parts) != 2:
+            #    return baskets
+            #basket_id, basket_hash = parts
+            
+            basketIdList = _get_list_from_json_string(request.COOKIES[cookie_key])
+
+            for basket_id in basketIdList:
+                if 1: ##basket_hash == self.get_basket_hash(basket_id):
+                    try:
+
+                        basket = Basket.objects.get(pk=basket_id, owner=None,
+                                                    status=Basket.OPEN)
+                        baskets.append(basket)
+                    except Basket.DoesNotExist:
+                        request.cookies_to_delete.append(cookie_key)
+                else:
                     request.cookies_to_delete.append(cookie_key)
-            else:
-                request.cookies_to_delete.append(cookie_key)
         return baskets
 
     def apply_offers_to_basket(self, request, basket):
