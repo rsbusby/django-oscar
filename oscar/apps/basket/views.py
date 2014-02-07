@@ -404,8 +404,11 @@ class BasketListView(ListView):
 
         if not request.POST.has_key('basket_id'):
             return self.get(request, **kwargs)
-        basket = Basket.objects.filter(id=request.POST['basket_id'])[0]
-
+        try:
+            basket = Basket.objects.filter(id=request.POST['basket_id'])[0]
+        except:
+            return self.get(request, **kwargs)
+            
         if request.POST.has_key('setSponsoredOrg'):
             sOrg = SponsoredOrganization.objects.filter(id=request.POST['sponsored_org_id'])[0]
             basket.sponsored_org = sOrg
