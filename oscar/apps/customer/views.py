@@ -501,7 +501,11 @@ class OrderDetailView(PostActionMixin, DetailView):
     def get_object(self, queryset=None):
 
         if self.request.GET.has_key('user_id'):
-            user = User.objects.filter(id=self.request.GET['user_id'])
+            try:
+                user = User.objects.filter(id=self.request.GET['user_id'])
+            except:
+                ## this may be guest user case, when seller is viewing sales
+                user = None
         else:
             user = self.request.user
 
@@ -598,11 +602,41 @@ class SaleDetailView(OrderDetailView, UpdateView):
     def get_template_names(self):
         return ["customer/sale.html"]
 
+    def get_object(self, queryset=None):
+
+        if self.request.GET.has_key('user_id'):
+            try:
+                user = User.objects.filter(id=self.request.GET['user_id'])
+            except:
+                ## this may be guest user case, when seller is viewing sales
+                user = None
+        else:
+            user = self.request.user
+
+        try:
+            o =  get_object_or_404(self.model, user=user,
+                                 number=self.kwargs['order_number'])
+        except:
+            o =  get_object_or_404(self.model,
+                                 number=self.kwargs['order_number'])
+
+        if user != self.request.user and not self.request.user.is_staff:
+            ## don't show this order unless admin, buyer, or seller
+            firstLine = OrderLine.objects.filter(order=o)[0]
+            partner = firstLine.partner
+            seller = partner.user
+            if seller != self.request.user:
+                self.response = HttpResponseRedirect(
+                reverse('catalogue:index'))
+                return
+
+        return o
+
+
     def get_context_data(self, **kwargs):
 
         self.object = self.get_object()
         ctx = super(SaleDetailView, self).get_context_data(**kwargs)
-
 
 
         if 'parcel_formset' not in ctx:

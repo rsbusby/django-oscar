@@ -43,6 +43,7 @@ urlpatterns = patterns('',
     url(r'^contact_us/$', contactUs, name='contactUs'),
     ##url(r'^contact/(?P<store_name>[\w-]*)/$', contactPeer, name='contactPeer'),
     url(r'^contact/$', contactPeer, name='contactPeer'),    
+    url(r'^contact_buyer/$', contactGuestBuyer, name='contactGuestBuyer'),    
 
 
     url(r'^terms_of_use/$', termsOfUse, name='termsOfUse'),

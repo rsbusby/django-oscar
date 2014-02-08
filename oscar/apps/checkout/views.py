@@ -69,7 +69,7 @@ class IndexView(CheckoutSessionMixin, FormView):
         if request.user.is_authenticated():
             return self.get_success_response()
 
-        if 1:
+        if 0:
             ## for now, just redirect to the login page with a message
             messages.info(
                         self.request,
@@ -503,7 +503,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             return HttpResponseRedirect(reverse('basket:summary'))
 
         ## if not authenticated, remedy this, send to gateway
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated() and not self.checkout_session.get_guest_email():
             return HttpResponseRedirect(reverse('checkout:index'))
 
         if request.GET.has_key('basket_id'):

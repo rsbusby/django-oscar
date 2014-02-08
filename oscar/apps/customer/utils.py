@@ -57,7 +57,48 @@ class Dispatcher(object):
         if messages['sms']:
             self.send_text_message(user, messages['sms'])
 
+
+    def dispatch_guest_messages(self, guest_email, messages, sender=None):
+        """
+        Send messages to an email address, keep a record in sender's database
+        """    
+        if messages['subject'] and (messages['body'] or messages['html']):
+            self.send_guest_email_messages(guest_email, messages, sender)
+
     # Internal
+
+    def send_guest_email_messages(self, guest_email, messages, sender):
+        """
+        Sends message to the guest's email and collects data in database
+        """
+        if not guest_email:
+            self.logger.warning("Unable to send email messages as email address is not valid")
+            return
+
+
+        #create headers
+        ## allow replies-
+        replyTo = None
+        # if user.is_staff:
+        #     ## set reply-to ?? 
+        #     try:
+        #         replyTo = sender.email
+        #     except:
+        #         pass
+
+        email = self.send_email_messages(guest_email, messages, replyTo = replyTo)
+
+        # Is user is signed in, record the event for audit
+        
+        if email and sender.is_authenticated():
+            Email._default_manager.create(user=sender,
+                                          sender=sender,
+                                          subject=email.subject,
+                                          body_text=email.body,
+                                          body_html=messages['html'])
+
+
+
 
     def send_user_email_messages(self, user,  messages, sender):
         """

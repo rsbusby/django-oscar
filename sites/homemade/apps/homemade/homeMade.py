@@ -170,6 +170,9 @@ if not STAND_ALONE:
     from django.contrib.sites.models import get_current_site
 
     from oscar.apps.partner.models import Partner
+    from oscar.apps.order.models import Order as OscarOrder
+    from oscar.apps.order.models import Line as OrderLine
+
     from django.contrib.auth.models import User
 
     from oscar.core.loading import get_class, get_profile_class, get_classes
@@ -1345,6 +1348,137 @@ def contactUs(*args, **kwargs):
     return render_template('contact_peer.html', topicDict=topicDict, oscarUserToMsg=oscarUserToMsg)
 
 @app.route("/contact/<store_name>", methods=['GET', 'POST'])
+
+def contactGuestBuyer(*args, **kwargs):
+
+
+    request = args[0]
+    request.args = request.GET
+    request.form = request.POST
+    request.files = request.FILES
+    g = request
+    u = getSellerFromOscarID(request.user.id)
+    adminName = 'blogger'
+
+    if request.args.has_key('order_num'):
+        ##emailToMsg = request.args.get('email')
+
+        try:
+            o = OscarOrder.objects.get(number=request.args.get('order_num') )
+        except:
+            errMsg = "Page not found"
+            messages.info(request, errMsg)
+            return redirect(url_for('catalogue:index'))
+
+        ## don't show this page unless admin or seller
+        if not request.user.is_staff:
+            firstLine = OrderLine.objects.filter(order=o)[0]
+            partner = firstLine.partner
+            seller = partner.user
+            if seller != request.user:
+                errMsg = "Page not found"
+                messages.info(request, errMsg)
+                return redirect(url_for('catalogue:index'))
+
+    else:
+        errMsg = "Page not found"
+        messages.info(request, errMsg)
+        return redirect(url_for('catalogue:index'))
+
+    oscarSender = request.user
+
+    subject = "Order " + o.number
+    ## set previous subject and text if a reply
+    if request.args.has_key('subject'):
+        subject = request.args['subject']
+
+    try:
+        a = oscarSender.email
+    except:
+        oscarSender = None
+
+    try:
+        if oscarSender.first_name or oscarSender.last_name:
+            personalNameOfSender = oscarSender.first_name + " " + oscarSender.last_name
+        else:
+            personalNameOfSender = None
+    except:
+        personalNameOfSender = None
+    #personalNameOfSender = userToMsg.getPersonalNameIfExists()
+    if not personalNameOfSender:
+        personalNameOfSender = "a customer "
+    
+    # if request.args.has_key('order_id'):
+    #     orderSeqId = request.args['orderSeqId']
+    #     #o = Order.objects(seqId=orderSeqId)
+    #     topicDict['order'] = "Question about order #" + str(orderSeqId)
+    #     topicDict["item"] = "Question about an item"
+    #     topicDict["misc"] = "General question"
+    #     msgText = "Regarding " + url_for("order", orderID=int(orderSeqId), _external=True)
+    #     # print url_for(order(orderSeqId))
+    # else:
+    #     topicDict["item"] = "Question about an item"
+    #     topicDict["order"] = "Order information"
+    #     topicDict["misc"] = "General question"
+
+    msg = ''
+
+    if request.method == 'POST':
+
+        if not request.form['text']:
+            msg = 'Please enter a message.'
+            return render_template('contact_peer.html', msg=msg, topicDict=topicDict, oscarUserToMsg=None)
+        else:
+            msg = request.form['text']
+
+
+            topicForSubject = "Message regarding order " + o.number
+
+            guestEmail = None
+            if request.form.get('email'):
+                guestEmail = request.form.get('email')
+
+            else:
+                guestEmail = o.email
+
+            if request.form['subject'] != "None" and request.form['subject'] != '':
+                subject = request.form['subject']
+            else:
+                subject = "Message from " + personalNameOfSender + " " + topicForSubject
+            ##emailUser(userToMsg, sender=u, subject=subject, msgStr=msg)
+            
+            ##if guestEmail:
+            ##    subject = subject #+ ", from " + anonEmail
+
+            thread_ref = None
+
+            ctx = {
+                'user': request.user,
+                'userToMsg': None,
+                'msgFromUser': msg,
+                'subject': subject,
+                'site': get_current_site(request),
+                'thread_ref':thread_ref,
+                'guest_recipient': True, 
+
+            }
+            Dispatcher = get_class('customer.utils', 'Dispatcher')
+            CommunicationEventType = get_model('customer', 'CommunicationEventType')
+
+            msgs = CommunicationEventType.objects.get_and_render(
+                code="CONTACT_PEER", context=ctx)
+            Dispatcher().dispatch_guest_messages(guestEmail, msgs, oscarSender)
+
+
+        return redirect(url_for('customer:sales-list'))
+    # if GET , show this
+    return render_template('contact_peer.html', topicDict=[], oscarUserToMsg=None, msgText=msg, subject=subject, email=o.guest_email)
+
+
+
+
+
+
 def contactPeer(*args, **kwargs):##store_name=None, orderSeqId=None):
  
     if STAND_ALONE:
@@ -1402,6 +1536,8 @@ def contactPeer(*args, **kwargs):##store_name=None, orderSeqId=None):
             msg = "No user or booth by that name."
             print "user " + userHash+ " not found for emailing"
             return redirect(url_for('about',  msg=msg))
+    elif request.args.has_key('email'):
+        r= 9
     else:
         msg = "No user or booth specified"
         return redirect(url_for('about',  msg=msg))

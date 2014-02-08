@@ -55,9 +55,14 @@
   <input id="contactSellerButton" style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{order.lines.all.0.partner.name}}"'>
 {% else %}
 
-  <input id="contactBuyerButton" style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Buyer" onclick='location.href="/homemade/contact?user={{order.user.username}}"'>
+ {% if not order.user %}
+ 
+  <input id="contactBuyerButton" style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Buyer" onclick='location.href="/homemade/contact_buyer?order_num={{order.number}}"'>
 
-{% endif %}
+ {%else %}
+  <input id="contactBuyerButton" style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Buyer" onclick='location.href="/homemade/contact?user={{order.user.username}}"'>
+ {% endif %}
+{% endif %} {# if user == order.user #}
 </div>
                 <div style="clear:both"></div>
 
