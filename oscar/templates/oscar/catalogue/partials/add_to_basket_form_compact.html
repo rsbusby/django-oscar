@@ -16,7 +16,7 @@
     {% if user.is_authenticated and user == product.stockrecord.partner.user or user.is_staff %}
 
     {% else%}
-       {% if product.is_available_to_buy  and request.user.is_authenticated %}
+       {% if product.is_available_to_buy %} {# and request.user.is_authenticated or  %} #}
          {% comment %}<button type="submit" class="btn btn-primary btn-full addToBasket">{% trans "Add to basket" %}</button>{% endcomment %}
          <input style="clear:both;background-color:#F5EBCC;margin:0 auto;border-width:3px;font-size:0.9em" type=submit value="{% trans "Add to basket" %}">
        {% endif %}
