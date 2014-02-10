@@ -225,7 +225,7 @@ class AbstractAddress(models.Model):
         _("Third line of address"), max_length=255, blank=True, null=True)
     line4 = models.CharField(_("City"), max_length=255, blank=True, null=True)
     state = models.CharField(
-        _("State/County"), max_length=255, blank=True, null=True)
+        _("State"), max_length=255, blank=True, null=True)
     postcode = fields.UppercaseCharField(
         _("Post/Zip-code"), max_length=64, blank=True, null=True)
     country = models.ForeignKey('address.Country', verbose_name=_("Country"))

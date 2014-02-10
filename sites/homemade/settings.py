@@ -440,7 +440,7 @@ OSCAR_DEFAULT_CURRENCY='USD'
 OSCAR_CURRENCY_LOCALE = 'en_US'
 # Address settings
 OSCAR_REQUIRED_ADDRESS_FIELDS = ('first_name', 'last_name', 'line1',
-                                 'line4', 'postcode' )
+                                 'line4', 'state', 'postcode' )
 TEST_LOCAL=False
 CHECKOUT_ENABLED=os.environ['CHECKOUT_ENABLED']
 PAY_IN_PERSON=os.environ['PAY_IN_PERSON']
