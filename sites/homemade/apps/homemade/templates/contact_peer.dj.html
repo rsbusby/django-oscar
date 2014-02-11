@@ -58,14 +58,15 @@
 
  {% if msg %}<div class=msg> {{ msg }}</div>{% endif %}
 
-  <form action="" method="post" style="padding=0;margin:0">
+  <form id="msgForm" action="" method="post" style="padding=0;margin:0">
 
     {% csrf_token %}
 
     {% if not request.user or request.user.is_anonymous %}
 
     Please enter your email address:
-    <input type="email" name="email">
+    <input id="anon_email" type="email" name="email">
+    <div id="anon_email_err" style=""> </div>
 
     {% endif %}
 
@@ -102,7 +103,13 @@
     </dd>
 
     </dl>
-    <div class=actions><input id="msg-submit" type=submit value="Send message"></div>
+
+        <button id="submitMessage" style="margin-left:1.2em;font-size:1.2em" class="btn btn-primary btn-large" name="actio" type="button" value="save"> Send message</button>
+    {% comment %}
+    <div class=actions>
+    <input id="msg-submit" type=sub value="Send message">
+    </div>
+    {% endcomment %}
   </form>
 
 
@@ -116,5 +123,44 @@
 
   </div> {# span #}
 </div>  {# row #}
+
+
+  {% if not request.user or request.user.is_anonymous %}
+<script>
+
+function errWrap(text) {
+    return '<ul class="errorlist">' + text +' </ul>';
+}
+
+
+function errMsg(id, msg) {
+    return $('#'+ id).html(errWrap(msg));
+}
+
+
+function goToByScroll(id){
+    $('html,body').animate({scrollTop: $("#"+id).offset().top},'slow');
+}
+
+
+$(document).ready(function() {
+
+  $('#submitMessage').click(function() { 
+    if (! $('#anon_email').val() ){
+      errMsg('anon_email_err', "Please enter your email address");
+      goToByScroll("anon_email");
+      // $('#anon_email_err').text("Please enter your email address");
+    }
+    else{
+      $("#msgForm").submit();
+    }
+  });
+
+});
+</script>
+    {% endif %}
+
+
+
 
 {% endblock %}
