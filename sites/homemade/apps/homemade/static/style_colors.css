@@ -785,7 +785,7 @@ input:not([type=submit]):not([type=file]):not([type=button]), textarea, select, 
     
     ppadding-left:1em;
     background: rgba(255,255,255,0.5);
-    margin: 0.5em 0 1em 0.5em;
+    mmmargin: 0em 1em 1em 0.5em;
 }
 
 

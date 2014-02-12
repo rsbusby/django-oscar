@@ -499,6 +499,23 @@
 </div>
 {% endcomment %}
 
+<div id="local_pickup_group">
+<legend class="">
+{% comment %}
+    <input style="margin-right:10px" id="local_delivery_toggle" type="checkbox" name="local_delivery_toggle" >
+{% endcomment %}
+ {{ stockrecord_form.local_pickup_enabled }}
+ {{ stockrecord_form.local_pickup_enabled.errors }}
+   <span style="margin-left:0.44em">Check if this item is available for local pickup </span>
+   </legend>
+ <div id="local_pickup_err"> </div>
+
+</div> {# local pickup group #}
+
+
+
+
+{% comment %}
   <table id="local_pickup_group">
            
                     <tr>
@@ -515,7 +532,7 @@
         </table>    
 
 <div id="local_pickup_err"></div>
-
+{% endcomment %}
    {# {% crispy stockrecord_form %} #}
 
 
