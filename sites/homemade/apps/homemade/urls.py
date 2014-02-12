@@ -31,6 +31,8 @@ urlpatterns = patterns('',
 
     url(r'^invite/$', invite, name='invite'),
 
+    url(r'^faq_main/$', faq_main, name='faq_main'),
+
 
     url(r'^blog/(?P<blog_post_id>\d+)/$', blog_post, name='blog_post'),
     url(r'^new_blog_post/$', new_blog_post_b, name='new_blog_post'),

@@ -1210,6 +1210,16 @@ def browse_stores_as_list():
 def permitDescription(zipcode=None):
     render_template('permit_info.html', county="The county has not been implemented.", zipcode=zipcode)
 
+def faq_main(*args, **kwargs):
+
+    request = args[0]
+    request.args = request.GET
+    request.form = request.POST
+    request.files = request.FILES
+
+    return render_template("faq_main.html")
+
+
 @app.route("/invite/", methods=['GET', 'POST'])
 def invite(*args, **kwargs):
 
@@ -1450,6 +1460,12 @@ def contactGuestBuyer(*args, **kwargs):
             ##if guestEmail:
             ##    subject = subject #+ ", from " + anonEmail
 
+            replyToFlag = False
+            if request.POST.get('reply_to'):
+                if request.POST.get('reply_to') == "on":
+                    replyToFlag = True
+
+
             thread_ref = None
 
             ctx = {
@@ -1460,6 +1476,7 @@ def contactGuestBuyer(*args, **kwargs):
                 'site': get_current_site(request),
                 'thread_ref':thread_ref,
                 'guest_recipient': True, 
+                'replyToFlag': replyToFlag,
 
             }
             Dispatcher = get_class('customer.utils', 'Dispatcher')
@@ -1467,7 +1484,7 @@ def contactGuestBuyer(*args, **kwargs):
 
             msgs = CommunicationEventType.objects.get_and_render(
                 code="CONTACT_PEER", context=ctx)
-            Dispatcher().dispatch_guest_messages(guestEmail, msgs, oscarSender)
+            Dispatcher().dispatch_guest_messages(guestEmail, msgs, oscarSender, replyToFlag = replyToFlag)
 
 
         return redirect(url_for('customer:sales-list'))
@@ -1608,6 +1625,11 @@ def contactPeer(*args, **kwargs):##store_name=None, orderSeqId=None):
             if request.form.get('email'):
                 anonEmail = request.form.get('email')
 
+            replyToFlag = False
+            if request.POST.get('reply_to'):
+                if request.POST.get('reply_to') == "on":
+                    replyToFlag = True
+
 
             if request.form['subject'] != "None" and request.form['subject'] != '':
                 subject = request.form['subject']
@@ -1626,6 +1648,7 @@ def contactPeer(*args, **kwargs):##store_name=None, orderSeqId=None):
                 'msgFromUser': msg,
                 'subject': subject,
                 'site': get_current_site(request),
+                'replyToFlag': replyToFlag,
 
             }
             Dispatcher = get_class('customer.utils', 'Dispatcher')
@@ -1633,7 +1656,7 @@ def contactPeer(*args, **kwargs):##store_name=None, orderSeqId=None):
 
             msgs = CommunicationEventType.objects.get_and_render(
                 code="CONTACT_PEER", context=ctx)
-            Dispatcher().dispatch_user_messages(oscarUserToMsg, msgs, oscarSender)
+            Dispatcher().dispatch_user_messages(oscarUserToMsg, msgs, oscarSender, replyToFlag = replyToFlag)
 
 
         

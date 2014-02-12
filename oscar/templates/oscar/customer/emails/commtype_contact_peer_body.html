@@ -8,10 +8,12 @@
 {#</pre>#}
 <br><br><br>
 
-{% if guest_recipient %}
+{% if guest_recipient and not replyToFlag %}
 
 <b>(Note from Homemade1616: please don't reply directly to this message. To reply, go to this link <a href="http://www.homemade1616.com/homemade/contact?subject={{subject}}&thread_ref={{thread_ref}}&user={{user.username}}">  http://www.homemade1616.com/homemade/contact?subject={{subject}}&thread_ref={{thread_ref}}&user={{user.username}} /</a> )</b>
+{% elif replyToFlag%}
 
+	<b>(Note from Homemade1616: when you reply to this message it will reply directly to the sender using your email address. To reply without giving your email address, go to this link <a href="http://www.homemade1616.com/homemade/contact?subject={{subject}}&thread_ref={{thread_ref}}&user={{user.username}}">  http://www.homemade1616.com/homemade/contact?subject={{subject}}&thread_ref={{thread_ref}}&user={{user.username}} /</a> )</b>
 
 {% else %}
 <b>(Note from Homemade1616: please don't reply directly to this message. To reply, go to your list of Homemade1616 messages at <a href="http://www.homemade1616.com/accounts/emails/"> http://www.homemade1616.com/accounts/emails/</a> )</b>

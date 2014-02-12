@@ -70,7 +70,15 @@
 
     {% endif %}
 
+    {% if 1 %}
+    <div id="reply_to_group" style="font-size:1.1em;margin:1em 0 0 0">
+       <input id="reply_to_input" style="margin:0em 1em 0.5em 0" type="checkbox" name="reply_to">
+       Allow the recipient to see and reply to your email address
+        &nbsp;&nbsp;<div style="color:#888888">(otherwise we keep your email hidden, but they can still reply)</div>
+       <div id="reply_to_input_err" style=""> </div>
 
+</div> {#reply_to#}
+    {% endif %}
 
     <input id="emailSubjectHidden" type='hidden' name="subject" value="{{subject}}" >
 
@@ -92,15 +100,12 @@
       {% endif %}
       <dt>Message:</dt>
    
-    {% comment %} 
-     <dd>
-      <input  autofocus="autofocus" type=text name=text size=500 > 
-     </dd>
-      {% endcomment %}
-
+   
+   <div id="msgText_err"></div>
     <dd>
-      <textarea class="wide" style="margin:8px 0 0 6px" autofocus="autofocus" rows=5 name=text >{{msgText}}</textarea>
+      <textarea id="msgText" class="wide" style="margin:8px 0 0 6px" autofocus="autofocus" rows=5 name=text >{{msgText}}</textarea>
     </dd>
+
 
     </dl>
 
@@ -125,7 +130,7 @@
 </div>  {# row #}
 
 
-  {% if not request.user or request.user.is_anonymous %}
+
 <script>
 
 function errWrap(text) {
@@ -142,9 +147,10 @@ function goToByScroll(id){
     $('html,body').animate({scrollTop: $("#"+id).offset().top},'slow');
 }
 
-
 $(document).ready(function() {
 
+
+  {% if not request.user or request.user.is_anonymous %}
   $('#submitMessage').click(function() { 
     if (! $('#anon_email').val() ){
       errMsg('anon_email_err', "Please enter your email address");
@@ -155,10 +161,28 @@ $(document).ready(function() {
       $("#msgForm").submit();
     }
   });
+  {% else %}
+ $('#submitMessage').click(function() { 
+    if (! $('#msgText').val() ){
+      errMsg('msgText_err', "Please type a message");
+      //goToByScroll("msgText");
+      // $('#anon_email_err').text("Please enter your email address");
+    }
+    else{
+      $("#msgForm").submit();
+    }
+  });
+
+  {% endif %}
+
+
+
 
 });
+
+
 </script>
-    {% endif %}
+  
 
 
 

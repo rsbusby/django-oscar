@@ -47,27 +47,27 @@ class Dispatcher(object):
             CommunicationEvent._default_manager.create(order=order,
                                                        event_type=event_type)
 
-    def dispatch_user_messages(self, user, messages, sender=None):
+    def dispatch_user_messages(self, user, messages, sender=None, replyToFlag=False):
         """
         Send messages to a site user
         """
 
         if messages['subject'] and (messages['body'] or messages['html']):
-            self.send_user_email_messages(user, messages, sender)
+            self.send_user_email_messages(user, messages, sender, replyToFlag)
         if messages['sms']:
             self.send_text_message(user, messages['sms'])
 
 
-    def dispatch_guest_messages(self, guest_email, messages, sender=None):
+    def dispatch_guest_messages(self, guest_email, messages, sender=None,replyToFlag=False):
         """
         Send messages to an email address, keep a record in sender's database
         """    
         if messages['subject'] and (messages['body'] or messages['html']):
-            self.send_guest_email_messages(guest_email, messages, sender)
+            self.send_guest_email_messages(guest_email, messages, sender, replyToFlag)
 
     # Internal
 
-    def send_guest_email_messages(self, guest_email, messages, sender):
+    def send_guest_email_messages(self, guest_email, messages, sender, replyToFlag):
         """
         Sends message to the guest's email and collects data in database
         """
@@ -78,7 +78,11 @@ class Dispatcher(object):
 
         #create headers
         ## allow replies-
+
+
         replyTo = None
+        if replyToFlag:
+            replyTo = guest_email
         # if user.is_staff:
         #     ## set reply-to ?? 
         #     try:
@@ -100,7 +104,7 @@ class Dispatcher(object):
 
 
 
-    def send_user_email_messages(self, user,  messages, sender):
+    def send_user_email_messages(self, user,  messages, sender, replyToFlag):
         """
         Sends message to the registered user / customer and collects data in database
         """
@@ -112,7 +116,7 @@ class Dispatcher(object):
         #create headers
         ## allow replies-
         replyTo = None
-        if user.is_staff:
+        if user.is_staff or replyToFlag:
             ## set reply-to ?? 
             try:
                 replyTo = sender.email
