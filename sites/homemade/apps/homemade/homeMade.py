@@ -2657,7 +2657,7 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size))
 
 @app.route('/login', methods=['GET', 'POST'])
-def login():
+def loginOld():
     """Logs the user in."""
     #flash("Is this working?")
     #if g.user:

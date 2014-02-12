@@ -1,5 +1,7 @@
 import logging
 
+from apps.homemade.homeMade import  *
+
 from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.core.urlresolvers import reverse, reverse_lazy
 
@@ -22,7 +24,7 @@ from oscar.apps.payment.models import SourceType, Source
 from django.contrib.sites.models import Site, get_current_site
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 
-from apps.homemade.homeMade import  *
+
 
 ShippingAddressForm, GatewayForm = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
 OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
@@ -106,6 +108,7 @@ class IndexView(CheckoutSessionMixin, FormView):
                     email
                 )
         else:
+
             user = form.get_user()
             login(self.request, user)
 
