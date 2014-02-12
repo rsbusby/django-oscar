@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block extrastyles %}
+  {{ block.super }}
+  <link rel='stylesheet' type='text/css' href="{% static 'style_modal.css' %}"/>
+
+{% endblock %}
+
+{% block title %}Connect with Stripe payments{% endblock %}
+{% block body %}
+
+<div style="font-size:1.8em;margin-bottom:0.4em;" >
+  Frequently Asked Questions
+</div>
+
+
+ <a id="paymentInfoModalLinkLink" style="color:#ff6666;font-size:1.1em;float:lef;margin-top:10px;margin-left:0.5em" href="#openModalPayments"> Click to see more details about payments</a>
+
+
+<div style="font-size:1.6em;margin-bottom:0.4em;" >
+  Selling
+</div>
+
+  <p style="margin-left:1.6em">
+  We are trying to make selling locally as simple as possible. Just <a id="open-booth" href="{% url 'register_store' %}"> open a booth</a> , sign up for receiving payments, and choose delivery and pickup options. Add your items to your booth, with a picture and description of each. That's it! There are no listing fees. We take a small percentage of each sale, in addition to the external transaction fees.
+
+</p>
+
+<div style="font-size:1.6em;margin-bottom:0.4em;" >
+  Payments
+</div>
+
+  <p style="margin-left:1.6em">
+         Currently we are are using Stripe as our credit card processing system. Stripe is a payment service that takes care of credit card payments, and makes deposits directly to a bank account of your choosing. It comes with a easy to understand view of your payment history, and gives you direct control over refunds. The buyer's credit card information goes straight to Stripe over a secure connection without passing through our site, so your customers will know that their payments are safe. <br><br>The fees for using Stripe are currently 2.9% of the sale plus 30 cents, which is taken from the sale price of your items. Our fees are 3.5% of the sale, so the total fees on each transaction are 6.4% + 30 cents.
+  </p>
+  <br>
+               <p> <b>Other payment options</b></p>
+
+<p style="margin-left:1.6em">
+    We plan to offer <b>PayPal</b> as a payment service in the near future. We're also interested in payment methods which have lower fees, such as <b>Dwolla</b> and <b>Bitcoin</b>.
+         If you have a preferred payment method that we do not offer, please <a href="{% url 'contactUs' %}?topic=Payment processing" target="_blank" >let us know</a> and we'll try to incorporate it as an option down the road. Thanks!
+        </p>
+<br>
+<p>
+<b>If you have any further questions please <a href="{% url 'contactUs' %}?topic=Payment processing" target="_blank" >contact us</a>.</b>
+</p>
+
+
+
+<div style="font-size:1.6em;margin-bottom:0.4em;" >
+  Shipping and Delivery
+</div>
+ <p> <b>Using flat-rate Priority Mail </b></p>
+
+       <p>
+        An easy and inexpensive option for domestic shipping is to use flat-rate Priority Mail boxes available through the postal service. Simply pick which boxes you will be using, and enter the number of items that can fit in the type of box(es) that you are shipping in. We'll then calculate how many boxes are needed to fulfill each order. A shipping label with the buyer's address will be available for printing from the order summary page.
+</p>
+
+
+        <p> <b>Calculate shipping by weight </b></p>
+        <p> Currently at HM1616 we can accurately calculate shipping costs for USPS First Class, USPS Parcel Select, and UPS based on the weight of an item, assuming moderately sized items. If your item is very large (more than  8"x8"x8") or otherwise requires special shipping, the shipping calculator would not be accurate, so please use the fixed price shipping option. 
+       </p>
+
+                  <p> <b>Custom shipping</b></p>
+                  <p> We realize that it may be easier for you to deal with shipping yourself. If that's the case, just select the option to provide your own shipping.</p>
+
+
+
+
+               <p> <b>Going local</b></p>
+
+<p>
+        Of course, local pickup or self-delivery can be an option if you like, and we hope to offer more local delivery options as they become available. 
+         If you know of a suitable delivery service in your area, let us know at support@homemade1616.com and we'll try to incorporate it as an option in the future. Thanks!
+        </p>
+
+<p>
+<b>If you have any further questions please <a href="{% url 'contactUs' %}?topic=Shipping question" target="_blank" >drop us a line</a>.</b>
+</p>
+
+
+
+
+  <div id="openModalPayments" class="modalShipInfo">
+      <div> 
+        <a href="#close" title="Close" class="close">X</a>
+        <h2><b>Payment Processing Information</b></h2>
+
+     <p> <b>Stripe</b></p>
+    
+       <p style="margin-left:1.6em">
+         Stripe is a payment service that takes care of credit card payments, and makes deposits directly to a bank account of your choosing. It comes with a easy to understand view of your payment history, and gives you direct control over refunds. The buyer's credit card information goes straight to Stripe over a secure connection without passing through our site, so your customers will know that their payments are safe. <br><br>The fees for using Stripe are currently 2.9% of the sale plus 30 cents, which is taken from the sale price of your items. Our fees are 3.5% of the sale, so the total fees on each transaction are 6.4% + 30 cents.
+  </p>
+  <br>
+               <p> <b>Other payment options</b></p>
+
+<p style="margin-left:1.6em">
+    We plan to offer <b>PayPal</b> as a payment service in the near future. We're also interested in payment methods which have lower fees, such as <b>Dwolla</b> and <b>Bitcoin</b>.
+         If you have a preferred payment method that we do not offer, please <a href="{% url 'contactUs' %}?topic=Payment processing" target="_blank" >let us know</a> and we'll try to incorporate it as an option down the road. Thanks!
+        </p>
+<br>
+<p>
+<b>If you have any further questions please <a href="{% url 'contactUs' %}?topic=Payment processing" target="_blank" >contact us</a>.</b>
+</p>
+
+          <article>
+          <label>
+            <span></span>
+          </label>
+          </article>
+
+          
+          <a class="btn orgButton" style="margin-top:14px;" href="#close"> Close window</a>
+
+    </div> 
+  </div>
+
+
+{% endblock %}
