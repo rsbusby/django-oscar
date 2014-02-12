@@ -29,15 +29,22 @@
 
 {% block bannerFile %}{{STATIC_URL}}icons/BannerImage-3.jpg{% endblock %}
 
+{% block title %}
+  Edit your booth
+{% endblock %}
+
 {% block content %}
 
 
 <div style="clear:both"> </div>
 
-
-
-  <h2>{% block title %}Edit your booth{% endblock %}</h2>
-   {% if error %}<p><div class=error><strong> {{ error }}</strong></div></p>{% endif %}
+  {% if partner %}
+    <h2>Edit your booth</h2>
+  {% else %}
+    <h2>Create your booth</h2>
+  {% endif %}
+  {% if error %}<p><div class=error><strong> {{ error }}</strong></div></p>{% endif %}
+  
 
 
 
