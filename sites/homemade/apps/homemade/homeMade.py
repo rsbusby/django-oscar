@@ -2804,6 +2804,11 @@ def register_store(*args, **kwargs):
         user = request.user
         storeExists = False
         partner = None
+
+        ## make sure is authenticated
+        if not user.id:
+            return redirect(url_for('catalogue:index'))
+
         try:
             if user.partner:
                 storeExists = True
@@ -3999,14 +4004,14 @@ def chargeSharedOscar(request, basket, order_number, amountInCents, feeInCents):
       customer=custID,  ## customer ID on application
       api_key=basket.seller.stripeToken ##seller.stripeSellerToken # seller's access token from the Stripe Connect flow
     )
-    # import ipdb;ipdb.set_trace()
+
     # customerConnected = stripe.Customer.create(
     #                                   email=mu.email,
     #                                   card=tempToken.card,
     #                                   api_key=seller.stripeAccountToken
     #                                   )
 
-    #import ipdb;ipdb.set_trace()
+
     print tempToken
     try:
         charge = stripe.Charge.create(
