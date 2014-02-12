@@ -537,37 +537,56 @@ class BasketAddView(FormView):
         print form.instance
 
         partner = form.instance.stockrecord.partner
-        
-        try:
-            bb = Basket.objects.filter(owner=self.request.user, status="Open", seller=partner)
-        except:
-            bb = None
+
         bask = None
-
-        if bb == None or len(bb) == 0:
-
-            ## take the default basket if possible
-            if self.request.basket.seller == None:
-                self.request.basket.seller = partner
-                bask = self.request.basket
-                bask.save()
-            else:   
-                ## create a new one
-                #bask = Basket(owner=self.request.user, status="Open", seller=partner)
-                bask = Basket(status="Open", seller=partner)                    
-                if self.request.user.is_authenticated():
-                    bask.owner = self.request.user
-                    bask.save()
-                else:
-                    ## add to the cookies 
-                    r = 9
-
-        elif len(bb) == 1:  
-            bask = bb[0]
+        bb = None ## query for basket
+        if self.request.user.is_authenticated():        
+            try:
+                bb = Basket.objects.filter(owner=self.request.user, status="Open", seller=partner)
+            except:
+                bb = None
         else:
-            ## should not happen!!! merge 'em
-            pass
-        bask.save()
+            ## anonymous buyer
+            if self.request.basket.seller == partner:
+                bask = self.request.basket
+            else:
+                bm = BasketMiddleware()
+                cookie_baskets = bm.get_cookie_baskets(settings.OSCAR_BASKET_COOKIE_OPEN + 's', self.request, Basket.open)
+                for b in cookie_baskets:
+                    try:
+                        if b.seller == partner:
+                            bask = b
+                            break
+                    except:
+                        pass
+
+
+        if bask == None:
+            if (bb == None or len(bb) == 0) and bask == None:
+
+                ## take the default basket if possible
+                if self.request.basket.seller == None:
+                    self.request.basket.seller = partner
+                    bask = self.request.basket
+                    bask.save()
+                else:   
+                    ## create a new one
+                    #bask = Basket(owner=self.request.user, status="Open", seller=partner)
+                    bask = Basket(status="Open", seller=partner)                    
+                    if self.request.user.is_authenticated():
+                        bask.owner = self.request.user
+                        bask.save()
+                    else:
+                        ## add to the cookies 
+                        r = 9
+
+            elif len(bb) == 1:  
+                bask = bb[0]
+            else:
+                ## should not happen!!! merge 'em
+                pass
+            bask.save()
+
         ## set the current basket to be the default basket in the request
         self.request.basket = bask
         print "SELLER"
