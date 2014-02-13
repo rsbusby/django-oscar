@@ -992,8 +992,9 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
 
         ## login
+        email3 = "rsbusby+234234@gmail.com"
         user3 = User.objects.create_user(username="user3",
-                                         email="rsbusby+234234@gmail.com", password=self.password)
+                                         email=email3, password=self.password)
 
         self.loginUser(user3, browser)
 
@@ -1020,6 +1021,10 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## submit form
         b.find_element_by_id("save-address").click()
+
+        ## logout user, test anon basket
+        self.go(reverse('customer:logout'))
+
 
         ## add sponsored org
         sorg = SponsoredOrganization(name="Food Backwards", is_current=True)
@@ -1058,12 +1063,36 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ## click add to basket
 
         b.find_element_by_class_name("addToBasket").click()
+        ## add again, make sure there is only one basket after this
+        b.find_element_by_class_name("addToBasket").click()
+
 
         ## go to basket, OK
         self.go(reverse('basket:summary'))
+        import ipdb;ipdb.set_trace()
+
+        ## assert that there is only one basket
+        self.failIf(browser.page_source.count("Go to Checkout") != 1)
+
 
         ## click checkout
         b.find_element_by_class_name("go-to-checkout").click()
+
+
+        ## login
+        element = b.find_element_by_id("id_username")
+        element.send_keys(email3)
+        ## click correct radio button, it does not have an ID, hence the 2 step process
+        bb =browser.find_element_by_id("rad2")
+        bb.find_element_by_name("options").click()
+
+        
+        element = b.find_element_by_id("id_password")
+        element.send_keys(self.password)
+
+
+
+        browser.find_element_by_tag_name("button").click()
 
         ## choose an address
         b.find_element_by_class_name("ship-address").click()

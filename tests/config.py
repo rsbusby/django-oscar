@@ -94,6 +94,8 @@ def configure():
             'OSCAR_CURRENCY_LOCALE':'en_US',
             'TEST_LOCAL':True,
             'CHECKOUT_ENABLED':True,
+            'OSCAR_ALLOW_ANON_CHECKOUT':True,
+
 
 
 
@@ -110,6 +112,7 @@ def configure():
 
         settings.configure(**test_settings)
         #settings.MONGODB_DB = "test_db"
+        settings.OSCAR_ALLOW_ANON_CHECKOUT = True
 
         mongoengine.connect(settings.MONGODB_DB) 
         print "YEAH setting Mongo DB in test config,  " + settings.MONGODB_DB
