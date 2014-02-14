@@ -9,12 +9,29 @@
 
 .faqHeader {
   color: #009900;
+  font-size: 1.2em;
 }
 .faqAnswer {
-    background-color: #eeeeee;
+    background-color: #fafafa;
     padding:0.7em;
     border-radius: 0 0 12px 12px;
 }
+
+.shado {
+text-shadow: 0px 1px 14px rgba(0,0,0,0.9),
+0px 1px 30px rgba(0,0,0,0.9),
+                 4px 4px 10px rgba(0,0,0,0.95),
+                 -4px 4px 10px rgba(0,0,0,0.95);
+
+}
+
+.faqTitle {
+  font-size:1.5em;
+  margin-bottom:0.4em;
+  font-weight:bold;
+  line-height: 1.2em;
+}
+
 </style>
 {% endblock %}
 
@@ -22,15 +39,17 @@
 {% block body %}
 
 <div style="font-size:1.2em">
-<div style="font-size:1.6em;margin-bottom:0.4em;" >
+<div class="faqTitle" style="" >
   Frequently Asked Questions
 </div>
+<hr style="margin:14px 0 0 0;color:#eeeeee;border-color:#eeeeee;border-width:3px;">
+
 <br><br>
 {% comment %}
  <a id="paymentInfoModalLinkLink" style="color:#ff6666;font-size:1.1em;float:lef;margin-top:10px;margin-left:0.5em" href="#openModalPayments"> Click to see more details about payments</a>
 {% endcomment %}
 
-<div id="sellingHeader" class="faqHeader" style="font-size:1.4em;margin-bottom:0.4em;" >
+<div id="sellingHeader" class="faqHeader" style="margin-bottom:0.4em;" >
   How do I become a seller?
 </div>
 
@@ -43,7 +62,7 @@
 </div>
 
 <br><br>
-<div id="paymentsHeader" class="faqHeader" style="font-size:1.4em;margin-bottom:0.4em;" >
+<div id="paymentsHeader" class="faqHeader" style="margin-bottom:0.4em;" >
   How are payments handled?
 </div>
 
@@ -65,7 +84,7 @@
 </div>
 <br><br>
 
-<div id="shippingHeader" class="faqHeader" style="font-size:1.4em;margin-bottom:0.4em;" >
+<div id="shippingHeader" class="faqHeader" style="margin-bottom:0.4em;" >
   What are the shipping and delivery options?
 </div>
 
