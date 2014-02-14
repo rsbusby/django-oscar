@@ -31,7 +31,7 @@
                 <ul class="nav pull-left">
               
                   <li>
-                    <a href="{% url 'catalogue:index' %}"><i class="icon-home"></i> {% trans "HOME" %}</a>
+                    <a href="{% url 'catalogue:index' %}">{% trans "SHOP" %}</a>
                   </li>
                    <li class="divider-vertical"></li>                   
 
@@ -102,10 +102,7 @@
 
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
-                        <li>
-                            <a id="my-account" href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "ACCOUNT" %}</a>
-                        </li>
-                                           <li class="divider-vertical"></li>                   
+                                     
 
                         {% comment %}
                         <li>
@@ -125,15 +122,21 @@
                         {% endif %}
                                            <li class="divider-vertical"></li>                   
 
+                        <li>
+                            <a id="my-account" href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "ACCOUNT" %}</a>
+                        </li>
+                                           <li class="divider-vertical"></li>   
                         {% if user.is_staff %}
                          <li><a href="{% url 'dashboard:index' %}"> {% trans "Admin" %}</a></li>
                                             <li class="divider-vertical"></li>                   
 
                         {% endif %}
 
-
                         <li><a href="{% url 'customer:logout' %}">{#<i class="icon-signout"></i>#} {% trans "LOGOUT " %}{#{{user.email}}#}</a></li>
                     {% else %}
+                        <li><a id="open-booth" href="{% url 'register_store' %}"> {% trans "SELL" %}</a></li>
+                                                                    <li class="divider-vertical"></li>                   
+
                         <li><a href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "LOGIN or REGISTER" %}</a></li>
                     {% endif %}
 

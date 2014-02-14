@@ -2807,7 +2807,8 @@ def register_store(*args, **kwargs):
 
         ## make sure is authenticated
         if not user.id:
-            return redirect(url_for('catalogue:index'))
+            messages.success(request, "Please login or register to begin the selling setup process.")
+            return redirect(url_for('customer:login') + "?next=" + "/homemade/register_store/")
 
         try:
             if user.partner:
@@ -4011,7 +4012,7 @@ def chargeSharedOscar(request, basket, order_number, amountInCents, feeInCents):
     #                                   api_key=seller.stripeAccountToken
     #                                   )
 
-
+    
     print tempToken
     try:
         charge = stripe.Charge.create(

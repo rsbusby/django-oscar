@@ -70,7 +70,7 @@
 
     {% endif %}
 
-    {% if 1 %}
+    {% if not oscarUserToMsg.is_staff  %}
     <div id="reply_to_group" style="font-size:1.1em;margin:1em 0 0 0">
        <input id="reply_to_input" style="margin:0em 1em 0.5em 0" type="checkbox" name="reply_to">
        Allow the recipient to see and reply to your email address
@@ -101,7 +101,7 @@
       <dt>Message:</dt>
    
    
-   <div id="msgText_err"></div>
+   <div id="msgText_err "></div>
     <dd>
       <textarea id="msgText" class="wide" style="margin:8px 0 0 6px" autofocus="autofocus" rows=5 name=text >{{msgText}}</textarea>
     </dd>
