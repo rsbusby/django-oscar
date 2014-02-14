@@ -1316,12 +1316,15 @@ def contactUs(*args, **kwargs):
                 
                 senderName = request.user.partner.name
             except:
-                if request.user.first_name:
-                    sender = request.user
-                    senderName = request.user.first_name + ' ' + request.user.last_name
-                    if not senderName:
-                        senderName = " user " + request.user.id
-                else:
+                try:
+                    if request.user.first_name:
+                        sender = request.user
+                        senderName = request.user.first_name + ' ' + request.user.last_name
+                        if not senderName:
+                            senderName = " user " + request.user.id
+                    else:
+                        senderName = "an anonymous user"
+                except:
                     senderName = "an anonymous user"
 
             subject = "Homemade 1616 question" +topicForSubject+ ", from " + senderName 
