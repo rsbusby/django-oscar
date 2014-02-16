@@ -1257,6 +1257,8 @@ def invite(*args, **kwargs):
 def contactUs(*args, **kwargs):
 
 
+
+
     if STAND_ALONE:
         if g.user:
             u = g.user
@@ -1346,7 +1348,7 @@ def contactUs(*args, **kwargs):
                 code="CONTACT_PEER", context=ctx)
          
             sender = None
-            if request.user.is_authenticated:
+            if request.user.is_authenticated():
                 sender = request.user
 
             Dispatcher().dispatch_user_messages(oscarUserToMsg, msgs, sender)

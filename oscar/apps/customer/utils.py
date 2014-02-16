@@ -108,6 +108,8 @@ class Dispatcher(object):
         """
         Sends message to the registered user / customer and collects data in database
         """
+
+        import ipdb;ipdb.set_trace()
         if not user.email:
             self.logger.warning("Unable to send email messages as user #%d has no email address", user.id)
             return
