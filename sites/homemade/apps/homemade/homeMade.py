@@ -1345,12 +1345,16 @@ def contactUs(*args, **kwargs):
             msgs = CommunicationEventType.objects.get_and_render(
                 code="CONTACT_PEER", context=ctx)
          
-            Dispatcher().dispatch_user_messages(oscarUserToMsg, msgs, request.user)
+            sender = None
+            if request.user.is_authenticated:
+                sender = request.user
+
+            Dispatcher().dispatch_user_messages(oscarUserToMsg, msgs, sender)
             ## hack
             try:
                 if subject.count("question") > 0:
                     ewUser = User.objects.filter(email="erica@homemade1616.com")[0]
-                    Dispatcher().dispatch_user_messages(ewUser, msgs, sender=request.user)            
+                    Dispatcher().dispatch_user_messages(ewUser, msgs, sender=sender)            
             except:
                 pass
 
