@@ -1289,10 +1289,16 @@ def contactUs(*args, **kwargs):
 
     try:
         oscarUserToMsg = User.objects.filter(is_staff=True)[0]
+
     except:
         msg = "No user or booth by that name."
         return redirect(url_for('about',  msg=msg))
 
+
+    try:
+        print "user to msg: " + oscarUserToMsg.email
+    except:
+        pass
 
     msg = None
     if request.method == 'POST':
