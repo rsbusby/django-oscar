@@ -130,7 +130,16 @@
 </div>  {# row #}
 
 
+      {% if oscarUserToMsg.is_staff %}
+<br><br><br>
+<div class="row-fluid">
 
+<div class="span8 offset2">
+<div>You may also contact us at <a href="mailto:info@homemade1616.com">info@homemade1616.com</a>
+</div>
+</div>
+</div>
+  {% endif %}
 <script>
 
 function errWrap(text) {
