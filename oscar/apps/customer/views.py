@@ -38,13 +38,13 @@ EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm = get_clas
 ProfileForm = get_class('customer.forms', 'ProfileForm')
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 PickupAddressForm = get_class('address.forms', 'PickupAddressForm')
+StoreAddressForm = get_class('address.forms', 'StoreAddressForm')
 
 user_registered = get_class('customer.signals', 'user_registered')
 Order = get_model('order', 'Order')
 Line = get_model('basket', 'Line')
 OrderLine = get_model('order', 'Line')
 Basket = get_model('basket', 'Basket')
-UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'Email')
 UserAddress = get_model('address', 'UserAddress')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
@@ -977,7 +977,7 @@ class StoreShippingAddressView(CreateView):
     saved as the default outgoing shipping address.
     """
     template_name = 'customer/store_address.html'
-    form_class = UserAddressForm
+    form_class = StoreAddressForm
     model = UserAddress
 
     #def __init__(self):

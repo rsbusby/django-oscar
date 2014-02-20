@@ -29,7 +29,7 @@ class UserAddressForm(AbstractAddressForm):
 
     class Meta:
         model = UserAddress
-        exclude = ('user', 'num_orders', 'hash', 'search_text', 'latitude', 'longitude', 'line3', 'line2','title','phone_number')
+        exclude = ('user', 'num_orders', 'hash', 'search_text', 'latitude', 'longitude', 'line3', 'line2','title','phone_number','location_name')
 
     # def __init__(self, user, *args, **kwargs):
 
@@ -83,4 +83,20 @@ class PickupAddressForm(UserAddressForm):
         self.instance.user = user
    
 
+class StoreAddressForm(UserAddressForm):
 
+
+    no_checkboxes = None
+
+    class Meta:
+        model = UserAddress
+        exclude = ('user', 'num_orders', 'hash', 'search_text', 'latitude', 'longitude', 'line3', 'line2', 'title', 'notes')
+        fields =  ('location_name', 'first_name', 'last_name', 'line1','line4','state', 'postcode')
+
+
+    def __init__(self, user, no_checkboxes=False, *args, **kwargs):
+
+        super(UserAddressForm, self).__init__(*args, **kwargs)
+
+        self.instance.user = user
+   
