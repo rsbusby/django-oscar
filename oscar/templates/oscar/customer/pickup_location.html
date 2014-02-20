@@ -3,7 +3,6 @@
 {% load i18n %}
 {% load staticfiles %}
 
-
 {% block title %}
     {% trans "Set the location and time for pickup" %} | {{ block.super }}
 {% endblock %}
@@ -40,7 +39,321 @@
 {% endblock %}
 
 
-{% block content %}
+
+
+{% block extrahead %}
+
+<style>
+
+ #pac-input {
+        background-color: #fff;
+        padding: 6px 11px 6px 13px;
+        width: 400px;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        text-overflow: ellipsis;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+        margin-left: -1px;
+        padding-left: 14px;  /* Regular padding-left + 1. */
+        width: 401px;
+      }
+
+      .pac-container {
+        font-family: Roboto;
+      }
+
+
+   #locationField, #controls {
+        position: relative;
+        width: 480px;
+      }
+      #autocomplete {
+        ppposition: absolute;
+        top: 0px;
+        left: 0px;
+        width: 99%;
+      }
+      .label {
+        text-align: right;
+        font-weight: bold;
+        width: 80%;
+        margin:1em;
+        color: #303030;
+        background-color: #f0f0ff;
+
+
+      }
+      #address {
+        border: 1px solid #000090;
+        background-color: #f0f0ff;
+        width: 99%;
+        padding-right: 2px;
+      }
+      #address td {
+        font-size: 0.9em;
+      }
+      .field {
+        wwidth: 99%;
+        padding:5px;
+        margin:0px;
+      }
+      .slimField {
+        width: 40%;
+      }
+      .wideField {
+        width: 80%;
+      }
+      #locationField {
+
+      }
+
+
+</style>
+ <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key={{mapsKey}}&sensor=false&libraries=places">
+    </script>
+
+<script type="text/javascript">
+  
+
+
+
+
+function initialize() {
+
+  var markers = [];
+  var mapOptions = {
+          center: new google.maps.LatLng(34., -118.244),
+          zoom: 8,
+          streetViewControl: false,
+          mapTypeControl: false,
+        };
+  var map = new google.maps.Map(document.getElementById('map-canvas'), {
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+
+  var defaultBounds = new google.maps.LatLngBounds(
+      new google.maps.LatLng(33.902, -118.7159),
+      new google.maps.LatLng(34.3974, -118.2631));
+  map.fitBounds(defaultBounds);
+
+  // Create the search box and link it to the UI element.
+  var input = /** @type {HTMLInputElement} */(
+      document.getElementById('pac-input'));
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+  var searchBox = new google.maps.places.SearchBox(
+    /** @type {HTMLInputElement} */(input));
+
+  // Listen for the event fired when the user selects an item from the
+  // pick list. Retrieve the matching places for that item.
+  google.maps.event.addListener(searchBox, 'places_changed', function() {
+    var places = searchBox.getPlaces();
+
+    for (var i = 0, marker; marker = markers[i]; i++) {
+      marker.setMap(null);
+    }
+
+    // For each place, get the icon, place name, and location.
+    markers = [];
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0, place; place = places[i]; i++) {
+      var image = {
+        url: place.icon,
+        size: new google.maps.Size(71, 71),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(17, 34),
+        scaledSize: new google.maps.Size(25, 25)
+      };
+
+      // Create a marker for each place.
+      var marker = new google.maps.Marker({
+        map: map,
+        icon: image,
+        title: place.name,
+        position: place.geometry.location
+      });
+
+      markers.push(marker);
+
+      bounds.extend(place.geometry.location);
+    }
+
+    map.fitBounds(bounds);
+  });
+
+  // Bias the SearchBox results towards places that are within the bounds of the
+  // current map's viewport.
+  google.maps.event.addListener(map, 'bounds_changed', function() {
+    var bounds = map.getBounds();
+    searchBox.setBounds(bounds);
+  });
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+
+</script>
+
+
+<script type="text/javascript">
+  
+var placeSearch, autocomplete;
+var componentForm = {
+  // street_number: 'short_name',
+  // route: 'long_name',
+  // locality: 'long_name',
+  // administrative_area_level_1: 'short_name',
+  // //country: 'long_name',
+  // postal_code: 'short_name'
+  street_number: 'short_name',
+  route: 'long_name',
+  locality: 'long_name',
+  administrative_area_level_1: 'short_name',
+  //country: 'long_name',
+  postal_code: 'short_name'
+};
+
+window.onload = initialize
+  
+
+function initialize() {
+  // Create the autocomplete object, restricting the search
+  // to geographical location types.
+  autocomplete = new google.maps.places.Autocomplete(
+      /** @type {HTMLInputElement} */(document.getElementById('autocomplete')),
+      { types: ['geocode'] });
+  // When the user selects an address from the dropdown,
+  // populate the address fields in the form.
+  google.maps.event.addListener(autocomplete, 'place_changed', function() {
+    fillInAddress();
+  });
+}
+
+// The START and END in square brackets define a snippet for our documentation:
+// [START region_fillform]
+function fillInAddress() {
+  // Get the place details from the autocomplete object.
+  var place = autocomplete.getPlace();
+
+  for (var component in componentForm) {
+    document.getElementById(component).value = '';
+    document.getElementById(component).disabled = false;
+  }
+
+  // Get each component of the address from the place details
+  // and fill the corresponding field on the form.
+  for (var i = 0; i < place.address_components.length; i++) {
+    var addressType = place.address_components[i].types[0];
+    console.log(place.address_components[i]);
+    console.log(componentForm[addressType]);
+    if (componentForm[addressType]) {
+      var val = place.address_components[i][componentForm[addressType]];
+      document.getElementById(addressType).value = val;
+      if (addressType == "street_number"){
+        document.getElementById("combinedAddress").value = val;
+        document.getElementById("id_line1").value = val;
+      }
+      if (addressType == "route"){
+        $("#combinedAddress").val($("#combinedAddress").val() + " " + val);
+        $("#id_line1").val($("#id_line1").val() + " " + val);
+
+      }
+      if (addressType == "postal_code"){
+        $("#id_postcode").val(val);
+      }
+      if (addressType == "locality"){
+        $("#id_line4").val(val);
+      }
+      if (addressType == "administrative_area_level_1"){
+        $("#id_state").val(val);
+      }
+    }
+  }
+}
+// [END region_fillform]
+
+// [START region_geolocation]
+// Bias the autocomplete object to the user's geographical location,
+// as supplied by the browser's 'navigator.geolocation' object.
+function geolocate() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var geolocation = new google.maps.LatLng(
+          position.coords.latitude, position.coords.longitude);
+      autocomplete.setBounds(new google.maps.LatLngBounds(geolocation,
+          geolocation));
+    });
+  }
+}
+// [END region_geolocation]
+
+
+
+</script>
+
+{% endblock extrahead %}
+
+  {% block content %}
+
+<div id="map-canvas" style="width:100%;height:300px;"> </div>
+
+
+ <form action="{% url 'customer:store-pickup-location' %}" method="post">
+<input id="pac-input" class="controls" type="text" placeholder="Search Box" autocomplete="off" style="z-index: 0; position: absolute; left: 88px; top: 0px;">
+
+
+
+<div class="row-fluid">
+<div class="span6">
+<div id="locationField">
+      <input id="autocomplete" placeholder="Enter your address"
+             onFocus="geolocate()" type="text"></input>
+    </div>
+
+    <table id="address">
+      <tr>
+        <td class="label">Street address</td>
+        <td class="slimField"><input class="field" id="street_number"
+              disabled="true"></input></td>
+        <td class="wideField" colspan="2"><input class="field" id="route"
+              disabled="true"></input></td>
+      </tr>
+      <tr>
+        <td class="label">City</td>
+        <td class="wideField" colspan="3"><input class="field" id="locality"
+              disabled="true"></input></td>
+      </tr>
+      <tr>
+        <td class="label">State</td>
+        <td class="slimField"><input class="field"
+              id="administrative_area_level_1" disabled="true"></input></td>
+
+        <td class="label">Zip code</td>
+        <td class="wideField"><input class="field" id="postal_code"
+              disabled="true"></input></td>
+      </tr>
+     <!--  <tr>
+        <td class="label">Country</td>
+        <td class="wideField" colspan="3"><input class="field"
+              id="country" disabled="true"></input></td>
+      </tr> -->
+    </table>
+</div>
+</form>
+ <div style="clear:both;"></div>
+
+<div class="clearfix span3">
+  <button id='store-ship-new-submit' type="submit" style="position:relative;margin:10 0 10 0" class="btn btn-primary btn-full pickup-location">{% trans "Save this location" %}</button>
+</div>
+</div>
+
+<input type="text" id="combinedAddress"/>
+
 
  <div style="clear:both;"></div>
 
@@ -83,7 +396,7 @@
 							<address>{% for field in address.active_address_fields %}
 							{{ field }}<br/>
 							{% endfor %}</address>
-							<form action="{% url 'customer:store-shipping-address' %}?basket_id={{basket.id}}" method="post">
+							<form action="{% url 'customer:store-pickup-location' %}?basket_id={{basket.id}}" method="post">
 								{% csrf_token %}
 								<input type="hidden" name="action" value="ship_to" />
 								<input type="hidden" name="address_id" value="{{ address.id }}" />
@@ -208,7 +521,7 @@ endDateTextBox.timepicker({
  <div style="clear:both;"></div>
 
 
-    <form action="{% url 'customer:store-shipping-address' %}" method="post" class="form-horizontal"  data-behaviours="lock">
+    <form action="{% url 'customer:store-pickup-location' %}" method="post" class="form-horizontal"  data-behaviours="lock">
         <div class="well well-info">
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=form %}
