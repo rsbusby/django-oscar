@@ -58,6 +58,20 @@
                      </div>
 {% endcomment %}
 
+<script>
+$(document).ready(function() {
+
+$('#id_q').focus(function() {
+
+  $('#advancedInput').slideDown(200);
+  $(this).attr("placeholder", "Search by item name");
+});
+
+});
+
+
+</script>
+
 <form method="get" action="{% url 'search:search-default' %}" class="navbar-form pull-right">
     {#{{ search_form.q }}#}
  <input id="id_q" name="q" placeholder="Search" tabindex="1" type="search" />
