@@ -218,7 +218,7 @@ class AbstractAddress(models.Model):
 
     # We use quite a few lines of an address as they are often quite long and
     # it's easier to just hide the unnecessary ones than add extra ones.
-    line1 = models.CharField(_("First line of address"), max_length=255)
+    line1 = models.CharField(_("Street address"), max_length=255)
     line2 = models.CharField(
         _("Second line of address"), max_length=255, blank=True, null=True)
     line3 = models.CharField(

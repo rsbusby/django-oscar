@@ -3,6 +3,7 @@ from django import forms
 from django.db.models import get_model
 
 UserAddress = get_model('address', 'useraddress')
+PickupAddress = get_model('address', 'pickupaddress')
 Country = get_model('address', 'Country')
 
 
@@ -28,7 +29,7 @@ class UserAddressForm(AbstractAddressForm):
 
     class Meta:
         model = UserAddress
-        exclude = ('user', 'num_orders', 'hash', 'search_text', 'latitude', 'longitude')
+        exclude = ('user', 'num_orders', 'hash', 'search_text', 'latitude', 'longitude', 'line3', 'line2','title','phone_number')
 
     # def __init__(self, user, *args, **kwargs):
 
@@ -63,5 +64,23 @@ class UserAddressForm(AbstractAddressForm):
             self.fields['country'].queryset = countries
             self.fields['country'].empty_label = None
 
+
+class PickupAddressForm(UserAddressForm):
+
+
+    no_checkboxes = None
+
+    class Meta:
+        model = UserAddress
+        exclude = ('user', 'num_orders', 'hash', 'search_text', 'latitude', 'longitude', 'line3', 'line2', 'first_name', 'last_name', 'title', 'notes')
+        fields =  ('location_name', 'line1','line4','state', 'postcode')
+
+
+    def __init__(self, user, no_checkboxes=False, *args, **kwargs):
+
+        super(UserAddressForm, self).__init__(*args, **kwargs)
+
+        self.instance.user = user
+   
 
 

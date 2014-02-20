@@ -37,6 +37,8 @@ EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm = get_clas
                        'SearchByDateRangeForm'])
 ProfileForm = get_class('customer.forms', 'ProfileForm')
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
+PickupAddressForm = get_class('address.forms', 'PickupAddressForm')
+
 user_registered = get_class('customer.signals', 'user_registered')
 Order = get_model('order', 'Order')
 Line = get_model('basket', 'Line')
@@ -1100,9 +1102,12 @@ class StoreShippingOptionsView(TemplateView):
     #   super(StoreShippingAddressView, self).__init__(no_checkboxes=True)
     #   return
 
-##    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
 
-##        return super(StoreShippingOptionsView, self).get(request, *args, **kwargs)
+        if not self.request.user.is_authenticated():
+            return HttpResponseRedirect(reverse('customer:login'))
+
+        return super(StoreShippingOptionsView, self).get(request, *args, **kwargs)
 
     def get_initial(self):
         initial = {}
@@ -1269,7 +1274,7 @@ class StorePickupLocationView(CreateView):
     saved as a pickup location.
     """
     template_name = 'customer/pickup_location.html'
-    form_class = UserAddressForm
+    form_class = PickupAddressForm
     model = UserAddress
 
     #def __init__(self):
@@ -1282,7 +1287,7 @@ class StorePickupLocationView(CreateView):
 
     def get_initial(self):
         initial = {}
-        initial['is_default_for_store']=True
+        ##initial['is_default_for_store']=True
 
         return initial
 
@@ -1330,10 +1335,25 @@ class StorePickupLocationView(CreateView):
         # filled in)
         ## invalid POST if not store...
 
+
+
+
         try:
             p = self.request.user.partner
         except:
             return HttpResponseRedirect(reverse('customer:address-list'))
+
+        if self.request.user.is_authenticated():
+            return HttpResponseRedirect(reverse('customer:address-list'))
+
+        ## check if geolocation form data
+        #if 'combinedAddress' in self.request.POST and len(self.request.POST.get("combinedAddress")) > 0:
+                
+
+                #newAddress = Partner.objects.create(name=u.storeName)
+                #address = UserAddress._default_manager.get(
+                #    pk=self.request.POST['address_id'], user=self.request.user)
+
 
         if self.request.user.is_authenticated() and 'address_id' in self.request.POST:
             address = UserAddress._default_manager.get(
