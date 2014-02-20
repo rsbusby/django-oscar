@@ -310,11 +310,14 @@ function geolocate() {
 
 <div class="row-fluid">
 <div class="span6">
+{% comment %}
 <div id="locationField">
-      <input id="autocomplete" placeholder="Enter your address"
+      <input id="autocomplete" placeholder="Search for an address"
              onFocus="geolocate()" type="text"></input>
-    </div>
+      <img src="{% static 'icons/powered-by-google-on-white.png' %}">
 
+    </div>
+{% endcomment %}
     <table id="address">
       <tr>
         <td class="label">Street address</td>
@@ -520,7 +523,14 @@ endDateTextBox.timepicker({
 
  <div style="clear:both;"></div>
 
+    <div id="locationField">
 
+      <input id="autocomplete" placeholder="Search for an address"
+             onFocus="geolocate()" type="text"></input>
+
+      <img src="{% static 'icons/powered-by-google-on-white.png' %}">
+
+    </div>
     <form action="{% url 'customer:store-pickup-location' %}" method="post" class="form-horizontal"  data-behaviours="lock">
         <div class="well well-info">
             {% csrf_token %}
