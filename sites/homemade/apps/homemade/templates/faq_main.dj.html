@@ -142,6 +142,7 @@ $(document).ready(function() {
   $('#shippingHeader').click(function() { 
 
     $("#shippingText").slideToggle(200);
+     goToByScroll("shippingText");
 
   });
 
@@ -151,9 +152,12 @@ $(document).ready(function() {
 
    $('#paymentsHeader').click(function() { 
     $("#paymentsText").slideToggle(200);
+    goToByScroll("paymentsText");
   });
 
-
+function goToByScroll(id){
+    $('html,body').animate({scrollTop: $("#"+id).offset().top},'slow');
+}
 
  // $('#shippingHeader').hover(function() { 
  //    $("#shippingText").fadeIn(800);
