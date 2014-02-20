@@ -2,6 +2,8 @@
 {% load url from future %}
 {% load currency_filters %}
 {% load i18n %}
+{% load staticfiles %}
+
 
 {% block title %}
     {% trans "Payment details" %} | {{ block.super }}
@@ -156,8 +158,15 @@ transaction. </p>
      <input type="hidden" name="setSponsoredOrg" value='' /> 
      <input type="hidden" name="sponsored_org_id" value='{{sponsored_org.id}}' /> 
 
+     <span>
      <button style="width:170px;hheight:3em;padding:5px 6px 5px 6px" class="orgButton" type="submit" name="sponsoredOrg" value="">{{sponsored_org.name}}</button>
+     </span>
+     <span>
+    <img src="{% static 'icons/FoodForward_TwoColor-LLR.jpg' %}" class="sponsoredLogo" style="width:8em" > 
 
+     <a style="margin-left:3em" href="http://foodforward.org/about/" target="_blank"> About this organization</a>
+      
+     </span>
   </form>
   <div style="clear:both"> </div>
 
