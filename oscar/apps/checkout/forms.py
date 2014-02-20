@@ -28,7 +28,7 @@ class ShippingAddressForm(AbstractAddressForm):
 
     class Meta:
         model = get_model('order', 'shippingaddress')
-        exclude = ('user', 'search_text')
+        exclude = ('user', 'search_text','title', 'line2', 'line3')
 
 
 class GatewayForm(AuthenticationForm):
