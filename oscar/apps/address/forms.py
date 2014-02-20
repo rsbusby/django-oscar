@@ -57,6 +57,7 @@ class UserAddressForm(AbstractAddressForm):
             is_shipping_country=True)
 
         # No need to show country dropdown if there is only one option
+
         if len(countries) == 1:
             del self.fields['country']
             self.instance.country = countries[0]
@@ -99,4 +100,15 @@ class StoreAddressForm(UserAddressForm):
         super(UserAddressForm, self).__init__(*args, **kwargs)
 
         self.instance.user = user
+
+        countries = Country._default_manager.filter(
+            is_shipping_country=True)
+
+        # No need to show country dropdown if there is only one option
+        if len(countries) == 1:
+            #del self.fields['country']
+            self.instance.country = countries[0]
+        #else:
+        #    self.fields['country'].queryset = countries
+        #    self.fields['country'].empty_label = None
    
