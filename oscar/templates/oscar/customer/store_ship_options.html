@@ -615,7 +615,7 @@ $('#submitShippingOptions').click(function() {
 
                 <button id="submitShippingOptions" style="margin-left:1.2em;font-size:1.2em" class="btn btn-primary btn-large" name="actio" type="button" value="save">{% trans "Save" %}</button>
 
-                <a style="margin-right:1.2em;margin-left:1.2em;" href="/catalogue/?booth={{product.stockrecord.partner.id}}">{% trans "Cancel" %}</a>
+                <a style="margin-right:1.2em;margin-left:1.2em;" href="/catalogue/?booth={{request.user.partner.id}}">{% trans "Cancel" %}</a>
 
             </div>
 
