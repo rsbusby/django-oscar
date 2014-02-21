@@ -160,9 +160,17 @@ max-width: none;
 {% endblock %}
 
 {% block headertext %}
-    {% blocktrans with q=query %}
-        <div style="font-size:0.8em">Products matching "{{ q }}" </div>
+
+    {% if spatial_results|length %}
+    {% blocktrans %}
+        <div style="font-size:0.8em">Products matching "{{ query }}" </div>
     {% endblocktrans %}
+    {% else %}
+        <div style="font-size:0.8em">No products matching "{{ query }}" </div>
+    {% endif %}
+
+
+
 {% endblock %}
 
 {% block content %}
@@ -177,7 +185,9 @@ max-width: none;
     {% for res in spatial_results %}
 
             {% if not "disabled" in res.object.status or request.user.is_admin or request.user == partner.user %}
+            {% if res.object != None %}
                 <li>{% render_product res.object %}</li>
+            {% endif %}
             {% endif %}
 
     {% endfor %}
@@ -226,6 +236,10 @@ max-width: none;
         </section>
 {% endcomment %}
 
+
+
+          <div id="map-canvas" style="width:100%;height:300px;"> </div>
+
     {% else %}
         <p>{% trans 'No search results found.' %}</p>
     {% endif %}
@@ -234,7 +248,6 @@ max-width: none;
 
 
 
-          <div id="map-canvas" style="width:100%;height:300px;"> </div>
 {% comment %}
          {% for res in spatial_results %}
            {% if res.object.get_location  %}
