@@ -11,6 +11,7 @@
   color: #009900;
   font-size: 1.2em;
   cursor:pointer;
+  padding-top:1em;
 }
 .faqAnswer {
     background-color: #fafafa;
@@ -62,7 +63,7 @@ text-shadow: 0px 1px 14px rgba(0,0,0,0.9),
 </p>
 </div>
 
-<br><br>
+<br>
 <div id="paymentsHeader" class="faqHeader" style="margin-bottom:0.4em;" >
   How are payments handled?
 </div>
@@ -83,7 +84,7 @@ text-shadow: 0px 1px 14px rgba(0,0,0,0.9),
 <b>If you have any further questions about payments please <a href="{% url 'contactUs' %}?topic=Payment processing" target="_blank" >contact us</a>.</b>
 </p>
 </div>
-<br><br>
+<br>
 
 <div id="shippingHeader" class="faqHeader" style="margin-bottom:0.4em;" >
   What are the shipping and delivery options?
@@ -142,7 +143,7 @@ $(document).ready(function() {
   $('#shippingHeader').click(function() { 
 
     $("#shippingText").slideToggle(200);
-     goToByScroll("shippingText");
+     goToByScroll("shippingHeader");
 
   });
 
@@ -152,7 +153,7 @@ $(document).ready(function() {
 
    $('#paymentsHeader').click(function() { 
     $("#paymentsText").slideToggle(200);
-    goToByScroll("paymentsText");
+    goToByScroll("paymentsHeader");
   });
 
 function goToByScroll(id){
