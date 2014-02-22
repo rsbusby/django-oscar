@@ -203,25 +203,27 @@ div.item, div.cartitems button {
 /* input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     /* display: none; <- Crashes Chrome on hover */
-    -webkit-appearance: none;
-    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
-}
-*/
+   /*-webkit-appearance: none;*/
+    /*margin: 0;  <-- Apparently some margin are still there even though it's hidden */
+/*}*/
 
 
 
-div.footer3 {
+
+
+.footer36 {
+  margin-bottom: 6em;
 	text-align:center ;
 	position:relative;
 	z-index: 30;
 	margin-left:-0.98%;	
 	margin-right:-1.43%;
 	background:url("icons/FooterBackground.png") ;
-    background-repeat: no-repeat;
-    background-position: bottom;
-    margin-top: -76px; /* negative value of footer height */
-    height: 60px;
-    gcolor:#666666;	
+  background-repeat: no-repeat;
+  background-position: bottom;
+  margin-top: -76px; //negative value of footer height 
+  height: 60px;
+  gcolor:#666666;	
 	
 	ggwidth:100%;
 	ggbottom:0; 
@@ -229,6 +231,14 @@ div.footer3 {
 	
     ggclear:both;
   
+}
+
+.footer3{
+  background-color: #F5EFDF;
+  padding-bottom:1.2em;
+  margin-bottom:1.2em;
+    text-align:center ;
+  position:relative;
 }
 
 div.footer3 a { color:#444444}
@@ -241,7 +251,8 @@ div.footer3 ul {
 div.footer3 ul li {
 	
 	display:inline;
-	padding-left:2em;
+  padding-left:0.5em;
+  padding-right:1.5em;  
 }
 
 div.footerText {
@@ -629,12 +640,32 @@ img.brandLogo {
 
 }
 
+.brandLogoMobile {
+
+  display: none;
+}
+
 @media (max-width: 767px) {
 
 img.brandLogo {
-  z-index:100;width:100%;margin:-40px 0 15px 26px;max-width:260px
+  z-index:100;width:100%;margin:-40px 0 15px 26px;max-width:260px;
+  display:none;
   }
-  }
+
+
+.brandLogoMobile {
+
+  display: inline;
+}
+
+
+.brandLogoLargeScreen {
+
+  display:none !important;
+} 
+
+  }  /* small size */
+
 
 
 div.searchWrapper {
