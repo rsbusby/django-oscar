@@ -645,6 +645,7 @@ div.footer3 {display:none;}
 img.detailPic {
 
   margin-bottom:2em;
+  max-height:50%;
 }
 
 

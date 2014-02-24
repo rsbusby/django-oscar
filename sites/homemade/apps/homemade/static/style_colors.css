@@ -664,6 +664,11 @@ img.brandLogo {
   display:none !important;
 } 
 
+.nav-collapse { 
+    -webkit-transform: none !important; 
+    z-index: 1 !important; 
+} 
+
   }  /* small size */
 
 
