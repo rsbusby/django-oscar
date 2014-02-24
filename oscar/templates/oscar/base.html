@@ -12,7 +12,8 @@
         <meta name="created" content="{% now "jS M Y h:i" %}" />
         <meta name="description" content="{% block description %}{% endblock %}" />
         <meta name="keywords" content="{% block keywords %}{% endblock %}" />
-        <meta name="viewport" content="{% block viewport %}width=device-width{#, initial-scale=1.0, user-scalable=no#}"{% endblock %}>
+        <meta name="viewport" content="{% block viewport %}width=device-width, initial-scale=1.0, user-scalable=no"
+        {% endblock %}>
     
         <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
         <!--[if lt IE 9]>
@@ -108,5 +109,20 @@
 
         {# Page meta-data - this is populated by the 'metadata' template context processor #}
         <!-- {% trans "Version:" %} {{ version }} -->
+
+{# Footer #}
+{% comment %}
+<div class="footer3" > 
+  <div class="footerText" >
+  <ul>
+     <li>2014 Homemade 1616</li>
+     <li><a href="mailto:info@homemade1616.com" target="_blank">info@homemade1616.com </a></li>
+     <li><a href="{% url 'contactUs' %}" >Contact Us</a>  </li>
+     <li><a href="#" >Top</a></li>
+  </ul>
+  </div> {#footerText#}
+ </div> {# footer3 #}
+{% endcomment %}
+
     </body>
 </html>
