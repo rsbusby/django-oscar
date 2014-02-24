@@ -12,8 +12,11 @@
         <meta name="created" content="{% now "jS M Y h:i" %}" />
         <meta name="description" content="{% block description %}{% endblock %}" />
         <meta name="keywords" content="{% block keywords %}{% endblock %}" />
-        <meta name="viewport" content="{% block viewport %}width=device-width, target-densitydpi=device-dpi,initial-scale=1.0, user-scalable=no"
-        {% endblock %}>
+        
+        {#<meta name="viewport" content="{% block viewport %}width=device-width, target-densitydpi=device-dpi,initial-scale=1.0, user-scalable=no{% endblock %}">    #}
+        <meta name="viewport" content="{% block viewport %}initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,width=device-width, height=device-height,target-densitydpi=device-dpi,user-scalable=yes{% endblock %}" />
+
+        
     
         <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
         <!--[if lt IE 9]>
