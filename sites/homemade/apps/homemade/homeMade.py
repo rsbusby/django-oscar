@@ -1311,6 +1311,11 @@ def contactUs(*args, **kwargs):
             topicForSubject = ""
             #topic = None
 
+            anonEmail = None
+            if request.form.get('email'):
+                anonEmail = request.form.get('email')
+                print "anonymous email from " + anonEmail
+
             if request.form['topicChoice']:
                 topic = request.form['topicChoice']
                 topicForSubject = ""
