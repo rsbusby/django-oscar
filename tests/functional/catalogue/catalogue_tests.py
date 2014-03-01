@@ -515,10 +515,9 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
         ## fill out form with something
         ta = browser.find_element_by_tag_name("textarea")
         ta.send_keys("this is a test message ")
-
-
+        
         ## submit form
-        browser.find_element_by_id("msg-submit").click()
+        browser.find_element_by_id("submitMessage").click()
 
         ## go to sent emails page
         url = "/accounts/emails/?sent=True"
@@ -1069,7 +1068,6 @@ class TestHolisticStuff(LiveServerTestCase, WebTestCase, ClientTestCase):
 
         ## go to basket, OK
         self.go(reverse('basket:summary'))
-        import ipdb;ipdb.set_trace()
 
         ## assert that there is only one basket
         self.failIf(browser.page_source.count("Go to Checkout") != 1)
