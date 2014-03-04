@@ -7,12 +7,12 @@
 <link rel='stylesheet' type=text/css href="{% static 'style_modal.css' %}">
 <link rel='stylesheet' type='text/css' href="{% static 'style_colors.css' %}"/>
 
-
-<script type="text/javascript" src="{% static 'js/jquery-1.8.2.min.js' %}"></script>
+{% comment %}
 <script type="text/javascript" src="{% static 'js/jquery.autocomplete.min.js' %}"></script>
 
 <script  src="{% static 'js/select2.js' %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'js/select2.css' %}" />
+{% endcomment %}
 
 <!-- add image crop styles -->
 <link href="{% static 'js/main_crop.css' %}" rel="stylesheet" type="text/css" />
@@ -21,8 +21,17 @@
 <!-- add image crop scripts -->
 <script src="{% static 'js/jquery.Jcrop.min.js' %}"></script>
 <script src="{% static 'js/script_crop.js' %}"></script>
+{% comment %}
 <script src="{% static 'js/modernizr.custom.60846.js' %}"></script>
+{% endcomment %}
 
+{# summernote WYSIWYG #}
+<!-- include summernote css/js-->
+<link href="{% static 'js/summernote/summernote.css' %}" rel="stylesheet">
+<script src="{% static 'js/summernote/summernote.js' %}"></script>
+
+<link href="{% static 'js/summernote/summernote_page.css' %}" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
 
 
 {% endblock %}
@@ -49,7 +58,7 @@
 
 
   {% comment %}<form class="store_register" action="" method=post  enctype="multipart/form-data">{% endcomment %} 
-    <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="">
+    <form id="booth-form" class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="">
       {% csrf_token %}
 
   {% comment %} <form class="store_pic_upload_form" enctype="multipart/form-data" method="post" action=""  onsubmit="return checkForm()"> {% endcomment %}
@@ -103,12 +112,30 @@
     
 
  
-      <dt>Bio:  
+
+      <dt>Bio: 
+      {% comment %} 
     {% if partner.bio %} 
       <dd><textarea id="bio" class="wide" rows=4 cols=80 name=bio>{{partner.bio}}</textarea>
     {% else %}
       <dd><textarea id="bio" rows=4 cols=80 name=bio></textarea>
     {% endif %}
+{% endcomment %}
+
+  <div class="row-fluid" style="max-width:60%">
+    <div class="span9">
+      <div class="summernote " id="bioContainer" style="max-width:100%" >
+         {% if partner.bio %} 
+           {{partner.bio|safe}}
+         {% endif %}
+      </div>
+    </div>
+    </div>
+
+        <input type="hidden" id="bio" name="bio"  type=text
+        {% if partner.bio %} 
+         value="{{partner.bio}}"
+       {% endif %} />
 
 
     {% comment %}
@@ -177,11 +204,77 @@
  <br>
 
 
- 
+{% comment %} 
  <div class=actions > <input id="submit-booth" class="noNeedsTerms" type=submit value="Save changes" style="margin:2.5em"></div>
+{% endcomment %}
+
+ <button id="submitTheBooth" style="margin-left:1.2em;font-size:1.2em" class="btn btn-primary btn-large" name="actio" type="button" value="save">Save Changes</button>
+
+
   </form>
   
  
-  
+  <script type="text/javascript">
+
+    $(document).ready(function() {
+//      $('.summernote').summernote();
+
+$('.summernote').summernote({
+
+  options: {
+    //  width: null,                  // set editor width
+    //  height: null,                 // set editable height, ex) 300
+
+   //   focus: false,                 // set focus after initilize summernote
+
+    //  tabsize: null,                // size of tab ex) 2 or 4
+    //  styleWithSpan: true,          // style with span (Chrome and FF)
+
+      disableLinkTarget: true,     // hide link Target Checkbox
+    //  disableDragAndDrop: false,    // disable drag and drop event
+
+    //  codemirror: null,             // codemirror options
+
+      // language
+    //  lang: 'en-US',                // language 'en-US', 'ko-KR', ...
+    //  direction: null,              // text direction, ex) 'rtl'
+},
+  toolbar: [
+    //['style', ['style']], // no style button
+    ['style', ['bold', 'italic', 'underline']],
+    ['fontsize', ['fontsize']],
+    //['color', ['color']],
+    ['para', ['ul', 'ol', 'paragraph']],
+    ['link', ['link']],
+    //['height', ['height']],
+    //['insert', ['picture', 'link']], // no insert buttons
+    //['table', ['table']], // no table button
+    //['help', ['help']] //no help button
+  ]
+
+});
+
+    });
+
+
+$(document).ready(function() {
+
+$('#submitTheBooth').click(function() { 
+  //alert("YEAH");
+
+    var sHTML = $('.summernote').code();
+//    alert(sHTML);
+    $("#bio").val($('.summernote').code());
+
+    $("#booth-form").submit();
+});
+});
+
+
+
+
+
+  </script>
+
 {% endblock %}
 
