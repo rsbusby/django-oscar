@@ -1,7 +1,7 @@
 {% load currency_filters %}
 {% load i18n %}
 
-{% if product.is_group %}
+{% if product.is_group and product.min_variant_price_incl_tax %}
     <div class="price_colr priceOscar">{% blocktrans with product.min_variant_price_incl_tax|currency as price %}From {{ price }}{% endblocktrans %}</div>
 {% else %}
     <div class="price_colo priceOscar">{{ product.stockrecord.price_incl_tax|currency }}</div>
