@@ -13,7 +13,8 @@
 
 {% if is_booth %}
 
-    {% if user.is_authenticated and user == product.stockrecord.partner.user or user.is_staff %}
+
+    {% if user.is_authenticated and user.id == product.stockrecord.partner.user.id or user.is_staff %}
 
     {% else%}
        {% if product.is_available_to_buy %} {# and request.user.is_authenticated or  %} #}

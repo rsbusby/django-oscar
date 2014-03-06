@@ -8,6 +8,10 @@
 {% load replace %}
 {% load string_filters %}
 
+
+   {{user}}
+        {{product.stockrecord.partner.user}}
+
 <article {% if not is_booth %}class="product_po" {%endif %}>
 
 
@@ -84,7 +88,6 @@
     {% block product_price %}
     <div class="product_pric">
         {% include "catalogue/partials/stock_record.html" %}
-
 
         {% if user.is_authenticated and user == product.stockrecord.partner.user or user.is_staff %}   {# edit_item_form #}
         <input class="pull-right" type="button" value="Edit this Item" onclick=location.href="{% url 'dashboard:catalogue-product' product.id %}">

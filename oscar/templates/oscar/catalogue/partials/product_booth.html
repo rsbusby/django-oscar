@@ -76,7 +76,8 @@
     <div class="product_pric" style="width:70%">
         {% include "catalogue/partials/stock_record.html" %}
 
-           {% if user.is_staff or user == product.stockrecord.partner.user  %}
+
+           {% if user.is_staff or user.id == product.stockrecord.partner.user.id  %}
                 {#<a class="pull-right" href="{% url 'dashboard:catalogue-product' product.id %}"><i class="icon-edit"></i> {% trans "Edit this item" %}</a>#}
 
                 <input class="pull-right" type="button" value="Edit this item" onclick=location.href="{% url 'dashboard:catalogue-product' product.id  %}">

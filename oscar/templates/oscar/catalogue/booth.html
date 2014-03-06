@@ -301,7 +301,7 @@
     
    <div class="sellerBio" style="margin-top:1em;margin-bottom:1em;">
      {%if partner.bio != None and partner.bio != '' %}
-       <pre>{{partner.bio}} </pre>
+       <pre>{{partner.bio|safe}} </pre>
      {%endif%}
    </div>
    <div style="clear:both;" ></div>
