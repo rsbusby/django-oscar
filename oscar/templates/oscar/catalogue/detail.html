@@ -13,6 +13,17 @@
     <!-- Colorbox (a lightbox plugin) for image galleries -->
     {{block.super}}
     <link rel="stylesheet" href="{% static "oscar/js/colorbox/colorbox.css" %}" type="text/css" media="screen" charset="utf-8"/>
+
+             <style>
+                select option { color: #666; }
+                .empty { color: #999;display:none; }
+
+            select option[default] {
+                color: #888;
+                display:none;
+            }
+
+            </style>
 {% endblock %}
 
 {% block title %}
@@ -62,7 +73,15 @@
       <div class="row-fluid" >
         {% block product_gallery %}
         <div class="span5 pull-left" style="margin:0 1.4em 0 0;padding-left:0.2em">
-            {% include "catalogue/partials/gallery.html" %}
+        {% if product.parent %}
+            {% with product.parent as product %}
+                {% include "catalogue/partials/gallery.html" %}
+            {% endwith %}
+        {% endif %}
+        
+        {% include "catalogue/partials/gallery.html" %}        
+
+
         </div>
         {% endblock %}
 
@@ -105,8 +124,53 @@
             {% endif %} {# user == seller or admin #}
             <h3>{{ product.get_title }}</h3>
 
+       
+
+            {% if product.variants.all|length %}
+
+          
+
+            <div class="variant-header" style="margin:0.5em 0 0.6em 0">Please select one of the following varieties: </div>
+
+            <select required name="variant-name-select" class="variant-select" id="variant-name-select">
+                    <option style="color:#999;display:none" value="" default disabled selected>Choose one</option>
+
+                {% for pv in product.variants.all %}
+                    <option class="variant-option" value="{{pv.id}}" name="{{pv.id}}" url="{{pv.get_absolute_url}}"
+                    {% if not pv.is_available_to_buy  %}
+                    disabled
+                    {% endif %}
+
+                    >{{pv.title}}</option>
+                {% endfor %}
+            </select>
+        
+
+            {% elif product.parent.variants.all|length %}
+
+                <div class="variant-header" style="margin:0.5em 0 0.6em 0">Please select one of the following varieties: </div>
+
+                <select name="variant-name-select" class="variant-select" id="variant-name-select">
+                    {% for pv in product.parent.variants.all %}
+                        <option class="variant-option" value="{{pv.id}}" name="{{pv.id}}" url="{{pv.get_absolute_url}}"
+                          {% if not pv.is_available_to_buy  %}
+                            disabled style="color:#ff0000"
+                          {% endif %}
+
+                        >{{pv.title}}</option>
+                    {% endfor %}
+                </select>
+
+
+            {% endif %}
+
+
+
+
             {% block product_stock_record %}
-            {% include "catalogue/partials/stock_record.html" %}
+             
+                {% include "catalogue/partials/stock_record.html" %}
+             
             {% endblock %}
 
             {% iffeature "reviews" %}
@@ -135,7 +199,9 @@
             {% if request.user.partner != partner  %}
 
             {% block product_basket_form %}
+              {% if not product.variants.all|length %}
                 {% include "catalogue/partials/add_to_basket_form.html" %}
+              {% endif %}
             {% endblock %}
             {% endif %}
 
@@ -335,6 +401,53 @@
 
 {% block extrascripts %}
     {{ block.super }}
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            // $('.variant-select').change(function() { 
+            //     var n = $(this).val();
+            //     alert(n);
+
+            //     //window.location.replace({{ product.get_absolute_url }});
+            //     //hmItemValidate();
+
+            //     //$("#prodForm").submit();
+            // });
+
+
+            // $("#variant-name-select").val({{product.title}});
+            {% if product.parent %}
+                $("#variant-name-select").val({{product.id}});
+            {% endif %}
+            $('.variant-select').on('change', function (e) {
+                var optionSelected = $("option:selected", this);
+                var valueSelected = this.value;
+                var newUrl = optionSelected.attr('url');
+                //var pvId = optionSelected.attr('product_id');
+                //alert(newUrl);
+                //$('#product-selected-id').val(pvId);
+                window.location.replace(newUrl);
+            });
+
+            // $('.variant-option').click(function() { 
+            //     var n = $(this).val();
+            //     alert(n);
+
+            //     //window.location.replace({{ product.get_absolute_url }});
+            //     //hmItemValidate();
+
+            //     //$("#prodForm").submit();
+            // });
+
+
+        });
+
+
+    </script>
+
+
     <!-- Responsive gallery js -->
     <script src="{% static "oscar/js/colorbox/jquery.colorbox-min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/responsivegallery/jquery.tmpl.min.js" %}" type="text/javascript" charset="utf-8"></script>
