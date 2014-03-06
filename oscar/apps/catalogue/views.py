@@ -62,7 +62,7 @@ class ProductDetailView(DetailView):
     def post(self, request, *args, **kwargs):
 
         self.object = product = self.get_object()
-        partner = product.stockrecord.partner
+        partner = product.get_partner()
         owner = partner.user
         if self.request.user != owner and not self.request.user.is_staff:
             return self.get(request, **kwargs)
@@ -84,15 +84,16 @@ class ProductDetailView(DetailView):
 
         ## check permissions, if item is disabled reroute.
         if product.status:
-            partner = product.stockrecord.partner
+            partner = product.get_partner()
             owner = partner.user
 
             if product.status.count('disable') and self.request.user != owner and not self.request.user.is_staff:
                 return redirect('/catalogue/')
 
-        if product.is_variant:
-            return HttpResponsePermanentRedirect(
-                product.parent.get_absolute_url())
+        ## modified March 2014, probably temp change
+        ##if product.is_variant:
+        ##    return HttpResponsePermanentRedirect(
+        ##        product.parent.get_absolute_url())
 
         correct_path = product.get_absolute_url()
         if correct_path != request.path:
@@ -117,10 +118,13 @@ class ProductDetailView(DetailView):
 
         try:
             product = self.object
-            partner = product.stockrecord.partner
+            partner = product.get_partner()
             ctx['partner'] = partner
             ctx['seller'] = partner.user
-            ctx['sellerObj'] = Seller.objects.filter(oscarUserID=partner.user.id)[0]
+            try:
+                ctx['sellerObj'] = Seller.objects.filter(oscarUserID=partner.user.id)[0]
+            except:
+                pass
         except:
             pass
         try:
@@ -315,7 +319,8 @@ class ProductListView(ListView):
         #     pq = pq.exclude(status='')        
         qs = Product.browsable.base_queryset()
         #qs = qs.exclude(status__icontains='disabled')
-
+        #import ipdb;ipdb.set_trace()
+        #qs = qs.filter(parent=None)
         if q:
             # Send signal to record the view of this product
             #self.search_signal.send(sender=self, query=q, user=self.request.user)
@@ -338,7 +343,7 @@ class ProductListView(ListView):
                 except:
                     return qs
 
-            qs = Product.objects.all()
+            qs = Product.objects.filter(parent=None)
             qs = qs.filter(stockrecord__partner__id=partner.id)
             owner = partner.user
             #if not (self.request.user.is_staff or self.request.user == owner):
@@ -360,6 +365,8 @@ class ProductListView(ListView):
             #qs = qs
             #import random
 
+            #qs = qs.filter(is_variant=False)
+
 
             if not self.request.session.get('random_seed', False) or self.request.GET.has_key('shuffle'):
                 self.request.session['random_seed'] = random.randint(1, 10000)
@@ -377,6 +384,7 @@ class ProductListView(ListView):
             random.seed(seed)
             items = sorted(qs, key=lambda x: random.random())
             qs = qs.order_by('-score')
+
             return qs
 
     def get_context_data(self, **kwargs):
