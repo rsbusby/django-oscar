@@ -8,12 +8,7 @@
 {% load replace %}
 {% load string_filters %}
 
-
-   {{user}}
-        {{product.stockrecord.partner.user}}
-
 <article {% if not is_booth %}class="product_po" {%endif %}>
-
 
 
     {% block product_image %}
@@ -72,6 +67,7 @@
     {% if is_booth %}
 
     {% block product_description %}
+
        {% if product.description %}
 
          <div class="noMobile">
@@ -122,6 +118,9 @@ Please contact us for clarification.{% endif%}">
 
         {% endif %}
    </div>
+
+
+
     {% endblock %}
     {% endif %}
 </article>
