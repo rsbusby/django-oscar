@@ -98,18 +98,31 @@ class Repository(object):
                 break
             soptsDict = json.loads(p.stockrecord.shipping_options)
             if soptsDict:
+
                 if soptsDict.get('local_delivery_used') == True:
+
+
                     try:
                         boothOpts = json.loads(p.stockrecord.partner.shipping_options)
                         local_delivery_cost = boothOpts['local_delivery_cost']
-                        for m in self.methods:
-                            if m.code == 'self-delivery':
-                                self.availableMethods.append(m)
-                                shipDict['self-delivery'] = local_delivery_cost
+                        local_delivery_radius = boothOpts['local_delivery_radius']
 
-                                basket.shipping_info = json.dumps(shipDict)
-                                ## freeze basket if need a shipping estimate
-                                #basket.freeze()
+                        ## make sure within radius
+                        dist = p.getDistanceToBuyer(shippingAddress)
+
+                        print "delivery dist: " 
+                        print dist
+
+                        if dist and float(dist) < float(local_delivery_radius):
+
+                            for m in self.methods:
+                                if m.code == 'self-delivery':
+                                    self.availableMethods.append(m)
+                                    shipDict['self-delivery'] = local_delivery_cost
+
+                                    basket.shipping_info = json.dumps(shipDict)
+                                    ## freeze basket if need a shipping estimate
+                                    #basket.freeze()
                                 basket.save()
                     except:
                         print "Problem with self-delivery in repo.py"

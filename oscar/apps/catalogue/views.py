@@ -100,7 +100,9 @@ class ProductDetailView(DetailView):
             return HttpResponsePermanentRedirect(correct_path)
 
         response = super(ProductDetailView, self).get(request, **kwargs)
-        self.send_signal(request, response, product)
+        ## commented out this signal, failing Mar 10, 2014
+        ## 'UserRecord' object has no attribute 'product'
+        #self.send_signal(request, response, product)
         return response
 
     def get_object(self, queryset=None):
@@ -124,6 +126,12 @@ class ProductDetailView(DetailView):
             try:
                 ctx['sellerObj'] = Seller.objects.filter(oscarUserID=partner.user.id)[0]
             except:
+                pass
+
+            try:
+                ctx['distanceToBuyer'] = product.getDistanceToBuyer(self.request.user.addresses.all()[0])
+            except:
+                print "distance not working"
                 pass
         except:
             pass
