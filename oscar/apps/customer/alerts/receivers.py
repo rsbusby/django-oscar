@@ -9,11 +9,15 @@ from oscar.core.compat import get_user_model
 User = get_user_model()
 
 def send_product_alerts(sender, instance, created, **kwargs):
+
     if kwargs.get('raw', False):
         return
     from oscar.apps.customer.alerts import utils
-    utils.send_product_alerts(instance.product)
-
+    ## getting an error, March 2014
+    try:
+        utils.send_product_alerts(instance.product)
+    except:
+        pass
 
 def migrate_alerts_to_user(sender, instance, created, **kwargs):
     """
