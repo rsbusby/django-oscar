@@ -446,8 +446,8 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         exclude = ('slug', 'status', 'score', 'product_class',
-                   'recommended_products', 'product_options',
-                   'attributes', 'categories', 'parent', 'upc', 'is_discountable', 'related_products')
+                   'recommended_products', 'partner', 'product_options', 'attributes',
+                    'categories', 'parent', 'upc', 'is_discountable', 'related_products', 'partner')
 
     def save(self):
         object = super(ProductForm, self).save(False)
