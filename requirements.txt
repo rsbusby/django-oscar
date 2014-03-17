@@ -83,6 +83,7 @@ pyprof2calltree==1.1.0
 python-dateutil==1.5
 python-magic==0.4.3
 python-memcached==1.51
+python-social-auth==0.1.21
 #pytz==2013b
 rauth==0.5.4
 #readline==6.2.4.1 ## this takes forever on Heroku

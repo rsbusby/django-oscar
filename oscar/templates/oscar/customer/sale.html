@@ -51,7 +51,7 @@
 
 <div class="pull-right">
 
-{% if user == order.user %}
+{% if user.id == order.user.id %}
   <input id="contactSellerButton" style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Seller" onclick='location.href="/homemade/contact?store_name={{order.lines.all.0.partner.name}}"'>
 {% else %}
 
@@ -62,7 +62,7 @@
  {%else %}
   <input id="contactBuyerButton" style="position:relative;top:0;margin-bottom:0em;margin:0 0 0.6em 0;" type="button" value="Contact Buyer" onclick='location.href="/homemade/contact?user={{order.user.username}}"'>
  {% endif %}
-{% endif %} {# if user == order.user #}
+{% endif %} {# if user.id == order.user.id #}
 </div>
                 <div style="clear:both"></div>
 
@@ -159,7 +159,7 @@
                         <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
                         <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
                         <td>
-                            {% if user == order.user %}
+                            {% if user.id == order.user.id %}
                                 {## don't show reorder if you are the seller #}
                             {% if line.product %}
 

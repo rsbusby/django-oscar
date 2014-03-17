@@ -287,10 +287,16 @@ class AbstractAddress(models.Model):
                 raise exceptions.ValidationError(msg)
 
     def _update_search_text(self):
-        search_fields = filter(
-            bool, [self.first_name, self.last_name,
-                   self.line1, self.line2, self.line3, self.line4,
-                   self.state, self.postcode, self.country.name])
+        try:
+            search_fields = filter(
+                bool, [self.first_name, self.last_name,
+                       self.line1, self.line2, self.line3, self.line4,
+                       self.state, self.postcode, self.country.name])
+        except:
+            search_fields = filter(
+                bool, [self.first_name, self.last_name,
+                       self.line1, self.line4,
+                       self.state, self.postcode])
         self.search_text = ' '.join(search_fields)
 
     # Properties
@@ -548,3 +554,5 @@ class AbstractPartnerAddress(AbstractAddress):
         abstract = True
         verbose_name = _("Partner address")
         verbose_name_plural = _("Partner addresses")
+
+

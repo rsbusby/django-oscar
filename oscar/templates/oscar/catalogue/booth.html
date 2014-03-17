@@ -203,7 +203,7 @@
                 <ol class="cartitems one" style="margin: 1.1em 0.6em 0.5em 0px">
 
                     {% for product in products %}
-                     {% if not "disabled" in product.status or request.user.is_staff or request.user == partner.user %}
+                     {% if not "disabled" in product.status or request.user.is_staff or request.user.id == partner.user.id %}
 
                         <li style="padding-bottom:15px;">{% render_product product is_booth=True %}</li>
                           <hr class="hrCart" > 

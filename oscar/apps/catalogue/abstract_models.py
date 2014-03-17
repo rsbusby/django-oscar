@@ -298,10 +298,8 @@ class AbstractProduct(models.Model):
                     "have, such as a size, as specified by its class"))
     product_options = models.ManyToManyField(
         'catalogue.Option', blank=True, verbose_name=_("Product Options"),
-        help_text=_("Options are values that can be associated with a item "
-                    "when it is added to a customer's basket.  This could be "
-                    "something like a personalised message to be printed on "
-                    "a T-shirt."))
+        help_text=_("Options are text that can be associated with a item "
+                    "when it is added to a customer's basket. "))
 
     related_products = models.ManyToManyField(
         'catalogue.Product', related_name='relations', blank=True,

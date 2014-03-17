@@ -41,7 +41,8 @@
     <h2 class="pull-left" >{% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}</h2>
 
 <div class="pull-right">
-{% if user == order.user %}
+
+{% if user.id == order.user.id %}
 
   <div style="font-weight:bold;margin-right:2em;float:left;font-size:1.2em" >ordered from <a href="/catalogue/?booth={{order.lines.all.0.partner.id}}" >{{order.lines.all.0.partner.name}} </a> </div>
 
@@ -91,7 +92,7 @@
                         <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
                         <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
                         <td>
-                            {% if user == order.user %}
+                            {% if user.id == order.user.id %}
                                 {## don't show reorder if you are the seller #}
                             {% if line.product %}
 

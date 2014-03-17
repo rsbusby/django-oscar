@@ -220,6 +220,8 @@ class FacetedSearchView(views.FacetedSearchView):
 
         # Do the radius query.
         sqs = SearchQuerySet()
+        ##sqs = sqs.filter(parent=None)
+        sqs = sqs.exclude(status__contains='disabled')
 
         if self.request.GET.has_key('zipcode'):
 
@@ -242,6 +244,9 @@ class FacetedSearchView(views.FacetedSearchView):
             if q != '':
                 qStr = self.request.GET['q']
                 sqs = sqs.filter(content=qStr)
+
+
+
 
         extra['spatial_results'] = sqs        
         #import ipdb;ipdb.set_trace()

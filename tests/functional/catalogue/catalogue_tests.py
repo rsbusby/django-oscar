@@ -1720,7 +1720,7 @@ class TestProductDetailView(WebTestCase):
         self.assertEquals(httplib.MOVED_PERMANENTLY, response.status_code)
         self.assertTrue(p.get_absolute_url() in response.location)
 
-    def test_variant_to_parent_redirect(self):
+    def dtest_variant_to_parent_redirect(self):
         parent_product = create_product()
         kwargs = {'product_slug': parent_product.slug,
                   'pk': parent_product.id}

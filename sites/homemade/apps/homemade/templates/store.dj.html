@@ -56,8 +56,12 @@
    <div id:"wideClear" style="clear:both;"> </div> 
     
    <div class="sellerBio">
+
+   asdkljkaasduhiuyiyiyiyiyyiyiyiyiy
      {%if u.bio %}
-     <pre>{{u.bio}} </pre>
+
+     arrrr
+     <pre>{{u.bio|safe}} </pre>
      {%endif%}
    </div>
    <div class="sellerLinks"> 
@@ -83,7 +87,7 @@
    {% comment %}
   {% if g.user.name != u.name %}
    
-   <p>  <input style="float:left;position:relative;top:-2em;" type="button" value="Contact Seller" onclick=location.href="{% url 'contactPeer' user_name=u.name %}">
+   <p>  <input style="float:left;position:relative;top:-2em;" type="button" value="Contact Sellerrr" onclick=location.href="{% url 'contactPeer' user_name=u.name %}">
   </p>
   <br>
   {%endif %}

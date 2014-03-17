@@ -161,6 +161,8 @@ max-width: none;
 
 {% block headertext %}
 
+  <div class="row-fluid">
+    <div class="span9">
     {% if spatial_results|length %}
     {% blocktrans %}
         <div style="font-size:0.8em">Products matching "{{ query }}" </div>
@@ -168,15 +170,20 @@ max-width: none;
     {% else %}
         <div style="font-size:0.8em">No products matching "{{ query }}" </div>
     {% endif %}
+    </div>
+    <div class="span3">
+      <a href="javascript:history.back()" style="font-weight:normal;font-size:0.6em;float:left;mmargin-bottom:1.4em">Back to previous page</a>
+    </div>
 
-
+  </div> {#row-fluid#}
 
 {% endblock %}
 
 {% block content %}
 
 
-<a href="javascript:history.back()" style="font-size:1.1em;float:right;margin-bottom:1.4em">Back to previous page</a>
+
+<div style="clear:both"></div>
 
         <section>
             <div class="mod">

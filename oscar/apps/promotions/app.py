@@ -30,6 +30,9 @@ class PromotionsApplication(Application):
             url(r'^$', ProductListView.as_view(), name='home'),
             #url(r'^$', invite, name='home'),
 
+            #url(r'^weblog/', include('zinnia.urls')),
+            #url(r'^comments/', include('django.contrib.comments.urls')),
+
         )
         return self.post_process_urls(urlpatterns)
 

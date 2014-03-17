@@ -135,6 +135,9 @@ class ProductDetailView(DetailView):
                 pass
         except:
             pass
+
+        ctx['user'] = self.request.user
+
         try:
             ctx['muser'] = Seller.objects.filter(oscarUserID=self.request.user.id)[0]
             ctx['u'] = Seller.objects.filter(oscarUserID=self.request.user.id)[0]
@@ -298,9 +301,9 @@ class ProductListView(ListView):
                 return self.get(request, **kwargs)
 
             if request.POST.has_key('enable'):
-                enableItem(product, self.request.user)
+                enableItem(p, self.request.user)
             if request.POST.has_key('disable'):    
-                disableItem(product, self.request.user)
+                disableItem(p, self.request.user)
 
         return self.get(request, **kwargs)
 
@@ -325,11 +328,14 @@ class ProductListView(ListView):
         #     pq = Q(exclude(status=''))
         # else:
         #     pq = pq.exclude(status='')        
-        qs = Product.browsable.base_queryset()
+        
+        #qs = Product.browsable.base_queryset()
+        
         #qs = qs.exclude(status__icontains='disabled')
         #import ipdb;ipdb.set_trace()
         #qs = qs.filter(parent=None)
         if q:
+            qs = Product.browsable.base_queryset()
             # Send signal to record the view of this product
             #self.search_signal.send(sender=self, query=q, user=self.request.user)
             qs = qs.filter(title__icontains=q)
@@ -339,7 +345,7 @@ class ProductListView(ListView):
             self.pq = pq
 
             self.paginator_class = Paginator
-
+            qs = Product.browsable.base_queryset()
             try:
                 partner = Partner.objects.filter(id=int(pq))[0]
             except:
@@ -351,12 +357,12 @@ class ProductListView(ListView):
                 except:
                     return qs
 
-            qs = Product.objects.filter(parent=None)
-            qs = qs.filter(stockrecord__partner__id=partner.id)
+            qq = Product.objects.filter(parent=None)
+            qq = qq.filter(stockrecord__partner__id=partner.id)
             owner = partner.user
             #if not (self.request.user.is_staff or self.request.user == owner):
             #    qs = qs.exclude(status__icontains='disabled')
-            return qs ##.order_by('?')
+            return qq ##.order_by('?')
         else:
             ## if not filtered, don'tshow "Other" items (no longer doing this Dec 14 2013)
             # try:
@@ -374,7 +380,7 @@ class ProductListView(ListView):
             #import random
 
             #qs = qs.filter(is_variant=False)
-
+            qs = Product.browsable.base_queryset()
 
             if not self.request.session.get('random_seed', False) or self.request.GET.has_key('shuffle'):
                 self.request.session['random_seed'] = random.randint(1, 10000)

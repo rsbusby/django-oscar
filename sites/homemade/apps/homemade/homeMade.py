@@ -1220,6 +1220,15 @@ def faq_main(*args, **kwargs):
     return render_template("faq_main.html")
 
 
+def hm_test(*args, **kwargs):
+
+    request = args[0]
+    request.args = request.GET
+    request.form = request.POST
+    request.files = request.FILES
+
+    return render_template("hm_test.html")
+
 @app.route("/invite/", methods=['GET', 'POST'])
 def invite(*args, **kwargs):
 
@@ -2048,18 +2057,22 @@ def getPicJCrop(u, fileKey, request):
         if fileKey.count('store'):
             print "saving store pic"
 
-            u.storePicPath = filename
+            if u:
+                u.storePicPath = filename
             #u.storePicPath = scaleImageFromJCrop(request, fileSaveNameAbs, fileroot=fileroot, fileDirAbs=fileDirAbs, fileDirRelative = fileDirRelative, optimalPixelWidth=500)
             #uploadPicsToS3([u.storePicPath], dir=fileDirAbs)
 
         else:
-            u.personalPicPath = scaleImageFromJCrop(request, fileSaveNameAbs, fileroot=fileroot, fileDirAbs=fileDirAbs, fileDirRelative = fileDirRelative, optimalPixelWidth=300)
+            if u:
+                u.personalPicPath = scaleImageFromJCrop(request, fileSaveNameAbs, fileroot=fileroot, fileDirAbs=fileDirAbs, fileDirRelative = fileDirRelative, optimalPixelWidth=300)
             print "saving profile pic"
             uploadPicsToS3([u.personalPicPath], dir=app.config['STATIC_FOLDER'])
 
         #u.storePicPath = scaleImage(fileSaveNameAbs, fileroot=fileroot, fileDirAbs=fileDirAbs, fileDirRelative = fileDirRelative, optimalPixelWidth=500)
-        
-        u.save()
+        if u:
+            u.save()
+
+        return filename
 
 
 
@@ -2837,7 +2850,11 @@ def register_store(*args, **kwargs):
         except:
             pass
 
-        u = getSellerFromOscarID(request.user.id)
+
+        try:
+            u = getSellerFromOscarID(request.user.id)
+        except:
+            u = None
         #if storeExists: 
         #template = "edit_store.html"
         #else:
@@ -2847,18 +2864,23 @@ def register_store(*args, **kwargs):
 
     msg = None
     if request.method == 'POST':
-        if request.args.has_key("termsCheck"):
-            if request.args['termsCheck'] == "on":
-                u.agreedToTerms = True
-                u.save()
-            elif request.args['termsCheck'] == "off":
-                u.agreedToTerms = False
-                u.save()
+        storeName = None
+        zipcode = None
+        bio = None
+        if u:
+            if request.args.has_key("termsCheck"):
+                if request.args['termsCheck'] == "on":
+                    u.agreedToTerms = True
+                    u.save()
+                elif request.args['termsCheck'] == "off":
+                    u.agreedToTerms = False
+                    u.save()
 
         print request.form
         if request.form['store_name']:
-            u.storeName =  request.form['store_name']
-            u.save()
+
+            storeName =  request.form['store_name']
+            #u.save()
         #if request.form["county"]:
         #    u.county = request.form["county"]
         #else:
@@ -2880,27 +2902,29 @@ def register_store(*args, **kwargs):
                 #ll = zcObj.longitude
                 #u.latCoarse = lt
                 #u.longCoarse = ll
-                u.zipcode = request.form['zipcode']
+                zipcode = request.form['zipcode']
             except:
                 msg = "Invalid zipcode."
                 return render_template(template, u=u, partner=partner, msg=msg)
 
+        storePicPath = None
         if request.files.has_key('store_pic') and request.files['store_pic'] != '':
 
             #if request.form.has_key('h') and request.form['h'] != '':
             ## do this fo all cases now since not cropping at the moment
-            getPicJCrop(u, 'store_pic', request)
+            storePicPath = getPicJCrop(u, 'store_pic', request)
             #else:
             #    getStorePic(u, request)
 
 
         if request.form.has_key('bio'):
-            if request.form['bio'] != u.bio:
-                u.bio = request.form['bio']
+            #if request.form['bio'] != u.bio:
+            bio = request.form['bio']
 
-        u.storeExists = True
+        if u:
+            u.storeExists = True
 
-        u.save()
+            u.save()
 
 
         ## create a partner
@@ -2909,14 +2933,17 @@ def register_store(*args, **kwargs):
             partner = Partner.objects.filter(user=request.user)[0]
         except:
             boothIsNew = True
-            partner = Partner.objects.create(code=u.id, name=u.storeName)
+            partner = Partner.objects.create(name=storeName)
+        if u:
+            partner.code = u.id
         #partner.name = u.storeName
         partner.user = request.user
         partner.users.add(request.user)
-        partner.name = u.storeName
-        partner.zipcode = u.zipcode
-        partner.bio = u.bio
-        partner.picPath = u.storePicPath
+        partner.name = storeName
+        partner.zipcode = zipcode
+        partner.bio = bio
+        if storePicPath:
+            partner.picPath = storePicPath
 
         partner.save() 
 
@@ -3898,17 +3925,18 @@ def stripeAuthorized(*args):
     #print stripe_user_id
     #print "DEBUG over"
     
-    u.stripeSellerID = stripe_user_id
-    #if not g.user.stripeID:
-    #    cust = stripe.Customer.create(
-    #        description=g.user.email
-    #        )    
-    #    g.user.stripeID = cust.id    
+    if u:
+        u.stripeSellerID = stripe_user_id
+        #if not g.user.stripeID:
+        #    cust = stripe.Customer.create(
+        #        description=g.user.email
+        #        )    
+        #    g.user.stripeID = cust.id    
 
-    # saved the token and ID for later payments to this user's account
-    u.stripeSellerToken = access_token
-    u.stripeSellerPubKey = stripe_publishable_key  # this is set during the get_access_token call, in tokenDecoder
-    u.save()
+        # saved the token and ID for later payments to this user's account
+        u.stripeSellerToken = access_token
+        u.stripeSellerPubKey = stripe_publishable_key  # this is set during the get_access_token call, in tokenDecoder
+        u.save()
 
     ## save to Oscar partner
     ou = request.user

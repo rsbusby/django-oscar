@@ -66,8 +66,6 @@
 
     <div class="row-fluid">
 
-
-
       <div class="span9" style="margin:0">
 
       <div class="row-fluid" >
@@ -81,7 +79,6 @@
         
         {% include "catalogue/partials/gallery.html" %}        
 
-
         </div>
         {% endblock %}
 
@@ -93,11 +90,12 @@
         {% block product_main %}
         <div class="span6 pull-lef" style="margin:0;padding-left:1.6em">
             {% comment %} 
-            This is a but clunky here.  Better to have some kind of JS-driven dashboard menu that 
-            pops out when clicked.  A bit like the Django-Debug-Toolbar button
+              This is a but clunky here.  Better to have some kind of JS-driven dashboard menu that 
+              pops out when clicked.  A bit like the Django-Debug-Toolbar button
             {% endcomment %}
 
-            {% if user.is_authenticated and user == product.stockrecord.partner.user or user.is_staff %}
+        
+            {% if user.is_authenticated and user.id == product.stockrecord.partner.user.id or user.is_staff %}
                 {#<a class="pull-right" href="{% url 'dashboard:catalogue-product' product.id %}"><i class="icon-edit"></i> {% trans "Edit this item" %}</a>#}
 
                 <input class="pull-right" type="button" value="Edit this item" onclick=location.href="{% url 'dashboard:catalogue-product' product.id  %}">

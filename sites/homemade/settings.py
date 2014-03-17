@@ -159,6 +159,7 @@ TEMPLATE_LOADERS = (
  ##   'django_jinja.loaders.FileSystemLoader',
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
+    'app_namespace.Loader',
     # needed by django-treebeard for admin (and potentially other libs)
     #'django.template.loaders.eggs.Loader',
  
@@ -179,7 +180,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'oscar.core.context_processors.metadata',
     'oscar.apps.customer.notifications.context_processors.notifications',
     # mine
-    
+    'social.apps.django_app.context_processors.backends',
+    'social.apps.django_app.context_processors.login_redirect',
+    ##'zinnia.context_processors.version',  # Optional
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -332,7 +336,16 @@ INSTALLED_APPS = INSTALLED_APPS + [
     'django_extensions',
     # Debug toolbar + extensions
     #'debug_toolbar',
+
+   ## for zinnia 
+    ##'zinnia_bootstrap',
+    ##'django.contrib.comments',
+    ##'tagging',
+    'mptt',
+    ##'zinnia',
+    ##
     'djrill',
+    'social.apps.django_app.default',
     'haystack',
     'crispy_forms',
     #'cache_panel',
@@ -352,6 +365,10 @@ INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
 # Add Oscar's custom auth backend so users can sign in using their email
 # address.
 AUTHENTICATION_BACKENDS = (
+      'social.backends.open_id.OpenIdAuth',
+      'social.backends.google.GoogleOpenId',
+      'social.backends.google.GoogleOAuth2',
+      'social.backends.twitter.TwitterOAuth',
     'oscar.apps.customer.auth_backends.Emailbackend',
     'django.contrib.auth.backends.ModelBackend',
     'django.contrib.auth.backends.RemoteUserBackend',
@@ -448,7 +465,7 @@ PAY_IN_PERSON=os.environ['PAY_IN_PERSON']
 CRISPY_TEMPLATE_PACK = 'bootstrap'
 
 OSCAR_BASKETS_COOKIE_OPEN = 'oscar_open_baskets'
-
+ZINNIA_AUTO_CLOSE_COMMENTS_AFTER=0
 
 
 # Reviews

@@ -68,7 +68,8 @@
     <dl>
       <dt>Store name (optional):
       <dd><input id="store_name" autofocus="autofocus" type=text name=store_name size=30 value="{{ partner.name }}" style="width:300px">
- 
+      </dd>
+    
  
 {% comment %} 
  <dt>County 
@@ -114,13 +115,14 @@
  
 
       <dt>Bio: 
-      {% comment %} 
+
+
     {% if partner.bio %} 
-      <dd><textarea id="bio" class="wide" rows=4 cols=80 name=bio>{{partner.bio}}</textarea>
+      <dd><textarea id="bioBackup" class="wide" rows=4 cols=80 name=bio>{{partner.bio}}</textarea>
     {% else %}
-      <dd><textarea id="bio" rows=4 cols=80 name=bio></textarea>
+      <dd><textarea id="bioBackup" rows=4 cols=80 name=bio></textarea>
     {% endif %}
-{% endcomment %}
+
 
   <div class="row-fluid" style="max-width:60%">
     <div class="span9">
@@ -132,10 +134,12 @@
     </div>
     </div>
 
-        <input type="hidden" id="bio" name="bio"  type=text
-        {% if partner.bio %} 
-         value="{{partner.bio}}"
-       {% endif %} />
+        <input type="hidden" id="bio" name="bio"
+          {% if partner.bio %} 
+            value="{{partner.bio}}"
+          {% endif %} 
+        /> 
+    </dt>
 
 
     {% comment %}
@@ -150,16 +154,11 @@
 {% endcomment %}
 
 
-             <div style="clear:both"> </div>
 
-
-
-         <div style="clear:both"> </div>
-<br>
    
   
       <dt>Upload an image to represent your booth:
-      <br>
+
       
       
     <dd><input type="file" name="store_pic" accept="image/*" /> 
@@ -200,15 +199,15 @@
   
    
  
- <div style="clear:both"> </div>
- <br>
 
 
-{% comment %} 
+</dl>
+
+{% comment %}
  <div class=actions > <input id="submit-booth" class="noNeedsTerms" type=submit value="Save changes" style="margin:2.5em"></div>
 {% endcomment %}
 
- <button id="submitTheBooth" style="margin-left:1.2em;font-size:1.2em" class="btn btn-primary btn-large" name="actio" type="button" value="save">Save Changes</button>
+ <button id="submit-booth" style="margin-left:1.2em;font-size:1.2em" class="btn btn-primary btn-large" name="actio" type="button" value="save">Save Changes</button>
 
 
   </form>
@@ -216,14 +215,17 @@
  
   <script type="text/javascript">
 
-    $(document).ready(function() {
-//      $('.summernote').summernote();
+//jQuery(document).ready(function($){
+     $(document).ready(function() {
+      // $('.summernote').summernote();
+    // window.document.getElementById("bioContainer").summernote();
 
+try{
 $('.summernote').summernote({
-
+ height: 100,                 // set editable height, ex) 300
   options: {
     //  width: null,                  // set editor width
-    //  height: null,                 // set editable height, ex) 300
+      // height: 200,                 // set editable height, ex) 300
 
    //   focus: false,                 // set focus after initilize summernote
 
@@ -253,18 +255,40 @@ $('.summernote').summernote({
   ]
 
 });
+  $('#bioBackup').hide();
+
+}
+catch(err)
+  {
+  txt="There was problem using summernote on this page.\n\n";
+  txt+="Error description: " + err.message + "\n\n";
+  txt+="Click OK to continue.\n\n";
+  console.log(txt);
+
+  }
 
     });
 
+// jQuery(document).ready(function($){
+ $(document).ready(function() {
 
-$(document).ready(function() {
-
-$('#submitTheBooth').click(function() { 
+$('#submit-booth').click(function() { 
   //alert("YEAH");
 
+    // For summernote
+    try{
     var sHTML = $('.summernote').code();
-//    alert(sHTML);
     $("#bio").val($('.summernote').code());
+      }
+catch(err)
+  {
+  txt="There was problem using summernote on this page.\n\n";
+  txt+="Error description: " + err.message + "\n\n";
+  txt+="Click OK to continue.\n\n";
+  console.log(txt);
+  $('#bio').val($('#bioBackup').val());
+  // alert(txt);
+  }
 
     $("#booth-form").submit();
 });

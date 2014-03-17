@@ -268,6 +268,7 @@ class AbstractStockRecord(models.Model):
         """
         Return whether this stockrecord allows the product to be purchased
         """
+        ##import ipdb;ipdb.set_trace()
         return get_partner_wrapper(self.partner_id).is_available_to_buy(self)
 
     def is_purchase_permitted(self, user=None, quantity=1, product=None):
