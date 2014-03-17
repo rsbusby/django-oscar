@@ -670,6 +670,20 @@ img.brandLogo {
     z-index: 1 !important; 
 } 
 
+
+body {
+
+  padding-left:0;
+  padding-right:0;
+}
+
+
+.page_inner {
+  border:none;
+  /*padding:0;*/
+}
+
+
   }  /* small size */
 
 
