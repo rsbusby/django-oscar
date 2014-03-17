@@ -341,7 +341,7 @@ INSTALLED_APPS = INSTALLED_APPS + [
     ##'zinnia_bootstrap',
     ##'django.contrib.comments',
     ##'tagging',
-    'mptt',
+    ##'mptt',
     ##'zinnia',
     ##
     'djrill',
