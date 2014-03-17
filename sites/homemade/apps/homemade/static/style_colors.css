@@ -670,6 +670,11 @@ img.brandLogo {
     z-index: 1 !important; 
 } 
 
+.navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
 
 body {
 
@@ -677,7 +682,10 @@ body {
   padding-right:0;
 }
 
+.page {
 
+  box-shadow:none;
+}
 .page_inner {
   border:none;
   /*padding:0;*/
