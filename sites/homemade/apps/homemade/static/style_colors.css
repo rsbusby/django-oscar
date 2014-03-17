@@ -645,6 +645,10 @@ img.brandLogo {
   display: none;
 }
 
+.mobile-only {
+
+  display:none;
+}
 @media (max-width: 767px) {
 
 img.brandLogo {
@@ -675,6 +679,10 @@ img.brandLogo {
     margin-right: 0px;
 }
 
+.mobile-only {
+
+  display:block;
+}
 
 body {
 

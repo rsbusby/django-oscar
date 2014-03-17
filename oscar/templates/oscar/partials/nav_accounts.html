@@ -17,14 +17,14 @@
                 <span class="icon-bar"></span>
             
         </a>
-        <a class="pull-right" style="margin:0.7em 0.2em 0 0" data-toggle="collapse" data-target=".account-collapse">
+        <a class="pull-right mobile-only" style="margin:0.7em 0.2em 0 0" data-toggle="collapse" data-target=".account-collapse">
             MENU
             
         </a>
 
                 
 
-        <div class="nav-collapse account-collapse">
+        <div class="nav-collapse account-collapse ppull-right">
             <div class="container-fluid">
                 {% if LANGUAGES|length > 1 %}
                     <form id="language_selector" class="pull-left navbar-form" action="/i18n/setlang/" method="post">
@@ -110,7 +110,7 @@
 
                 </ul>
 
-                <ul class="nav pull-right">
+                <ul class="nav pull-right"  >
                     {% if user.is_authenticated %}
                                      
 
@@ -127,7 +127,7 @@
                             <li><a id="my-booth" href="{% url 'catalogue:index' %}?booth={{request.user.partner.id}}">MY BOOTH</a></li>
                         {% else %}
 
-                         <li><a id="open-booth" href="{% url 'register_store' %}"> {% trans "SELL" %}</a></li>
+                         <li   ><a id="open-booth" href="{% url 'register_store' %}"> {% trans "SELL" %}</a></li>
 
                         {% endif %}
                                            <li class="divider-vertical"></li>                   
