@@ -409,6 +409,8 @@ class ProductCreateUpdateView(generic.UpdateView):
         p = self.object
         vc = copy(p)
         vc.pk = None
+        vc.parent = p
+        vc.parent_id = p.id
         vc.save()
 
         ## copy stockrecord
@@ -577,6 +579,15 @@ class ProductCreateUpdateView(generic.UpdateView):
                 stockrecord.is_shippable = True
 
             stockrecord.save()
+
+
+        ## deal with variants
+        if self.request.POST.has_key("variant_info"):
+            variant_json = self.request.POST['variant_info']
+            vc = self.createProductVariant()
+            vc.title = vc.title + "_1"
+            print "Creating a variant, " + vc.title
+            vc.save()
 
 
         ## check if store has payments enabled. If not, disable the item

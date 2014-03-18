@@ -699,6 +699,12 @@ body {
   /*padding:0;*/
 }
 
+.tab-content {
+
+  padding-left:12px;
+  padding-right:10px;  
+}
+
 
   }  /* small size */
 

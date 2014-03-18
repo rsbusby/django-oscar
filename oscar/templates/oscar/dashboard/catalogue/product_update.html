@@ -19,7 +19,24 @@
 
 
 
-{% block headertext %}{{ title }} <div style="font-size:0.8em">Scroll down to bottom of page and click "Save" when finished</div>
+{% block headertext %}{{ title }} 
+<div style="font-size:0.8em">
+Scroll down to bottom of page and click "Save" when finished
+</div>
+
+<div class="clearfix" style="font-size:1.0em">
+
+       {% with parent=product.parent %}
+        {% if parent %}
+
+        This item is a variant of 
+                <a href="{% url 'dashboard:catalogue-product' parent.id %}" title="{% blocktrans %}Edit {{ parent.title }}{% endblocktrans %}">{{ parent.title }}</a>
+        {% endif %}
+        {% endwith %}
+
+
+
+</div>
 {% endblock %}
 
 {% block dashboard_content %}
@@ -32,38 +49,57 @@
     {% endif %}
 
 
+    {#<input type="hidden" name="variant_info" value="test" />#}
+
     <div class="row-fluid">
-        <div class="span1 pull-left hidden-phone">
-            {% comment %}
+        <div class="span3 pull-left hhidden-phone">
+            
             <div data-spy="affix" class="affix-top" data-offset-top="200">
 
 
                 <div class="table-header">
-                    <h3>{% trans "Sections" %}</h3>
+                    <h3>{% trans "Edit:" %}</h3>
                 </div>
                 <ul class="nav nav-list bs-docs-sidenav" id="product_update_tabs">
+                  {% comment %}
                     {% if product %}
                     <li ><a href="#overview" data-toggle="tab">{% trans 'Overview' %}</a></li>
                     {% endif %}
                     <li{% if not product %} class="active"{% endif %}><a href="#product_details" data-toggle="tab">{% trans 'Product details' %}</a></li>
 
                     <li><a href="#product_recommended" data-toggle="tab">{% trans 'Recommended Products' %}</a></li>
-
+                {% endcomment %}    
+                    <li class="active"><a href="#everything" data-toggle="tab">{% trans 'Item properties' %}</a></li>
                     {% with variants=product.variants.all %}
                     {% if variants|length > 0 %}
                     <li><a href="#product_variants" data-toggle="tab">{% trans 'Product variants' %}</a></li>
+                    {% else %}
+
+                       {% with parent=product.parent %}
+                            {% if parent %}
+                             <li>
+                                 
+                                    <a href="{% url 'dashboard:catalogue-product' parent.id %}" title="{% blocktrans %}Edit {{ parent.title }}{% endblocktrans %}"> <-- Back to parent item,  {{ parent.title }}</a>
+                                    </li>
+                            {% endif %}
+                            {% endwith %}
+
                     {% endif %}
                     {% endwith %}
+
+
+                    {% comment %}
                     <li><a href="#product_attributes" data-toggle="tab">{% trans 'Product attributes' %}</a></li>
                     <li><a href="#product_category" data-toggle="tab">{% trans 'Product category' %}</a></li>
                     <li><a href="#product_images" data-toggle="tab">{% trans 'Product images' %}</a></li>
-                    <li class="active"><a href="#everything" data-toggle="tab">{% trans 'Edit Item' %}</a></li>
+
 
                     <li><a href="#product_stock" data-toggle="tab">{% trans 'Product stock' %}</a></li>
+                {% endcomment %}
                 </ul>
 
             </div>
-{% endcomment %}
+
         </div>
         <div class="span9">
             <div class="tab-content">
@@ -205,7 +241,7 @@
                         {% with parent=product.parent %}
                         {% if parent %}
                         <div class="control-group">
-                            <label class="control-label">{% trans "Parent" %}</label>
+                            <label class="control-label">{% trans "Parent item" %}</label>
                             <div class="controls">
                                 <a href="{% url 'dashboard:catalogue-product' parent.id %}" title="{% blocktrans %}Edit {{ parent.title }}{% endblocktrans %}">{{ parent.title }}</a>
                             </div>
@@ -223,7 +259,7 @@
                         {% with parent=product.parent %}
                         {% if parent %}
                         <tr>
-                            <th>{% trans "Parent" %}</th>
+                            <th>{% trans "Parent item" %}</th>
                             <th></th>
                         </tr>
                         <tr>
@@ -233,7 +269,7 @@
                         {% endif %}
                         {% endwith %}
                         <tr>
-                            <th>{% trans "Children" %}</th>
+                            <th>{% trans "Item variations" %}</th>
                             <th></th>
                         </tr>
 
@@ -341,18 +377,18 @@
                         </div>
                         {% endif %}
                         {% endfor %}
-
+{% comment %}
                         {% with parent=product.parent %}
                         {% if parent %}
                         <div class="control-group">
-                            <label class="control-label">{% trans "Parent" %}</label>
+                            <label class="control-label">{% trans "Parent item" %}</label>
                             <div class="controls">
                                 <a href="{% url 'dashboard:catalogue-product' parent.id %}" title="{% blocktrans %}Edit {{ parent.title }}{% endblocktrans %}">{{ parent.title }}</a>
                             </div>
                         </div>
                         {% endif %}
                         {% endwith %}
-                   
+            {% endcomment %}       
                    {% comment %} </div> {% endcomment %}
 
   {#<div class="tab-pane" id="product_attributes">#}
@@ -755,6 +791,13 @@ Use UPS
 </div> {# hm_ship_info #}
 </div> {#remote ship group #}
 
+    <div id="saveButtons" style="margin:3em 0 0 1em">
+  <button id="submitTheWholeDarnForm" style="font-size:1.2em" class="btn btn-primary btn-large" name="actio" type="button" value="save">{% trans "Save" %}</button>
+
+
+                <a style="margin:6px 0 0 1.4em;font-size:1.2em" href="/catalogue/?booth={{product.stockrecord.partner.id}}">{% trans "Cancel" %}</a>
+</div>
+              
 <script>
 
 
@@ -1177,6 +1220,9 @@ $('#submitTheWholeDarnForm').click(function() {
     {% endif %}
 {% endcomment %}
 
+
+
+
                 </div>
 
                 {% comment %}
@@ -1201,6 +1247,9 @@ $('#submitTheWholeDarnForm').click(function() {
  </div>
       
   </div>
+
+              
+
  </div>
            
    
@@ -1209,20 +1258,20 @@ $('#submitTheWholeDarnForm').click(function() {
         <div class="form-actions"  style="background:none repeat scroll 0% 0% rgb(235, 235, 235);mmmargin-left:0px;llleft:0px;" >
         {% endcomment %}
 
-            <div class="pull-left" style="margin-left:5em;font-size:1.2em;margin-top:1.4em">
+            <div class="pull-left span3 offset2" style="mmargin-left:5em;font-size:1.2em;margin-top:1.4em">
 
 
                 {% comment %}
                 {% trans "or" %}
                 <button class="btn btn-secondary btn-large" name="action" type="submit" value="continue">{% trans "Save and continue editing" %}</button>
-                {% endcomment %}
+             
                 <button id="submitTheWholeDarnForm" style="margin-left:1.2em;font-size:1.2em" class="btn btn-primary btn-large" name="actio" type="button" value="save">{% trans "Save" %}</button>
 
 
 
 
                 <a style="margin-right:1.2em;margin-left:1.2em;" href="/catalogue/?booth={{product.stockrecord.partner.id}}">{% trans "Cancel" %}</a>
-
+{% endcomment %}
             </div>
 {% comment %}            
             {% if product %}
