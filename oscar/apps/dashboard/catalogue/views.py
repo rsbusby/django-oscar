@@ -400,6 +400,32 @@ class ProductCreateUpdateView(generic.UpdateView):
             return self.forms_invalid(form, stockrecord_form, category_formset,
                                       image_formset) ##, recommended_formset)
 
+
+    def createProductVariant(self):
+        ''' Copy the current product '''
+        from copy import copy
+
+        ## copy product
+        p = self.object
+        vc = copy(p)
+        vc.pk = None
+        vc.save()
+
+        ## copy stockrecord
+        sr = p.stockrecord
+        src = copy(sr) 
+        src.product = vc
+        src.product_id = vc.id
+        src.pk = None
+        src.save()
+
+        ## set stockrecord to the copy
+        vc.stockrecord = src
+
+        ## did we miss anything?
+
+        return vc
+
     def forms_valid(self, form, stockrecord_form, category_formset,
                     image_formset): ##, recommended_formset):
         """
