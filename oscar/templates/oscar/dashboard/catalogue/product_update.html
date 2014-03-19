@@ -71,16 +71,26 @@ Scroll down to bottom of page and click "Save" when finished
                 {% endcomment %}    
                     <li class="active"><a href="#everything" data-toggle="tab">{% trans 'Item properties' %}</a></li>
                     {% with variants=product.variants.all %}
+
+                    
+
+
                     {% if variants|length > 0 %}
+                    
+                   
                     <li><a href="#product_variants" data-toggle="tab">{% trans 'Product variants' %}</a></li>
                     {% else %}
 
-                       {% with parent=product.parent %}
+                    {% with parent=product.parent %}
                             {% if parent %}
+                            <li><a href="#product_attributes" data-toggle="tab">{% trans 'Product attributes' %}</a></li>
                              <li>
                                  
                                     <a href="{% url 'dashboard:catalogue-product' parent.id %}" title="{% blocktrans %}Edit {{ parent.title }}{% endblocktrans %}"> <-- Back to parent item,  {{ parent.title }}</a>
                                     </li>
+                            {%else%}
+                    <li><a href="#product_variants" data-toggle="tab">{% trans 'Product variants' %}</a></li>
+
                             {% endif %}
                             {% endwith %}
 
@@ -88,8 +98,9 @@ Scroll down to bottom of page and click "Save" when finished
                     {% endwith %}
 
 
+                    
+           
                     {% comment %}
-                    <li><a href="#product_attributes" data-toggle="tab">{% trans 'Product attributes' %}</a></li>
                     <li><a href="#product_category" data-toggle="tab">{% trans 'Product category' %}</a></li>
                     <li><a href="#product_images" data-toggle="tab">{% trans 'Product images' %}</a></li>
 
@@ -251,11 +262,11 @@ Scroll down to bottom of page and click "Save" when finished
                     </div>
                 </div>
 {% endcomment %}
-                {% with variants=product.variants.all %}
-                {% if variants|length > 0 %}
+               
+              {% with variants=product.variants.all %}
                 <div class="tab-pane" id="product_variants">
                     <table class='table table-striped table-bordered'>
-                        <caption>{% trans "Variants" %}</caption>
+                        <caption>{% trans "Item variations  (different flavors, sizes, etc)" %}</caption>
                         {% with parent=product.parent %}
                         {% if parent %}
                         <tr>
@@ -269,7 +280,7 @@ Scroll down to bottom of page and click "Save" when finished
                         {% endif %}
                         {% endwith %}
                         <tr>
-                            <th>{% trans "Item variations" %}</th>
+                            {#<th>{% trans "Item variations" %}</th>#}
                             <th></th>
                         </tr>
 
@@ -280,11 +291,13 @@ Scroll down to bottom of page and click "Save" when finished
                         </tr>
                         {% endfor %}
                     </table>
-                </div>
-                {% endif %}
-                {% endwith %}
 
-{% comment %}
+                    <a id="createNewVariant" href="{% url 'catalogue:index' %}" class="btn btn-primary">{% trans "Add a new variant" %}</a></td>
+                </div>
+
+
+
+               
                <div class="tab-pane" id="product_attributes">
                     <table class="table table-striped table-bordered">
                         <caption>
@@ -322,7 +335,9 @@ Scroll down to bottom of page and click "Save" when finished
                         {% endfor %}
                     </table>
              </div> 
-{% endcomment %}
+
+                {% endwith %} {# variants exist?#}
+
                 <div class="tab-pane" id="product_category">
                     <table class="table table-striped table-bordered form-inline">
                         <caption>{% trans "Category" %}</caption>
