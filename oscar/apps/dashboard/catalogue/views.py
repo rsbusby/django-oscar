@@ -582,10 +582,12 @@ class ProductCreateUpdateView(generic.UpdateView):
 
 
         ## deal with variants
-        if self.request.POST.has_key("variant_info"):
+
+        if self.request.POST.has_key("variant_created") and self.request.POST['variant_created'] == "true":
             variant_json = self.request.POST['variant_info']
             vc = self.createProductVariant()
-            vc.title = vc.title + "_1"
+            self.new_variant = vc
+            #vc.title = vc.title + "_1"
             print "Creating a variant, " + vc.title
             vc.save()
 
@@ -625,6 +627,15 @@ class ProductCreateUpdateView(generic.UpdateView):
         return "?".join(url_parts)
 
     def get_success_url(self):
+
+        if hasattr(self,'new_variant'):
+            msg = _("Created new variant of product '%s'") % self.object.title
+            messages.success(self.request, msg)
+            url = reverse('dashboard:catalogue-product',
+                          kwargs={"pk": self.new_variant.id})
+            return self.get_url_with_querystring(url)
+
+
         if self.creating:
             msg = _("Created product '%s'") % self.object.title
         else:

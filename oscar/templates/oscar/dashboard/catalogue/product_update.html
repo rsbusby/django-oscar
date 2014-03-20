@@ -21,6 +21,8 @@
 
 {% block headertext %}{{ title }} 
 <div style="font-size:0.8em">
+    <div id="overall_err"> </div>
+
 Scroll down to bottom of page and click "Save" when finished
 </div>
 
@@ -49,7 +51,8 @@ Scroll down to bottom of page and click "Save" when finished
     {% endif %}
 
 
-    {#<input type="hidden" name="variant_info" value="test" />#}
+    <input id="variant_info" type="hidden" name="variant_info" value="" />
+    <input id="variant_created" type="hidden" name="variant_created" value="false" />
 
     <div class="row-fluid">
         <div class="span3 pull-left hhidden-phone">
@@ -69,7 +72,7 @@ Scroll down to bottom of page and click "Save" when finished
 
                     <li><a href="#product_recommended" data-toggle="tab">{% trans 'Recommended Products' %}</a></li>
                 {% endcomment %}    
-                    <li class="active"><a href="#everything" data-toggle="tab">{% trans 'Item properties' %}</a></li>
+                    <li class="active"><a id="everything-tab" href="#everything" data-toggle="tab">{% trans 'Item properties' %}</a></li>
                     {% with variants=product.variants.all %}
 
                     
@@ -83,7 +86,7 @@ Scroll down to bottom of page and click "Save" when finished
 
                     {% with parent=product.parent %}
                             {% if parent %}
-                            <li><a href="#product_attributes" data-toggle="tab">{% trans 'Product attributes' %}</a></li>
+                            <li><a href="#product_attributes" data-toggle="tab">{% trans 'Variant attributes' %}</a></li>
                              <li>
                                  
                                     <a href="{% url 'dashboard:catalogue-product' parent.id %}" title="{% blocktrans %}Edit {{ parent.title }}{% endblocktrans %}"> <-- Back to parent item,  {{ parent.title }}</a>
@@ -292,7 +295,11 @@ Scroll down to bottom of page and click "Save" when finished
                         {% endfor %}
                     </table>
 
-                    <a id="createNewVariant" href="{% url 'catalogue:index' %}" class="btn btn-primary">{% trans "Add a new variant" %}</a></td>
+                <button id="createNewVariant" style="font-size:1em" class="btn btn-primary " name="actio" type="button" value="createNewVariant">{% trans "Add a new variant" %}</button>
+
+                 {#   <a id="createNewVariant" href="{% url 'catalogue:index' %}" class="btn btn-primary">{% trans "Add a new variant" %}</a>#}
+
+                 </td> 
                 </div>
 
 
@@ -353,7 +360,7 @@ Scroll down to bottom of page and click "Save" when finished
                     </table>
                 </div>
 
-         <div class="tab-pane active" id="everything">
+         <div class="tab-pane active" id="everything" name="everything">
                
 {% comment %}
 <div class="table-header">
@@ -410,6 +417,7 @@ Scroll down to bottom of page and click "Save" when finished
                
           {#      </div> #}
 
+            <div class="only-parent-item">
                     <div class="table-header">
                         <h4>{% trans "Upload, change or remove images. Please have at least one image." %}</h4>
                         <p style="font-size=1.1;color:fcfcfc">
@@ -441,7 +449,7 @@ Scroll down to bottom of page and click "Save" when finished
                         </tr>
                         {% endfor %}
                     </table>
-
+                    </div> {# only parent item#} {# if not a variant #}
 
 {{ stockrecord_form.non_field_errors }}
            <table class="table table-striped table-bordered fform-inline">
@@ -1102,7 +1110,10 @@ function errWrap(text) {
 }
 
 
-function errMsg(id, msg) {
+function errMsg(id, msg, scroll) {
+    if (scroll != 0){
+        goToByScroll(id);
+    }   
 	return $('#'+ id).html(errWrap(msg));
 }
 
@@ -1205,17 +1216,52 @@ else{errClean('remote_ship_err');}
 	if ( ! errCount ){
 		$("#prodForm").submit();
 	}
+    else{
+        errMsg('overall' + '_err', "More information is needed to save the item, see below.", 0);
 
+        // $('#everything-tab').click();
+
+    }
+    return errCount;
+}
+
+function goToByScroll(id){
+    $('html,body').animate({scrollTop: $("#"+id).offset().top},'slow');
 }
 
 $(document).ready(function() {
 
 $('#submitTheWholeDarnForm').click(function() { 
 	//alert("YEAH");
-    hmItemValidate();
+
+     var errCount = hmItemValidate();
 
     //$("#prodForm").submit();
 });
+
+
+$('#createNewVariant').click(function() { 
+    //alert("YEAH");
+
+
+    $('#variant_created').val(true);
+
+    var errCount = hmItemValidate();
+
+    if ( errCount ){
+         $('#everything-tab').click();
+         $('#createNewVariant').text("Please complete and save the parent item.");
+    }
+    else{
+       $('#createNewVariant').text("Saving item and creating a new variant, one moment....");
+    }
+});
+
+
+            {% if product.parent %}
+                $(".only-parent-item").hide();
+            {% endif %}
+
 });
 
 
