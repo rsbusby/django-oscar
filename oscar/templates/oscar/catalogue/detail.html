@@ -134,15 +134,21 @@
                     <option style="color:#999;display:none" value="" default disabled selected>Choose one</option>
 
                 {% for pv in product.variants.all %}
+
                     <option class="variant-option" value="{{pv.id}}" name="{{pv.id}}" url="{{pv.get_absolute_url}}"
                     {% if not pv.is_available_to_buy  %}
                     disabled
                     {% endif %}
+                    >
+                  {#  {{pv.title}}  #}
 
-                    >{{pv.title}}</option>
+             {#{{pv.attribute_values.all.0.value}}#}
+             {{pv.attribute_summary}}
+
+                  </option> 
                 {% endfor %}
             </select>
-        
+       
 
             {% elif product.parent.variants.all|length %}
 
@@ -169,6 +175,13 @@
              
                 {% include "catalogue/partials/stock_record.html" %}
              
+
+              {% for av in product.attribute_values.all %}
+        <tr>
+            <th>{{ av.attribute.name }}</th>
+            <td>{{ av.value }}</td>
+        </tr>
+        {% endfor %}
             {% endblock %}
 
             {% iffeature "reviews" %}
