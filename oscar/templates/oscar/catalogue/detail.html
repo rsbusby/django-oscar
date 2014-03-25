@@ -143,7 +143,8 @@
                   {#  {{pv.title}}  #}
 
              {#{{pv.attribute_values.all.0.value}}#}
-             {{pv.attribute_summary}}
+             {{pv.attribute_summary
+             }}
 
                   </option> 
                 {% endfor %}
@@ -346,14 +347,16 @@
             </div>
 
             {% if not reviews %}
+                    {% comment %}
                 <p>
                     {% trans "This item does not have any reviews yet" %} -
                 
-                    {% comment %}
+
                     {# only allowing review writing if you've bought the product #}
                     <a href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
-                    {% endcomment %}
+
                 </p>
+                    {% endcomment %}
             {% else %}
                 <div>
                     {% for review in reviews|slice:":3" %}
