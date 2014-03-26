@@ -63,7 +63,7 @@ $(document).ready(function() {
 
 $('#id_q').focus(function() {
 
-  $('#advancedInput').slideDown(200);
+  $('#advancedInput').slideDown(310);
   $(this).attr("placeholder", "Search by item name");
 
 
@@ -120,8 +120,8 @@ $('#id_q').focus(function() {
     
         Search by zipcode:<input type='search' style="margin-top:1em;" size=5 name=zipcode value="" onfocus="if (this.value == '') {this.value = ''}">
     
-    <div style="">
-        Radius (miles):<input type='number' style="margin-top:1em;" size=2 name=radius min=5 step=1 value=""  onfocus="if (this.value == '') {this.value = 10}"> 
+    <div style="margin-top:1em">
+        Radius (miles):<input type='number' style="float:right" size=2 name=radius min=5 step=1 value=""  onfocus="if (this.value == '') {this.value = 10}"> 
     </div> 
     
 
