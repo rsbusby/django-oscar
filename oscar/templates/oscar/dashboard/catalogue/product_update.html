@@ -73,6 +73,8 @@ Scroll down to bottom of page and click "Save" when finished
                     <li><a href="#product_recommended" data-toggle="tab">{% trans 'Recommended Products' %}</a></li>
                 {% endcomment %}    
                     <li class="active"><a id="everything-tab" href="#everything" data-toggle="tab">{% trans 'Item properties' %}</a></li>
+
+                    {% comment %}
                     {% with variants=product.variants.all %}
 
                     
@@ -100,7 +102,7 @@ Scroll down to bottom of page and click "Save" when finished
                     {% endif %}
                     {% endwith %}
 
-
+                    {% endcomment %}
                     
            
                     {% comment %}
