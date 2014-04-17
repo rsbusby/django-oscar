@@ -55,15 +55,19 @@ Scroll down to bottom of page and click "Save" when finished
     <input id="variant_created" type="hidden" name="variant_created" value="false" />
 
     <div class="row-fluid">
-        <div class="span3 pull-left hhidden-phone">
+
+ 
+
+        <div class="span1 pull-left hhidden-phone">
             
             <div data-spy="affix" class="affix-top" data-offset-top="200">
-
+{% comment %}
 
                 <div class="table-header">
                     <h3>{% trans "Edit:" %}</h3>
                 </div>
                 <ul class="nav nav-list bs-docs-sidenav" id="product_update_tabs">
+                {% endcomment %}
                   {% comment %}
                     {% if product %}
                     <li ><a href="#overview" data-toggle="tab">{% trans 'Overview' %}</a></li>
@@ -72,8 +76,10 @@ Scroll down to bottom of page and click "Save" when finished
 
                     <li><a href="#product_recommended" data-toggle="tab">{% trans 'Recommended Products' %}</a></li>
                 {% endcomment %}    
+                {% comment %}
                     <li class="active"><a id="everything-tab" href="#everything" data-toggle="tab">{% trans 'Item properties' %}</a></li>
 
+                {% endcomment %}
                     {% comment %}
                     {% with variants=product.variants.all %}
 
@@ -112,8 +118,9 @@ Scroll down to bottom of page and click "Save" when finished
 
                     <li><a href="#product_stock" data-toggle="tab">{% trans 'Product stock' %}</a></li>
                 {% endcomment %}
+                {% comment %}
                 </ul>
-
+            {% endcomment %}
             </div>
 
         </div>
