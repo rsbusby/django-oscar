@@ -9,12 +9,25 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': PG_NAME,
-        'USER': 'scvfklsmfsskpz',
+        'USER': 'gvuldgwgfqgnxv',
         'PASSWORD': PG_PASS,
-        'HOST': 'ec2-54-225-123-71.compute-1.amazonaws.com',
+        'HOST': 'ec2-54-204-31-33.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': PG_NAME,
+#         'USER': 'scvfklsmfsskpz',
+#         'PASSWORD': PG_PASS,
+#         'HOST': 'ec2-54-225-123-71.compute-1.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
+
+
 
 TEMPLATE_DEBUG = False
 
