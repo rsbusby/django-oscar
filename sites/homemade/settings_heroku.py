@@ -5,6 +5,8 @@ import os
 PG_PASS = os.environ["PG_PASS"]
 PG_NAME = os.environ["PG_NAME"]
 
+
+## this is the basic db, 'red'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -16,6 +18,8 @@ DATABASES = {
     }
 }
 
+
+## this was the dev db, 'yellow'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
